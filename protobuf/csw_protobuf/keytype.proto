@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package csw_protobuf;
+
+import "scalapb/scalapb.proto";
+
+enum PbKeyType {
+    option (scalapb.enum_options).type = "csw.params.core.generics.KeyType[_]";
+
+    ChoiceKey       = 0;
+    RaDecKey        = 1;
+    StringKey       = 2;
+    StructKey       = 3;
+
+    BooleanKey      = 4;
+    ByteKey         = 5;
+    CharKey         = 6;
+    ShortKey        = 7;
+    LongKey         = 8;
+    IntKey          = 9;
+    FloatKey        = 10;
+    DoubleKey       = 11;
+    TimestampKey    = 12;
+
+    ByteArrayKey    = 13;
+    ShortArrayKey   = 14;
+    LongArrayKey    = 15;
+    IntArrayKey     = 16;
+    FloatArrayKey   = 17;
+    DoubleArrayKey  = 18;
+
+    ByteMatrixKey   = 19;
+    ShortMatrixKey  = 20;
+    LongMatrixKey   = 21;
+    IntMatrixKey    = 22;
+    FloatMatrixKey  = 23;
+    DoubleMatrixKey = 24;
+}
