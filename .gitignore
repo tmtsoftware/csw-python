@@ -1,6 +1,14 @@
 # protobuf
 csw_protobuf/*.py
 scalapb/*.py
+**/__pycache__
+
+
+# PyCharm files
+.idea
+
+# virtual environment
+venv
 
 # Prerequisites
 *.d
