@@ -1,3 +1,7 @@
+# protobuf
+csw_protobuf/*.py
+scalapb/*.py
+
 # Prerequisites
 *.d
 
