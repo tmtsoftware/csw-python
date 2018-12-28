@@ -1,9 +1,10 @@
 This directory stores protobuf filesused by CSW.  To construct the files here, use:
 
-``
-protoc --python_out=.. csw_protobuf/*.proto 
-protoc --python_out=.. scalapb/*.proto 
-``
+```
+$ protoc --python_out=.. csw_protobuf/*.proto
+
+$ protoc --python_out=.. scalapb/*.proto 
+```
 
 from the this directory.
 
