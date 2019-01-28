@@ -15,3 +15,12 @@ class EventPublisher:
         '''
         event_key = pb_event.source + "." + pb_event.name
         self.__redis.publish(event_key, pb_event.SerializeToString())
+
+    def publishSystemEvent(self, event):
+        '''
+        Publish a SystemEvent to the Event Service
+
+        :param event: SystemEvent to be published
+        :return: None
+        '''
+        self.publish(event.pbEvent)

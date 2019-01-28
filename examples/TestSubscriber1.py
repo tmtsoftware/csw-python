@@ -4,8 +4,8 @@ sys.path.append(os.path.relpath(".."))
 
 from csw_event.EventSubscriber import EventSubscriber
 
-# XXX TODO: Add wrapper class
-class TestSubscriber:
+# Test subscribing to events using only the protobuf API
+class TestSubscriber1:
 
     def __init__(self):
         eventKey = "test.assembly.myAssemblyEvent"
@@ -19,6 +19,7 @@ class TestSubscriber:
         print(f"event = {event}")
         print(f"XXX event type = {type(event)}")
         print(f"XXX eventTime type = {type(event.eventTime)}")
+        print(f"XXX eventType = {event.eventType}")
         print(f"XXX eventType type = {type(event.eventType)}")
         print(f"XXX event.paramSet type = {type(event.paramSet)}")
         p = event.paramSet[0]
@@ -35,7 +36,7 @@ class TestSubscriber:
 
 
 def main():
-    TestSubscriber()
+    TestSubscriber1()
 
 if __name__ == "__main__":
     main()
