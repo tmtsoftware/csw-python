@@ -41,3 +41,12 @@ class SystemEvent:
     def isInvalid(self):
         return self.eventId == "-1"
 
+    def get(self, name):
+        """
+        Gets the parameter with the given name, or else returns None
+        :param str name: parameter name
+        :return: the parameter, if found
+        """
+        for p in self.paramSet:
+            if (p.name == name):
+                return p

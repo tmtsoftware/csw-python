@@ -93,3 +93,4 @@ class Parameter:
         """
         items = Parameter.__itemGetters__.get(p.keyType)(p)
         return Parameter(p.name, p.keyType, items, p.units)
+

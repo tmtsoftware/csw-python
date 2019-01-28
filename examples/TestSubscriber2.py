@@ -18,6 +18,9 @@ class TestSubscriber2:
             print(f"    with values: {i.name}: {i.items}")
         if (systemEvent.isInvalid()):
             print("    Invalid")
+        p = systemEvent.get("assemblyEventValue")
+        if (p != None):
+            print(f"Found: {p.name}")
 
 def main():
     TestSubscriber2()
