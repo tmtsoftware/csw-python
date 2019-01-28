@@ -8,7 +8,7 @@ class IntArray:
     def __init__(self, values):
         """
         Wrapper for IntArrayItems: values should be an array of array of ints
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:
@@ -21,7 +21,7 @@ class LongArray:
     def __init__(self, values):
         """
         Wrapper for LongArrayItems: values should be an array of array of longs
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:
@@ -34,7 +34,7 @@ class ShortArray:
     def __init__(self, values):
         """
         Wrapper for ShortArrayItems: values should be an array of array of shorts
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:
@@ -47,7 +47,7 @@ class FloatArray:
     def __init__(self, values):
         """
         Wrapper for FloatArrayItems: values should be an array of array of floats
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:
@@ -60,7 +60,7 @@ class DoubleArray:
     def __init__(self, values):
         """
         Wrapper for DoubleArrayItems: values should be an array of array of doubles
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:
@@ -73,7 +73,7 @@ class CharArray:
     def __init__(self, values):
         """
         Wrapper for CharArrayItems: values should be an array of array of chars
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:
@@ -86,7 +86,7 @@ class ByteArray:
     def __init__(self, values):
         """
         Wrapper for ByteArrayItems: values should be an array of array of bytes
-        :param values: list
+        :param list values: list of parameter values
         """
         ar = []
         for i in values:

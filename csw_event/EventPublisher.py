@@ -8,9 +8,9 @@ class EventPublisher:
 
     def publish(self, pb_event):
         '''
-        Publish a PbEvent to Event Service
+        Publish a PbEvent to the Event Service
 
-        :param pb_event: Event to be published, as a PbEvent type
+        :param PbEvent pb_event: Event to be published
         :return: None
         '''
         event_key = pb_event.source + "." + pb_event.name
@@ -20,7 +20,7 @@ class EventPublisher:
         '''
         Publish a SystemEvent to the Event Service
 
-        :param event: SystemEvent to be published
+        :param SystemEvent event: event to be published
         :return: None
         '''
         self.publish(event.pbEvent)

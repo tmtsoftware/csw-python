@@ -1,9 +1,6 @@
 from csw_event.RedisConnector import RedisConnector
 from csw_event.SystemEvent import SystemEvent
 from csw_protobuf.events_pb2 import PbEvent
-from types import *
-
-
 
 class EventSubscriber:
 
@@ -27,7 +24,7 @@ class EventSubscriber:
         Start a subscription to events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
-        :param event_key_list: list of event key (Strings) to subscribe to
+        :param list event_key_list: list of event key (Strings) to subscribe to
         :param callback: function to be called when event updates. Should take PbEvent and return void
         :return: subscription thread.  use .stop() method to stop subscription
         '''
@@ -38,7 +35,7 @@ class EventSubscriber:
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
-        :param event_key_list: list of event key (Strings) to subscribe to
+        :param list event_key_list: list of event key (Strings) to subscribe to
         :param callback: function to be called when event updates. Should take SystemEvent and return void
         :return: subscription thread.  use .stop() method to stop subscription
         '''

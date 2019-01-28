@@ -1,10 +1,10 @@
 import sys
 import os
+sys.path.append(os.path.relpath(".."))
 
 from csw_event.ArrayItems import IntArray, FloatArray
 from csw_protobuf.parameter_types_pb2 import IntItems
 
-sys.path.append(os.path.relpath(".."))
 
 from csw_event.Parameter import Parameter
 from csw_event.SystemEvent import SystemEvent

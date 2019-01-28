@@ -69,17 +69,12 @@ class Parameter:
         """
         Creates a Parameter (keys with values, units).
 
-        Parameters
-        ----------
-        keyName : str
-            the name of the key
-        keyType : int
-            the type of the key (one of the PbKeyType enum values)
-        items : list
-            a list of values of the given type (matching the key type)
-        units : int
-           units of the values (one of the PbUnits enum values, default NoUnits)
+        :param str keyName: the name of the key
+        :param int keyType: the type of the key (one of the PbKeyType enum values)
+        :param list items: a list of values of the given type (matching the key type)
+        :param int units: units of the values (one of the PbUnits enum values, default NoUnits)
         """
+
         self.keyName = keyName
         self.keyType = keyType
         self.items = items

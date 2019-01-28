@@ -9,15 +9,11 @@ class SystemEvent:
         """
         Creates a SystemEvent.
 
-        Parameters
-        ----------
-        source : str
-            prefix representing source of the event
-        eventName : str
-            the name of event
-        paramSet : List of Parameter
-            list of parameters (keys with values)
+        :param str source: prefix representing source of the event
+        :param str eventName: the name of event
+        :param list paramSet: list of parameters (keys with values)
         """
+
         self.source = source
         self.eventName = eventName
         self.paramSet = paramSet
