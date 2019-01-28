@@ -13,7 +13,11 @@ class TestSubscriber2:
 
     @staticmethod
     def callback(systemEvent):
-        print(f"Received system event '{systemEvent.eventName}' with values: {systemEvent.paramSet[0].items}")
+        print(f"Received system event '{systemEvent.eventName}'")
+        for i in systemEvent.paramSet:
+            print(f"    with values: {i.items}")
+        if (systemEvent.isInvalid()):
+            print("    Invalid")
 
 def main():
     TestSubscriber2()

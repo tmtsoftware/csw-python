@@ -5,20 +5,22 @@ from csw_protobuf.events_pb2 import PbEvent
 
 class SystemEvent:
 
-    def __init__(self, source, eventName, paramSet):
+    def __init__(self, source, eventName, paramSet, eventId = str(uuid.uuid4())):
         """
         Creates a SystemEvent.
 
         :param str source: prefix representing source of the event
         :param str eventName: the name of event
         :param list paramSet: list of parameters (keys with values)
+        :param str eventId: event id (optional: Should leave empty unless received from event service)
         """
 
         self.source = source
         self.eventName = eventName
         self.paramSet = paramSet
+        self.eventId = eventId
         event = PbEvent()
-        event.eventId = str(uuid.uuid4())
+        event.eventId = eventId
         event.source = source
         event.name = eventName
         event.eventTime.GetCurrentTime()
@@ -34,4 +36,8 @@ class SystemEvent:
         """
         i = e.paramSet
         paramSet = [Parameter.fromPbParameter(p) for p in e.paramSet]
-        return SystemEvent(e.source, e.name, paramSet)
+        return SystemEvent(e.source, e.name, paramSet, e.eventId)
+
+    def isInvalid(self):
+        return self.eventId == "-1"
+
