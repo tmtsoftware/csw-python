@@ -17,6 +17,7 @@ class IntArray:
             ar.append(item)
         self.items = ar
 
+
 class LongArray:
     def __init__(self, values):
         """
@@ -29,6 +30,7 @@ class LongArray:
             item.values.extend(i)
             ar.append(item)
         self.items = ar
+
 
 class ShortArray:
     def __init__(self, values):
@@ -43,6 +45,7 @@ class ShortArray:
             ar.append(item)
         self.items = ar
 
+
 class FloatArray:
     def __init__(self, values):
         """
@@ -55,6 +58,7 @@ class FloatArray:
             item.values.extend(i)
             ar.append(item)
         self.items = ar
+
 
 class DoubleArray:
     def __init__(self, values):
@@ -69,18 +73,6 @@ class DoubleArray:
             ar.append(item)
         self.items = ar
 
-class CharArray:
-    def __init__(self, values):
-        """
-        Wrapper for CharArrayItems: values should be an array of array of chars
-        :param list values: list of parameter values
-        """
-        ar = []
-        for i in values:
-            item = CharItems()
-            item.values.extend(i)
-            ar.append(item)
-        self.items = ar
 
 class ByteArray:
     def __init__(self, values):
