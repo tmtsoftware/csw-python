@@ -2,35 +2,35 @@ from csw_protobuf.keytype_pb2 import IntKey, StringKey
 from csw_protobuf.parameter_pb2 import PbParameter
 from csw_protobuf.units_pb2 import NoUnits
 
-
-# ChoiceKey = 0
-# RaDecKey = 1
-# StringKey = 2
-# StructKey = 3
-# BooleanKey = 4
-# ByteKey = 5
-# CharKey = 6
-# ShortKey = 7
-# LongKey = 8
-# IntKey = 9
-# FloatKey = 10
-# DoubleKey = 11
-# TimestampKey = 12
-# ByteArrayKey = 13
-# ShortArrayKey = 14
-# LongArrayKey = 15
-# IntArrayKey = 16
-# FloatArrayKey = 17
-# DoubleArrayKey = 18
-# ByteMatrixKey = 19
-# ShortMatrixKey = 20
-# LongMatrixKey = 21
-# IntMatrixKey = 22
-# FloatMatrixKey = 23
-# DoubleMatrixKey = 24
-
-
 class Parameter:
+
+# XXX TODO: Add support for all these item types in the two tables below
+    # ChoiceKey = 0
+    # RaDecKey = 1
+    # StringKey = 2
+    # StructKey = 3
+    # BooleanKey = 4
+    # ByteKey = 5
+    # CharKey = 6
+    # ShortKey = 7
+    # LongKey = 8
+    # IntKey = 9
+    # FloatKey = 10
+    # DoubleKey = 11
+    # TimestampKey = 12
+    # ByteArrayKey = 13
+    # ShortArrayKey = 14
+    # LongArrayKey = 15
+    # IntArrayKey = 16
+    # FloatArrayKey = 17
+    # DoubleArrayKey = 18
+    # ByteMatrixKey = 19
+    # ShortMatrixKey = 20
+    # LongMatrixKey = 21
+    # IntMatrixKey = 22
+    # FloatMatrixKey = 23
+    # DoubleMatrixKey = 24
+
 
     # Depending on the key type, set a different field in the parameter p to the list of items i.
     __itemSetters__ = {
