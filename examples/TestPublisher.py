@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.append(os.path.relpath(".."))
 
+from examples.TestSubscriber import TestSubscriber
 from csw_protobuf.keytype_pb2 import IntKey
 from csw_protobuf.parameter_types_pb2 import IntItems
 from csw_protobuf.units_pb2 import NoUnits
@@ -21,6 +22,8 @@ class TestPublisher:
         event.source = "test.assembly"
         event.name = "myAssemblyEvent"
 
+        event.eventTime.GetCurrentTime()
+
         paramSet = PbParameter()
         paramSet.name = "assemblyEventValue"
         paramSet.units = NoUnits
@@ -33,6 +36,10 @@ class TestPublisher:
 
         pub = EventPublisher()
         pub.publish(event)
+
+        TestSubscriber.callback(event)
+
+
 
 def main():
     TestPublisher()
