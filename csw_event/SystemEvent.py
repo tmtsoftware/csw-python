@@ -50,3 +50,14 @@ class SystemEvent:
         for p in self.paramSet:
             if (p.name == name):
                 return p
+
+    def exists(self, name):
+        """
+        Returns true if the parameter with the given name is present in the event
+        :param str name: parameter name
+        :return: true if the parameter is found
+        """
+        for p in self.paramSet:
+            if (p.name == name):
+                return True
+        return False
