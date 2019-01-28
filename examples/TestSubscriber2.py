@@ -15,7 +15,7 @@ class TestSubscriber2:
     def callback(systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
-            print(f"    with values: {i.items}")
+            print(f"    with values: {i.name}: {i.items}")
         if (systemEvent.isInvalid()):
             print("    Invalid")
 
