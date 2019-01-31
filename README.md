@@ -6,6 +6,11 @@ This package contains python APIs for the [TMT Common Software (CSW)](https://gi
 
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) makes use of classes generated from protobuf definitions, which define the structure of the events that are stored in Redis. Wrapper classes were added for convenience.
 
+## Build
+
+Note that if you want to run the code from here (as opposed to installing it with pip), 
+you will need to first [generate python code from the protobuf files](csw_protobuf/README.md).
+
 ## Installation
 
 You can install the `tmtpycsw` package with pip3 (or pip for python3):
