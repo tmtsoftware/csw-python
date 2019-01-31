@@ -9,7 +9,9 @@ The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/ser
 ## Build
 
 Note that if you want to run the code from here (as opposed to installing it with pip), 
-you will need to first [generate python code from the protobuf files](csw_protobuf/README.md).
+you will need to first generate python code from the protobuf files in the
+ [csw_protobuf](csw_protobuf) and [scalapb](scalapb) subdirectories.
+ The README files there contain the commands to use for that.
 
 ## Installation
 
