@@ -1,6 +1,6 @@
 # --- Wrappers for protobuf matrix items ---
 from csw_event.ArrayItems import IntArray, ByteArray, LongArray, ShortArray, FloatArray, DoubleArray
-from csw_protobuf.parameter_types_pb2 import IntArrayItems, ByteArrayItems, LongArrayItems, ShortArrayItems, \
+from csw_protobuf.parameter_pb2 import IntArrayItems, ByteArrayItems, LongArrayItems, ShortArrayItems, \
     FloatArrayItems, DoubleArrayItems
 
 

@@ -20,14 +20,13 @@ class TestPublisher1:
         event.eventId = str(uuid.uuid4())
         event.source = "test.assembly"
         event.name = "myAssemblyEvent"
-        event.eventTime.GetCurrentTime()
         event.eventType = PbEvent.SystemEvent
 
         parameter = PbParameter()
         parameter.name = "assemblyEventValue"
         parameter.units = NoUnits
         parameter.keyType = IntKey
-        parameter.intItems.values.append(42)
+        parameter.items.intItems.values.append(42)
         event.paramSet.extend([parameter])
 
         pub = EventPublisher()

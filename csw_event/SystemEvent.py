@@ -23,7 +23,6 @@ class SystemEvent:
         event.eventId = eventId
         event.source = source
         event.name = eventName
-        event.eventTime.GetCurrentTime()
         event.eventType = PbEvent.SystemEvent
         parameters = [p.pbParameter for p in paramSet]
         event.paramSet.extend(parameters)

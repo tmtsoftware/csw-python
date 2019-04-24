@@ -1,4 +1,4 @@
-from csw_protobuf.parameter_types_pb2 import IntItems, LongItems, ShortItems, FloatItems, DoubleItems, CharItems, \
+from csw_protobuf.parameter_pb2 import IntItems, LongItems, ShortItems, FloatItems, DoubleItems, CharItems, \
     ByteItems
 
 

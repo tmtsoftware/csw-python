@@ -1,4 +1,4 @@
-This directory stores protobuf filesused by CSW.  To construct the files here, use:
+This directory stores protobuf files used by CSW.  To construct the files here, use:
 
 ```
 $ protoc --python_out=.. csw_protobuf/*.proto
