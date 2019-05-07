@@ -32,7 +32,7 @@ class TestPublisher1:
         pub = EventPublisher()
         pub.publish(event)
 
-        TestSubscriber1.callback(event)
+        # TestSubscriber1.callback(event)
 
 
 
