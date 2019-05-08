@@ -17,15 +17,15 @@ class EventSubscriberTester(unittest.TestCase):
         print("Callback:", message)
         event = PbEvent()
         event.ParseFromString(message['data'])
-        print(event.name)
+        print(event.eventName)
 
     @staticmethod
     def callbackEvent(event):
-        print(event.name)
+        print(event.eventName)
 
     def testGet(self):
         ev = self.sub.get('a.b.c')
         event = PbEvent()
         event.ParseFromString(ev)
-        print(event.name)
+        print(event.eventName)
 

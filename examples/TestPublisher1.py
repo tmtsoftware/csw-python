@@ -19,11 +19,11 @@ class TestPublisher1:
         event = PbEvent()
         event.eventId = str(uuid.uuid4())
         event.source = "test.assembly"
-        event.name = "myAssemblyEvent"
+        event.keyName = "myAssemblyEvent"
         event.eventType = PbEvent.SystemEvent
 
         parameter = PbParameter()
-        parameter.name = "assemblyEventValue"
+        parameter.keyName = "assemblyEventValue"
         parameter.units = NoUnits
         parameter.keyType = IntKey
         parameter.items.intItems.values.append(42)
