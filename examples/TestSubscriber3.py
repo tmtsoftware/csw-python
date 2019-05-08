@@ -5,7 +5,7 @@ class TestSubscriber3:
 
     def __init__(self):
         eventKey = "test.assembly.myAssemblyEvent"
-        EventSubscriber().subscribeSystemEvent([eventKey], self.callback)
+        EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod
     def callback(systemEvent):

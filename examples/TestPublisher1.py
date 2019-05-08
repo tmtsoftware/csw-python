@@ -1,39 +1,27 @@
 import sys
 import os
+
 sys.path.append(os.path.relpath(".."))
-
-from examples.TestSubscriber1 import TestSubscriber1
-from csw_protobuf.keytype_pb2 import IntKey
-from csw_protobuf.units_pb2 import NoUnits
-
-import uuid
-
+from csw_event.SystemEvent import SystemEvent
 from csw_event.EventPublisher import EventPublisher
-from csw_protobuf.events_pb2 import PbEvent
-from csw_protobuf.parameter_pb2 import PbParameter
+from csw_event.Parameter import Parameter
 
-# Test publishing events using only the protobuf API
+# Test publishing events
 class TestPublisher1:
 
     def __init__(self):
-        event = PbEvent()
-        event.eventId = str(uuid.uuid4())
-        event.source = "test.assembly"
-        event.keyName = "myAssemblyEvent"
-        event.eventType = PbEvent.SystemEvent
+        source = "test.assembly"
+        eventName = "myAssemblyEvent"
 
-        parameter = PbParameter()
-        parameter.keyName = "assemblyEventValue"
-        parameter.units = NoUnits
-        parameter.keyType = IntKey
-        parameter.items.intItems.values.append(42)
-        event.paramSet.extend([parameter])
+        keyName = "assemblyEventValue"
+        keyType = 'IntKey'
+        items = [42]
+        param = Parameter(keyName, keyType, items)
+        paramSet = [param]
 
+        event = SystemEvent(source, eventName, paramSet)
         pub = EventPublisher()
         pub.publish(event)
-
-        # TestSubscriber1.callback(event)
-
 
 
 def main():

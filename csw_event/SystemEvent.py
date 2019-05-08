@@ -1,27 +1,13 @@
 import uuid
+import time
 
 from csw_event.Parameter import Parameter
 from csw_event.EventTime import EventTime
 
 
-# class Event:
-#     def __init__(self, obj):
-#         self.id = obj['eventId']
-#         self.prefix = obj['source']
-#         self.event_name = obj['eventName']
-#         self.event_time = obj['eventTime']
-#         self.param_set = toParameterSet(obj['paramSet'])
-#
-#     def __repr__(self):
-#         return "id=" + self.id + "\n" + \
-#                "prefix=" + self.prefix + "\n" + \
-#                "name=" + self.event_name + "\n" + \
-#                "time=" + str(self.event_time) + "\n" + \
-#                "paramSet=" + str(self.param_set)
-
 class SystemEvent:
 
-    def __init__(self, source, eventName, eventTime, paramSet, eventId = str(uuid.uuid4())):
+    def __init__(self, source, eventName, paramSet, eventTime=EventTime.fromSystem(), eventId=str(uuid.uuid4())):
         """
         Creates a SystemEvent.
 
@@ -39,13 +25,25 @@ class SystemEvent:
         self.eventId = eventId
 
     @staticmethod
-    def fromCbor(obj):
+    def deserialize(obj):
         """
         Returns a SystemEvent for the given CBOR object.
         """
-        paramSet = list(map(lambda p: Parameter.fromCbor(p), obj['paramSet']))
-        eventTime = EventTime.fromCbor(obj['eventTime'])
-        return SystemEvent(obj['source'], obj['eventName'], eventTime, paramSet, obj['eventId'])
+        paramSet = list(map(lambda p: Parameter.deserialize(p), obj['paramSet']))
+        eventTime = EventTime.deserialize(obj['eventTime'])
+        return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
+
+    def serialize(self):
+        """
+        :return: serialized value to be encoded to CBOR
+        """
+        return ['SystemEvent', {
+            'eventId': self.eventId,
+            'source': self.source,
+            'eventName': self.eventName,
+            'eventTime': self.eventTime.serialize(),
+            'paramSet': list(map(lambda p: p.serialize(), self.paramSet))
+        }]
 
     def isInvalid(self):
         return self.eventId == "-1"

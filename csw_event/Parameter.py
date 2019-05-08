@@ -6,7 +6,7 @@ class Parameter:
         Creates a Parameter (keys with values, units).
 
         :param str keyName: the name of the key
-        :param int keyType: the type of the key (one of the PbKeyType enum values)
+        :param str keyType: the type of the key (One of TODO: document types)
         :param list items: a list of values of the given type (matching the key type)
         :param int units: units of the values (one of the PbUnits enum values, default NoUnits)
         """
@@ -17,9 +17,20 @@ class Parameter:
         self.units = units
 
     @staticmethod
-    def fromCbor(obj):
+    def deserialize(obj):
         """
         Returns a Parameter for the given CBOR object.
         """
         return Parameter(obj['keyName'], obj['keyType'], obj['items'], obj['units'])
+
+    def serialize(self):
+        """
+        :return: a dictionary that can be serialized to CBOR
+        """
+        return {
+            'keyName': self.keyName,
+            'keyType': self.keyType,
+            'items': self.items,
+            'units': self.units
+        }
 

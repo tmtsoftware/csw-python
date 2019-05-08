@@ -1,4 +1,5 @@
 from csw_event.RedisConnector import RedisConnector
+from cbor2 import *
 
 
 class EventPublisher:
@@ -6,21 +7,14 @@ class EventPublisher:
     def __init__(self):
         self.__redis = RedisConnector()
 
-    def publish(self, pb_event):
+    def publish(self, event):
         '''
-        Publish a PbEvent to the Event Service
+        Publish an event to the Event Service
 
-        :param PbEvent pb_event: Event to be published
+        :param SystemEvent event: Event to be published
         :return: None
         '''
-        event_key = pb_event.source + "." + pb_event.name
-        self.__redis.publish(event_key, pb_event.SerializeToString())
+        event_key = event.source + "." + event.eventName
+        obj = dumps(event.serialize())
+        self.__redis.publish(event_key, obj)
 
-    def publishSystemEvent(self, event):
-        '''
-        Publish a SystemEvent to the Event Service
-
-        :param SystemEvent event: event to be published
-        :return: None
-        '''
-        self.publish(event.pbEvent)

@@ -2,12 +2,8 @@ import sys
 import os
 sys.path.append(os.path.relpath(".."))
 
-from csw_protobuf.units_pb2 import meter, marcsec, arcsec
-from csw_event.MatrixItems import IntMatrix
-from csw_event.ArrayItems import IntArray, FloatArray
 from csw_event.Parameter import Parameter
 from csw_event.SystemEvent import SystemEvent
-from csw_protobuf.keytype_pb2 import IntKey, IntArrayKey, FloatArrayKey, IntMatrixKey
 from csw_event.EventPublisher import EventPublisher
 
 # Test publishing events using the Parameter and SystemEvent wrapper classes

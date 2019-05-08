@@ -4,12 +4,12 @@ sys.path.append(os.path.relpath(".."))
 
 from csw_event.EventSubscriber import EventSubscriber
 
-# Test subscribing to events using the wrapper classes
+# Test subscribing to events
 class TestSubscriber2:
 
     def __init__(self):
         eventKey = "test.assembly.myAssemblyEvent"
-        EventSubscriber().subscribeSystemEvent([eventKey], self.callback)
+        EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod
     def callback(systemEvent):

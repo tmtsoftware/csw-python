@@ -4,7 +4,7 @@ sys.path.append(os.path.relpath(".."))
 
 from csw_event.EventSubscriber import EventSubscriber
 
-# Test subscribing to events using only the protobuf API
+# Test subscribing to events
 class TestSubscriber1:
 
     def __init__(self):
@@ -13,7 +13,7 @@ class TestSubscriber1:
 
     @staticmethod
     def callback(event):
-        print(f"Event value = {event.paramSet[0].items.intItems.values[0]}")
+        print(f"Event value = {event.paramSet[0].items[0]}")
 
 def main():
     TestSubscriber1()
