@@ -2,7 +2,8 @@ import unittest
 
 from csw_event.EventSubscriber import EventSubscriber
 from csw_event.EventPublisher import EventPublisher
-from csw_protobuf.events_pb2 import PbEvent
+from csw_event.Parameter import Parameter
+from csw_event.SystemEvent import SystemEvent
 
 
 class EventPublisherTester(unittest.TestCase):
@@ -11,6 +12,15 @@ class EventPublisherTester(unittest.TestCase):
         pub = EventPublisher()
         sub = EventSubscriber()
 
-        event = PbEvent()
+        source = "test.assembly"
+        eventName = "myAssemblyEvent"
+
+        keyName = "assemblyEventValue"
+        keyType = 'IntKey'
+        items = [42]
+        param = Parameter(keyName, keyType, items)
+        paramSet = [param]
+
+        event = SystemEvent(source, eventName, paramSet)
 
         pub.publish(event)

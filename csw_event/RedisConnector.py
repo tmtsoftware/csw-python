@@ -24,16 +24,16 @@ class RedisConnector:
         self.__redis_pubsub.subscribe(**d)
         return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
 
-    def publish(self, event_key, pb_encoded_event):
+    def publish(self, event_key, encoded_event):
         """
-        Publish encoded event string to Redis
+        Publish CBOR encoded event string to Redis
 
         :param event_key: String specifying Redis key for event.  Should be source prefix + "." + event name.
-        :param pb_encoded_event: PbEvent encoded using protocol buffers
+        :param encoded_event: CBOR encoded value for the event (in the form [className, dict])
         :return: None
         """
-        self.__redis.set(event_key, pb_encoded_event)
-        self.__redis.publish(event_key, pb_encoded_event)
+        self.__redis.set(event_key, encoded_event)
+        self.__redis.publish(event_key, encoded_event)
 
     def get(self, event_key):
         """

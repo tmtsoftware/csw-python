@@ -6,9 +6,9 @@ class Parameter:
         Creates a Parameter (keys with values, units).
 
         :param str keyName: the name of the key
-        :param str keyType: the type of the key (One of TODO: document types)
+        :param str keyType: the type of the key (Example: IntKey, StringKey: See https://tmtsoftware.github.io/csw/0.7.0-RC1/messages/keys-parameters.html for key type names)
         :param list items: a list of values of the given type (matching the key type)
-        :param int units: units of the values (one of the PbUnits enum values, default NoUnits)
+        :param str units: units of the values (See https://tmtsoftware.github.io/csw/0.7.0-RC1/messages/units.html for list of unit names)
         """
 
         self.keyName = keyName

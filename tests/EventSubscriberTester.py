@@ -1,7 +1,6 @@
 import unittest
 
 from csw_event.EventSubscriber import EventSubscriber
-from csw_protobuf.events_pb2 import PbEvent
 
 
 class EventSubscriberTester(unittest.TestCase):
