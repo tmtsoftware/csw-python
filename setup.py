@@ -6,6 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="tmtpycsw",
     version="0.0.3",
+    python_requires='>3.7.0',
     author="Allan Brighton",
     author_email="allanexus@gmail.com",
     description="A python API for the CSW event service",

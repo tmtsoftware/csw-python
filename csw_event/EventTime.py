@@ -1,18 +1,23 @@
 import time
+from dataclasses import dataclass
 
 
+@dataclass(frozen=True)
 class EventTime:
+    """
+    Creates an EventTime containing seconds since the epoch (1970) and the offset from seconds in nanoseconds
+    """
+    seconds: int
+    nanos: int
 
-    def __init__(self, seconds, nanos):
+    def serialize(self):
         """
-        Creates an EventTime.
-
-        :param int seconds: time in seconds since the epoch (1970)
-        :param int nanos: offset from seconds in nanoseconds
+        :return: a dictionary that can be serialized to CBOR
         """
-
-        self.seconds = seconds
-        self.nanos = nanos
+        return {
+            'seconds': self.seconds,
+            'nanos': self.nanos
+        }
 
     @staticmethod
     def deserialize(obj):
@@ -30,14 +35,3 @@ class EventTime:
         seconds = int(t)
         nanos = int((t - seconds) * 1000000000)
         return EventTime(seconds, nanos)
-
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
-        return {
-            'seconds': self.seconds,
-            'nanos': self.nanos
-        }
-
-

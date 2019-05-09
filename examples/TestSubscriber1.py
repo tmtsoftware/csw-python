@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.relpath(".."))
-
 from csw_event.EventSubscriber import EventSubscriber
 
 # Test subscribing to events

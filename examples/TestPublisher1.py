@@ -1,10 +1,7 @@
-import sys
-import os
-
-sys.path.append(os.path.relpath(".."))
 from csw_event.SystemEvent import SystemEvent
 from csw_event.EventPublisher import EventPublisher
 from csw_event.Parameter import Parameter
+
 
 # Test publishing events
 class TestPublisher1:
@@ -27,6 +24,6 @@ class TestPublisher1:
 def main():
     TestPublisher1()
 
+
 if __name__ == "__main__":
     main()
-

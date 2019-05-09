@@ -8,13 +8,12 @@ class EventPublisher:
         self.__redis = RedisConnector()
 
     def publish(self, event):
-        '''
+        """
         Publish an event to the Event Service
 
         :param SystemEvent event: Event to be published
         :return: None
-        '''
+        """
         event_key = event.source + "." + event.eventName
         obj = dumps(event.serialize())
         self.__redis.publish(event_key, obj)
-

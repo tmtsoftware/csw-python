@@ -24,7 +24,20 @@ class EventPublisherTester(unittest.TestCase):
 
         event = SystemEvent(source, eventName, paramSet)
 
+        thread = sub.subscribe([eventKey], self.callback)
         pub.publish(event)
         e = sub.get(eventKey)
-        assert(e == paramSet)
-        exit(0)
+        assert (e == event)
+        thread.stop()
+
+    @staticmethod
+    def callback(systemEvent):
+        print(f"Received system event '{systemEvent.eventName}'")
+        for i in systemEvent.paramSet:
+            print(f"    with values: {i.keyName}: {i.items}")
+        if systemEvent.isInvalid():
+            print("    Invalid")
+        if systemEvent.exists("assemblyEventValue"):
+            p = systemEvent.get("assemblyEventValue")
+            if p is not None:
+                print(f"Found: {p.keyName}")

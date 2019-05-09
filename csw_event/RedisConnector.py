@@ -2,6 +2,9 @@ import redis
 
 
 class RedisConnector:
+    """
+    Events are posted to Redis. This is internal class used to access Redis.
+    """
 
     def __init__(self):
         self.__redis = redis.Redis(

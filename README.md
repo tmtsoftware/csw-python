@@ -2,16 +2,12 @@
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
 
+Note: Python version 3.7 or greater is required.
+
 ## CSW Event Service
 
-The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) makes use of classes generated from protobuf definitions, which define the structure of the events that are stored in Redis. Wrapper classes were added for convenience.
-
-## Build
-
-Note that if you want to run the code from here (as opposed to installing it with pip), 
-you will need to first generate python code from the protobuf files in the
- [csw_protobuf](csw_protobuf) and [scalapb](scalapb) subdirectories.
- The README files there contain the commands to use for that.
+The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
+Wrapper classes were added for convenience.
 
 ## Installation
 
@@ -63,6 +59,7 @@ class TestPublisher:
         intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1,2,3,4], [5,6,7,8]])
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey", [[[1,2,3,4], [5,6,7,8]],[[-1,-2,-3,-4], [-5,-6,-7,-8]]], "meter")
-        event = SystemEvent("test.assembly", "myAssemblyEvent", [intParam, intArrayParam, floatArrayParam, intMatrixParam])
+        paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
+        event = SystemEvent("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 ```

@@ -1,5 +1,6 @@
 from csw_event.EventSubscriber import EventSubscriber
 
+
 # Test subscribing to events using the wrapper classes from the pip installed tmtpycsw package
 class TestSubscriber3:
 
@@ -12,17 +13,17 @@ class TestSubscriber3:
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
             print(f"    with values: {i.keyName}: {i.items}")
-        if (systemEvent.isInvalid()):
+        if systemEvent.isInvalid():
             print("    Invalid")
-        if (systemEvent.exists("assemblyEventValue")):
+        if systemEvent.exists("assemblyEventValue"):
             p = systemEvent.get("assemblyEventValue")
-            if (p != None):
+            if p is not None:
                 print(f"Found: {p.keyName}")
 
 
 def main():
     TestSubscriber3()
 
+
 if __name__ == "__main__":
     main()
-

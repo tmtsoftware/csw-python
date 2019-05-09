@@ -1,28 +1,32 @@
 import uuid
-import time
+from dataclasses import dataclass
+from typing import List
 
 from csw_event.Parameter import Parameter
 from csw_event.EventTime import EventTime
 
 
+@dataclass(frozen=True)
 class SystemEvent:
+    """
+    Creates a SystemEvent.
 
-    def __init__(self, source, eventName, paramSet, eventTime=EventTime.fromSystem(), eventId=str(uuid.uuid4())):
-        """
-        Creates a SystemEvent.
+    Args
+        source (str): prefix representing source of the event
 
-        :param str source: prefix representing source of the event
-        :param str eventName: the name of event
-        :param EventTime eventTime: the time the event was created
-        :param list[Parameter] paramSet: list of parameters (keys with values)
-        :param str eventId: event id (optional: Should leave empty unless received from event service)
-        """
+        eventName (str): the name of event
 
-        self.source = source
-        self.eventName = eventName
-        self.eventTime = eventTime
-        self.paramSet = paramSet
-        self.eventId = eventId
+        paramSet (list): list of Parameter (keys with values)
+
+        eventTime (EventTime): the time the event was created (defaults to current time)
+
+        eventId (str): event id (optional: Should leave empty unless received from event service)
+    """
+    source: str
+    eventName: str
+    paramSet: List[Parameter]
+    eventTime: EventTime = EventTime.fromSystem()
+    eventId: str = str(uuid.uuid4())
 
     @staticmethod
     def deserialize(obj):
@@ -55,7 +59,7 @@ class SystemEvent:
         :return: the parameter, if found
         """
         for p in self.paramSet:
-            if (p.keyName == keyName):
+            if p.keyName == keyName:
                 return p
 
     def exists(self, keyName):
@@ -65,6 +69,6 @@ class SystemEvent:
         :return: true if the parameter is found
         """
         for p in self.paramSet:
-            if (p.keyName == keyName):
+            if p.keyName == keyName:
                 return True
         return False
