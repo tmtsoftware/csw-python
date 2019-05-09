@@ -1,5 +1,5 @@
 from csw_event.RedisConnector import RedisConnector
-from csw_event.SystemEvent import SystemEvent
+from csw_event.Event import Event
 from cbor2 import *
 
 
@@ -11,15 +11,8 @@ class EventSubscriber:
     @staticmethod
     def __handle_callback(message, callback):
         data = message['data']
-        ar = loads(data)
-        cls = ar[0]
-        obj = ar[1]
-        if cls == 'SystemEvent':
-            event = SystemEvent.deserialize(obj)
-            callback(event)
-            # TODO: Handle ObserveEvents
-        else:
-            raise Exception("Expected a SystemEvent, but got: " + cls)
+        event = Event.deserialize(data)
+        callback(event)
 
     def subscribe(self, event_key_list, callback):
         """
@@ -27,7 +20,7 @@ class EventSubscriber:
         to be called when an event in the list has its value updated.
 
         :param list event_key_list: list of event key (Strings) to subscribe to
-        :param callback: function to be called when event updates. Should take SystemEvent and return void
+        :param callback: function to be called when event updates. Should take Event and return void
         :return: subscription thread.  use .stop() method to stop subscription
         """
         return self.__redis.subscribeCallback(event_key_list, lambda message: self.__handle_callback(message, callback))
@@ -37,15 +30,8 @@ class EventSubscriber:
         Get an event from the Event Service
 
         :param event_key: String specifying Redis key for event.  Should be source prefix + "." + event name.
-        :return: Event obtained from Event Service, decoded into a SystemEvent
+        :return: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(event_key)
-        ar = loads(data)
-        cls = ar[0]
-        obj = ar[1]
-        if cls == 'SystemEvent':
-            event = SystemEvent.deserialize(obj)
-            return event
-        # TODO: Handle ObserveEvents
-        else:
-            raise Exception("Expected a SystemEvent, but got: " + cls)
+        event = Event.deserialize(data)
+        return event

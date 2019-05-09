@@ -11,7 +11,7 @@ class EventPublisher:
         """
         Publish an event to the Event Service
 
-        :param SystemEvent event: Event to be published
+        :param Event event: Event to be published
         :return: None
         """
         event_key = event.source + "." + event.eventName

@@ -1,47 +1,50 @@
 import uuid
 from dataclasses import dataclass
 from typing import List
+from cbor2 import *
 
 from csw_event.Parameter import Parameter
 from csw_event.EventTime import EventTime
 
 
 @dataclass(frozen=True)
-class SystemEvent:
+class Event:
     """
-    Creates a SystemEvent.
+    Creates a Event.
 
     Args
         source (str): prefix representing source of the event
-
         eventName (str): the name of event
-
         paramSet (list): list of Parameter (keys with values)
-
         eventTime (EventTime): the time the event was created (defaults to current time)
-
         eventId (str): event id (optional: Should leave empty unless received from event service)
+        eventType (str): CSW event class: one of "SystemEvent", "ObserveEvent" (default: "SystemEvent")
     """
     source: str
     eventName: str
     paramSet: List[Parameter]
     eventTime: EventTime = EventTime.fromSystem()
     eventId: str = str(uuid.uuid4())
+    eventType: str = "SystemEvent"
 
     @staticmethod
-    def deserialize(obj):
+    def deserialize(data):
         """
-        Returns a SystemEvent for the given CBOR object.
+        Returns a Event for the given CBOR object.
         """
+        ar = loads(data)
+        eventType = ar[0]
+        assert(eventType in {"SystemEvent", "ObserveEvent"})
+        obj = ar[1]
         paramSet = list(map(lambda p: Parameter.deserialize(p), obj['paramSet']))
         eventTime = EventTime.deserialize(obj['eventTime'])
-        return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
+        return Event(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'], eventType)
 
     def serialize(self):
         """
         :return: serialized value to be encoded to CBOR
         """
-        return ['SystemEvent', {
+        return [self.eventType, {
             'eventId': self.eventId,
             'source': self.source,
             'eventName': self.eventName,

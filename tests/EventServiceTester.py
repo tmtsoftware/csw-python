@@ -3,7 +3,7 @@ import unittest
 from csw_event.EventSubscriber import EventSubscriber
 from csw_event.EventPublisher import EventPublisher
 from csw_event.Parameter import Parameter
-from csw_event.SystemEvent import SystemEvent
+from csw_event.Event import Event
 
 
 class EventPublisherTester(unittest.TestCase):
@@ -22,7 +22,7 @@ class EventPublisherTester(unittest.TestCase):
         param = Parameter(keyName, keyType, items)
         paramSet = [param]
 
-        event = SystemEvent(source, eventName, paramSet)
+        event = Event(source, eventName, paramSet)
 
         thread = sub.subscribe([eventKey], self.callback)
         pub.publish(event)

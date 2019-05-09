@@ -1,5 +1,5 @@
 from csw_event.Parameter import Parameter
-from csw_event.SystemEvent import SystemEvent
+from csw_event.Event import Event
 from csw_event.EventPublisher import EventPublisher
 
 
@@ -14,7 +14,7 @@ class TestPublisher3:
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
-        event = SystemEvent("test.assembly", "myAssemblyEvent", paramSet)
+        event = Event("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 
 
