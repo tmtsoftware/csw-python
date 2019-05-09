@@ -1,7 +1,7 @@
 from csw_event.EventSubscriber import EventSubscriber
 
 
-# Test subscribing to events using the wrapper classes from the pip installed tmtpycsw package
+# Test subscribing to events
 class TestSubscriber3:
 
     def __init__(self):

@@ -3,7 +3,7 @@ from csw_event.SystemEvent import SystemEvent
 from csw_event.EventPublisher import EventPublisher
 
 
-# Test publishing events using the Parameter and SystemEvent wrapper classes from the pip installed tmtpycsw package
+# Test publishing events
 class TestPublisher3:
     pub = EventPublisher()
 
