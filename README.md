@@ -26,52 +26,43 @@ To subscribe to an event with the key "test.assembly.myAssemblyEvent":
 ```python
 from csw_event.EventSubscriber import EventSubscriber
 
+# Test subscribing to events using the wrapper classes from the pip installed tmtpycsw package
 class TestSubscriber:
 
     def __init__(self):
         eventKey = "test.assembly.myAssemblyEvent"
-        EventSubscriber().subscribeSystemEvent([eventKey], self.callback)
+        EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod
     def callback(systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
-        
         for i in systemEvent.paramSet:
-            print(f"    with values: {i.name}: {i.items}")
-        
+            print(f"    with values: {i.keyName}: {i.items}")
         if (systemEvent.isInvalid()):
             print("    Invalid")
-        
         if (systemEvent.exists("assemblyEventValue")):
             p = systemEvent.get("assemblyEventValue")
             if (p != None):
-                print(f"Found: {p.name}")
+                print(f"Found: {p.keyName}")
+
 ```
 
 To publish an event (with various types of parameters):
 
 ```python
-from csw_protobuf.units_pb2 import meter, marcsec, arcsec
-from csw_event.MatrixItems import IntMatrix
-from csw_event.ArrayItems import IntArray, FloatArray
 from csw_event.Parameter import Parameter
 from csw_event.SystemEvent import SystemEvent
-from csw_protobuf.keytype_pb2 import IntKey, IntArrayKey, FloatArrayKey, IntMatrixKey
 from csw_event.EventPublisher import EventPublisher
 
-class TestPublisher3:
+# Test publishing events using the Parameter and SystemEvent wrapper classes from the pip installed tmtpycsw package
+class TestPublisher:
     pub = EventPublisher()
 
     def __init__(self):
-        
-        intParam = Parameter("IntValue", IntKey, [42], arcsec)
-        
-        intArrayParam = Parameter("IntArrayValue", IntArrayKey, IntArray([[1,2,3,4], [5,6,7,8]]).items)
-        
-        floatArrayParam = Parameter("FloatArrayValue", FloatArrayKey, FloatArray([[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]]).items, marcsec)
-        
-        intMatrixParam = Parameter("IntMatrixValue", IntMatrixKey, IntMatrix([[[1,2,3,4], [5,6,7,8]],[[-1,-2,-3,-4], [-5,-6,-7,-8]]]).items, meter)
-        
+        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
+        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1,2,3,4], [5,6,7,8]])
+        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
+        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey", [[[1,2,3,4], [5,6,7,8]],[[-1,-2,-3,-4], [-5,-6,-7,-8]]], "meter")
         event = SystemEvent("test.assembly", "myAssemblyEvent", [intParam, intArrayParam, floatArrayParam, intMatrixParam])
-        self.pub.publishSystemEvent(event)
+        self.pub.publish(event)
 ```

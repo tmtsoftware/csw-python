@@ -14,6 +14,7 @@ class EventPublisherTester(unittest.TestCase):
 
         source = "test.assembly"
         eventName = "myAssemblyEvent"
+        eventKey = source + "." + eventName
 
         keyName = "assemblyEventValue"
         keyType = 'IntKey'
@@ -24,3 +25,6 @@ class EventPublisherTester(unittest.TestCase):
         event = SystemEvent(source, eventName, paramSet)
 
         pub.publish(event)
+        e = sub.get(eventKey)
+        assert(e == paramSet)
+        exit(0)

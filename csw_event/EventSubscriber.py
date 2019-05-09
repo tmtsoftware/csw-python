@@ -38,5 +38,13 @@ class EventSubscriber:
         :param event_key: String specifying Redis key for event.  Should be source prefix + "." + event name.
         :return: Event obtained from Event Service, decoded into a SystemEvent
         '''
-        obj = self.__redis.get(event_key)
-        return SystemEvent.deserialize(load(obj))
+        data = self.__redis.get(event_key)
+        ar = loads(data)
+        cls = ar[0]
+        obj = ar[1]
+        if cls == 'SystemEvent':
+            event = SystemEvent.deserialize(obj)
+            return event
+        # TODO: Handle ObserveEvents
+        else:
+            raise Exception("Expected a SystemEvent, but got: " + cls)
