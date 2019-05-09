@@ -22,8 +22,9 @@ To subscribe to an event with the key "test.assembly.myAssemblyEvent":
 ```python
 from csw_event.EventSubscriber import EventSubscriber
 
-# Test subscribing to events using the wrapper classes from the pip installed tmtpycsw package
-class TestSubscriber:
+
+# Test subscribing to events
+class TestSubscriber3:
 
     def __init__(self):
         eventKey = "test.assembly.myAssemblyEvent"
@@ -34,13 +35,12 @@ class TestSubscriber:
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
             print(f"    with values: {i.keyName}: {i.items}")
-        if (systemEvent.isInvalid()):
+        if systemEvent.isInvalid():
             print("    Invalid")
-        if (systemEvent.exists("assemblyEventValue")):
+        if systemEvent.exists("assemblyEventValue"):
             p = systemEvent.get("assemblyEventValue")
-            if (p != None):
+            if p is not None:
                 print(f"Found: {p.keyName}")
-
 ```
 
 To publish an event (with various types of parameters):
@@ -50,15 +50,17 @@ from csw_event.Parameter import Parameter
 from csw_event.Event import Event
 from csw_event.EventPublisher import EventPublisher
 
-# Test publishing events using the Parameter and Event wrapper classes from the pip installed tmtpycsw package
-class TestPublisher:
+
+# Test publishing events
+class TestPublisher3:
     pub = EventPublisher()
 
     def __init__(self):
         intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
-        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1,2,3,4], [5,6,7,8]])
+        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
-        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey", [[[1,2,3,4], [5,6,7,8]],[[-1,-2,-3,-4], [-5,-6,-7,-8]]], "meter")
+        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
         event = Event("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
