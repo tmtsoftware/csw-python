@@ -9,7 +9,8 @@ Note: Python version 3.7 or greater is required.
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
 Wrapper classes were added for convenience.
 
-Note: It is not possible to publish *Float* values from python (they always come out as Doubles), however subscribing to Float values works. 
+Note: It is not possible to publish *Float* or *Byte* values from python (Floats always come out as Doubles), 
+however subscribing to any type works from Python. 
 
 ## Installation
 
@@ -73,3 +74,5 @@ class TestPublisher3:
 
 Events that you create in python are by default `SystemEvent`s. You can pass an optional `eventType` parameter to create an `ObserveEvent` instead.
 Parameters are packed in a python `Parameter` class for convenience. A `Struct` class is used to hold any parameter values of type `Struct`.
+
+__TODO: Add support for key types: RaDecKey, UTCTimeKey, TAITimeKey__
