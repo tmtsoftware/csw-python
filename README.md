@@ -9,6 +9,8 @@ Note: Python version 3.7 or greater is required.
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
 Wrapper classes were added for convenience.
 
+Note: It is not possible to publish *Float* values from python (they always come out as Doubles), however subscribing to Float values works. 
+
 ## Installation
 
 You can install the `tmtpycsw` package with pip3 (or pip for python3):
@@ -46,7 +48,7 @@ class TestSubscriber3:
 To publish an event (with various types of parameters):
 
 ```python
-from csw_event.Parameter import Parameter
+from csw_event.Parameter import Parameter, Struct
 from csw_event.Event import Event
 from csw_event.EventPublisher import EventPublisher
 
@@ -58,10 +60,16 @@ class TestPublisher3:
     def __init__(self):
         intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
         intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
+        doubleArrayParam = Parameter("DoubleArrayValue", "DoubleArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
-        paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
+
+        structParam = Parameter("MyStruct", "StructKey", [Struct([intParam, intArrayParam, doubleArrayParam, intMatrixParam])])
+
+        paramSet = [intParam, intArrayParam, doubleArrayParam, intMatrixParam, structParam]
         event = Event("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 ```
+
+Events that you create in python are by default `SystemEvent`s. You can pass an optional `eventType` parameter to create an `ObserveEvent` instead.
+Parameters are packed in a python `Parameter` class for convenience. A `Struct` class is used to hold any parameter values of type `Struct`.

@@ -1,4 +1,4 @@
-from csw_event.Parameter import Parameter
+from csw_event.Parameter import Parameter, Struct
 from csw_event.Event import Event
 from csw_event.EventPublisher import EventPublisher
 
@@ -9,11 +9,16 @@ class TestPublisher3:
 
     def __init__(self):
         intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
+        # floatParam = Parameter("floatValue", "FloatKey", [float(42.1)], "arcsec")
         intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
+        # floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
+        doubleArrayParam = Parameter("DoubleArrayValue", "DoubleArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
-        paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
+
+        structParam = Parameter("MyStruct", "StructKey", [Struct([intParam, intArrayParam, doubleArrayParam, intMatrixParam])])
+
+        paramSet = [intParam, intArrayParam, doubleArrayParam, intMatrixParam, structParam]
         event = Event("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 

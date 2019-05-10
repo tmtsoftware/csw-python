@@ -15,5 +15,6 @@ class EventPublisher:
         :return: None
         """
         event_key = event.source + "." + event.eventName
-        obj = dumps(event.serialize())
+        serializedValue = event.serialize()
+        obj = dumps(serializedValue)
         self.__redis.publish(event_key, obj)
