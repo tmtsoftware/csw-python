@@ -32,11 +32,11 @@ class Event:
         """
         Returns a Event for the given CBOR object.
         """
-        ar = loads(data)
-        eventType = ar[0]
+        m = loads(data)
+        eventType = next(iter(m))
         assert(eventType in {"SystemEvent", "ObserveEvent"})
-        obj = ar[1]
-        paramSet = list(map(lambda p: Parameter.deserialize(p), obj['paramSet']))
+        obj = m[eventType]
+        paramSet = list(m(lambda p: Parameter.deserialize(p), obj['paramSet']))
         eventTime = EventTime.deserialize(obj['eventTime'])
         return Event(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'], eventType)
 
@@ -44,13 +44,13 @@ class Event:
         """
         :return: serialized value to be encoded to CBOR
         """
-        return [self.eventType, {
+        return {self.eventType: {
             'eventId': self.eventId,
             'source': self.source,
             'eventName': self.eventName,
             'eventTime': self.eventTime.serialize(),
             'paramSet': list(map(lambda p: p.serialize(), self.paramSet))
-        }]
+        }}
 
     def isInvalid(self):
         return self.eventId == "-1"
