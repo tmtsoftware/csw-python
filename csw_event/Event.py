@@ -36,7 +36,7 @@ class Event:
         eventType = next(iter(m))
         assert(eventType in {"SystemEvent", "ObserveEvent"})
         obj = m[eventType]
-        paramSet = list(m(lambda p: Parameter.deserialize(p), obj['paramSet']))
+        paramSet = list(map(lambda p: Parameter.deserialize(p), obj['paramSet']))
         eventTime = EventTime.deserialize(obj['eventTime'])
         return Event(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'], eventType)
 

@@ -13,15 +13,18 @@ class Parameter:
     """
     keyName: str
     keyType: str
-    items: list
+    items: object
     units: str = "NoUnits"
 
     def serialize(self):
         """
         :return: a dictionary that can be serialized to CBOR
         """
-
-        items = list(map(lambda p: Parameter.serializeParamValue(self.keyType, p), self.items))
+        # Note that bytes are stored in a byte string (b'...') instead of a list or array
+        if (self.keyType == "ByteKey"):
+            items = self.items
+        else:
+            items = list(map(lambda p: Parameter.serializeParamValue(self.keyType, p), self.items))
         return {
             'keyName': self.keyName,
             'keyType': self.keyType,
@@ -61,7 +64,10 @@ class Parameter:
         Returns a Parameter for the given CBOR object.
         """
         keyType = obj['keyType']
-        items = list(map(lambda p: Parameter.deserializeParamValue(keyType, p), obj['items']))
+        if (keyType == "ByteKey"):
+            items = obj['items']
+        else:
+            items = list(map(lambda p: Parameter.deserializeParamValue(keyType, p), obj['items']))
         return Parameter(obj['keyName'], keyType, items, obj['units'])
 
 
