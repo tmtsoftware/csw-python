@@ -19,7 +19,7 @@ class TestPublisher3:
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
         doubleArrayParam = Parameter("DoubleArrayValue", "DoubleArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
 
-        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', b'\x01\x02\x03\x04'])
+        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', bytes([1,2,3,4])])
 
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
@@ -28,7 +28,6 @@ class TestPublisher3:
 
         paramSet = [byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam, intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
         event = Event("test.assembly", "myAssemblyEvent", paramSet)
-        # event = Event("test.assembly", "myAssemblyEvent", [byteParam])
         self.pub.publish(event)
 
 
