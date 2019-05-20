@@ -2,7 +2,7 @@ import time
 from dataclasses import dataclass, asdict
 
 
-@dataclass(frozen=True)
+@dataclass
 class EventTime:
     """
     Creates an EventTime containing seconds since the epoch (1970) and the offset from seconds in nanoseconds
@@ -10,17 +10,11 @@ class EventTime:
     seconds: int
     nanos: int
 
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
+    def asDict(self):
         return asdict(self)
 
     @staticmethod
-    def deserialize(obj):
-        """
-        Returns an EventTime for the given CBOR object.
-        """
+    def fromDict(obj):
         return EventTime(**obj)
 
     @staticmethod

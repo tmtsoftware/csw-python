@@ -1,3 +1,4 @@
+from csw.Coords import EqCoord, Angle, EqFrame, ProperMotion
 from csw.Parameter import Parameter, Struct
 from csw.Event import Event
 from csw.EventPublisher import EventPublisher
@@ -19,14 +20,20 @@ class TestPublisher3:
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
         doubleArrayParam = Parameter("DoubleArrayValue", "DoubleArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
 
-        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', bytes([1,2,3,4])])
+        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
 
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
 
-        structParam = Parameter("MyStruct", "StructKey", [Struct([intParam, floatParam, longParam, shortParam, booleanParam, intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam])])
+        coordsParam = Parameter("EqCoordParam", "CoordKey",
+                                [EqCoord(ra=Angle(180), frame=EqFrame("FK5"), dec=Angle(32), pm=ProperMotion(0.5, 2.33))])
 
-        paramSet = [byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam, intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
+        structParam = Parameter("MyStruct", "StructKey", [Struct(
+            [coordsParam, intParam, floatParam, longParam, shortParam, booleanParam, intArrayParam, floatArrayParam,
+             doubleArrayParam, intMatrixParam])])
+
+        paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
+                    intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
         event = Event("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 

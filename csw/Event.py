@@ -7,7 +7,7 @@ from csw.Parameter import Parameter
 from csw.EventTime import EventTime
 
 
-@dataclass(frozen=True)
+@dataclass
 class Event:
     """
     Creates a Event.
@@ -28,7 +28,7 @@ class Event:
     eventType: str = "SystemEvent"
 
     @staticmethod
-    def deserialize(data):
+    def fromDict(data):
         """
         Returns a Event for the given CBOR object.
         """
@@ -36,11 +36,11 @@ class Event:
         eventType = next(iter(m))
         assert(eventType in {"SystemEvent", "ObserveEvent"})
         obj = m[eventType]
-        paramSet = list(map(lambda p: Parameter.deserialize(p), obj['paramSet']))
-        eventTime = EventTime.deserialize(obj['eventTime'])
+        paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
+        eventTime = EventTime.fromDict(obj['eventTime'])
         return Event(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'], eventType)
 
-    def serialize(self):
+    def asDict(self):
         """
         :return: dictionary to be encoded to CBOR
         """
@@ -48,8 +48,8 @@ class Event:
             'eventId': self.eventId,
             'source': self.source,
             'eventName': self.eventName,
-            'eventTime': self.eventTime.serialize(),
-            'paramSet': list(map(lambda p: p.serialize(), self.paramSet))
+            'eventTime': self.eventTime.asDict(),
+            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }}
 
     def isInvalid(self):

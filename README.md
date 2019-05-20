@@ -7,10 +7,7 @@ Note: Python version 3.7 or greater is required.
 ## CSW Event Service
 
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
-Wrapper classes were added for convenience.
-
-Note: It is not possible to publish *Float* or *Byte* values from python (Floats always come out as Doubles), 
-however subscribing to any type works from Python. 
+Python wrapper classes were added for convenience.
 
 ## Installation
 
@@ -37,7 +34,7 @@ class TestSubscriber3:
     def callback(systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
-            print(f"    with values: {i.keyName}: {i.items}")
+            print(f"    with values: {i.keyName}({i.keyType}): {i.items}")
         if systemEvent.isInvalid():
             print("    Invalid")
         if systemEvent.exists("assemblyEventValue"):
@@ -49,6 +46,7 @@ class TestSubscriber3:
 To publish an event (with various types of parameters):
 
 ```python
+from csw.Coords import EqCoord, Angle, EqFrame, ProperMotion
 from csw.Parameter import Parameter, Struct
 from csw.Event import Event
 from csw.EventPublisher import EventPublisher
@@ -70,14 +68,20 @@ class TestPublisher3:
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
         doubleArrayParam = Parameter("DoubleArrayValue", "DoubleArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
 
-        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', bytes([1,2,3,4])])
+        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
 
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
 
-        structParam = Parameter("MyStruct", "StructKey", [Struct([intParam, floatParam, longParam, shortParam, booleanParam, intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam])])
+        coordsParam = Parameter("EqCoordParam", "CoordKey",
+                                [EqCoord(ra=Angle(180), frame=EqFrame("FK5"), dec=Angle(32), pm=ProperMotion(0.5, 2.33))])
 
-        paramSet = [byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam, intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
+        structParam = Parameter("MyStruct", "StructKey", [Struct(
+            [coordsParam, intParam, floatParam, longParam, shortParam, booleanParam, intArrayParam, floatArrayParam,
+             doubleArrayParam, intMatrixParam])])
+
+        paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
+                    intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
         event = Event("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 ```
@@ -85,4 +89,3 @@ class TestPublisher3:
 Events that you create in python are by default `SystemEvent`s. You can pass an optional `eventType` parameter to create an `ObserveEvent` instead.
 Parameters are packed in a python `Parameter` class for convenience. A `Struct` class is used to hold any parameter values of type `Struct`.
 
-__TODO: Add support for key types: RaDecKey, UTCTimeKey, TAITimeKey__

@@ -11,7 +11,7 @@ class EventSubscriber:
     @staticmethod
     def __handle_callback(message, callback):
         data = message['data']
-        event = Event.deserialize(data)
+        event = Event.fromDict(data)
         callback(event)
 
     def subscribe(self, event_key_list, callback):
@@ -33,5 +33,5 @@ class EventSubscriber:
         :return: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(event_key)
-        event = Event.deserialize(data)
+        event = Event.fromDict(data)
         return event

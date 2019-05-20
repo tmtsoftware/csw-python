@@ -1,9 +1,9 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 from typing import List
 
 
-@dataclass(frozen=True)
+@dataclass
 class Parameter:
     """
     Creates a Parameter (keys with values, units).
@@ -16,45 +16,47 @@ class Parameter:
     items: object
     units: str = "NoUnits"
 
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
+    def asDict(self):
         # Note that bytes are stored in a byte string (b'...') instead of a list or array
         if (self.keyType == "ByteKey"):
             items = self.items
         else:
-            items = list(map(lambda p: Parameter.serializeParamValue(self.keyType, p), self.items))
-        return asdict(self)
+            items = list(map(lambda p: Parameter.paramValueOrDict(self.keyType, p), self.items))
+        return {
+            'keyName': self.keyName,
+            'keyType': self.keyType,
+            'items': items,
+            'units': self.units
+        }
 
     @staticmethod
-    def serializeParamValue(keyType, param):
+    def paramValueOrDict(keyType, param):
         """
         Internal recursive method that handles StructKey types
         :param keyType: parameter's key type
         :param param: parameter value, which might be a primitive type or another param for Struct types
-        :return: param value, or a dictionary if keytype is StructKey
+        :return: simple param value, or a dictionary if keytype is StructKey
         """
-        if keyType == "StructKey":
-            return param.serialize()
+        if keyType in {"StructKey", "CoordKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey"}:
+            return param.asDict()
         else:
             return param
 
     @staticmethod
-    def deserializeParamValue(keyType, obj):
+    def paramValueFromDict(keyType, obj):
         """
         Internal recursive method that handles StructKey types
         :param keyType: parameter's key type
         :param obj: parameter value, which might be a primitive type or another param for Struct types
-        :return: param value, or a list of Parameter object if keytype is StructKey
+        :return: simple param value, or a Struct object if keytype is StructKey
         """
         if keyType == "StructKey":
-            return Struct.deserialize(obj)
+            return Struct.fromDict(obj)
         else:
             return obj
 
     @staticmethod
-    def deserialize(obj):
+    def fromDict(obj):
         """
         Returns a Parameter for the given CBOR object.
         """
@@ -62,14 +64,14 @@ class Parameter:
         if (keyType == "ByteKey"):
             items = obj['items']
         else:
-            items = list(map(lambda p: Parameter.deserializeParamValue(keyType, p), obj['items']))
+            items = list(map(lambda p: Parameter.paramValueFromDict(keyType, p), obj['items']))
         return Parameter(obj['keyName'], keyType, items, obj['units'])
 
 
 # -----------------
 # Struct parameter
 # -----------------
-@dataclass(frozen=True)
+@dataclass
 class Struct:
     """
     Creates a Struct (value when key is "StructKey").
@@ -77,15 +79,9 @@ class Struct:
     """
     paramSet: List[Parameter]
 
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
-        return {"paramSet" : list(map(lambda p: p.serialize(), self.paramSet))}
+    def asDict(self):
+        return {"paramSet" : list(map(lambda p: p.asDict(), self.paramSet))}
 
     @staticmethod
-    def deserialize(obj):
-        """
-        Returns a Stuct for the given (decoded) CBOR object.
-        """
-        return Struct(list(map(lambda p: Parameter.deserialize(p), obj['paramSet'])))
+    def fromDict(obj):
+        return Struct(list(map(lambda p: Parameter.fromDict(p), obj['paramSet'])))

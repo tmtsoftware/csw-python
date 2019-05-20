@@ -1,28 +1,15 @@
 from dataclasses import dataclass, asdict
 
 
-@dataclass(frozen=True)
+@dataclass
 class Tag:
     """
     A tag is a label to indicate the use of the coordinate
     """
     name: str
 
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
-        return asdict(self)
 
-    @staticmethod
-    def deserialize(obj):
-        """
-        Returns a Tag for the given (decoded) CBOR object.
-        """
-        return Tag(obj['name'])
-
-
-@dataclass(frozen=True)
+@dataclass
 class Angle:
     """
     A wrapper for angle. Normally angle would be stored in double
@@ -31,43 +18,49 @@ class Angle:
     """
     uas: int
 
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
-        return asdict(self)
 
-    @staticmethod
-    def deserialize(obj):
-        """
-        Returns an Angle for the given (decoded) CBOR object.
-        """
-        return Angle(**obj)
+@dataclass
+class EqFrame:
+    """
+    This class is represented as a sealed trait with case objects in Scala and is serialized as: type: {}
+    """
+    type: str
 
 
-@dataclass(frozen=True)
+@dataclass
+class ProperMotion:
+    pmx: float
+    pmy: float
+
+
+@dataclass
 class EqCoord:
-    """
-    Creates a Struct (value when key is "StructKey").
-    'paramSet' is a list of Parameters that make up the Struct
-    """
-    paramSet: List[Parameter]
+    tag: Tag = Tag("BASE")
+    ra: Angle = Angle(0)
+    dec: Angle = Angle(0)
+    frame: EqFrame = "ICRS"
+    catalogName: str = "none"
+    pm: ProperMotion = ProperMotion(0.0, 0.0)
 
-    def serialize(self):
-        """
-        :return: a dictionary that can be serialized to CBOR
-        """
-        return {"paramSet" : list(map(lambda p: p.serialize(), self.paramSet))}
+    def asDict(self):
+        return {
+            "EqCoord": {
+                "tag": asdict(self.tag),
+                "ra": asdict(self.ra),
+                "dec": asdict(self.dec),
+                "frame": {self.frame.type: {}},
+                "catalogName": self.catalogName,
+                "pm": asdict(self.pm)
+            }
+        }
 
     @staticmethod
-    def deserialize(obj):
-        """
-        Returns a Stuct for the given (decoded) CBOR object.
-        """
-        return Struct(list(map(lambda p: Parameter.deserialize(p), obj['paramSet'])))
-
-
-
-# case class EqCoord(tag: Tag, ra: Angle, dec: Angle, frame: EQ_FRAME, catalogName: String, pm: ProperMotion) extends Coord {
-
-#    with values: BasePosition: [{'EqCoord': {'tag': {'name': 'BASE'}, 'ra': {'uas': 648000000000}, 'dec': {'uas': 115200000000}, 'frame': {'ICRS': {}}, 'catalogName': 'none', 'pm': {'pmx': 0.5, 'pmy': 2.33}}}]
+    def fromDict(obj):
+        dict = obj["EqCoord"]
+        tag = Tag(**dict["tag"])
+        ra = Angle(**dict["ra"])
+        dec = Angle(**dict["dec"])
+        frame = EqFrame(list(dict["frame"].keys())[0])
+        catalogName = dict["catalogName"]
+        pm = ProperMotion(**dict["pm"])
+        return EqCoord(tag, ra, dec, frame, catalogName, pm)
