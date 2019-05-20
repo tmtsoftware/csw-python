@@ -1,6 +1,6 @@
-from csw_event.Parameter import Parameter
-from csw_event.Event import Event
-from csw_event.EventPublisher import EventPublisher
+from csw.Parameter import Parameter
+from csw.Event import Event
+from csw.EventPublisher import EventPublisher
 
 # Test publishing events using the Parameter and Event wrapper classes
 class TestPublisher2:

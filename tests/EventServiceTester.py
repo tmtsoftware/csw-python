@@ -1,9 +1,9 @@
 import unittest
 
-from csw_event.EventSubscriber import EventSubscriber
-from csw_event.EventPublisher import EventPublisher
-from csw_event.Parameter import Parameter
-from csw_event.Event import Event
+from csw.EventSubscriber import EventSubscriber
+from csw.EventPublisher import EventPublisher
+from csw.Parameter import Parameter
+from csw.Event import Event
 
 
 class EventPublisherTester(unittest.TestCase):

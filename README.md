@@ -23,7 +23,7 @@ You can install the `tmtpycsw` package with pip3 (or pip for python3):
 To subscribe to an event with the key "test.assembly.myAssemblyEvent":
 
 ```python
-from csw_event.EventSubscriber import EventSubscriber
+from csw.EventSubscriber import EventSubscriber
 
 
 # Test subscribing to events
@@ -49,9 +49,9 @@ class TestSubscriber3:
 To publish an event (with various types of parameters):
 
 ```python
-from csw_event.Parameter import Parameter, Struct
-from csw_event.Event import Event
-from csw_event.EventPublisher import EventPublisher
+from csw.Parameter import Parameter, Struct
+from csw.Event import Event
+from csw.EventPublisher import EventPublisher
 
 
 # Test publishing events

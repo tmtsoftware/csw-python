@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import List
 from cbor2 import *
 
-from csw_event.Parameter import Parameter
-from csw_event.EventTime import EventTime
+from csw.Parameter import Parameter
+from csw.EventTime import EventTime
 
 
 @dataclass(frozen=True)
@@ -42,7 +42,7 @@ class Event:
 
     def serialize(self):
         """
-        :return: serialized value to be encoded to CBOR
+        :return: dictionary to be encoded to CBOR
         """
         return {self.eventType: {
             'eventId': self.eventId,

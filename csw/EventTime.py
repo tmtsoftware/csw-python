@@ -1,5 +1,5 @@
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass(frozen=True)
@@ -14,10 +14,7 @@ class EventTime:
         """
         :return: a dictionary that can be serialized to CBOR
         """
-        return {
-            'seconds': self.seconds,
-            'nanos': self.nanos
-        }
+        return asdict(self)
 
     @staticmethod
     def deserialize(obj):

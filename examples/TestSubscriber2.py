@@ -1,4 +1,4 @@
-from csw_event.EventSubscriber import EventSubscriber
+from csw.EventSubscriber import EventSubscriber
 
 
 # Test subscribing to events

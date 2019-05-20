@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 from typing import List
 
@@ -25,12 +25,7 @@ class Parameter:
             items = self.items
         else:
             items = list(map(lambda p: Parameter.serializeParamValue(self.keyType, p), self.items))
-        return {
-            'keyName': self.keyName,
-            'keyType': self.keyType,
-            'items': items,
-            'units': self.units
-        }
+        return asdict(self)
 
     @staticmethod
     def serializeParamValue(keyType, param):
@@ -38,7 +33,7 @@ class Parameter:
         Internal recursive method that handles StructKey types
         :param keyType: parameter's key type
         :param param: parameter value, which might be a primitive type or another param for Struct types
-        :return: param value, or a list of maps if keytype is StructKey
+        :return: param value, or a dictionary if keytype is StructKey
         """
         if keyType == "StructKey":
             return param.serialize()
@@ -84,7 +79,7 @@ class Struct:
 
     def serialize(self):
         """
-        :return: a list that can be serialized to CBOR
+        :return: a dictionary that can be serialized to CBOR
         """
         return {"paramSet" : list(map(lambda p: p.serialize(), self.paramSet))}
 
