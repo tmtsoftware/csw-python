@@ -21,7 +21,7 @@ class EventTime:
         """
         Returns an EventTime for the given CBOR object.
         """
-        return EventTime(obj['seconds'], obj['nanos'])
+        return EventTime(**obj)
 
     @staticmethod
     def fromSystem():

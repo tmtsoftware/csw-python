@@ -42,7 +42,7 @@ class Angle:
         """
         Returns an Angle for the given (decoded) CBOR object.
         """
-        return Angle(obj['uas'])
+        return Angle(**obj)
 
 
 @dataclass(frozen=True)
