@@ -55,7 +55,7 @@ class Event:
     def isInvalid(self):
         return self.eventId == "-1"
 
-    def get(self, keyName):
+    def get(self, keyName: str):
         """
         Gets the parameter with the given name, or else returns None
         :param str keyName: parameter name
@@ -65,7 +65,7 @@ class Event:
             if p.keyName == keyName:
                 return p
 
-    def exists(self, keyName):
+    def exists(self, keyName: str):
         """
         Returns true if the parameter with the given name is present in the event
         :param str keyName: parameter name

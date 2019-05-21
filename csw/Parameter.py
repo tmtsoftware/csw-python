@@ -2,6 +2,9 @@ from dataclasses import dataclass
 
 from typing import List
 
+from csw.Coords import Coord
+
+coordTypes = {"CoordKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey"}
 
 @dataclass
 class Parameter:
@@ -30,14 +33,14 @@ class Parameter:
         }
 
     @staticmethod
-    def paramValueOrDict(keyType, param):
+    def paramValueOrDict(keyType: str, param):
         """
         Internal recursive method that handles StructKey types
         :param keyType: parameter's key type
         :param param: parameter value, which might be a primitive type or another param for Struct types
         :return: simple param value, or a dictionary if keytype is StructKey
         """
-        if keyType in {"StructKey", "CoordKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey"}:
+        if keyType in coordTypes.union({"StructKey"}):
             return param.asDict()
         else:
             return param
@@ -52,11 +55,13 @@ class Parameter:
         """
         if keyType == "StructKey":
             return Struct.fromDict(obj)
+        elif keyType in coordTypes:
+            return Coord.fromDict(obj)
         else:
             return obj
 
     @staticmethod
-    def fromDict(obj):
+    def fromDict(obj: dict):
         """
         Returns a Parameter for the given CBOR object.
         """
@@ -83,5 +88,5 @@ class Struct:
         return {"paramSet" : list(map(lambda p: p.asDict(), self.paramSet))}
 
     @staticmethod
-    def fromDict(obj):
+    def fromDict(obj: dict):
         return Struct(list(map(lambda p: Parameter.fromDict(p), obj['paramSet'])))

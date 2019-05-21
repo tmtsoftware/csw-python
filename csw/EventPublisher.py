@@ -1,3 +1,4 @@
+from csw.Event import Event
 from csw.RedisConnector import RedisConnector
 from cbor2 import *
 
@@ -7,7 +8,7 @@ class EventPublisher:
     def __init__(self):
         self.__redis = RedisConnector()
 
-    def publish(self, event):
+    def publish(self, event: Event):
         """
         Publish an event to the Event Service
 

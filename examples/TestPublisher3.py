@@ -1,4 +1,4 @@
-from csw.Coords import EqCoord, Angle, EqFrame, ProperMotion
+from csw.Coords import EqCoord, Angle, EqFrame, ProperMotion, SolarSystemCoord, SolarSystemObject, Tag
 from csw.Parameter import Parameter, Struct
 from csw.Event import Event
 from csw.EventPublisher import EventPublisher
@@ -25,8 +25,9 @@ class TestPublisher3:
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
 
-        coordsParam = Parameter("EqCoordParam", "CoordKey",
-                                [EqCoord(ra=Angle(180), frame=EqFrame("FK5"), dec=Angle(32), pm=ProperMotion(0.5, 2.33))])
+        eqCoord = EqCoord(ra=Angle(180), frame=EqFrame.FK5, dec=Angle(32), pm=ProperMotion(0.5, 2.33))
+        solarSystemCoord = SolarSystemCoord(Tag("BASE"), SolarSystemObject.Venus)
+        coordsParam = Parameter("EqCoordParam", "CoordKey", [eqCoord, solarSystemCoord])
 
         structParam = Parameter("MyStruct", "StructKey", [Struct(
             [coordsParam, intParam, floatParam, longParam, shortParam, booleanParam, intArrayParam, floatArrayParam,

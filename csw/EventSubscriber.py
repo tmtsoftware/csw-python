@@ -9,29 +9,29 @@ class EventSubscriber:
         self.__redis = RedisConnector()
 
     @staticmethod
-    def __handle_callback(message, callback):
+    def __handleCallback(message: dict, callback):
         data = message['data']
         event = Event.fromDict(data)
         callback(event)
 
-    def subscribe(self, event_key_list, callback):
+    def subscribe(self, eventKeyList: list, callback):
         """
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
-        :param list event_key_list: list of event key (Strings) to subscribe to
+        :param list eventKeyList: list of event key (Strings) to subscribe to
         :param callback: function to be called when event updates. Should take Event and return void
         :return: subscription thread.  use .stop() method to stop subscription
         """
-        return self.__redis.subscribeCallback(event_key_list, lambda message: self.__handle_callback(message, callback))
+        return self.__redis.subscribeCallback(eventKeyList, lambda message: self.__handleCallback(message, callback))
 
-    def get(self, event_key):
+    def get(self, eventKey: str):
         """
         Get an event from the Event Service
 
-        :param event_key: String specifying Redis key for event.  Should be source prefix + "." + event name.
+        :param eventKey: String specifying Redis key for event.  Should be source prefix + "." + event name.
         :return: Event obtained from Event Service, decoded into a Event
         """
-        data = self.__redis.get(event_key)
+        data = self.__redis.get(eventKey)
         event = Event.fromDict(data)
         return event

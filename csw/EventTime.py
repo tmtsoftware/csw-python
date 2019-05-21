@@ -14,7 +14,7 @@ class EventTime:
         return asdict(self)
 
     @staticmethod
-    def fromDict(obj):
+    def fromDict(obj: dict):
         return EventTime(**obj)
 
     @staticmethod
