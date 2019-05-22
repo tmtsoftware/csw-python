@@ -2,6 +2,8 @@
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
 
+_Note: See the `cbor-version` branch for the latest version, which uses CBOR instead of protobufs._
+
 ## CSW Event Service
 
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) makes use of classes generated from protobuf definitions, which define the structure of the events that are stored in Redis. Wrapper classes were added for convenience.
