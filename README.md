@@ -46,7 +46,8 @@ class TestSubscriber3:
 To publish an event (with various types of parameters):
 
 ```python
-from csw.Coords import EqCoord, Angle, EqFrame, ProperMotion
+from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
+    CometCoord, AltAzCoord
 from csw.Parameter import Parameter, Struct
 from csw.Event import Event
 from csw.EventPublisher import EventPublisher
@@ -73,8 +74,14 @@ class TestPublisher3:
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
 
-        coordsParam = Parameter("EqCoordParam", "CoordKey",
-                                [EqCoord(ra=Angle(180), frame=EqFrame("FK5"), dec=Angle(32), pm=ProperMotion(0.5, 2.33))])
+        eqCoord = EqCoord.make(ra="12:13:14.15 hours", dec="-30:31:32.3 deg", frame=EqFrame.FK5, pm=(0.5, 2.33))
+        solarSystemCoord = SolarSystemCoord.make("BASE", SolarSystemObject.Venus)
+        minorPlanetCoord = MinorPlanetCoord.make("GUIDER1", 2000, "90 deg", "2 deg", "100 deg", 1.4, 0.234,
+                                                 "220 deg")
+        cometCoord = CometCoord.make("BASE", 2000.0, "90 deg", "2 deg", "100 deg", 1.4, 0.234)
+        altAzCoord = AltAzCoord.make("301 deg", "42.5 deg")
+        coordsParam = Parameter("CoordParam", "CoordKey",
+                                [eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord, altAzCoord])
 
         structParam = Parameter("MyStruct", "StructKey", [Struct(
             [coordsParam, intParam, floatParam, longParam, shortParam, booleanParam, intArrayParam, floatArrayParam,
@@ -88,4 +95,9 @@ class TestPublisher3:
 
 Events that you create in python are by default `SystemEvent`s. You can pass an optional `eventType` parameter to create an `ObserveEvent` instead.
 Parameters are packed in a python `Parameter` class for convenience. A `Struct` class is used to hold any parameter values of type `Struct`.
+
+Coordinate parameter angle values, such as ra and dec all expect the same syntax as astropy's Angle class.
+The `make` methods are convenience factor methods, while the constructors expect actual Angle parameters.
+
+
 

@@ -1,8 +1,8 @@
 from dataclasses import dataclass, asdict
 from enum import Enum
-# import numpy as np
-# from astropy import units as u
-# from astropy.coordinates import XXXAngle as A
+from astropy.coordinates import Angle
+from astropy import units as u
+
 
 @dataclass
 class Tag:
@@ -12,40 +12,23 @@ class Tag:
     name: str
 
 
-# TODO: Use astropy's Angle class and convert to this one for compatibility?
-# Or implement methods and constants available in Scala class
+# noinspection PyUnresolvedReferences
 @dataclass
-class Angle:
+class _CswAngle:
     """
-    A wrapper for angle. Normally angle would be stored in double
-    as radians, but this introduces rounding errors.
+    A wrapper for Angle values (See the csw.params.core.models.Angle class).
+    Note: The Python API uses astropy Angle. This class is used internally for compatibility.
+    Normally Angle would be stored in double as radians, but this introduces rounding errors.
     This class stores value in microarc seconds to prevent rounding errors.
     """
     uas: int
 
-    #operators
-    # def __add__(self, a2):
-    #     return Angle(self.uas + a2.uas)
-    #
-    # def __sub__(self, a2):
-    #     return Angle(self.uas - a2.uas)
-    #
-    # def __mul__(self, a2):
-    #     return Angle(self.uas * a2.uas)
-    #
-    # def __div__(self, a2):
-    #     return Angle(self.uas / a2.uas)
-    #
-    # def __pos__(self):
-    #     return self
-    #
-    # def __neg__(self):
-    #     return Angle(-self.uas)
+    def toAngle(self):
+        return Angle(self.uas * u.uarcsec)
 
-    # @staticmethod
-    # def fromAstropyAngle(a):
-    #     astropy.
-    #
+    @staticmethod
+    def fromAngle(a: Angle):
+        return _CswAngle(int(a.uarcsec))
 
 
 class EqFrame(Enum):
@@ -71,24 +54,33 @@ class ProperMotion:
     pmy: float
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class EqCoord:
     """
     Represents equatorial coordinates (mirrors class of same name in the CSW Scala code).
     """
     tag: Tag = Tag("BASE")
-    ra: Angle = Angle(0)
-    dec: Angle = Angle(0)
+    ra: Angle = Angle("0 deg")
+    dec: Angle = Angle("0 deg")
     frame: EqFrame = EqFrame.ICRS
     catalogName: str = "none"
     pm: ProperMotion = ProperMotion(0.0, 0.0)
+
+    @staticmethod
+    def make(tag: str = "BASE", ra: any = "0 deg", dec: any = "0 deg", frame: EqFrame = EqFrame.ICRS, catalogName: str = "none", pm: tuple = (0.0, 0.0)):
+        """
+        Convenience factory method.
+        Note that the ra and dec args should be in a format accepted by astropy's Angle class.
+        """
+        return EqCoord(Tag(tag), Angle(ra), Angle(dec), frame, catalogName, ProperMotion(pm[0], pm[1]))
 
     def asDict(self):
         return {
             "EqCoord": {
                 "tag": asdict(self.tag),
-                "ra": asdict(self.ra),
-                "dec": asdict(self.dec),
+                "ra": asdict(_CswAngle.fromAngle(self.ra)),
+                "dec": asdict(_CswAngle.fromAngle(self.dec)),
                 "frame": {self.frame.name: {}},
                 "catalogName": self.catalogName,
                 "pm": asdict(self.pm)
@@ -99,8 +91,8 @@ class EqCoord:
     def fromDict(obj: dict):
         return EqCoord(
             tag=Tag(**obj["tag"]),
-            ra=Angle(**obj["ra"]),
-            dec=Angle(**obj["dec"]),
+            ra=_CswAngle(**obj["ra"]).toAngle().to(u.deg),
+            dec=_CswAngle(**obj["dec"]).toAngle().to(u.deg),
             frame=EqFrame[list(obj["frame"].keys())[0]],
             catalogName=obj["catalogName"],
             pm=ProperMotion(**obj["pm"]),
@@ -114,6 +106,10 @@ class SolarSystemCoord:
     """
     tag: Tag
     body: SolarSystemObject
+
+    @staticmethod
+    def make(tag: str, body: SolarSystemObject):
+        return SolarSystemCoord(Tag(tag), body)
 
     def asDict(self):
         return {
@@ -131,6 +127,7 @@ class SolarSystemCoord:
         )
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class MinorPlanetCoord:
     """
@@ -138,16 +135,36 @@ class MinorPlanetCoord:
     """
     tag: Tag
     epoch: float  # TT as a Modified Julian Date
-    inclination: Angle  # degrees
-    longAscendingNode: Angle  # degrees
-    argOfPerihelion: Angle  # degrees
+    inclination: Angle
+    longAscendingNode: Angle
+    argOfPerihelion: Angle
     meanDistance: float  # AU
     eccentricity: float
-    meanAnomaly: Angle  # degrees
+    meanAnomaly: Angle
+
+    @staticmethod
+    def make(tag: str, epoch: float, inclination: any, longAscendingNode: any, argOfPerihelion: any,
+             meanDistance: float, eccentricity: float, meanAnomaly: any):
+        """
+        Convenience factory method.
+        Note that the inclination, longAscendingNode, argOfPerihelion and meanAnomaly args
+        should be in a format accepted by astropy's Angle class.
+        """
+        return MinorPlanetCoord(Tag(tag), epoch, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
+                                meanDistance, eccentricity, Angle(meanAnomaly))
 
     def asDict(self):
         return {
-            "MinorPlanetCoord": asdict(self)
+            "MinorPlanetCoord": {
+                "tag": asdict(self.tag),
+                "epoch": self.epoch,
+                "inclination": asdict(_CswAngle.fromAngle(self.inclination)),
+                "longAscendingNode": asdict(_CswAngle.fromAngle(self.longAscendingNode)),
+                "argOfPerihelion": asdict(_CswAngle.fromAngle(self.argOfPerihelion)),
+                "meanDistance": self.meanDistance,
+                "eccentricity": self.eccentricity,
+                "meanAnomaly": asdict(_CswAngle.fromAngle(self.meanAnomaly))
+            }
         }
 
     @staticmethod
@@ -155,15 +172,16 @@ class MinorPlanetCoord:
         return MinorPlanetCoord(
             tag=Tag(**obj["tag"]),
             epoch=obj["epoch"],
-            inclination=Angle(**obj["inclination"]),
-            longAscendingNode=Angle(**obj["longAscendingNode"]),
-            argOfPerihelion=Angle(**obj["argOfPerihelion"]),
+            inclination=_CswAngle(**obj["inclination"]).toAngle().to(u.deg),
+            longAscendingNode=_CswAngle(**obj["longAscendingNode"]).toAngle().to(u.deg),
+            argOfPerihelion=_CswAngle(**obj["argOfPerihelion"]).toAngle().to(u.deg),
             meanDistance=obj["meanDistance"],
             eccentricity=obj["eccentricity"],
-            meanAnomaly=Angle(**obj["meanAnomaly"])
+            meanAnomaly=_CswAngle(**obj["meanAnomaly"]).toAngle().to(u.deg)
         )
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class CometCoord:
     """
@@ -171,15 +189,35 @@ class CometCoord:
     """
     tag: Tag
     epochOfPerihelion: float  # TT as a Modified Julian Date
-    inclination: Angle  # degrees
-    longAscendingNode: Angle  # degrees
-    argOfPerihelion: Angle  # degrees
+    inclination: Angle
+    longAscendingNode: Angle
+    argOfPerihelion: Angle
     perihelionDistance: float  # AU
     eccentricity: float
 
+    @staticmethod
+    def make(tag: str, epochOfPerihelion: float, inclination: any, longAscendingNode: any, argOfPerihelion: any,
+             perihelionDistance: float, eccentricity: float):
+        """
+        Convenience factory method.
+        Note that the inclination, longAscendingNode and argOfPerihelion args
+        should be in a format accepted by astropy's Angle class.
+        """
+        return CometCoord(Tag(tag), epochOfPerihelion, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
+                          perihelionDistance, eccentricity)
+
+
     def asDict(self):
         return {
-            "CometCoord": asdict(self)
+            "CometCoord": {
+                "tag": asdict(self.tag),
+                "epochOfPerihelion": self.epochOfPerihelion,
+                "inclination": asdict(_CswAngle.fromAngle(self.inclination)),
+                "longAscendingNode": asdict(_CswAngle.fromAngle(self.longAscendingNode)),
+                "argOfPerihelion": asdict(_CswAngle.fromAngle(self.argOfPerihelion)),
+                "perihelionDistance": self.perihelionDistance,
+                "eccentricity": self.eccentricity
+            }
         }
 
     @staticmethod
@@ -187,35 +225,47 @@ class CometCoord:
         return CometCoord(
             tag=Tag(**obj["tag"]),
             epochOfPerihelion=obj["epochOfPerihelion"],
-            inclination=Angle(**obj["inclination"]),
-            longAscendingNode=Angle(**obj["longAscendingNode"]),
-            argOfPerihelion=Angle(**obj["argOfPerihelion"]),
+            inclination=_CswAngle(**obj["inclination"]).toAngle().to(u.deg),
+            longAscendingNode=_CswAngle(**obj["longAscendingNode"]).toAngle().to(u.deg),
+            argOfPerihelion=_CswAngle(**obj["argOfPerihelion"]).toAngle().to(u.deg),
             perihelionDistance=obj["perihelionDistance"],
             eccentricity=obj["eccentricity"]
         )
 
 
-#  case class AltAzCoord(tag: Tag, alt: Angle, az: Angle) extends Coord {
+# noinspection PyUnresolvedReferences
 @dataclass
 class AltAzCoord:
     """
     Represents Alt-Az Coordinates (mirrors class of same name in the CSW Scala code).
     """
-    tag: Tag
-    alt: Angle  # degrees
-    az: Angle  # degrees
+    tag: Tag = Tag("BASE")
+    alt: Angle = Angle("0 deg")
+    az: Angle = Angle("0 deg")
+
+    @staticmethod
+    def make(tag: str = "BASE", alt: any = "0 deg", az: any = "0 deg"):
+        """
+        Convenience factory method.
+        Note that the alt and az args should be in a format accepted by astropy's Angle class.
+        """
+        return AltAzCoord(Tag(tag), Angle(alt), Angle(az))
 
     def asDict(self):
         return {
-            "AltAzCoord": asdict(self)
+            "AltAzCoord": {
+                "tag": asdict(self.tag),
+                "alt": asdict(_CswAngle.fromAngle(self.alt)),
+                "az": asdict(_CswAngle.fromAngle(self.az))
+            }
         }
 
     @staticmethod
     def fromDict(obj: dict):
         return AltAzCoord(
             tag=Tag(**obj["tag"]),
-            alt=Angle(**obj["alt"]),
-            az=Angle(**obj["az"]),
+            alt=_CswAngle(**obj["alt"]).toAngle().to(u.deg),
+            az=_CswAngle(**obj["az"]).toAngle().to(u.deg),
         )
 
 
