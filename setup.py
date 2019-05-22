@@ -5,12 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tmtpycsw",
-    version="0.0.3",
+    version="0.0.4",
     python_requires='>3.7.0',
     author="Allan Brighton",
     author_email="allanexus@gmail.com",
-    description="A python API for the CSW event service",
-    long_description="A python API for the CSW event service.",
+    description="A python API for TMT CSW services",
+    long_description="This package provides some Python APIs for TMT Common Software (CSW) services.",
     long_description_content_type="text/markdown",
     url="https://github.com/tmtsoftware/pycsw",
     packages=setuptools.find_packages(),
