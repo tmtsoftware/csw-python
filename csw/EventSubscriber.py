@@ -1,6 +1,5 @@
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-from cbor2 import *
 
 
 class EventSubscriber:
