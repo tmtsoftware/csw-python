@@ -10,7 +10,7 @@ from csw.EventTime import EventTime
 @dataclass
 class Event:
     """
-    Creates a Event.
+    Creates an Event that can be published to the event service.
 
     Args
         source (str): prefix representing source of the event
