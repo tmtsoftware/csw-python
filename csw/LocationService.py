@@ -22,6 +22,7 @@ class ConnectionType(Enum):
 class RegType(Enum):
     HttpRegistration = "HttpRegistration"
     TcpRegistration = "TcpRegistration"
+    # Akka registration not supported in Python
     # AkkaRegistration = "AkkaRegistration"
 
 
@@ -35,31 +36,9 @@ class ConnectionInfo:
 
 @dataclass_json
 @dataclass
-class AkkaLocation:
-    # type: str
-    connection: ConnectionInfo
-    uri: str
-    prefix: str
-    actorRef: any
-
-
-@dataclass_json
-@dataclass
-class TcpLocation:
-    # type: str
-    connection: ConnectionInfo
-    uri: str
-
-
-@dataclass_json
-@dataclass
-class HttpLocation:
-    # type: str
-    connection: ConnectionInfo
-    uri: str
-
-
 class Location:
+    connection: ConnectionInfo
+    uri: str
 
     @staticmethod
     def makeLocation(x: dict):
@@ -75,6 +54,23 @@ class Location:
         else:
             raise Exception("Invalid Location type: " + key)
 
+
+@dataclass_json
+@dataclass
+class AkkaLocation(Location):
+    prefix: str
+    actorRef: str
+
+
+@dataclass_json
+@dataclass
+class TcpLocation(Location):
+    pass
+
+@dataclass_json
+@dataclass
+class HttpLocation(Location):
+    pass
 
 @dataclass_json
 @dataclass
@@ -116,6 +112,10 @@ class LocationService:
             raise Exception(r.text)
 
     def list(self):
+        """
+        Lists all locations registered
+        :return: list of locations
+        """
         uri = self.baseUri + "list"
         r = requests.get(uri)
         if (not r.ok):
