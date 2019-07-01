@@ -1,7 +1,6 @@
 import uuid
 from dataclasses import dataclass
 from typing import List
-from cbor2 import *
 
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
@@ -32,10 +31,9 @@ class Event:
         """
         Returns a Event for the given CBOR object.
         """
-        m = loads(data)
-        eventType = next(iter(m))
+        eventType = next(iter(data))
         assert(eventType in {"SystemEvent", "ObserveEvent"})
-        obj = m[eventType]
+        obj = data[eventType]
         paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
         eventTime = EventTime.fromDict(obj['eventTime'])
         return Event(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'], eventType)

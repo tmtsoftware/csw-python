@@ -1,5 +1,6 @@
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
+from cbor2 import *
 
 
 class EventSubscriber:
@@ -10,7 +11,7 @@ class EventSubscriber:
     @staticmethod
     def __handleCallback(message: dict, callback):
         data = message['data']
-        event = Event.fromDict(data)
+        event = Event.fromDict(loads(data))
         callback(event)
 
     def subscribe(self, eventKeyList: list, callback):
@@ -32,5 +33,5 @@ class EventSubscriber:
         :return: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(eventKey)
-        event = Event.fromDict(data)
+        event = Event.fromDict(loads(data))
         return event

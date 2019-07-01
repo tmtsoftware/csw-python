@@ -151,8 +151,7 @@ class LocationService:
             raise Exception(r.text)
         return Location.makeLocation(json.loads(r.text))
 
-    # TODO: handle receiving SSE and calling callback function
-    # def track(self, name: str, componentType: ComponentType, connectionType: ConnectionType, callback: str):
+    # def track(self, name: str, componentType: ComponentType, connectionType: ConnectionType, callback):
     #     """
     #     Tracks (monitors) the given connection and calls the given function whenever the connection state changes
     #
@@ -166,8 +165,10 @@ class LocationService:
     #     r = requests.get(uri)
     #     if (not r.ok):
     #         raise Exception(r.text)
+    #     # TODO: handle receiving SSE and calling callback function
 
-    def __list__(self, uri: str):
+
+    def _list(self, uri: str):
         r = requests.get(uri)
         if (not r.ok):
             raise Exception(r.text)
@@ -180,7 +181,7 @@ class LocationService:
         :return: list of locations
         """
         uri = self.baseUri + "list"
-        return self.__list__(uri)
+        return self._list(uri)
 
     @dispatch(ComponentType)
     def list(self, componentType: ComponentType):
@@ -189,7 +190,7 @@ class LocationService:
         :return: list of locations
         """
         uri = self.baseUri + "list?componentType=" + componentType.value
-        return self.__list__(uri)
+        return self._list(uri)
 
     @dispatch(str)
     def list(self, hostname: str):
@@ -198,7 +199,7 @@ class LocationService:
         :return: list of locations
         """
         uri = self.baseUri + "list?hostname=" + hostname
-        return self.__list__(uri)
+        return self._list(uri)
 
     @dispatch(ConnectionType)
     def list(self, connectionType: ConnectionType):
@@ -207,7 +208,7 @@ class LocationService:
         :return: list of locations
         """
         uri = self.baseUri + "list?connectionType=" + connectionType.value
-        return self.__list__(uri)
+        return self._list(uri)
 
     def listByPrefix(self, prefix: str):
         """
@@ -215,7 +216,7 @@ class LocationService:
         :return: list of locations
         """
         uri = self.baseUri + "list?prefix=" + prefix
-        return self.__list__(uri)
+        return self._list(uri)
 
     # /**
     # * Registers a connection -> location in cluster
