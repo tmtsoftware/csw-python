@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from enum import Enum
+from multipledispatch import dispatch
 import requests
 import json
 
+
+# Python API for CSW Location Service
 
 class ComponentType(Enum):
     Assembly = "assembly"
@@ -45,11 +48,11 @@ class Location:
         # TODO: Handle AkkaLocation
         data = json.dumps(list(x.values())[0])
         key = list(x.keys())[0]
-        if (key == "HttpLocation"):
+        if key == "HttpLocation":
             return HttpLocation.schema().loads(data)
-        elif (key == "TcpLocation"):
+        elif key == "TcpLocation":
             return TcpLocation.schema().loads(data)
-        elif (key == "AkkaLocation"):
+        elif key == "AkkaLocation":
             return AkkaLocation.schema().loads(data)
         else:
             raise Exception("Invalid Location type: " + key)
@@ -67,10 +70,12 @@ class AkkaLocation(Location):
 class TcpLocation(Location):
     pass
 
+
 @dataclass_json
 @dataclass
 class HttpLocation(Location):
     pass
+
 
 @dataclass_json
 @dataclass
@@ -89,13 +94,15 @@ class LocationService:
     def register(self, regType: RegType, registration: Registration):
         """
         Registers a connection.
-        :param registration: the Registration holding connection and it's corresponding location to register with LocationService
+        :param regType: the type of service being reisgtered
+        :param registration: the Registration holding the connection and it's corresponding
+                location to register with LocationService
         :return:
         """
         jsonBody = '{"' + regType.value + '": ' + registration.to_json() + '}'
         uri = self.baseUri + "register"
         r = requests.post(uri, json=json.loads(jsonBody))
-        if (not r.ok):
+        if not r.ok:
             raise Exception(r.text)
         return registration.connection
 
@@ -108,19 +115,107 @@ class LocationService:
         jsonBody = connection.to_json()
         uri = self.baseUri + "unregister"
         r = requests.post(uri, json=json.loads(jsonBody))
-        if (not r.ok):
+        if not r.ok:
             raise Exception(r.text)
 
+    def find(self, name: str, componentType: ComponentType, connectionType: ConnectionType):
+        """
+        Resolves the location for a connection from the local cache
+        :param name: name of the component or service
+        :param componentType: type of the component or service
+        :param connectionType: the type of connection
+        :return: the Location
+        """
+        connectionName = f"{name}-{componentType.value}-{connectionType.value}"
+        uri = f"{self.baseUri}find/{connectionName}"
+        r = requests.get(uri)
+        if not r.ok:
+            raise Exception(r.text)
+        return Location.makeLocation(json.loads(r.text))
+
+    def resolve(self, name: str, componentType: ComponentType, connectionType: ConnectionType, withinSecs: str = "5"):
+        """
+        Resolves the location for a connection from the local cache, if not found waits for the event to arrive
+        within specified time limit
+
+        :param name: name of the component or service
+        :param componentType: type of the component or service
+        :param connectionType: the type of connection
+        :param within: max number of seconds to wait for the connection to be found
+        :return: the Location
+        """
+        connectionName = f"{name}-{componentType.value}-{connectionType.value}"
+        uri = f"{self.baseUri}resolve/{connectionName}?within={withinSecs}s"
+        r = requests.get(uri)
+        if (not r.ok):
+            raise Exception(r.text)
+        return Location.makeLocation(json.loads(r.text))
+
+    # TODO: handle receiving SSE and calling callback function
+    # def track(self, name: str, componentType: ComponentType, connectionType: ConnectionType, callback: str):
+    #     """
+    #     Tracks (monitors) the given connection and calls the given function whenever the connection state changes
+    #
+    #     :param name: name of the component or service
+    #     :param componentType: type of the component or service
+    #     :param connectionType: the type of connection
+    #     :param callback: function to call when connection state changes
+    #     """
+    #     connectionName = f"{name}-{componentType.value}-{connectionType.value}"
+    #     uri = f"{self.baseUri}resolve/{connectionName}"
+    #     r = requests.get(uri)
+    #     if (not r.ok):
+    #         raise Exception(r.text)
+
+    def __list__(self, uri: str):
+        r = requests.get(uri)
+        if (not r.ok):
+            raise Exception(r.text)
+        return list(map(lambda x: Location.makeLocation(x), json.loads(r.text)))
+
+    @dispatch()
     def list(self):
         """
         Lists all locations registered
         :return: list of locations
         """
         uri = self.baseUri + "list"
-        r = requests.get(uri)
-        if (not r.ok):
-            raise Exception(r.text)
-        return list(map(lambda x: Location.makeLocation(x), json.loads(r.text)))
+        return self.__list__(uri)
+
+    @dispatch(ComponentType)
+    def list(self, componentType: ComponentType):
+        """
+        Lists components of the given component type
+        :return: list of locations
+        """
+        uri = self.baseUri + "list?componentType=" + componentType.value
+        return self.__list__(uri)
+
+    @dispatch(str)
+    def list(self, hostname: str):
+        """
+        Lists all locations registered on the given hostname
+        :return: list of locations
+        """
+        uri = self.baseUri + "list?hostname=" + hostname
+        return self.__list__(uri)
+
+    @dispatch(ConnectionType)
+    def list(self, connectionType: ConnectionType):
+        """
+        Lists all locations registered with the given connection type
+        :return: list of locations
+        """
+        uri = self.baseUri + "list?connectionType=" + connectionType.value
+        return self.__list__(uri)
+
+    def listByPrefix(self, prefix: str):
+        """
+        Lists all locations with the given prefix
+        :return: list of locations
+        """
+        uri = self.baseUri + "list?prefix=" + prefix
+        return self.__list__(uri)
 
     # /**
     # * Registers a connection -> location in cluster
