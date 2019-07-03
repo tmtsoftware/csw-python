@@ -6,6 +6,7 @@ from csw.Coords import Coord
 
 coordTypes = {"CoordKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey"}
 
+
 @dataclass
 class Parameter:
     """
@@ -19,9 +20,10 @@ class Parameter:
     items: object
     units: str = "NoUnits"
 
+    # noinspection PyTypeChecker
     def asDict(self):
         # Note that bytes are stored in a byte string (b'...') instead of a list or array
-        if (self.keyType == "ByteKey"):
+        if self.keyType == "ByteKey":
             items = self.items
         else:
             items = list(map(lambda p: Parameter.paramValueOrDict(self.keyType, p), self.items))
@@ -66,7 +68,7 @@ class Parameter:
         Returns a Parameter for the given CBOR object.
         """
         keyType = obj['keyType']
-        if (keyType == "ByteKey"):
+        if keyType == "ByteKey":
             items = obj['items']
         else:
             items = list(map(lambda p: Parameter.paramValueFromDict(keyType, p), obj['items']))
@@ -85,7 +87,7 @@ class Struct:
     paramSet: List[Parameter]
 
     def asDict(self):
-        return {"paramSet" : list(map(lambda p: p.asDict(), self.paramSet))}
+        return {"paramSet": list(map(lambda p: p.asDict(), self.paramSet))}
 
     @staticmethod
     def fromDict(obj: dict):

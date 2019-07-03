@@ -68,7 +68,8 @@ class EqCoord:
     pm: ProperMotion = ProperMotion(0.0, 0.0)
 
     @staticmethod
-    def make(tag: str = "BASE", ra: any = "0 deg", dec: any = "0 deg", frame: EqFrame = EqFrame.ICRS, catalogName: str = "none", pm: tuple = (0.0, 0.0)):
+    def make(tag: str = "BASE", ra: any = "0 deg", dec: any = "0 deg", frame: EqFrame = EqFrame.ICRS,
+             catalogName: str = "none", pm: tuple = (0.0, 0.0)):
         """
         Convenience factory method.
         Note that the ra and dec args should be in a format accepted by astropy's Angle class.
@@ -203,9 +204,9 @@ class CometCoord:
         Note that the inclination, longAscendingNode and argOfPerihelion args
         should be in a format accepted by astropy's Angle class.
         """
-        return CometCoord(Tag(tag), epochOfPerihelion, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
+        return CometCoord(Tag(tag), epochOfPerihelion, Angle(inclination), Angle(longAscendingNode),
+                          Angle(argOfPerihelion),
                           perihelionDistance, eccentricity)
-
 
     def asDict(self):
         return {

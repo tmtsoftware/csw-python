@@ -1,4 +1,4 @@
-from csw.CommandResponse import Completed, SubmitResponse, CompletedWithResult, Result, Invalid, MissingKeyIssue, Error
+from csw.CommandResponse import SubmitResponse, CompletedWithResult, Result
 from csw.CommandServer import CommandServer, CommandHandler
 from csw.Parameter import Parameter
 from csw.Setup import Setup
@@ -13,9 +13,9 @@ class MyCommandHandler(CommandHandler):
         """
         n = len(setup.paramSet)
         print(f"MyCommandHandler Received setup {str(setup)} with {n} params")
-        filter = setup.get("filter").items[0]
+        filt = setup.get("filter").items[0]
         encoder = setup.get("encoder").items[0]
-        print(f"filter = {filter}, encoder = {encoder}")
+        print(f"filter = {filt}, encoder = {encoder}")
 
         # --- Example return values ---
 
@@ -27,7 +27,6 @@ class MyCommandHandler(CommandHandler):
 
         return CompletedWithResult(setup.runId, Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])]))
 
-
     def onOneway(self, setup: Setup):
         """
         Overrides the base class onOneway method to handle Submit messages from a CSW component.
@@ -36,9 +35,10 @@ class MyCommandHandler(CommandHandler):
         """
         n = len(setup.paramSet)
         print(f"MyCommandHandler Received oneway {str(setup)} with {n} params")
-        filter = setup.get("filter").items[0]
+        filt = setup.get("filter").items[0]
         encoder = setup.get("encoder").items[0]
-        print(f"filter = {filter}, encoder = {encoder}")
+        print(f"filter = {filt}, encoder = {encoder}")
+
 
 # noinspection PyTypeChecker
 commandServer = CommandServer("pycswTest", MyCommandHandler)

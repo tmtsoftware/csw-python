@@ -26,7 +26,7 @@ class CommandHandler(BaseHTTPRequestHandler):
         data = self.rfile.read(contentLength)
         setup = Setup.fromDict(loads(data))
 
-        if (self.path == '/submit'):
+        if self.path == '/submit':
             commandResponse = self.onSubmit(setup)
             responseDict = {str(commandResponse.__class__.__name__): commandResponse.asDict()}
             responseData = dumps(responseDict)
@@ -39,6 +39,7 @@ class CommandHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'application/octet-stream')
             self.end_headers()
+
 
 class CommandServer:
     """

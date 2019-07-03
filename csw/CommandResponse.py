@@ -47,6 +47,7 @@ class Error(SubmitResponse):
             'message': self.message
         }
 
+
 @dataclass
 class Locked(SubmitResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""

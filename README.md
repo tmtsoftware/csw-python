@@ -8,6 +8,14 @@ Note: Python version 3.7 or greater is required.
 
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
 Python wrapper classes were added for convenience.
+You can publish events as well as subscribe to events in Python. See the examples directory for some code examples.
+
+## Command Service API
+
+The `TestCommandServer` class lets you start an HTTP server that will accept CSW Setup commands.
+By overriding the `onSetup` and `onOneway` methods, you can handle commands being sent from a CSW component in Python code
+and return a SubmitResponse to the component. The messages are serialized using CBOR in the same way as for events.
+See the `examples/TestCommandServer` class for a code example.
 
 ## Installation
 
@@ -99,5 +107,54 @@ Parameters are packed in a python `Parameter` class for convenience. A `Struct` 
 Coordinate parameter angle values, such as ra and dec all expect the same syntax as astropy's Angle class.
 The `make` methods are convenience factor methods, while the constructors expect actual Angle parameters.
 
+## Command Server Example
+
+The following example shows how to start an HTTP command server. The default port is 8082, but can be passed as a parameter to
+the CommandServer class.
+
+```python
+from csw.CommandResponse import SubmitResponse, CompletedWithResult, Result
+from csw.CommandServer import CommandServer, CommandHandler
+from csw.Parameter import Parameter
+from csw.Setup import Setup
 
 
+class MyCommandHandler(CommandHandler):
+    def onSubmit(self, setup: Setup) -> SubmitResponse:
+        """
+        Overrides the base class onSubmit method to handle Submit messages from a CSW component
+        :param setup: contains the Submit command from CSW
+        :return: a subclass of SubmitResponse that is serialized and passed back to the CSW component
+        """
+        n = len(setup.paramSet)
+        print(f"MyCommandHandler Received setup {str(setup)} with {n} params")
+        filt = setup.get("filter").items[0]
+        encoder = setup.get("encoder").items[0]
+        print(f"filter = {filt}, encoder = {encoder}")
+
+        # --- Example return values ---
+
+        # return Completed(setup.runId)
+
+        # return Error(setup.runId, "There is a problem ...")
+
+        # return Invalid(setup.runId, MissingKeyIssue("Missing required key XXX"))
+
+        return CompletedWithResult(setup.runId, Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])]))
+
+    def onOneway(self, setup: Setup):
+        """
+        Overrides the base class onOneway method to handle Submit messages from a CSW component.
+        No response os required.
+        :param setup: contains the Submit command from CSW
+        """
+        n = len(setup.paramSet)
+        print(f"MyCommandHandler Received oneway {str(setup)} with {n} params")
+        filt = setup.get("filter").items[0]
+        encoder = setup.get("encoder").items[0]
+        print(f"filter = {filt}, encoder = {encoder}")
+
+
+commandServer = CommandServer("pycswTest", MyCommandHandler)
+
+```
