@@ -33,9 +33,11 @@ class Setup:
         """
         Returns a Event for the given CBOR object.
         """
-        key = next(iter(data))
-        assert(key == "Setup")
-        obj = data[key]
+        # key = next(iter(data))
+        # print("XXX key = " + key)
+        # assert(key == "Setup")
+        # obj = data[key]
+        obj = data
         runId = obj['runId']
         source = obj['source']
         commandName = obj['commandName']
@@ -55,3 +57,23 @@ class Setup:
             'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }}
 
+    def get(self, keyName: str):
+        """
+        Gets the parameter with the given name, or else returns None
+        :param str keyName: parameter name
+        :return: the parameter, if found
+        """
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def exists(self, keyName: str):
+        """
+        Returns true if the parameter with the given name is present
+        :param str keyName: parameter name
+        :return: true if the parameter is found
+        """
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return True
+        return False
