@@ -8,6 +8,10 @@ from csw.Setup import Setup
 
 
 class CommandHandler(BaseHTTPRequestHandler):
+    """
+    Abstract base class for handling CSW commands.
+    Subclasses should override onSubmit() and/or onOneway() to implement the behavior for those commands.
+    """
 
     def do_GET(self):
         self.send_response(400)
@@ -52,7 +56,6 @@ class CommandServer:
     """
 
     def __init__(self, name: str, handler: CommandHandler, port: int = 8082):
-        # handler = CommandHandler
         locationService = LocationService()
         connection = ConnectionInfo(name, ComponentType.Service.value, ConnectionType.HttpType.value)
         reg = Registration(port, connection)
