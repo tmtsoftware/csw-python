@@ -5,10 +5,10 @@ from csw.Parameter import Parameter
 
 
 @dataclass
-class SubmitResponse:
+class CommandResponse:
     """
-    SubmitResponse is returned by Submit message which calls the onSubmit handler
-    Responses returned can be Invalid, Started, Completed, CompletedWithResult, Error, Cancelled, Locked
+    Type of a response to a command (submit, oneway or validate).
+    Note that oneway and validate responses are limited to Accepted, Invalid or Locked.
     """
     runId: str
 
@@ -29,19 +29,25 @@ class SubmitResponse:
 
 
 @dataclass
-class Completed(SubmitResponse):
+class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
     pass
 
 
 @dataclass
-class Cancelled(SubmitResponse):
+class Cancelled(CommandResponse):
     """Represents a negative response that describes the cancellation of command"""
     pass
 
 
 @dataclass
-class Error(SubmitResponse):
+class Accepted(CommandResponse):
+    """Represents a final response stating acceptance of a command received"""
+    pass
+
+
+@dataclass
+class Error(CommandResponse):
     """Represents a negative response that describes an error in executing the command"""
     message: str
 
@@ -63,7 +69,7 @@ class Error(SubmitResponse):
 
 
 @dataclass
-class Locked(SubmitResponse):
+class Locked(CommandResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
     message: str
 
@@ -85,7 +91,7 @@ class Locked(SubmitResponse):
 
 
 @dataclass
-class Started(SubmitResponse):
+class Started(CommandResponse):
     """Represents an intermediate response stating a long running command has been started"""
     message: str
 
@@ -124,7 +130,7 @@ class Result:
 
 
 @dataclass
-class CompletedWithResult(SubmitResponse):
+class CompletedWithResult(CommandResponse):
     """Represents a positive response stating completion of command"""
     result: Result
 
@@ -220,7 +226,7 @@ class OtherIssue(CommandIssue):
 
 
 @dataclass
-class Invalid(SubmitResponse):
+class Invalid(CommandResponse):
     issue: CommandIssue
 
     def asDict(self, flat: bool):
