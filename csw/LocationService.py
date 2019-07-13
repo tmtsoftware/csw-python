@@ -1,3 +1,4 @@
+from typing import List
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from enum import Enum
@@ -5,8 +6,9 @@ from multipledispatch import dispatch
 import requests
 import json
 
-
 # Python API for CSW Location Service
+from openpyxl.pivot.table import Location
+
 
 class ComponentType(Enum):
     Assembly = "assembly"
@@ -44,10 +46,10 @@ class Location:
     uri: str
 
     @staticmethod
-    def makeLocation(x: dict):
-        # TODO: Handle AkkaLocation
-        data = json.dumps(list(x.values())[0])
-        key = list(x.keys())[0]
+    def makeLocation(obj: dict) -> Location:
+        data = json.dumps(list(obj.values())[0])
+        key = list(obj.keys())[0]
+        print(f"XXXXXXX makeLocation: obj = {str(obj)}, data = {str(data)}, key = {str(key)}")
         if key == "HttpLocation":
             return HttpLocation.schema().loads(data)
         elif key == "TcpLocation":
@@ -89,9 +91,9 @@ class Registration:
 
 
 class LocationService:
-    baseUri = uri = "http://127.0.0.1:7654/location/"
+    baseUri = "http://127.0.0.1:7654/location/"
 
-    def register(self, regType: RegType, registration: Registration):
+    def register(self, regType: RegType, registration: Registration) -> ConnectionInfo:
         """
         Registers a connection.
         :param regType: the type of service being reisgtered
@@ -118,7 +120,7 @@ class LocationService:
         if not r.ok:
             raise Exception(r.text)
 
-    def find(self, name: str, componentType: ComponentType, connectionType: ConnectionType):
+    def find(self, name: str, componentType: ComponentType, connectionType: ConnectionType) -> Location:
         """
         Resolves the location for a connection from the local cache
         :param name: name of the component or service
@@ -133,7 +135,8 @@ class LocationService:
             raise Exception(r.text)
         return Location.makeLocation(json.loads(r.text))
 
-    def resolve(self, name: str, componentType: ComponentType, connectionType: ConnectionType, withinSecs: str = "5"):
+    def resolve(self, name: str, componentType: ComponentType, connectionType: ConnectionType,
+                withinSecs: str = "5") -> Location:
         """
         Resolves the location for a connection from the local cache, if not found waits for the event to arrive
         within specified time limit
@@ -168,14 +171,14 @@ class LocationService:
     #     # TODO: handle receiving SSE and calling callback function
 
     @staticmethod
-    def _list(uri: str):
+    def _list(uri: str) -> List[Location]:
         r = requests.get(uri)
         if not r.ok:
             raise Exception(r.text)
         return list(map(lambda x: Location.makeLocation(x), json.loads(r.text)))
 
     @dispatch()
-    def list(self):
+    def list(self) -> List[Location]:
         """
         Lists all locations registered
         :return: list of locations
@@ -184,7 +187,7 @@ class LocationService:
         return self._list(uri)
 
     @dispatch(ComponentType)
-    def list(self, componentType: ComponentType):
+    def list(self, componentType: ComponentType) -> List[Location]:
         """
         Lists components of the given component type
         :return: list of locations
@@ -193,7 +196,7 @@ class LocationService:
         return self._list(uri)
 
     @dispatch(str)
-    def list(self, hostname: str):
+    def list(self, hostname: str) -> List[Location]:
         """
         Lists all locations registered on the given hostname
         :return: list of locations
@@ -202,7 +205,7 @@ class LocationService:
         return self._list(uri)
 
     @dispatch(ConnectionType)
-    def list(self, connectionType: ConnectionType):
+    def list(self, connectionType: ConnectionType) -> List[Location]:
         """
         Lists all locations registered with the given connection type
         :return: list of locations
@@ -210,7 +213,7 @@ class LocationService:
         uri = self.baseUri + "list?connectionType=" + connectionType.value
         return self._list(uri)
 
-    def listByPrefix(self, prefix: str):
+    def listByPrefix(self, prefix: str) -> List[Location]:
         """
         Lists all locations with the given prefix
         :return: list of locations

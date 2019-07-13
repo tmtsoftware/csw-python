@@ -1,7 +1,7 @@
 from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
     CometCoord, AltAzCoord
 from csw.Parameter import Parameter, Struct
-from csw.Event import Event
+from csw.Event import SystemEvent
 from csw.EventPublisher import EventPublisher
 
 
@@ -41,7 +41,7 @@ class TestPublisher3:
 
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
-        event = Event("test.assembly", "myAssemblyEvent", paramSet)
+        event = SystemEvent("test.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 
 

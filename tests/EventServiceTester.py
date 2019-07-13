@@ -34,7 +34,7 @@ class EventPublisherTester(unittest.TestCase):
     def callback(systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
-            print(f"    with values: {i.keyName}: {i.items}")
+            print(f"    with items: {i.keyName}: {i.items}")
         if systemEvent.isInvalid():
             print("    Invalid")
         if systemEvent.exists("assemblyEventValue"):

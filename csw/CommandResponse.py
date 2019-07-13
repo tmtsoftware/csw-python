@@ -12,13 +12,20 @@ class SubmitResponse:
     """
     runId: str
 
-    def asDict(self):
+    def asDict(self, flat: bool):
         """
-        :return: dictionary to be encoded to CBOR
+        :return: a dictionary corresponding to this object
         """
-        return {
+        d = {
             'runId': self.runId,
         }
+        if flat:
+            d['type'] = self.__class__.__name__
+        else:
+            d = {
+                self.__class__.__name__: d
+            }
+        return d
 
 
 @dataclass
@@ -38,14 +45,21 @@ class Error(SubmitResponse):
     """Represents a negative response that describes an error in executing the command"""
     message: str
 
-    def asDict(self):
+    def asDict(self, flat: bool):
         """
-        :return: dictionary to be encoded to CBOR
+        :return: a dictionary corresponding to this object
         """
-        return {
+        d = {
             'runId': self.runId,
             'message': self.message
         }
+        if flat:
+            d['type'] = self.__class__.__name__
+        else:
+            d = {
+                self.__class__.__name__: d
+            }
+        return d
 
 
 @dataclass
@@ -53,11 +67,43 @@ class Locked(SubmitResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
     message: str
 
+    def asDict(self, flat: bool):
+        """
+        :return: a dictionary corresponding to this object
+        """
+        d = {
+            'runId': self.runId,
+            'message': self.message
+        }
+        if flat:
+            d['type'] = self.__class__.__name__
+        else:
+            d = {
+                self.__class__.__name__: d
+            }
+        return d
+
 
 @dataclass
 class Started(SubmitResponse):
     """Represents an intermediate response stating a long running command has been started"""
     message: str
+
+    def asDict(self, flat: bool):
+        """
+        :return: a dictionary corresponding to this object
+        """
+        d = {
+            'runId': self.runId,
+            'message': self.message
+        }
+        if flat:
+            d['type'] = self.__class__.__name__
+        else:
+            d = {
+                self.__class__.__name__: d
+            }
+        return d
 
 
 # --- CompletedWithResult ---
@@ -67,37 +113,14 @@ class Result:
     prefix: str
     paramSet: List[Parameter]
 
-    def asDict(self):
+    def asDict(self, flat: bool):
         """
-        :return: dictionary to be encoded to CBOR
+        :return: a dictionary corresponding to this object
         """
         return {
             'prefix': self.prefix,
-            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
+            'paramSet': list(map(lambda p: p.asDict(flat), self.paramSet))
         }
-
-
-# """
-# {
-#   "CompletedWithResult": {
-#     "runId": "0e537918-7272-4e10-b20f-82861d084873",
-#     "result": {
-#       "prefix": "wfos.prog.cloudcover",
-#       "paramSet": [
-#         {
-#           "keyName": "encoder",
-#           "keyType": "IntKey",
-#           "items": [
-#             20
-#           ],
-#           "units": "NoUnits"
-#         }
-#       ]
-#     }
-#   }
-# }
-#
-# """
 
 
 @dataclass
@@ -105,14 +128,21 @@ class CompletedWithResult(SubmitResponse):
     """Represents a positive response stating completion of command"""
     result: Result
 
-    def asDict(self):
+    def asDict(self, flat: bool):
         """
-        :return: dictionary to be encoded to CBOR
+        :return: a dictionary corresponding to this object
         """
-        return {
+        d = {
             'runId': self.runId,
-            'result': self.result.asDict()
+            'result': self.result.asDict(flat)
         }
+        if flat:
+            d['type'] = self.__class__.__name__
+        else:
+            d = {
+                self.__class__.__name__: d
+            }
+        return d
 
 
 # ---
@@ -189,36 +219,28 @@ class OtherIssue(CommandIssue):
     """A required Sequencer is not available"""
 
 
-# """
-# {
-#   "Invalid": {
-#     "runId": "7af2722e-3a92-4522-b7da-b1d063ddaf67",
-#     "issue": {
-#       "OtherIssue": {
-#         "reason": "test issue"
-#       }
-#     }
-#   }
-# }
-#
-# """
-
-
 @dataclass
 class Invalid(SubmitResponse):
     issue: CommandIssue
 
-    def asDict(self):
+    def asDict(self, flat: bool):
         """
-        :return: dictionary to be encoded to CBOR
+        :return: a dictionary for this object
         """
         return {
+            'type': self.__class__.__name__,
             'runId': self.runId,
             'issue': {
-                str(self.issue.__class__.__name__): {
-                    "reason": self.issue.reason
+                'type': self.issue.__class__.__name__,
+                "reason": self.issue.reason
+            }
+        } if flat else {
+            self.__class__.__name__: {
+                'runId': self.runId,
+                'issue': {
+                    self.issue.__class__.__name__: {
+                        "reason": self.issue.reason
+                    }
                 }
             }
         }
-
-# ---

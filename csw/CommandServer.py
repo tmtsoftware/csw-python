@@ -1,10 +1,10 @@
 import socketserver
 from http.server import BaseHTTPRequestHandler
-from cbor2 import *
+import json
 
 from csw.CommandResponse import SubmitResponse
+from csw.ControlCommand import ControlCommand
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
-from csw.Setup import Setup
 
 
 class CommandHandler(BaseHTTPRequestHandler):
@@ -19,29 +19,29 @@ class CommandHandler(BaseHTTPRequestHandler):
     def do_HEAD(self):
         self.send_response(400)
 
-    def onSubmit(self, setup: Setup) -> SubmitResponse:
+    def onSubmit(self, setup: ControlCommand) -> SubmitResponse:
         pass
 
-    def onOneway(self, setup: Setup):
+    def onOneway(self, setup: ControlCommand):
         pass
 
     def do_POST(self):
         contentLength = int(self.headers['Content-Length'])
         data = self.rfile.read(contentLength)
-        setup = Setup.fromDict(loads(data))
+        command = ControlCommand.fromDict(json.loads(data), flat=True)
 
-        if self.path == '/submit':
-            commandResponse = self.onSubmit(setup)
-            responseDict = {str(commandResponse.__class__.__name__): commandResponse.asDict()}
-            responseData = dumps(responseDict)
+        if self.path.endswith('/submit'):
+            commandResponse = self.onSubmit(command)
+            responseDict = commandResponse.asDict(flat=True)
+            responseData = json.dumps(responseDict)
             self.send_response(200)
-            self.send_header('Content-type', 'application/octet-stream')
+            self.send_header('Content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(responseData)
+            self.wfile.write(responseData.encode())
         else:
-            self.onOneway(setup)
+            self.onOneway(command)
             self.send_response(200)
-            self.send_header('Content-type', 'application/octet-stream')
+            self.send_header('Content-type', 'application/json')
             self.end_headers()
 
 
@@ -49,10 +49,6 @@ class CommandServer:
     """
     Creates an HTTP server that can receive CSW Setup commands and registers it with the Location Service,
     so that CSW components can locate it and send commands to it.
-
-    Test with curl example:
-        curl -d @./command.cbor -v -H "Content-Type: application/octet-stream" http://localhost:8082/submit
-        or: curl -d @./command.cbor -v -H "Content-Type: application/octet-stream" http://localhost:8082/oneway
     """
 
     def __init__(self, name: str, handler: CommandHandler, port: int = 8082):

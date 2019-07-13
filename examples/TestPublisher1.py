@@ -1,4 +1,4 @@
-from csw.Event import Event
+from csw.Event import SystemEvent
 from csw.EventPublisher import EventPublisher
 from csw.Parameter import Parameter
 
@@ -12,6 +12,6 @@ items = [42.0]
 param = Parameter(keyName, keyType, items)
 paramSet = [param]
 
-event = Event(source, eventName, paramSet)
+event = SystemEvent(source, eventName, paramSet)
 pub = EventPublisher()
 pub.publish(event)

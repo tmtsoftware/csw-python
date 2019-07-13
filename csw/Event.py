@@ -27,28 +27,43 @@ class Event:
     eventType: str = "SystemEvent"
 
     @staticmethod
-    def fromDict(data):
+    def fromDict(obj, flat: bool):
         """
-        Returns a Event for the given CBOR object.
+        Returns a Event for the given dict.
         """
-        eventType = next(iter(data))
-        assert(eventType in {"SystemEvent", "ObserveEvent"})
-        obj = data[eventType]
-        paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
+        if flat:
+            typ = obj['type']
+        else:
+            typ = next(iter(obj))
+            obj = obj[typ]
+        assert(typ in {"SystemEvent", "ObserveEvent"})
+        paramSet = list(map(lambda p: Parameter.fromDict(p, flat=False), obj['paramSet']))
         eventTime = EventTime.fromDict(obj['eventTime'])
-        return Event(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'], eventType)
+        if typ == 'SystemEvent':
+            return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
+        else:
+            return ObserveEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
 
-    def asDict(self):
+
+    def asDict(self, flat: bool):
         """
-        :return: dictionary to be encoded to CBOR
+        :return: a dictionary corresponding to this object
         """
-        return {self.eventType: {
+        d = {
             'eventId': self.eventId,
             'source': self.source,
             'eventName': self.eventName,
             'eventTime': self.eventTime.asDict(),
-            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
-        }}
+            'paramSet': list(map(lambda p: p.asDict(flat), self.paramSet))
+        }
+        if flat:
+            d['type'] = self.__class__.__name__
+        else:
+            d = {
+                self.__class__.__name__: d
+            }
+        return d
+
 
     def isInvalid(self):
         return self.eventId == "-1"
@@ -73,3 +88,12 @@ class Event:
             if p.keyName == keyName:
                 return True
         return False
+
+@dataclass
+class SystemEvent(Event):
+    pass
+
+
+@dataclass
+class ObserveEvent(Event):
+    pass

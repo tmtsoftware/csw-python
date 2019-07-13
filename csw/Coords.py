@@ -54,18 +54,57 @@ class ProperMotion:
     pmy: float
 
 
+@dataclass
+class Coord:
+    """
+    In Scala this is the base trait of the coordinate types.
+    If the key type is CoordKey, the value type can be any of the Coord subtypes.
+    The dict key gives the class name.
+    """
+    tag: Tag
+
+    @staticmethod
+    def fromDict(obj: dict, flat: bool):
+        switcher = {
+            "EqCoord": EqCoord,
+            "SolarSystemCoord": SolarSystemCoord,
+            "MinorPlanetCoord": MinorPlanetCoord,
+            "CometCoord": CometCoord,
+            "AltAzCoord": AltAzCoord
+        }
+        if flat:
+            typ = obj['type']
+            return switcher[typ].fromValueDict(obj)
+        else:
+            typ = next(iter(obj))
+            return switcher[typ].fromValueDict(obj[typ])
+
+    def asDict(self, flat: bool):
+        pass
+
+    # Differences in the way JSON and CBOR are encoded at the time of writing require
+    # different dict structures: If flat, include a 'type' key in the dict, otherwise use {type: {dict...}}
+    def _flatten(self, d: dict, flat: bool):
+        # if flat:
+        #     d['type'] = self.__class__.__name__
+        # else:
+        d = {
+            self.__class__.__name__: d
+        }
+        return d
+
+
 # noinspection PyUnresolvedReferences
 @dataclass
-class EqCoord:
+class EqCoord(Coord):
     """
     Represents equatorial coordinates (mirrors class of same name in the CSW Scala code).
     """
-    tag: Tag = Tag("BASE")
-    ra: Angle = Angle("0 deg")
-    dec: Angle = Angle("0 deg")
-    frame: EqFrame = EqFrame.ICRS
-    catalogName: str = "none"
-    pm: ProperMotion = ProperMotion(0.0, 0.0)
+    ra: Angle
+    dec: Angle
+    frame: EqFrame
+    catalogName: str
+    pm: ProperMotion
 
     @staticmethod
     def make(tag: str = "BASE", ra: any = "0 deg", dec: any = "0 deg", frame: EqFrame = EqFrame.ICRS,
@@ -76,65 +115,85 @@ class EqCoord:
         """
         return EqCoord(Tag(tag), Angle(ra), Angle(dec), frame, catalogName, ProperMotion(pm[0], pm[1]))
 
-    def asDict(self):
-        return {
-            "EqCoord": {
-                "tag": asdict(self.tag),
-                "ra": asdict(_CswAngle.fromAngle(self.ra)),
-                "dec": asdict(_CswAngle.fromAngle(self.dec)),
-                "frame": {self.frame.name: {}},
-                "catalogName": self.catalogName,
-                "pm": asdict(self.pm)
-            }
+    def asDict(self, flat: bool):
+        # d = {
+        #     "tag": asdict(self.tag),
+        #     "ra": asdict(_CswAngle.fromAngle(self.ra)),
+        #     "dec": asdict(_CswAngle.fromAngle(self.dec)),
+        #     "frame": {self.frame.name: {}},
+        #     "catalogName": self.catalogName,
+        #     "pm": asdict(self.pm)
+        # }
+        d = {
+            "tag": self.tag.name,
+            "ra": _CswAngle.fromAngle(self.ra).uas,
+            "dec": _CswAngle.fromAngle(self.dec).uas,
+            "frame": self.frame.name,
+            "catalogName": self.catalogName,
+            "pm": asdict(self.pm)
         }
+        return self._flatten(d, flat)
 
     @staticmethod
-    def fromDict(obj: dict):
+    def fromValueDict(obj: dict):
+        # return EqCoord(
+        #     tag=Tag(**obj["tag"]),
+        #     ra=_CswAngle(**obj["ra"]).toAngle().to(u.deg),
+        #     dec=_CswAngle(**obj["dec"]).toAngle().to(u.deg),
+        #     frame=EqFrame[list(obj["frame"].keys())[0]],
+        #     catalogName=obj["catalogName"],
+        #     pm=ProperMotion(**obj["pm"]),
+        # )
         return EqCoord(
-            tag=Tag(**obj["tag"]),
-            ra=_CswAngle(**obj["ra"]).toAngle().to(u.deg),
-            dec=_CswAngle(**obj["dec"]).toAngle().to(u.deg),
-            frame=EqFrame[list(obj["frame"].keys())[0]],
+            tag=Tag(obj["tag"]),
+            ra=_CswAngle(obj["ra"]).toAngle().to(u.deg),
+            dec=_CswAngle(obj["dec"]).toAngle().to(u.deg),
+            frame=EqFrame[obj["frame"]],
             catalogName=obj["catalogName"],
             pm=ProperMotion(**obj["pm"]),
         )
 
 
 @dataclass
-class SolarSystemCoord:
+class SolarSystemCoord(Coord):
     """
     Represents Solar System Coordinates (mirrors class of same name in the CSW Scala code).
     """
-    tag: Tag
     body: SolarSystemObject
 
     @staticmethod
     def make(tag: str, body: SolarSystemObject):
         return SolarSystemCoord(Tag(tag), body)
 
-    def asDict(self):
-        return {
-            "SolarSystemCoord": {
-                "tag": asdict(self.tag),
-                "body": {self.body.name: {}},
-            }
+    def asDict(self, flat: bool):
+        # d = {
+        #     "tag": asdict(self.tag),
+        #     "body": {self.body.name: {}},
+        # }
+        d = {
+            "tag": self.tag.name,
+            "body": self.body.name,
         }
+        return self._flatten(d, flat)
 
     @staticmethod
-    def fromDict(obj: dict):
+    def fromValueDict(obj: dict):
+        # return SolarSystemCoord(
+        #     tag=Tag(**obj["tag"]),
+        #     body=SolarSystemObject[list(obj["body"].keys())[0]]
+        # )
         return SolarSystemCoord(
-            tag=Tag(**obj["tag"]),
-            body=SolarSystemObject[list(obj["body"].keys())[0]]
+            tag=Tag(obj["tag"]),
+            body=SolarSystemObject[obj["body"]]
         )
 
 
 # noinspection PyUnresolvedReferences
 @dataclass
-class MinorPlanetCoord:
+class MinorPlanetCoord(Coord):
     """
     Represents Minor Planet Coordinates (mirrors class of same name in the CSW Scala code).
     """
-    tag: Tag
     epoch: float  # TT as a Modified Julian Date
     inclination: Angle
     longAscendingNode: Angle
@@ -154,41 +213,49 @@ class MinorPlanetCoord:
         return MinorPlanetCoord(Tag(tag), epoch, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
                                 meanDistance, eccentricity, Angle(meanAnomaly))
 
-    def asDict(self):
-        return {
-            "MinorPlanetCoord": {
-                "tag": asdict(self.tag),
-                "epoch": self.epoch,
-                "inclination": asdict(_CswAngle.fromAngle(self.inclination)),
-                "longAscendingNode": asdict(_CswAngle.fromAngle(self.longAscendingNode)),
-                "argOfPerihelion": asdict(_CswAngle.fromAngle(self.argOfPerihelion)),
-                "meanDistance": self.meanDistance,
-                "eccentricity": self.eccentricity,
-                "meanAnomaly": asdict(_CswAngle.fromAngle(self.meanAnomaly))
-            }
+    def asDict(self, flat: bool):
+        # d = {
+        #     "tag": asdict(self.tag),
+        #     "epoch": self.epoch,
+        #     "inclination": asdict(_CswAngle.fromAngle(self.inclination)),
+        #     "longAscendingNode": asdict(_CswAngle.fromAngle(self.longAscendingNode)),
+        #     "argOfPerihelion": asdict(_CswAngle.fromAngle(self.argOfPerihelion)),
+        #     "meanDistance": self.meanDistance,
+        #     "eccentricity": self.eccentricity,
+        #     "meanAnomaly": asdict(_CswAngle.fromAngle(self.meanAnomaly))
+        # }
+        d = {
+            "tag": self.tag.name,
+            "epoch": self.epoch,
+            "inclination": _CswAngle.fromAngle(self.inclination).uas,
+            "longAscendingNode": _CswAngle.fromAngle(self.longAscendingNode).uas,
+            "argOfPerihelion": _CswAngle.fromAngle(self.argOfPerihelion).uas,
+            "meanDistance": self.meanDistance,
+            "eccentricity": self.eccentricity,
+            "meanAnomaly": _CswAngle.fromAngle(self.meanAnomaly).uas
         }
+        return self._flatten(d, flat)
 
     @staticmethod
-    def fromDict(obj: dict):
+    def fromValueDict(obj: dict):
         return MinorPlanetCoord(
-            tag=Tag(**obj["tag"]),
+            tag=Tag(obj["tag"]),
             epoch=obj["epoch"],
-            inclination=_CswAngle(**obj["inclination"]).toAngle().to(u.deg),
-            longAscendingNode=_CswAngle(**obj["longAscendingNode"]).toAngle().to(u.deg),
-            argOfPerihelion=_CswAngle(**obj["argOfPerihelion"]).toAngle().to(u.deg),
+            inclination=_CswAngle(obj["inclination"]).toAngle().to(u.deg),
+            longAscendingNode=_CswAngle(obj["longAscendingNode"]).toAngle().to(u.deg),
+            argOfPerihelion=_CswAngle(obj["argOfPerihelion"]).toAngle().to(u.deg),
             meanDistance=obj["meanDistance"],
             eccentricity=obj["eccentricity"],
-            meanAnomaly=_CswAngle(**obj["meanAnomaly"]).toAngle().to(u.deg)
+            meanAnomaly=_CswAngle(obj["meanAnomaly"]).toAngle().to(u.deg)
         )
 
 
 # noinspection PyUnresolvedReferences
 @dataclass
-class CometCoord:
+class CometCoord(Coord):
     """
     Represents Comet Coordinates (mirrors class of same name in the CSW Scala code).
     """
-    tag: Tag
     epochOfPerihelion: float  # TT as a Modified Julian Date
     inclination: Angle
     longAscendingNode: Angle
@@ -208,27 +275,35 @@ class CometCoord:
                           Angle(argOfPerihelion),
                           perihelionDistance, eccentricity)
 
-    def asDict(self):
-        return {
-            "CometCoord": {
-                "tag": asdict(self.tag),
-                "epochOfPerihelion": self.epochOfPerihelion,
-                "inclination": asdict(_CswAngle.fromAngle(self.inclination)),
-                "longAscendingNode": asdict(_CswAngle.fromAngle(self.longAscendingNode)),
-                "argOfPerihelion": asdict(_CswAngle.fromAngle(self.argOfPerihelion)),
-                "perihelionDistance": self.perihelionDistance,
-                "eccentricity": self.eccentricity
-            }
+    def asDict(self, flat: bool):
+        # d = {
+        #     "tag": asdict(self.tag),
+        #     "epochOfPerihelion": self.epochOfPerihelion,
+        #     "inclination": asdict(_CswAngle.fromAngle(self.inclination)),
+        #     "longAscendingNode": asdict(_CswAngle.fromAngle(self.longAscendingNode)),
+        #     "argOfPerihelion": asdict(_CswAngle.fromAngle(self.argOfPerihelion)),
+        #     "perihelionDistance": self.perihelionDistance,
+        #     "eccentricity": self.eccentricity
+        # }
+        d = {
+            "tag": self.tag.name,
+            "epochOfPerihelion": self.epochOfPerihelion,
+            "inclination": _CswAngle.fromAngle(self.inclination).uas,
+            "longAscendingNode": _CswAngle.fromAngle(self.longAscendingNode).uas,
+            "argOfPerihelion": _CswAngle.fromAngle(self.argOfPerihelion).uas,
+            "perihelionDistance": self.perihelionDistance,
+            "eccentricity": self.eccentricity
         }
+        return self._flatten(d, flat)
 
     @staticmethod
-    def fromDict(obj: dict):
+    def fromValueDict(obj: dict):
         return CometCoord(
-            tag=Tag(**obj["tag"]),
+            tag=Tag(obj["tag"]),
             epochOfPerihelion=obj["epochOfPerihelion"],
-            inclination=_CswAngle(**obj["inclination"]).toAngle().to(u.deg),
-            longAscendingNode=_CswAngle(**obj["longAscendingNode"]).toAngle().to(u.deg),
-            argOfPerihelion=_CswAngle(**obj["argOfPerihelion"]).toAngle().to(u.deg),
+            inclination=_CswAngle(obj["inclination"]).toAngle().to(u.deg),
+            longAscendingNode=_CswAngle(obj["longAscendingNode"]).toAngle().to(u.deg),
+            argOfPerihelion=_CswAngle(obj["argOfPerihelion"]).toAngle().to(u.deg),
             perihelionDistance=obj["perihelionDistance"],
             eccentricity=obj["eccentricity"]
         )
@@ -236,11 +311,10 @@ class CometCoord:
 
 # noinspection PyUnresolvedReferences
 @dataclass
-class AltAzCoord:
+class AltAzCoord(Coord):
     """
     Represents Alt-Az Coordinates (mirrors class of same name in the CSW Scala code).
     """
-    tag: Tag = Tag("BASE")
     alt: Angle = Angle("0 deg")
     az: Angle = Angle("0 deg")
 
@@ -252,39 +326,23 @@ class AltAzCoord:
         """
         return AltAzCoord(Tag(tag), Angle(alt), Angle(az))
 
-    def asDict(self):
-        return {
-            "AltAzCoord": {
-                "tag": asdict(self.tag),
-                "alt": asdict(_CswAngle.fromAngle(self.alt)),
-                "az": asdict(_CswAngle.fromAngle(self.az))
-            }
+    def asDict(self, flat: bool):
+        # d = {
+        #     "tag": asdict(self.tag),
+        #     "alt": asdict(_CswAngle.fromAngle(self.alt)),
+        #     "az": asdict(_CswAngle.fromAngle(self.az))
+        # }
+        d = {
+            "tag": self.tag.name,
+            "alt": _CswAngle.fromAngle(self.alt).uas,
+            "az": _CswAngle.fromAngle(self.az).uas
         }
+        return self._flatten(d, flat)
 
     @staticmethod
-    def fromDict(obj: dict):
+    def fromValueDict(obj: dict):
         return AltAzCoord(
-            tag=Tag(**obj["tag"]),
-            alt=_CswAngle(**obj["alt"]).toAngle().to(u.deg),
-            az=_CswAngle(**obj["az"]).toAngle().to(u.deg),
+            tag=Tag(obj["tag"]),
+            alt=_CswAngle(obj["alt"]).toAngle().to(u.deg),
+            az=_CswAngle(obj["az"]).toAngle().to(u.deg),
         )
-
-
-class Coord:
-    """
-    In Scala this is the base trait of the coordinate types.
-    If the key type is CoordKey, the value type can be any of the Coord subtypes.
-    The dict key gives the class name.
-    """
-
-    @staticmethod
-    def fromDict(obj: dict):
-        switcher = {
-            "EqCoord": EqCoord,
-            "SolarSystemCoord": SolarSystemCoord,
-            "MinorPlanetCoord": MinorPlanetCoord,
-            "CometCoord": CometCoord,
-            "AltAzCoord": AltAzCoord
-        }
-        name = list(obj.keys())[0]
-        return switcher[name].fromDict(obj[name])

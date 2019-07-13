@@ -1,17 +1,23 @@
+import cbor2
+
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-from cbor2 import *
+from csw.LocationService import LocationService, ComponentType, ConnectionType
+from urllib.parse import urlparse
 
 
 class EventSubscriber:
 
     def __init__(self):
+        # loc = LocationService().find("EventServer", ComponentType.Service, ConnectionType.TcpType)
+        # uri = urlparse(loc.uri)
+        # self.__redis = RedisConnector(host=uri.hostname, port=uri.port)
         self.__redis = RedisConnector()
 
     @staticmethod
     def __handleCallback(message: dict, callback):
         data = message['data']
-        event = Event.fromDict(loads(data))
+        event = Event.fromDict(cbor2.loads(data), flat=False)
         callback(event)
 
     def subscribe(self, eventKeyList: list, callback):
@@ -33,5 +39,5 @@ class EventSubscriber:
         :return: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(eventKey)
-        event = Event.fromDict(loads(data))
+        event = Event.fromDict(cbor2.loads(data), flat=False)
         return event

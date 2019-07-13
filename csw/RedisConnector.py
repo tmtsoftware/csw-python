@@ -4,13 +4,10 @@ import redis
 class RedisConnector:
     """
     Events are posted to Redis. This is internal class used to access Redis.
-    (TODO: Use location service to get host and port)
     """
 
-    def __init__(self):
-        self.__redis = redis.Redis(
-            host='localhost',
-            port=6379)
+    def __init__(self, host: str = 'localhost', port: int = 6379):
+        self.__redis = redis.Redis(host=host, port=port)
         self.__redis_pubsub = self.__redis.pubsub()
 
     def close(self):
