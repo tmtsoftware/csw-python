@@ -17,14 +17,12 @@ class Event:
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
-        eventType (str): CSW event class: one of "SystemEvent", "ObserveEvent" (default: "SystemEvent")
     """
     source: str
     eventName: str
     paramSet: List[Parameter]
     eventTime: EventTime = EventTime.fromSystem()
     eventId: str = str(uuid.uuid4())
-    eventType: str = "SystemEvent"
 
     @staticmethod
     def fromDict(obj, flat: bool):
@@ -36,14 +34,13 @@ class Event:
         else:
             typ = next(iter(obj))
             obj = obj[typ]
-        assert(typ in {"SystemEvent", "ObserveEvent"})
+        assert (typ in {"SystemEvent", "ObserveEvent"})
         paramSet = list(map(lambda p: Parameter.fromDict(p, flat=False), obj['paramSet']))
         eventTime = EventTime.fromDict(obj['eventTime'])
         if typ == 'SystemEvent':
             return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
         else:
             return ObserveEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
-
 
     def asDict(self, flat: bool):
         """
@@ -63,7 +60,6 @@ class Event:
                 self.__class__.__name__: d
             }
         return d
-
 
     def isInvalid(self):
         return self.eventId == "-1"
@@ -88,6 +84,7 @@ class Event:
             if p.keyName == keyName:
                 return True
         return False
+
 
 @dataclass
 class SystemEvent(Event):
