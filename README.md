@@ -115,12 +115,12 @@ the CommandServer class.
 ```python
 from csw.CommandResponse import CommandResponse, CompletedWithResult, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted
-from csw.CommandServer import CommandServer, CommandHandler
+from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.Parameter import Parameter
 
 
-class MyCommandHandler(CommandHandler):
+class MyComponentHandlers(ComponentHandlers):
     def onSubmit(self, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class onSubmit method to handle commands from a CSW component
@@ -128,7 +128,7 @@ class MyCommandHandler(CommandHandler):
         :return: a subclass of CommandResponse that is serialized and passed back to the CSW component
         """
         n = len(command.paramSet)
-        print(f"MyCommandHandler Received setup {str(command)} with {n} params")
+        print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
         # filt = command.get("filter").items[0]
         # encoder = command.get("encoder").items[0]
         # print(f"filter = {filt}, encoder = {encoder}")
@@ -150,7 +150,7 @@ class MyCommandHandler(CommandHandler):
         :return: an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
         """
         n = len(command.paramSet)
-        print(f"MyCommandHandler Received oneway {str(command)} with {n} params")
+        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
         filt = command.get("filter").items[0]
         encoder = command.get("encoder").items[0]
         print(f"filter = {filt}, encoder = {encoder}")
@@ -165,5 +165,5 @@ class MyCommandHandler(CommandHandler):
         return Accepted(command.runId)
 
 # noinspection PyTypeChecker
-commandServer = CommandServer("pycswTest", MyCommandHandler)
+commandServer = CommandServer("pycswTest", MyComponentHandlers)
 ```

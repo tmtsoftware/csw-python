@@ -8,10 +8,11 @@ from csw.ControlCommand import ControlCommand
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
 
 
-class CommandHandler(BaseHTTPRequestHandler):
+class ComponentHandlers(BaseHTTPRequestHandler):
     """
     Abstract base class for handling CSW commands.
-    Subclasses can override onSubmit() and/or onOneway() to implement the behavior for those commands.
+    Subclasses can override methods like onSubmit, onOneway and validateCommand
+    to implement the behavior of the component.
     """
 
     def do_GET(self):
@@ -36,7 +37,7 @@ class CommandHandler(BaseHTTPRequestHandler):
         """
         pass
 
-    def validate(self, command: ControlCommand) -> CommandResponse:
+    def validateCommand(self, command: ControlCommand) -> CommandResponse:
         """
        Validates the given command
        :param command: contains the command
@@ -53,7 +54,7 @@ class CommandHandler(BaseHTTPRequestHandler):
         elif method == 'oneway':
             commandResponse = self.onOneway(command)
         else:
-            commandResponse = self.validate(command)
+            commandResponse = self.validateCommand(command)
         responseDict = commandResponse.asDict(flat=True)
         responseData = json.dumps(responseDict)
         self.send_response(200)
@@ -62,10 +63,17 @@ class CommandHandler(BaseHTTPRequestHandler):
         self.wfile.write(responseData.encode())
 
     def do_POST(self):
+        # Note: For compatibility with ESW, path has the form:
+        # /command/$componentType/$componentName/{submit,oneway,validate,$runId,current-state/subscribe}
+        # (The $runId variant correponds to commandService.queryFinal())
         method = ntpath.basename(self.path)
         if method in {'submit', 'oneway', 'validate'}:
             self._handleCommand(method)
+        elif method == "current-state/subscribe":
+            #TODO: subscribe to current state, respond with SSE connection
+            self.send_response(400)
         else:
+            # TODO: parse runId for queryFinal
             self.send_response(400)
 
 
@@ -75,7 +83,7 @@ class CommandServer:
     so that CSW components can locate it and send commands to it.
     """
 
-    def __init__(self, name: str, handler: CommandHandler, port: int = 8082):
+    def __init__(self, name: str, handler: ComponentHandlers, port: int = 8082):
         locationService = LocationService()
         connection = ConnectionInfo(name, ComponentType.Service.value, ConnectionType.HttpType.value)
         reg = Registration(port, connection)
