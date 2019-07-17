@@ -49,5 +49,6 @@ class MyComponentHandlers(ComponentHandlers):
         """
         return Accepted(command.runId)
 
+
 # noinspection PyTypeChecker
-commandServer = CommandServer("pycswTest", MyComponentHandlers)
+commandServer = CommandServer("pycswTest", MyComponentHandlers())
