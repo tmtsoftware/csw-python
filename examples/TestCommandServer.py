@@ -1,12 +1,21 @@
+import asyncio
+from asyncio import Task
+
 from csw.CommandResponse import CommandResponse, CompletedWithResult, Result, Completed, Invalid, MissingKeyIssue, \
-    Error, Accepted
+    Error, Accepted, Started
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.Parameter import Parameter
 
 
 class MyComponentHandlers(ComponentHandlers):
-    def onSubmit(self, command: ControlCommand) -> CommandResponse:
+
+    async def longRunningCommand(self, command: ControlCommand) -> CommandResponse:
+        await asyncio.sleep(5)
+        print("XXX Long running task completed")
+        return Completed(command.runId)
+
+    def onSubmit(self, command: ControlCommand) -> (CommandResponse, Task):
         """
         Overrides the base class onSubmit method to handle commands from a CSW component
         :param command: contains the ControlCommand from CSW
@@ -20,15 +29,20 @@ class MyComponentHandlers(ComponentHandlers):
 
         # --- Example return values ---
 
-        # return Completed(command.runId)
+        # return Completed(command.runId), None
 
-        # return Error(command.runId, "There is a problem ...")
+        # return Error(command.runId, "There is a problem ..."), None
 
-        # return Invalid(command.runId, MissingKeyIssue("Missing required key XXX"))
+        # return Invalid(command.runId, MissingKeyIssue("Missing required key XXX")), None
 
-        return CompletedWithResult(command.runId, Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])]))
+        # result = Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])])
+        # return CompletedWithResult(command.runId, result), None
 
-    def onOneway(self, command: ControlCommand):
+        # long running command
+        task = asyncio.create_task(self.longRunningCommand(command))
+        return Started(command.runId, "Long running task in progress..."), task
+
+    def onOneway(self, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class onOneway method to handle commands from a CSW component.
         :param command: contains the ControlCommand from CSW
@@ -41,7 +55,7 @@ class MyComponentHandlers(ComponentHandlers):
         print(f"filter = {filt}, encoder = {encoder}")
         return Accepted(command.runId)
 
-    def validateCommand(self, command: ControlCommand):
+    def validateCommand(self, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class validate method to verify that the given command is valid.
         :param command: contains the ControlCommand from CSW

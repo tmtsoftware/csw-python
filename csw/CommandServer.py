@@ -1,8 +1,11 @@
+from asyncio import Task
+
 from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 import atexit
 
+from csw.CommandResponseManager import CommandResponseManager
 from csw.ControlCommand import ControlCommand
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
 from csw.CommandResponse import CommandResponse, Accepted, Error
@@ -14,13 +17,16 @@ class ComponentHandlers:
     Subclasses can override methods to implement the behavior of the component.
     """
 
-    def onSubmit(self, command: ControlCommand) -> CommandResponse:
+    def onSubmit(self, command: ControlCommand) -> (CommandResponse, Task):
         """
         Handles the given setup command and returns a CommandResponse subclass
         :param command: contains the command
-        :return: a subclass of CommandResponse
+        :return: a pair: (subclass of CommandResponse, Task),
+        where the task can be None if the command response is final.
+        For long running commands, you can respond with Started(runId, "...") and a task that
+        completes the work in the background.
         """
-        return Error(command.runId, "Not implemented: submit command handler")
+        return Error(command.runId, "Not implemented: submit command handler"), None
 
     def onOneway(self, command: ControlCommand) -> CommandResponse:
         """
@@ -45,13 +51,18 @@ class CommandServer:
     so that CSW components can locate it and send commands to it.
     """
 
+    crm = CommandResponseManager()
+
     async def _handleCommand(self, request: Request) -> Response:
         method = request.match_info['method']
         if method in {'submit', 'oneway', 'validate'}:
             data = await request.json()
             command = ControlCommand.fromDict(data, flat=True)
             if method == 'submit':
-                commandResponse = self.handler.onSubmit(command)
+                commandResponse, task = self.handler.onSubmit(command)
+                if task is not None:
+                    self.crm.addTask(command.runId, task)
+                    print("A task is still running")
             elif method == 'oneway':
                 commandResponse = self.handler.onOneway(command)
             else:
@@ -62,8 +73,12 @@ class CommandServer:
             raise web.HTTPBadRequest()
 
     async def _handleQueryFinal(self, request: Request) -> Response:
-        # TODO: query final on runId
-        raise web.HTTPBadRequest()
+        runId = request.match_info['runId']
+        print("XXXX query final " + runId)
+        commandResponse = await self.crm.waitForTask(runId)
+        print("XXX result of long running command after await: " + str(commandResponse))
+        responseDict = commandResponse.asDict(flat=True)
+        return web.json_response(responseDict)
 
     async def _handleSubscribeCurrentState(self, request: Request) -> Response:
         # TODO: subscribe to current state, respond with SSE connection
