@@ -5,14 +5,13 @@ import atexit
 
 from csw.ControlCommand import ControlCommand
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
-from csw.CommandResponse import CommandResponse, Accepted
+from csw.CommandResponse import CommandResponse, Accepted, Error
 
 
 class ComponentHandlers:
     """
     Abstract base class for handling CSW commands.
-    Subclasses can override methods like onSubmit, onOneway and validateCommand
-    to implement the behavior of the component.
+    Subclasses can override methods to implement the behavior of the component.
     """
 
     def onSubmit(self, command: ControlCommand) -> CommandResponse:
@@ -21,7 +20,7 @@ class ComponentHandlers:
         :param command: contains the command
         :return: a subclass of CommandResponse
         """
-        pass
+        return Error(command.runId, "Not implemented: submit command handler")
 
     def onOneway(self, command: ControlCommand) -> CommandResponse:
         """
@@ -29,7 +28,7 @@ class ComponentHandlers:
         :param command: contains the command
         :return: a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)
         """
-        pass
+        return Error(command.runId, "Not implemented: oneway command handler")
 
     def validateCommand(self, command: ControlCommand) -> CommandResponse:
         """
@@ -42,7 +41,7 @@ class ComponentHandlers:
 
 class CommandServer:
     """
-    Creates an HTTP server that can receive CSW Setup commands and registers it with the Location Service,
+    Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
     so that CSW components can locate it and send commands to it.
     """
 
