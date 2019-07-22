@@ -25,41 +25,33 @@ class Event:
     eventId: str = str(uuid.uuid4())
 
     @staticmethod
-    def fromDict(obj, flat: bool):
+    def fromDict(obj):
         """
         Returns a Event for the given dict.
         """
-        if flat:
-            typ = obj['type']
-        else:
-            typ = next(iter(obj))
-            obj = obj[typ]
+        typ = next(iter(obj))
+        obj = obj[typ]
         assert (typ in {"SystemEvent", "ObserveEvent"})
-        paramSet = list(map(lambda p: Parameter.fromDict(p, flat=False), obj['paramSet']))
+        paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
         eventTime = EventTime.fromDict(obj['eventTime'])
         if typ == 'SystemEvent':
             return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
         else:
             return ObserveEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
-        d = {
-            'eventId': self.eventId,
-            'source': self.source,
-            'eventName': self.eventName,
-            'eventTime': self.eventTime.asDict(),
-            'paramSet': list(map(lambda p: p.asDict(flat), self.paramSet))
-        }
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
+        return {
+            self.__class__.__name__: {
+                'eventId': self.eventId,
+                'source': self.source,
+                'eventName': self.eventName,
+                'eventTime': self.eventTime.asDict(),
+                'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
             }
-        return d
+        }
 
     def isInvalid(self):
         return self.eventId == "-1"

@@ -12,20 +12,15 @@ class CommandResponse:
     """
     runId: str
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
-        d = {
-            'runId': self.runId,
-        }
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
+        return {
+            self.__class__.__name__: {
+                'runId': self.runId,
             }
-        return d
+        }
 
 
 @dataclass
@@ -51,21 +46,16 @@ class Error(CommandResponse):
     """Represents a negative response that describes an error in executing the command"""
     message: str
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
-        d = {
-            'runId': self.runId,
-            'message': self.message
-        }
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
+        return {
+            self.__class__.__name__: {
+                'runId': self.runId,
+                'message': self.message
             }
-        return d
+        }
 
 
 @dataclass
@@ -73,21 +63,16 @@ class Locked(CommandResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
     message: str
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
-        d = {
-            'runId': self.runId,
-            'message': self.message
-        }
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
+        return {
+            self.__class__.__name__: {
+                'runId': self.runId,
+                'message': self.message
             }
-        return d
+        }
 
 
 @dataclass
@@ -95,21 +80,16 @@ class Started(CommandResponse):
     """Represents an intermediate response stating a long running command has been started"""
     message: str
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
-        d = {
-            'runId': self.runId,
-            'message': self.message
-        }
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
+        return {
+            self.__class__.__name__: {
+                'runId': self.runId,
+                'message': self.message
             }
-        return d
+        }
 
 
 # --- CompletedWithResult ---
@@ -119,13 +99,13 @@ class Result:
     prefix: str
     paramSet: List[Parameter]
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
         return {
             'prefix': self.prefix,
-            'paramSet': list(map(lambda p: p.asDict(flat), self.paramSet))
+            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }
 
 
@@ -134,21 +114,16 @@ class CompletedWithResult(CommandResponse):
     """Represents a positive response stating completion of command"""
     result: Result
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
-        d = {
-            'runId': self.runId,
-            'result': self.result.asDict(flat)
-        }
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
+        return {
+            self.__class__.__name__: {
+                'runId': self.runId,
+                'result': self.result.asDict()
             }
-        return d
+        }
 
 
 # ---
@@ -229,18 +204,11 @@ class OtherIssue(CommandIssue):
 class Invalid(CommandResponse):
     issue: CommandIssue
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary for this object
         """
         return {
-            'type': self.__class__.__name__,
-            'runId': self.runId,
-            'issue': {
-                'type': self.issue.__class__.__name__,
-                "reason": self.issue.reason
-            }
-        } if flat else {
             self.__class__.__name__: {
                 'runId': self.runId,
                 'issue': {

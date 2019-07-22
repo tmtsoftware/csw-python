@@ -22,6 +22,5 @@ class EventPublisher:
         :return: None
         """
         event_key = event.source + "." + event.eventName
-        print("XXXXXXXX " + str(event.asDict(flat=False)))
-        obj = cbor2.dumps(event.asDict(flat=False))
+        obj = cbor2.dumps(event.asDict())
         self.__redis.publish(event_key, obj)

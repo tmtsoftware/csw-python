@@ -15,28 +15,24 @@ class ControlCommand:
     paramSet: List[Parameter]
 
     @staticmethod
-    def fromDict(obj, flat: bool):
+    def fromDict(obj):
         """
         Returns a ControlCommand for the given dict.
         """
-        if flat:
-            typ = obj['type']
-        else:
-            typ = next(iter(obj))
-            obj = obj[typ]
-
+        typ = next(iter(obj))
+        obj = obj[typ]
         runId = obj['runId']
         source = obj['source']
         commandName = obj['commandName']
         maybeObsId = obj['maybeObsId'] if 'maybeObsId' in obj else ""
-        paramSet = list(map(lambda p: Parameter.fromDict(p, flat), obj['paramSet']))
-        assert(typ in {"Setup", "Observe"})
+        paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
+        assert (typ in {"Setup", "Observe"})
         if typ == 'Setup':
             return Setup(runId, source, commandName, maybeObsId, paramSet)
         else:
             return Observe(runId, source, commandName, maybeObsId, paramSet)
 
-    def asDict(self, flat: bool):
+    def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
@@ -44,17 +40,14 @@ class ControlCommand:
             'runId': self.runId,
             'source': self.source,
             'commandName': self.commandName,
-            'paramSet': list(map(lambda p: p.asDict(flat), self.paramSet))
+            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }
         if len(self.maybeObsId) != 0:
             d['maybeObsId'] = self.maybeObsId
-        if flat:
-            d['type'] = self.__class__.__name__
-        else:
-            d = {
-                self.__class__.__name__: d
-            }
-        return d
+
+        return {
+            self.__class__.__name__: d
+        }
 
     def get(self, keyName: str):
         """

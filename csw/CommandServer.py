@@ -57,17 +57,18 @@ class CommandServer:
         method = request.match_info['method']
         if method in {'submit', 'oneway', 'validate'}:
             data = await request.json()
-            command = ControlCommand.fromDict(data, flat=True)
+            command = ControlCommand.fromDict(data)
             if method == 'submit':
                 commandResponse, task = self.handler.onSubmit(command)
                 if task is not None:
+                    # noinspection PyTypeChecker
                     self.crm.addTask(command.runId, task)
                     print("A task is still running")
             elif method == 'oneway':
                 commandResponse = self.handler.onOneway(command)
             else:
                 commandResponse = self.handler.validateCommand(command)
-            responseDict = commandResponse.asDict(flat=True)
+            responseDict = commandResponse.asDict()
             return web.json_response(responseDict)
         else:
             raise web.HTTPBadRequest()
@@ -77,7 +78,7 @@ class CommandServer:
         print("XXXX query final " + runId)
         commandResponse = await self.crm.waitForTask(runId)
         print("XXX result of long running command after await: " + str(commandResponse))
-        responseDict = commandResponse.asDict(flat=True)
+        responseDict = commandResponse.asDict()
         return web.json_response(responseDict)
 
     async def _handleSubscribeCurrentState(self, request: Request) -> Response:

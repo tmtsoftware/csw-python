@@ -17,7 +17,7 @@ class EventSubscriber:
     @staticmethod
     def __handleCallback(message: dict, callback):
         data = message['data']
-        event = Event.fromDict(cbor2.loads(data), flat=False)
+        event = Event.fromDict(cbor2.loads(data))
         callback(event)
 
     def subscribe(self, eventKeyList: list, callback):
@@ -39,5 +39,5 @@ class EventSubscriber:
         :return: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(eventKey)
-        event = Event.fromDict(cbor2.loads(data), flat=False)
+        event = Event.fromDict(cbor2.loads(data))
         return event
