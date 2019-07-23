@@ -12,7 +12,6 @@ class CommandResponseManager:
     tasks = {}
 
     def addTask(self, runId: str, task: Task):
-        print("XXX addTask " + runId)
         self.tasks[runId] = task
 
     async def waitForTask(self, runId: str, timeout: float = 60.0) -> CommandResponse:

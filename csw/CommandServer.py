@@ -1,48 +1,12 @@
-from asyncio import Task
-
 from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 import atexit
 
 from csw.CommandResponseManager import CommandResponseManager
+from csw.ComponentHandlers import ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
-from csw.CommandResponse import CommandResponse, Accepted, Error
-
-
-class ComponentHandlers:
-    """
-    Abstract base class for handling CSW commands.
-    Subclasses can override methods to implement the behavior of the component.
-    """
-
-    def onSubmit(self, command: ControlCommand) -> (CommandResponse, Task):
-        """
-        Handles the given setup command and returns a CommandResponse subclass
-        :param command: contains the command
-        :return: a pair: (subclass of CommandResponse, Task),
-        where the task can be None if the command response is final.
-        For long running commands, you can respond with Started(runId, "...") and a task that
-        completes the work in the background.
-        """
-        return Error(command.runId, "Not implemented: submit command handler"), None
-
-    def onOneway(self, command: ControlCommand) -> CommandResponse:
-        """
-        Handles the given setup command and returns an immediate CommandResponse
-        :param command: contains the command
-        :return: a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)
-        """
-        return Error(command.runId, "Not implemented: oneway command handler")
-
-    def validateCommand(self, command: ControlCommand) -> CommandResponse:
-        """
-       Validates the given command
-       :param command: contains the command
-       :return: a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)
-       """
-        return Accepted(command.runId)
 
 
 class CommandServer:
@@ -75,15 +39,9 @@ class CommandServer:
 
     async def _handleQueryFinal(self, request: Request) -> Response:
         runId = request.match_info['runId']
-        print("XXXX query final " + runId)
         commandResponse = await self.crm.waitForTask(runId)
-        print("XXX result of long running command after await: " + str(commandResponse))
         responseDict = commandResponse.asDict()
         return web.json_response(responseDict)
-
-    async def _handleSubscribeCurrentState(self, request: Request) -> Response:
-        # TODO: subscribe to current state, respond with SSE connection
-        raise web.HTTPBadRequest()
 
     @staticmethod
     def _registerWithLocationService(name: str, port: int):
@@ -99,9 +57,7 @@ class CommandServer:
         app = web.Application()
         app.add_routes([
             web.post('/command/{componentType}/{componentName}/{method}', self._handleCommand),
-            web.get('/command/{componentType}/{componentName}/{runId}', self._handleQueryFinal),
-            web.get('/command/{componentType}/{componentName}/current-state/subscribe',
-                    self._handleSubscribeCurrentState)
+            web.get('/command/{componentType}/{componentName}/{runId}', self._handleQueryFinal)
         ])
 
         self._registerWithLocationService(name, port)
