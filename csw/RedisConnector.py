@@ -1,4 +1,5 @@
 import redis
+from typing import List
 
 
 class RedisConnector:
@@ -13,34 +14,34 @@ class RedisConnector:
     def close(self):
         self.__redis_pubsub.close()
 
-    def subscribeCallback(self, event_key_list, callback):
+    def subscribeCallback(self, eventKeyList: List[str], callback):
         """
         Set up a Redis subscription on specified keys with specified callback on value changes.
 
-        :param event_key_list:
+        :param eventKeyList:
         :param callback: callback called when item changes.  Should take a Redis message type.
         :return: subscription thread.  use .stop() method to stop subscription
         """
-        d = dict.fromkeys(event_key_list, callback)
+        d = dict.fromkeys(eventKeyList, callback)
         self.__redis_pubsub.subscribe(**d)
         return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
 
-    def publish(self, event_key, encoded_event):
+    def publish(self, eventKey: str, encodedEvent: bytes):
         """
         Publish CBOR encoded event string to Redis
 
-        :param event_key: String specifying Redis key for event.  Should be source prefix + "." + event name.
-        :param encoded_event: CBOR encoded value for the event (in the form [className, dict])
+        :param eventKey: String specifying Redis key for event.  Should be source prefix + "." + event name.
+        :param encodedEvent: CBOR encoded value for the event (in the form [className, dict])
         :return: None
         """
-        self.__redis.set(event_key, encoded_event)
-        self.__redis.publish(event_key, encoded_event)
+        self.__redis.set(eventKey, encodedEvent)
+        self.__redis.publish(eventKey, encodedEvent)
 
-    def get(self, event_key):
+    def get(self, eventKey: str):
         """
         Get value from Redis using specified key
 
-        :param event_key: String specifying Redis key for event.  Should be source prefix + "." + event name.
+        :param eventKey: String specifying Redis key for event.  Should be source prefix + "." + event name.
         :return: Raw Redis string for event, typically in protocol buffer encoding
         """
-        return self.__redis.get(event_key)
+        return self.__redis.get(eventKey)

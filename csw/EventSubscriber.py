@@ -2,8 +2,8 @@ import cbor2
 
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-from csw.LocationService import LocationService, ComponentType, ConnectionType
-from urllib.parse import urlparse
+#from csw.LocationService import LocationService, ComponentType, ConnectionType
+#from urllib.parse import urlparse
 
 
 class EventSubscriber:
