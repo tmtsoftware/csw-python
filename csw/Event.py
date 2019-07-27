@@ -1,6 +1,7 @@
 import uuid
 from dataclasses import dataclass
 from typing import List
+from abc import abstractmethod
 
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
@@ -9,7 +10,8 @@ from csw.EventTime import EventTime
 @dataclass
 class Event:
     """
-    Creates an Event that can be published to the event service.
+    Abstract base class that creates an Event that can be published to the event service
+    (Don't use this class directly: The system expects a SystemEvent or an ObserveEvent).
 
     Args
         source (str): prefix representing source of the event
@@ -23,6 +25,14 @@ class Event:
     paramSet: List[Parameter]
     eventTime: EventTime = EventTime.fromSystem()
     eventId: str = str(uuid.uuid4())
+
+    @abstractmethod
+    def eventType(self) -> str:
+        """
+        This is only here to make the Event class abstract.
+        :return: the type of the event
+        """
+        pass
 
     @staticmethod
     def fromDict(obj):
@@ -80,9 +90,13 @@ class Event:
 
 @dataclass
 class SystemEvent(Event):
-    pass
+    @abstractmethod
+    def eventType(self) -> str:
+        return "SystemEvent"
 
 
 @dataclass
 class ObserveEvent(Event):
-    pass
+    @abstractmethod
+    def eventType(self) -> str:
+        return "ObserveEvent"
