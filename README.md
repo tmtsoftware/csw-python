@@ -129,8 +129,8 @@ class MyComponentHandlers(ComponentHandlers):
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
-        # filt = command.get("filter").items[0]
-        # encoder = command.get("encoder").items[0]
+        # filt = command.get("filter").values[0]
+        # encoder = command.get("encoder").values[0]
         # print(f"filter = {filt}, encoder = {encoder}")
 
         # --- Example return values ---
@@ -151,8 +151,8 @@ class MyComponentHandlers(ComponentHandlers):
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
-        filt = command.get("filter").items[0]
-        encoder = command.get("encoder").items[0]
+        filt = command.get("filter").values[0]
+        encoder = command.get("encoder").values[0]
         print(f"filter = {filt}, encoder = {encoder}")
         return Accepted(command.runId)
 

@@ -13,11 +13,11 @@ class Parameter:
     Creates a Parameter (keys with values, units).
     See https://tmtsoftware.github.io/csw/0.7.0-RC1/messages/keys-parameters.html for key type names.
     See https://tmtsoftware.github.io/csw/0.7.0-RC1/messages/units.html for list of unit names.
-    'items' is an array of values, or a nested array for array and matrix types.
+    'values' is an array of values, or a nested array for array and matrix types.
     """
     keyName: str
     keyType: str
-    items: object
+    values: object
     units: str = "NoUnits"
 
     @staticmethod
@@ -52,14 +52,14 @@ class Parameter:
     def asDict(self):
         # Note that bytes are stored in a byte string (b'...') instead of a list or array
         if self.keyType == "ByteKey":
-            items = self.items
+            values = self.values
         else:
-            items = list(map(lambda p: Parameter.paramValueOrDict(self.keyType, p), self.items))
+            values = list(map(lambda p: Parameter.paramValueOrDict(self.keyType, p), self.values))
 
         return {
             self.keyType: {
                 'keyName': self.keyName,
-                'values': items,
+                'values': values,
                 'units': self.units
             }
         }
@@ -73,10 +73,10 @@ class Parameter:
         obj = obj[keyType]
 
         if keyType == "ByteKey":
-            items = obj['values']
+            values = obj['values']
         else:
-            items = list(map(lambda p: Parameter.paramValueFromDict(keyType, p), obj['values']))
-        return Parameter(obj['keyName'], keyType, items, obj['units'])
+            values = list(map(lambda p: Parameter.paramValueFromDict(keyType, p), obj['values']))
+        return Parameter(obj['keyName'], keyType, values, obj['units'])
 
 
 # -----------------

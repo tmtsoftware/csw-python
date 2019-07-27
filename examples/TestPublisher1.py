@@ -8,8 +8,8 @@ eventName = "myAssemblyEvent"
 
 keyName = "assemblyEventValue"
 keyType = 'DoubleKey'
-items = [42.0]
-param = Parameter(keyName, keyType, items)
+values = [42.0]
+param = Parameter(keyName, keyType, values)
 paramSet = [param]
 
 event = SystemEvent(source, eventName, paramSet)

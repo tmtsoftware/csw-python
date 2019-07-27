@@ -18,8 +18,8 @@ class EventPublisherTester(unittest.TestCase):
 
         keyName = "assemblyEventValue"
         keyType = 'IntKey'
-        items = [42]
-        param = Parameter(keyName, keyType, items)
+        values = [42]
+        param = Parameter(keyName, keyType, values)
         paramSet = [param]
 
         event = Event(source, eventName, paramSet)
@@ -34,7 +34,7 @@ class EventPublisherTester(unittest.TestCase):
     def callback(systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
-            print(f"    with items: {i.keyName}: {i.items}")
+            print(f"    with values: {i.keyName}: {i.values}")
         if systemEvent.isInvalid():
             print("    Invalid")
         if systemEvent.exists("assemblyEventValue"):

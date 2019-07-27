@@ -9,7 +9,7 @@ class TestSubscriber1:
 
     @staticmethod
     def callback(event):
-        print(f"Event value = {event.paramSet[0].items[0]}")
+        print(f"Event value = {event.paramSet[0].values[0]}")
 
 def main():
     TestSubscriber1()
