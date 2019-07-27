@@ -14,7 +14,7 @@ class RedisConnector:
     def close(self):
         self.__redis_pubsub.close()
 
-    def subscribeCallback(self, keyList: List[str], callback):
+    def subscribe(self, keyList: List[str], callback):
         """
         Set up a Redis subscription on specified keys with specified callback on value changes.
 

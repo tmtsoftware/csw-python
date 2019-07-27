@@ -29,7 +29,7 @@ class EventSubscriber:
         :param callback: function to be called when event updates. Should take Event and return void
         :return: subscription thread.  use .stop() method to stop subscription
         """
-        return self.__redis.subscribeCallback(eventKeyList, lambda message: self.__handleCallback(message, callback))
+        return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
 
     def get(self, eventKey: str):
         """
