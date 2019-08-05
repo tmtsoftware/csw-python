@@ -62,3 +62,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+/build/
+/tmtpycsw.egg-info/
+/pycsw.iml
+/dist/tmtpycsw-0.0.8.tar.gz
+/dist/tmtpycsw-0.0.8-py3-none-any.whl
