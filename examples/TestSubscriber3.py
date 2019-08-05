@@ -5,12 +5,12 @@ from csw.EventSubscriber import EventSubscriber
 class TestSubscriber3:
 
     def __init__(self):
-        eventKey = "test.assembly.myAssemblyEvent"
+        eventKey = "csw.assembly.myAssemblyEvent"
         EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod
     def callback(systemEvent):
-        print(f"Received system event '{systemEvent.eventName}'")
+        print(f"Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'")
         for i in systemEvent.paramSet:
             print(f"    with values: {i.keyName}({i.keyType}): {i.values}")
         if systemEvent.isInvalid():

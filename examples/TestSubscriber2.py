@@ -5,7 +5,7 @@ from csw.EventSubscriber import EventSubscriber
 class TestSubscriber2:
 
     def __init__(self):
-        eventKey = "test.assembly.myAssemblyEvent"
+        eventKey = "csw.assembly.myAssemblyEvent"
         EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod

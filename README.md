@@ -35,7 +35,7 @@ from csw.EventSubscriber import EventSubscriber
 class TestSubscriber3:
 
     def __init__(self):
-        eventKey = "test.assembly.myAssemblyEvent"
+        eventKey = "csw.assembly.myAssemblyEvent"
         EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod
@@ -97,7 +97,7 @@ class TestPublisher3:
 
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
-        event = Event("test.assembly", "myAssemblyEvent", paramSet)
+        event = Event("csw.assembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 ```
 

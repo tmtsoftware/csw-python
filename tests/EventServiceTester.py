@@ -12,7 +12,7 @@ class EventPublisherTester(unittest.TestCase):
         pub = EventPublisher()
         sub = EventSubscriber()
 
-        source = "test.assembly"
+        source = "csw.assembly"
         eventName = "myAssemblyEvent"
         eventKey = source + "." + eventName
 
