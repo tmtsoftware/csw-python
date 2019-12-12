@@ -1,4 +1,4 @@
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 
 # Demonstrate usage of the Python Location Service API
 
@@ -25,17 +25,17 @@ for i in locationService.list(ConnectionType.HttpType):
     print("    " + str(i))
 
 # Register a connection
-connection = ConnectionInfo("myComp", ComponentType.Service.value, ConnectionType.HttpType.value)
-reg = Registration(8080, connection, path="myservice/test")
-regResult = locationService.register(RegType.HttpRegistration, reg)
+connection = ConnectionInfo("csw.myComp", ComponentType.Service.value, ConnectionType.HttpType.value)
+reg = HttpRegistration(connection, 8080, path="myservice/test")
+regResult = locationService.register(reg)
 print("\nRegistration result: " + str(regResult))
 
 # Find a connection
-location1 = locationService.find("myComp", ComponentType.Service, ConnectionType.HttpType)
+location1 = locationService.find(connection)
 print("location1 = " + str(location1))
 
 # Resolve a connection (waiting if needed)
-location2 = locationService.resolve("myComp", ComponentType.Service, ConnectionType.HttpType)
+location2 = locationService.resolve(connection)
 print("location2 = " + str(location2))
 
 # Unregister

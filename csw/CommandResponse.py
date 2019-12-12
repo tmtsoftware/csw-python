@@ -141,7 +141,7 @@ class MissingKeyIssue(CommandIssue):
 
 
 class WrongPrefixIssue(CommandIssue):
-    """Returned when an Assembly receives a configuration with a Prefix that it doesn't support"""
+    """Returned when an Assembly receives a configuration with a prefix that it doesn't support"""
 
 
 class WrongParameterTypeIssue(CommandIssue):

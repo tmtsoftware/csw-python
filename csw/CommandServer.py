@@ -6,7 +6,8 @@ import atexit
 from csw.CommandResponseManager import CommandResponseManager
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ControlCommand import ControlCommand
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, Registration, RegType
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+    RegType, Prefix
 
 
 class CommandServer:
@@ -18,6 +19,7 @@ class CommandServer:
     crm = CommandResponseManager()
 
     async def _handleCommand(self, request: Request) -> Response:
+        print("XXX handleCommand: request = " + str(request))
         method = request.match_info['method']
         if method in {'submit', 'oneway', 'validate'}:
             data = await request.json()
@@ -44,15 +46,14 @@ class CommandServer:
         return web.json_response(responseDict)
 
     @staticmethod
-    def _registerWithLocationService(name: str, port: int):
+    def _registerWithLocationService(prefix: str, port: int):
         print("Registering with location service using port " + str(port))
         locationService = LocationService()
-        connection = ConnectionInfo(name, ComponentType.Service.value, ConnectionType.HttpType.value)
-        reg = Registration(port, connection)
+        connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
         atexit.register(locationService.unregister, connection)
-        locationService.register(RegType.HttpRegistration, reg)
+        locationService.register(HttpRegistration(connection, port, ""))
 
-    def __init__(self, name: str, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
         self.handler = handler
         app = web.Application()
         app.add_routes([
@@ -60,5 +61,5 @@ class CommandServer:
             web.get('/command/{componentType}/{componentName}/{runId}', self._handleQueryFinal)
         ])
 
-        self._registerWithLocationService(name, port)
+        self._registerWithLocationService(prefix, port)
         web.run_app(app, port=port)

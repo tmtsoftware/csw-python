@@ -6,9 +6,8 @@ from multipledispatch import dispatch
 import requests
 import json
 
-# Python API for CSW Location Service
-from openpyxl.pivot.table import Location
 
+# Python API for CSW Location Service
 
 class ComponentType(Enum):
     Assembly = "assembly"
@@ -24,6 +23,7 @@ class ConnectionType(Enum):
     AkkaType = "akka"
 
 
+# XXX TODO FIXME: Still needed?
 class RegType(Enum):
     HttpRegistration = "HttpRegistration"
     TcpRegistration = "TcpRegistration"
@@ -34,9 +34,16 @@ class RegType(Enum):
 @dataclass_json
 @dataclass
 class ConnectionInfo:
-    name: str
+    prefix: str
     componentType: str
     connectionType: str
+
+
+@dataclass_json
+@dataclass
+class ResolveInfo:
+    connection: ConnectionInfo
+    within: str
 
 
 @dataclass_json
@@ -46,10 +53,9 @@ class Location:
     uri: str
 
     @staticmethod
-    def makeLocation(obj: dict) -> Location:
+    def makeLocation(obj: dict):
         data = json.dumps(list(obj.values())[0])
         key = list(obj.keys())[0]
-        print(f"XXXXXXX makeLocation: obj = {str(obj)}, data = {str(data)}, key = {str(key)}")
         if key == "HttpLocation":
             return HttpLocation.schema().loads(data)
         elif key == "TcpLocation":
@@ -83,140 +89,162 @@ class HttpLocation(Location):
 @dataclass
 class Registration:
     """
-    Used to register with the Location Service.
+    Abstract base class for registering with the location service
     """
-    port: int
     connection: ConnectionInfo
+    port: int
+
+
+@dataclass_json
+@dataclass
+class HttpRegistration(Registration):
+    """
+    Used to register an http based service with the Location Service.
+    """
     path: str = ""
 
 
-class LocationService:
-    baseUri = "http://127.0.0.1:7654/location/"
+@dataclass_json
+@dataclass
+class TcpRegistration(Registration):
+    """
+    Used to register a tcp based service with the Location Service.
+    """
 
-    def register(self, regType: RegType, registration: Registration) -> ConnectionInfo:
+
+class LocationService:
+    baseUri = "http://127.0.0.1:7654/"
+    postUri = f"{baseUri}post-endpoint"
+    wsUri = f"{baseUri}websocket-endpoint"
+
+    # {"Register":{"TcpRegistration":{"connection":{"prefix":"csw.exampleTCPService","componentType":"service","connectionType":"tcp"},"port":1234}}}
+    def register(self, registration: Registration) -> ConnectionInfo:
         """
         Registers a connection.
-        :param regType: the type of service being reisgtered
         :param registration: the Registration holding the connection and it's corresponding
                 location to register with LocationService
         :return:
         """
-        jsonBody = '{"' + regType.value + '": ' + registration.to_json() + '}'
-        uri = self.baseUri + "register"
-        r = requests.post(uri, json=json.loads(jsonBody))
+        regType = registration.__class__.__name__
+        jsonBody = f'{{"Register": {{"{regType}": {registration.to_json()}}}}}'
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
         return registration.connection
 
+    # {"Unregister":{"prefix":"csw.exampleTCPService","componentType":"service","connectionType":"tcp"}}
     def unregister(self, connection: ConnectionInfo):
         """
         Unregisters a connection.
         :param connection: an already registered connection
         :return:
         """
-        jsonBody = connection.to_json()
-        uri = self.baseUri + "unregister"
-        r = requests.post(uri, json=json.loads(jsonBody))
+        jsonBody = f'{{"Unregister": {connection.to_json()}}}'
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
 
-    def find(self, name: str, componentType: ComponentType, connectionType: ConnectionType) -> Location:
+    # {"Find":{"prefix":"csw.redis5","componentType":"service","connectionType":"tcp"}}
+    def find(self, connection: ConnectionInfo) -> Location:
         """
         Resolves the location for a connection from the local cache
-        :param name: name of the component or service
-        :param componentType: type of the component or service
-        :param connectionType: the type of connection
+        :param connection: an already registered connection
         :return: the Location
         """
-        connectionName = f"{name}-{componentType.value}-{connectionType.value}"
-        uri = f"{self.baseUri}find/{connectionName}"
-        r = requests.get(uri)
+        jsonBody = f'{{"Find": {connection.to_json()}}}'
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        return Location.makeLocation(json.loads(r.text))
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location.makeLocation(maybeResult[0])
 
-    def resolve(self, name: str, componentType: ComponentType, connectionType: ConnectionType,
-                withinSecs: str = "5") -> Location:
+    # {"Resolve":{"connection":{"prefix":"csw.exampleTCPService","componentType":"service","connectionType":"tcp"},
+    # "within":"2 seconds"}}
+    def resolve(self, connection: ConnectionInfo, withinSecs: int = "5") -> Location:
         """
         Resolves the location for a connection from the local cache, if not found waits for the event to arrive
         within specified time limit
 
-        :param name: name of the component or service
-        :param componentType: type of the component or service
-        :param connectionType: the type of connection
+        :param connection: an already registered connection
         :param withinSecs: max number of seconds to wait for the connection to be found
         :return: the Location
         """
-        connectionName = f"{name}-{componentType.value}-{connectionType.value}"
-        uri = f"{self.baseUri}resolve/{connectionName}?within={withinSecs}s"
-        r = requests.get(uri)
+        resolveInfo = ResolveInfo(connection, f"{withinSecs} seconds")
+        jsonBody = f'{{"Resolve": {resolveInfo.to_json()}}}'
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        return Location.makeLocation(json.loads(r.text))
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location.makeLocation(maybeResult[0])
 
-    # def track(self, name: str, componentType: ComponentType, connectionType: ConnectionType, callback):
+    # {"Track":{"prefix":"csw.redis1","componentType":"service","connectionType":"tcp"}}
+    # def track(self, connection: ConnectionInfo, callback):
     #     """
     #     Tracks (monitors) the given connection and calls the given function whenever the connection state changes
     #
-    #     :param name: name of the component or service
-    #     :param componentType: type of the component or service
-    #     :param connectionType: the type of connection
+    #     :param connection: an already registered connection
     #     :param callback: function to call when connection state changes
     #     """
-    #     connectionName = f"{name}-{componentType.value}-{connectionType.value}"
-    #     uri = f"{self.baseUri}resolve/{connectionName}"
-    #     r = requests.get(uri)
-    #     if (not r.ok):
+    #     jsonBody = f'{{"Track": {connection.to_json()}}}'
+    #     r = requests.post(self.wsUri, json=json.loads(jsonBody))
+    #     if not r.ok:
     #         raise Exception(r.text)
     #     # TODO: handle receiving SSE and calling callback function
 
     @staticmethod
-    def _list(uri: str) -> List[Location]:
-        r = requests.get(uri)
+    def _list(jsonBody: str) -> List[Location]:
+        r = requests.post(LocationService.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
         return list(map(lambda x: Location.makeLocation(x), json.loads(r.text)))
 
+    # {"ListEntries":{}}
     @dispatch()
     def list(self) -> List[Location]:
         """
         Lists all locations registered
         :return: list of locations
         """
-        uri = self.baseUri + "list"
-        return self._list(uri)
+        jsonBody = '{"ListEntries":{}}'
+        return self._list(jsonBody)
 
+    # {"ListByComponentType":"hcd"}
     @dispatch(ComponentType)
     def list(self, componentType: ComponentType) -> List[Location]:
         """
         Lists components of the given component type
         :return: list of locations
         """
-        uri = self.baseUri + "list?componentType=" + componentType.value
-        return self._list(uri)
+        jsonBody = f'{{"ListByComponentType": "{componentType.value}"}}'
+        return self._list(jsonBody)
 
+    # {"ListByHostname":"192.168.178.32"}
     @dispatch(str)
     def list(self, hostname: str) -> List[Location]:
         """
         Lists all locations registered on the given hostname
         :return: list of locations
         """
-        uri = self.baseUri + "list?hostname=" + hostname
-        return self._list(uri)
+        jsonBody = f'{{"ListByHostname": "{hostname}"}}'
+        return self._list(jsonBody)
 
+    # {"ListByConnectionType":"tcp"}
     @dispatch(ConnectionType)
     def list(self, connectionType: ConnectionType) -> List[Location]:
         """
         Lists all locations registered with the given connection type
         :return: list of locations
         """
-        uri = self.baseUri + "list?connectionType=" + connectionType.value
-        return self._list(uri)
+        jsonBody = f'{{"ListByConnectionType": "{connectionType.value}"}}'
+        return self._list(jsonBody)
 
+    # {"ListByPrefix":"nfiraos.ncc.trombone"}
     def listByPrefix(self, prefix: str) -> List[Location]:
         """
         Lists all locations with the given prefix
         :return: list of locations
         """
-        uri = self.baseUri + "list?prefix=" + prefix
-        return self._list(uri)
+        jsonBody = f'{{"ListByPrefix": "{prefix}"}}'
+        return self._list(jsonBody)
