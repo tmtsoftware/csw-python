@@ -11,7 +11,7 @@ from csw.Parameter import Parameter
 class MyComponentHandlers(ComponentHandlers):
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
-        await asyncio.sleep(5)
+        await asyncio.sleep(3)
         print("XXX Long running task completed")
         return Completed(runId)
 
