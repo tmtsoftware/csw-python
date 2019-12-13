@@ -8,7 +8,6 @@ class ControlCommand:
     """
     Represents a CSW command.
     """
-    runId: str
     source: str
     commandName: str
     maybeObsId: List[str]
@@ -21,23 +20,21 @@ class ControlCommand:
         """
         typ = next(iter(obj))
         obj = obj[typ]
-        runId = obj['runId']
         source = obj['source']
         commandName = obj['commandName']
         maybeObsId = obj['maybeObsId'] if 'maybeObsId' in obj else ""
         paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
         assert (typ in {"Setup", "Observe"})
         if typ == 'Setup':
-            return Setup(runId, source, commandName, maybeObsId, paramSet)
+            return Setup(source, commandName, maybeObsId, paramSet)
         else:
-            return Observe(runId, source, commandName, maybeObsId, paramSet)
+            return Observe(source, commandName, maybeObsId, paramSet)
 
     def asDict(self):
         """
         :return: a dictionary corresponding to this object
         """
         d = {
-            'runId': self.runId,
             'source': self.source,
             'commandName': self.commandName,
             'paramSet': list(map(lambda p: p.asDict(), self.paramSet))

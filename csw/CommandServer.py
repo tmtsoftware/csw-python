@@ -2,12 +2,12 @@ from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 import atexit
+import uuid
 
 from csw.CommandResponseManager import CommandResponseManager
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ControlCommand import ControlCommand
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
-    RegType, Prefix
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 
 
 class CommandServer:
@@ -24,16 +24,17 @@ class CommandServer:
         if method in {'submit', 'oneway', 'validate'}:
             data = await request.json()
             command = ControlCommand.fromDict(data)
+            runId = str(uuid.uuid4())
             if method == 'submit':
-                commandResponse, task = self.handler.onSubmit(command)
+                commandResponse, task = self.handler.onSubmit(runId, command)
                 if task is not None:
                     # noinspection PyTypeChecker
-                    self.crm.addTask(command.runId, task)
+                    self.crm.addTask(runId, task)
                     print("A task is still running")
             elif method == 'oneway':
-                commandResponse = self.handler.onOneway(command)
+                commandResponse = self.handler.onOneway(runId, command)
             else:
-                commandResponse = self.handler.validateCommand(command)
+                commandResponse = self.handler.validateCommand(runId, command)
             responseDict = commandResponse.asDict()
             return web.json_response(responseDict)
         else:
