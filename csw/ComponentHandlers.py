@@ -2,7 +2,6 @@ from csw.CommandResponse import CommandResponse, Accepted, Error
 from csw.ControlCommand import ControlCommand
 from asyncio import Task
 
-
 class ComponentHandlers:
     """
     Abstract base class for handling CSW commands.
