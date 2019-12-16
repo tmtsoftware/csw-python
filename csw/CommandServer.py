@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+from typing import List
 
 import aiohttp
 from aiohttp import web, WSMessage
@@ -52,6 +53,19 @@ class QueryFinal:
         timeout = obj['timeout']
         return QueryFinal(runId, timeout)
 
+@dataclass
+@dataclass_json
+class SubscribeCurrentState:
+    stateNames: List[str]
+
+    @staticmethod
+    def fromDict(obj):
+        """
+        Returns a SubscribeCurrentState for the given dict.
+        """
+        typ = next(iter(obj))
+        stateNames = obj[typ]
+        return SubscribeCurrentState(stateNames)
 
 class CommandServer:
     """
@@ -104,10 +118,13 @@ class CommandServer:
                         await ws.send_str(resp.text)
                         await ws.close()
                     elif method == "SubscribeCurrentState":
-                        pass  # XXX TODO FIXME: Handle subscribe current state
-                        await ws.close()
+                        stateNames = SubscribeCurrentState.fromDict(obj).stateNames
+                        print(f"Received SubscribeCurrentState: stateNames = {stateNames}")
+                        self.handler._subscribeCurrentState(stateNames, ws)
+                    else:
+                        print(f"Warning: Received unknown ws message: {str(msg.data)}")
             elif msg.type == aiohttp.WSMsgType.ERROR:
-                print('ws connection closed with exception %s' % ws.exception())
+                print('Error: ws connection closed with exception %s' % ws.exception())
         print('websocket connection closed')
         return ws
 
@@ -119,7 +136,7 @@ class CommandServer:
         atexit.register(locationService.unregister, connection)
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
 
-    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082, currentStatePublishSeconds: int = 2):
         self.handler = handler
         app = web.Application()
         app.add_routes([

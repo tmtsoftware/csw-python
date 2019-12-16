@@ -1,10 +1,12 @@
 import asyncio
 from asyncio import Task
+from typing import List
 
 from csw.CommandResponse import CommandResponse, CompletedWithResult, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
+from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
 
 
@@ -65,6 +67,15 @@ class MyComponentHandlers(ComponentHandlers):
         :return: an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
         """
         return Accepted(runId)
+
+    # Returns the current state
+    def currentStates(self) -> List[CurrentState]:
+        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
+        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
+        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
+        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
+        return [CurrentState("csw.assembly", "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
 
 
 # noinspection PyTypeChecker
