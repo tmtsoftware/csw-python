@@ -15,6 +15,7 @@ class MyComponentHandlers(ComponentHandlers):
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(3)
         print("XXX Long running task completed")
+        await self.publishCurrentStates()
         return Completed(runId)
 
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):

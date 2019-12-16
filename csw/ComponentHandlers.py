@@ -59,14 +59,19 @@ class ComponentHandlers:
 
     # ---Do not override the following methods ---
 
-    def publishCurrentState(self, currentState: CurrentState):
+    async def publishCurrentStates(self):
         """
         Publish the current state of the python based CSW component
         """
-        subscribers = self._currentStateSubscribers[""] | self._currentStateSubscribers[currentState.stateName]
-        cs = json.dumps(currentState.asDict())
-        for ws in subscribers:
-            ws.send_str(cs)
+        for currentState in self.currentStates():
+            s1 = self._currentStateSubscribers.get("") or set()
+            s2 = self._currentStateSubscribers.get(currentState.stateName) or set()
+            subscribers = s1 | s2
+            dict = currentState.asDict()
+            cs = json.dumps(dict)
+            for ws in subscribers:
+                print(f"Publishing current state: {cs}")
+                await ws.send_str(cs)
 
     def _addCurrentStateSubscriber(self, stateName: str, ws: WebSocketResponse):
         if (stateName in self._currentStateSubscribers):
