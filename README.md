@@ -113,17 +113,30 @@ The following example shows how to start an HTTP command server. The default por
 the CommandServer class.
 
 ```python
-from csw.CommandResponse import CommandResponse, CompletedWithResult, Result, Completed, Invalid, MissingKeyIssue, \
-    Error, Accepted
+import asyncio
+from asyncio import Task
+from typing import List
+
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
+    Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
+from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
 
 
 class MyComponentHandlers(ComponentHandlers):
-    def onSubmit(self, command: ControlCommand) -> CommandResponse:
+
+    async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
+        await asyncio.sleep(3)
+        print("XXX Long running task completed")
+        await self.publishCurrentStates()
+        return Completed(runId)
+
+    def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
         Overrides the base class onSubmit method to handle commands from a CSW component
+        :param runId: unique id for this command
         :param command: contains the ControlCommand from CSW
         :return: a subclass of CommandResponse that is serialized and passed back to the CSW component
         """
@@ -135,17 +148,30 @@ class MyComponentHandlers(ComponentHandlers):
 
         # --- Example return values ---
 
-        # return Completed(command.runId)
+        # return Completed(runId), None
 
-        # return Error(command.runId, "There is a problem ...")
+        # return Error(runId, "There is a problem ..."), None
 
-        # return Invalid(command.runId, MissingKeyIssue("Missing required key XXX"))
+        # return Invalid(runId, MissingKeyIssue("Missing required key XXX")), None
 
-        return CompletedWithResult(command.runId, Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])]))
+        # result = Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])])
+        # return Completed(runId, result), None
 
-    def onOneway(self, command: ControlCommand):
+        if command.commandName == "LongRunningCommand":
+            task = asyncio.create_task(self.longRunningCommand(runId, command))
+            return Started(runId, "Long running task in progress..."), task
+        elif command.commandName == "SimpleCommand":
+            return Completed(runId), None
+        elif command.commandName == "ResultCommand":
+            result = Result([Parameter("myValue", 'DoubleKey', [42.0])])
+            return Completed(runId, result), None
+        else:
+            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName}")), None
+
+    def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class onOneway method to handle commands from a CSW component.
+        :param runId: unique id for this command
         :param command: contains the ControlCommand from CSW
         :return: an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
         """
@@ -154,16 +180,27 @@ class MyComponentHandlers(ComponentHandlers):
         filt = command.get("filter").values[0]
         encoder = command.get("encoder").values[0]
         print(f"filter = {filt}, encoder = {encoder}")
-        return Accepted(command.runId)
+        return Accepted(runId)
 
-    def validate(self, command: ControlCommand):
+    def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class validate method to verify that the given command is valid.
+        :param runId: unique id for this command
         :param command: contains the ControlCommand from CSW
         :return: an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
         """
-        return Accepted(command.runId)
+        return Accepted(runId)
+
+    # Returns the current state
+    def currentStates(self) -> List[CurrentState]:
+        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
+        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
+        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
+        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
+        return [CurrentState("csw.assembly", "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+
 
 # noinspection PyTypeChecker
-commandServer = CommandServer("pycswTest", MyComponentHandlers)
+commandServer = CommandServer("csw.pycswTest", MyComponentHandlers())
 ```

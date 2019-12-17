@@ -24,12 +24,6 @@ class CommandResponse:
 
 
 @dataclass
-class Completed(CommandResponse):
-    """Represents a positive response stating completion of command"""
-    pass
-
-
-@dataclass
 class Cancelled(CommandResponse):
     """Represents a negative response that describes the cancellation of command"""
     pass
@@ -92,11 +86,9 @@ class Started(CommandResponse):
         }
 
 
-# --- CompletedWithResult ---
 @dataclass
 class Result:
     """A result containing parameters for command response"""
-    prefix: str
     paramSet: List[Parameter]
 
     def asDict(self):
@@ -104,15 +96,14 @@ class Result:
         :return: a dictionary corresponding to this object
         """
         return {
-            'prefix': self.prefix,
             'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }
 
 
 @dataclass
-class CompletedWithResult(CommandResponse):
+class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
-    result: Result
+    result: Result = Result([])
 
     def asDict(self):
         """
@@ -124,9 +115,6 @@ class CompletedWithResult(CommandResponse):
                 'result': self.result.asDict()
             }
         }
-
-
-# ---
 
 # --- Invalid ---
 @dataclass

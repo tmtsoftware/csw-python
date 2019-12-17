@@ -2,8 +2,8 @@ import asyncio
 from asyncio import Task
 from typing import List
 
-from csw.CommandResponse import CommandResponse, CompletedWithResult, Result, Completed, Invalid, MissingKeyIssue, \
-    Error, Accepted, Started
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
+    Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
@@ -40,11 +40,18 @@ class MyComponentHandlers(ComponentHandlers):
         # return Invalid(runId, MissingKeyIssue("Missing required key XXX")), None
 
         # result = Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])])
-        # return CompletedWithResult(runId, result), None
+        # return Completed(runId, result), None
 
-        # long running command
-        task = asyncio.create_task(self.longRunningCommand(runId, command))
-        return Started(runId, "Long running task in progress..."), task
+        if command.commandName == "LongRunningCommand":
+            task = asyncio.create_task(self.longRunningCommand(runId, command))
+            return Started(runId, "Long running task in progress..."), task
+        elif command.commandName == "SimpleCommand":
+            return Completed(runId), None
+        elif command.commandName == "ResultCommand":
+            result = Result([Parameter("myValue", 'DoubleKey', [42.0])])
+            return Completed(runId, result), None
+        else:
+            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName}")), None
 
     def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
         """

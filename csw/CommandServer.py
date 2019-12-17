@@ -40,7 +40,7 @@ class Oneway:
 @dataclass_json
 class QueryFinal:
     runId: str
-    timeout: str
+    timeout: list
 
     @staticmethod
     def fromDict(obj):
