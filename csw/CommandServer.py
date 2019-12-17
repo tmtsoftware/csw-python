@@ -85,7 +85,7 @@ class CommandServer:
                 if task is not None:
                     # noinspection PyTypeChecker
                     self.crm.addTask(runId, task)
-                    print("A task is still running")
+                    print("Long running task in progress...")
             elif method == 'Oneway':
                 commandResponse = self.handler.onOneway(runId, command)
             else:
@@ -107,11 +107,11 @@ class CommandServer:
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 if msg.data == 'close':
+                    print("Received ws close message")
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
                     method = next(iter(obj))
-                    # '{"QueryFinal":{"runId":"396195e9-34d6-468c-bcfd-6def4b5e74a0","timeout":[20,"SECONDS"]}}'
                     if method == "QueryFinal":
                         queryFinal = QueryFinal.fromDict(obj)
                         resp = await self._handleQueryFinal(queryFinal)

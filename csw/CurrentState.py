@@ -33,9 +33,7 @@ class CurrentState:
             'stateName': self.stateName,
             'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }
-        return {
-            self.__class__.__name__: d
-        }
+        return d
 
     def get(self, keyName: str):
         """
