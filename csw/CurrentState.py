@@ -17,8 +17,10 @@ class CurrentState:
         """
         Returns a CurrentState for the given dict.
         """
-        typ = next(iter(obj))
-        obj = obj[typ]
+        # XXX TODO FIXME: Test this: Does it use "_type"?
+        # typ = next(iter(obj))
+        typ = obj['_type']
+        # obj = obj[typ]
         prefix = obj['prefix']
         stateName = obj['stateName']
         paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))

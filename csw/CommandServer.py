@@ -40,18 +40,16 @@ class Oneway:
 @dataclass_json
 class QueryFinal:
     runId: str
-    timeout: list
+    timeoutInSeconds: int
 
     @staticmethod
     def fromDict(obj):
         """
         Returns a ControlCommand for the given dict.
         """
-        typ = next(iter(obj))
-        obj = obj[typ]
         runId = obj['runId']
-        timeout = obj['timeout']
-        return QueryFinal(runId, timeout)
+        timeoutInSeconds = obj['timeoutInSeconds']
+        return QueryFinal(runId, timeoutInSeconds)
 
 @dataclass
 @dataclass_json
@@ -63,8 +61,8 @@ class SubscribeCurrentState:
         """
         Returns a SubscribeCurrentState for the given dict.
         """
-        typ = next(iter(obj))
-        stateNames = obj[typ]
+        # typ = obj["_type"]
+        stateNames = obj["names"]
         return SubscribeCurrentState(stateNames)
 
 class CommandServer:
@@ -76,9 +74,9 @@ class CommandServer:
 
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
-        method = next(iter(obj))
+        method = obj['_type']
         if method in {'Submit', 'Oneway', 'Validate'}:
-            command = ControlCommand.fromDict(obj[method])
+            command = ControlCommand.fromDict(obj['controlCommand'])
             runId = str(uuid.uuid4())
             if method == 'Submit':
                 commandResponse, task = self.handler.onSubmit(runId, command)
@@ -96,7 +94,7 @@ class CommandServer:
             raise Exception("Invalid Location type: " + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
-        commandResponse = await self.crm.waitForTask(queryFinal.runId)  # XXX TODO: timeout
+        commandResponse = await self.crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
         responseDict = commandResponse.asDict()
         return web.json_response(responseDict)
 
@@ -111,7 +109,7 @@ class CommandServer:
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
-                    method = next(iter(obj))
+                    method = obj['_type']
                     if method == "QueryFinal":
                         queryFinal = QueryFinal.fromDict(obj)
                         resp = await self._handleQueryFinal(queryFinal)

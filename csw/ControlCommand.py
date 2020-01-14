@@ -18,8 +18,8 @@ class ControlCommand:
         """
         Returns a ControlCommand for the given dict.
         """
-        typ = next(iter(obj))
-        obj = obj[typ]
+        print(f'XXX obj = {str(obj)}')
+        typ = obj["_type"]
         source = obj['source']
         commandName = obj['commandName']
         maybeObsId = obj['maybeObsId'] if 'maybeObsId' in obj else ""
@@ -35,6 +35,7 @@ class ControlCommand:
         :return: a dictionary corresponding to this object
         """
         d = {
+            '_type': self.__class__.__name__,
             'source': self.source,
             'commandName': self.commandName,
             'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
@@ -42,9 +43,7 @@ class ControlCommand:
         if len(self.maybeObsId) != 0:
             d['maybeObsId'] = self.maybeObsId
 
-        return {
-            self.__class__.__name__: d
-        }
+        return d
 
     def get(self, keyName: str):
         """

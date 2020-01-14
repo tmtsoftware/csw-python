@@ -72,8 +72,8 @@ class Coord:
             "CometCoord": CometCoord,
             "AltAzCoord": AltAzCoord
         }
-        typ = next(iter(obj))
-        return switcher[typ].fromValueDict(obj[typ])
+        typ = obj["_type"]
+        return switcher[typ].fromValueDict(obj)
 
     def asDict(self):
         pass
@@ -102,14 +102,13 @@ class EqCoord(Coord):
 
     def asDict(self):
         return {
-            self.__class__.__name__: {
-                "tag": self.tag.name,
-                "ra": _CswAngle.fromAngle(self.ra).uas,
-                "dec": _CswAngle.fromAngle(self.dec).uas,
-                "frame": self.frame.name,
-                "catalogName": self.catalogName,
-                "pm": asdict(self.pm)
-            }
+            "_type": self.__class__.__name__,
+            "tag": self.tag.name,
+            "ra": _CswAngle.fromAngle(self.ra).uas,
+            "dec": _CswAngle.fromAngle(self.dec).uas,
+            "frame": self.frame.name,
+            "catalogName": self.catalogName,
+            "pm": asdict(self.pm)
         }
 
     @staticmethod
@@ -137,10 +136,9 @@ class SolarSystemCoord(Coord):
 
     def asDict(self):
         return {
-            self.__class__.__name__: {
-                "tag": self.tag.name,
-                "body": self.body.name,
-            }
+            "_type": self.__class__.__name__,
+            "tag": self.tag.name,
+            "body": self.body.name,
         }
 
     @staticmethod
@@ -178,16 +176,15 @@ class MinorPlanetCoord(Coord):
 
     def asDict(self):
         return {
-            self.__class__.__name__: {
-                "tag": self.tag.name,
-                "epoch": self.epoch,
-                "inclination": _CswAngle.fromAngle(self.inclination).uas,
-                "longAscendingNode": _CswAngle.fromAngle(self.longAscendingNode).uas,
-                "argOfPerihelion": _CswAngle.fromAngle(self.argOfPerihelion).uas,
-                "meanDistance": self.meanDistance,
-                "eccentricity": self.eccentricity,
-                "meanAnomaly": _CswAngle.fromAngle(self.meanAnomaly).uas
-            }
+            "_type": self.__class__.__name__,
+            "tag": self.tag.name,
+            "epoch": self.epoch,
+            "inclination": _CswAngle.fromAngle(self.inclination).uas,
+            "longAscendingNode": _CswAngle.fromAngle(self.longAscendingNode).uas,
+            "argOfPerihelion": _CswAngle.fromAngle(self.argOfPerihelion).uas,
+            "meanDistance": self.meanDistance,
+            "eccentricity": self.eccentricity,
+            "meanAnomaly": _CswAngle.fromAngle(self.meanAnomaly).uas
         }
 
     @staticmethod
@@ -231,15 +228,14 @@ class CometCoord(Coord):
 
     def asDict(self):
         return {
-            self.__class__.__name__: {
-                "tag": self.tag.name,
-                "epochOfPerihelion": self.epochOfPerihelion,
-                "inclination": _CswAngle.fromAngle(self.inclination).uas,
-                "longAscendingNode": _CswAngle.fromAngle(self.longAscendingNode).uas,
-                "argOfPerihelion": _CswAngle.fromAngle(self.argOfPerihelion).uas,
-                "perihelionDistance": self.perihelionDistance,
-                "eccentricity": self.eccentricity
-            }
+            "_type": self.__class__.__name__,
+            "tag": self.tag.name,
+            "epochOfPerihelion": self.epochOfPerihelion,
+            "inclination": _CswAngle.fromAngle(self.inclination).uas,
+            "longAscendingNode": _CswAngle.fromAngle(self.longAscendingNode).uas,
+            "argOfPerihelion": _CswAngle.fromAngle(self.argOfPerihelion).uas,
+            "perihelionDistance": self.perihelionDistance,
+            "eccentricity": self.eccentricity
         }
 
     @staticmethod
@@ -274,11 +270,10 @@ class AltAzCoord(Coord):
 
     def asDict(self):
         return {
-            self.__class__.__name__: {
-                "tag": self.tag.name,
-                "alt": _CswAngle.fromAngle(self.alt).uas,
-                "az": _CswAngle.fromAngle(self.az).uas
-            }
+            "_type": self.__class__.__name__,
+            "tag": self.tag.name,
+            "alt": _CswAngle.fromAngle(self.alt).uas,
+            "az": _CswAngle.fromAngle(self.az).uas
         }
 
     @staticmethod

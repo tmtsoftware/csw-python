@@ -39,8 +39,7 @@ class Event:
         """
         Returns a Event for the given dict.
         """
-        typ = next(iter(obj))
-        obj = obj[typ]
+        typ = obj['_type']
         assert (typ in {"SystemEvent", "ObserveEvent"})
         paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
         eventTime = EventTime.fromDict(obj['eventTime'])
@@ -54,13 +53,12 @@ class Event:
         :return: a dictionary corresponding to this object
         """
         return {
-            self.__class__.__name__: {
-                'eventId': self.eventId,
-                'source': self.source,
-                'eventName': self.eventName,
-                'eventTime': self.eventTime.asDict(),
-                'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
-            }
+            "_type": self.__class__.__name__,
+            'eventId': self.eventId,
+            'source': self.source,
+            'eventName': self.eventName,
+            'eventTime': self.eventTime.asDict(),
+            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
         }
 
     def isInvalid(self):

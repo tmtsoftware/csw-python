@@ -17,9 +17,8 @@ class CommandResponse:
         :return: a dictionary corresponding to this object
         """
         return {
-            self.__class__.__name__: {
-                'runId': self.runId,
-            }
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
         }
 
 
@@ -45,10 +44,9 @@ class Error(CommandResponse):
         :return: a dictionary corresponding to this object
         """
         return {
-            self.__class__.__name__: {
-                'runId': self.runId,
-                'message': self.message
-            }
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
+            'message': self.message
         }
 
 
@@ -62,10 +60,9 @@ class Locked(CommandResponse):
         :return: a dictionary corresponding to this object
         """
         return {
-            self.__class__.__name__: {
-                'runId': self.runId,
-                'message': self.message
-            }
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
+            'message': self.message
         }
 
 
@@ -79,10 +76,9 @@ class Started(CommandResponse):
         :return: a dictionary corresponding to this object
         """
         return {
-            self.__class__.__name__: {
-                'runId': self.runId,
-                'message': self.message
-            }
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
+            'message': self.message
         }
 
 
@@ -109,12 +105,14 @@ class Completed(CommandResponse):
         """
         :return: a dictionary corresponding to this object
         """
-        return {
-            self.__class__.__name__: {
-                'runId': self.runId,
-                'result': self.result.asDict()
-            }
+        d = {
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
         }
+        if len(self.result.paramSet) != 0:
+            d['result'] = self.result.asDict()['paramSet']
+        return d
+
 
 # --- Invalid ---
 @dataclass
@@ -197,12 +195,11 @@ class Invalid(CommandResponse):
         :return: a dictionary for this object
         """
         return {
-            self.__class__.__name__: {
-                'runId': self.runId,
-                'issue': {
-                    self.issue.__class__.__name__: {
-                        "reason": self.issue.reason
-                    }
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
+            'issue': {
+                self.issue.__class__.__name__: {
+                    "reason": self.issue.reason
                 }
             }
         }

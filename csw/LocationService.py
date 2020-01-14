@@ -111,13 +111,13 @@ class TcpRegistration(Registration):
     Used to register a tcp based service with the Location Service.
     """
 
-
 class LocationService:
     baseUri = "http://127.0.0.1:7654/"
     postUri = f"{baseUri}post-endpoint"
     wsUri = f"{baseUri}websocket-endpoint"
 
-    # {"Register":{"TcpRegistration":{"connection":{"prefix":"csw.exampleTCPService","componentType":"service","connectionType":"tcp"},"port":1234}}}
+    # {"_type":"Register","registration":{"_type":"AkkaRegistration","connection":{"prefix":"csw.testakkaservice_1","componentType":"service","connectionType":"akka"},"actorRefURI":"akka://TestAkkaServiceApp@192.168.178.32:40221/user/TestAkkaService1#1774679661"}}
+    #
     def register(self, registration: Registration) -> ConnectionInfo:
         """
         Registers a connection.
@@ -126,32 +126,35 @@ class LocationService:
         :return:
         """
         regType = registration.__class__.__name__
-        jsonBody = f'{{"Register": {{"{regType}": {registration.to_json()}}}}}'
+        # jsonBody = f'{{"Register": {{"{regType}": {registration.to_json()}}}}}'
+        regJson = json.loads(registration.to_json())
+        regJson['_type'] = registration.__class__.__name__
+        # '_type': self.__class__.__name__
+        jsonBody = f'{{"_type": "Register", "registration": {json.dumps(regJson)}}}'
+        print(f'XXX {jsonBody}')
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
         return registration.connection
 
-    # {"Unregister":{"prefix":"csw.exampleTCPService","componentType":"service","connectionType":"tcp"}}
     def unregister(self, connection: ConnectionInfo):
         """
         Unregisters a connection.
         :param connection: an already registered connection
         :return:
         """
-        jsonBody = f'{{"Unregister": {connection.to_json()}}}'
+        jsonBody = f'{{"_type": "Unregister", "connection": {connection.to_json()}}}'
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
 
-    # {"Find":{"prefix":"csw.redis5","componentType":"service","connectionType":"tcp"}}
     def find(self, connection: ConnectionInfo) -> Location:
         """
         Resolves the location for a connection from the local cache
         :param connection: an already registered connection
         :return: the Location
         """
-        jsonBody = f'{{"Find": {connection.to_json()}}}'
+        jsonBody = f'{{"_type": "Find", "connection": {connection.to_json()}}}'
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
@@ -159,7 +162,6 @@ class LocationService:
         if len(maybeResult) != 0:
             return Location.makeLocation(maybeResult[0])
 
-    # {"Resolve":{"connection":{"prefix":"csw.exampleTCPService","componentType":"service","connectionType":"tcp"},
     # "within":"2 seconds"}}
     def resolve(self, connection: ConnectionInfo, withinSecs: int = "5") -> Location:
         """
@@ -171,7 +173,7 @@ class LocationService:
         :return: the Location
         """
         resolveInfo = ResolveInfo(connection, f"{withinSecs} seconds")
-        jsonBody = f'{{"Resolve": {resolveInfo.to_json()}}}'
+        jsonBody = f'{{"_type": "Resolve", "connection": {resolveInfo.to_json()}}}'
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
@@ -179,19 +181,16 @@ class LocationService:
         if len(maybeResult) != 0:
             return Location.makeLocation(maybeResult[0])
 
-    # {"Track":{"prefix":"csw.redis1","componentType":"service","connectionType":"tcp"}}
-    # def track(self, connection: ConnectionInfo, callback):
-    #     """
-    #     Tracks (monitors) the given connection and calls the given function whenever the connection state changes
-    #
-    #     :param connection: an already registered connection
-    #     :param callback: function to call when connection state changes
-    #     """
-    #     jsonBody = f'{{"Track": {connection.to_json()}}}'
-    #     r = requests.post(self.wsUri, json=json.loads(jsonBody))
-    #     if not r.ok:
-    #         raise Exception(r.text)
-    #     # TODO: handle receiving SSE and calling callback function
+    # //  case class Register(registration: Registration)                                   extends LocationHttpMessage
+    # //  case class Unregister(connection: Connection)                                     extends LocationHttpMessage
+    # //  case object UnregisterAll                                                         extends LocationHttpMessage
+    # //  case class Find(connection: TypedConnection[Location])                            extends LocationHttpMessage
+    # //  case class Resolve(connection: TypedConnection[Location], within: FiniteDuration) extends LocationHttpMessage
+    # //  case object ListEntries                                                           extends LocationHttpMessage
+    # //  case class ListByComponentType(componentType: ComponentType)                      extends LocationHttpMessage
+    # //  case class ListByHostname(hostname: String)                                       extends LocationHttpMessage
+    # //  case class ListByConnectionType(connectionType: ConnectionType)                   extends LocationHttpMessage
+    # //  case class ListByPrefix(prefix: Prefix)                                           extends LocationHttpMessage
 
     @staticmethod
     def _list(jsonBody: str) -> List[Location]:
@@ -200,51 +199,46 @@ class LocationService:
             raise Exception(r.text)
         return list(map(lambda x: Location.makeLocation(x), json.loads(r.text)))
 
-    # {"ListEntries":{}}
     @dispatch()
     def list(self) -> List[Location]:
         """
         Lists all locations registered
         :return: list of locations
         """
-        jsonBody = '{"ListEntries":{}}'
+        jsonBody = '{"_type": "ListEntries"}'
         return self._list(jsonBody)
 
-    # {"ListByComponentType":"hcd"}
     @dispatch(ComponentType)
     def list(self, componentType: ComponentType) -> List[Location]:
         """
         Lists components of the given component type
         :return: list of locations
         """
-        jsonBody = f'{{"ListByComponentType": "{componentType.value}"}}'
+        jsonBody = f'{{"_type": "ListByComponentType", "componentType": "{componentType.value}"}}'
         return self._list(jsonBody)
 
-    # {"ListByHostname":"192.168.178.32"}
     @dispatch(str)
     def list(self, hostname: str) -> List[Location]:
         """
         Lists all locations registered on the given hostname
         :return: list of locations
         """
-        jsonBody = f'{{"ListByHostname": "{hostname}"}}'
+        jsonBody = f'{{"_type": "ListByHostname", "hostname": "{hostname}"}}'
         return self._list(jsonBody)
 
-    # {"ListByConnectionType":"tcp"}
     @dispatch(ConnectionType)
     def list(self, connectionType: ConnectionType) -> List[Location]:
         """
         Lists all locations registered with the given connection type
         :return: list of locations
         """
-        jsonBody = f'{{"ListByConnectionType": "{connectionType.value}"}}'
+        jsonBody = f'{{"_type": "ListByConnectionType", "connectionType": "{connectionType.value}"}}'
         return self._list(jsonBody)
 
-    # {"ListByPrefix":"nfiraos.ncc.trombone"}
     def listByPrefix(self, prefix: str) -> List[Location]:
         """
         Lists all locations with the given prefix
         :return: list of locations
         """
-        jsonBody = f'{{"ListByPrefix": "{prefix}"}}'
+        jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{prefix}"}}'
         return self._list(jsonBody)
