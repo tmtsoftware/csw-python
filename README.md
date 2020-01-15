@@ -35,7 +35,7 @@ from csw.EventSubscriber import EventSubscriber
 class TestSubscriber3:
 
     def __init__(self):
-        eventKey = "csw.assembly.myAssemblyEvent"
+        eventKey = "csw.testassembly.myAssemblyEvent"
         EventSubscriber().subscribe([eventKey], self.callback)
 
     @staticmethod
