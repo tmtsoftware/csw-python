@@ -116,7 +116,7 @@ class LocationService:
     postUri = f"{baseUri}post-endpoint"
     wsUri = f"{baseUri}websocket-endpoint"
 
-    # {"_type":"Register","registration":{"_type":"AkkaRegistration","connection":{"prefix":"csw.testakkaservice_1","componentType":"service","connectionType":"akka"},"actorRefURI":"akka://TestAkkaServiceApp@192.168.178.32:40221/user/TestAkkaService1#1774679661"}}
+    # {"_type":"Register","registration":{"_type":"AkkaRegistration","connection":{"prefix":"CSW.testakkaservice_1","componentType":"service","connectionType":"akka"},"actorRefURI":"akka://TestAkkaServiceApp@192.168.178.32:40221/user/TestAkkaService1#1774679661"}}
     #
     def register(self, registration: Registration) -> ConnectionInfo:
         """

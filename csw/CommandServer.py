@@ -89,6 +89,7 @@ class CommandServer:
             else:
                 commandResponse = self.handler.validateCommand(runId, command)
             responseDict = commandResponse.asDict()
+            print(f"XXX responseDict = {str(responseDict)}")
             return web.json_response(responseDict)
         else:
             raise Exception("Invalid Location type: " + method)

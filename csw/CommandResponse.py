@@ -110,7 +110,7 @@ class Completed(CommandResponse):
             'runId': self.runId,
         }
         if len(self.result.paramSet) != 0:
-            d['result'] = self.result.asDict()['paramSet']
+            d['result'] = self.result.asDict()
         return d
 
 
