@@ -22,15 +22,6 @@ class ConnectionType(Enum):
     TcpType = "tcp"
     AkkaType = "akka"
 
-
-# XXX TODO FIXME: Still needed?
-class RegType(Enum):
-    HttpRegistration = "HttpRegistration"
-    TcpRegistration = "TcpRegistration"
-    # Akka registration not supported in Python
-    # AkkaRegistration = "AkkaRegistration"
-
-
 @dataclass_json
 @dataclass
 class ConnectionInfo:
@@ -126,10 +117,8 @@ class LocationService:
         :return:
         """
         regType = registration.__class__.__name__
-        # jsonBody = f'{{"Register": {{"{regType}": {registration.to_json()}}}}}'
         regJson = json.loads(registration.to_json())
         regJson['_type'] = registration.__class__.__name__
-        # '_type': self.__class__.__name__
         jsonBody = f'{{"_type": "Register", "registration": {json.dumps(regJson)}}}'
         print(f'XXX {jsonBody}')
         r = requests.post(self.postUri, json=json.loads(jsonBody))
