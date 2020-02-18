@@ -4,6 +4,8 @@ import sys
 import os
 import time
 
+from _pytest import pathlib
+
 from csw.EventSubscriber import EventSubscriber
 from csw.EventTime import EventTime
 
@@ -31,10 +33,11 @@ def test_pub_sub():
     publishEvent3(prefix, pub)
     # make sure assembly has time to write the file
     time.sleep(0.5)
+    dir = pathlib.Path(__file__).parent.absolute()
     # compare file created by assembly with known good version
-    assert filecmp.cmp("PyTestAssemblyHandlers.out", "/tmp/PyTestAssemblyHandlers.out")
+    assert filecmp.cmp(f"{dir}/PyTestAssemblyHandlers.out", "/tmp/PyTestAssemblyHandlers.out")
     # compare file created from received events below with known good version
-    assert filecmp.cmp("PyTestAssemblyHandlers.in", "/tmp/PyTestAssemblyHandlers.in")
+    assert filecmp.cmp(f"{dir}/PyTestAssemblyHandlers.in", "/tmp/PyTestAssemblyHandlers.in")
     thread.stop()
 
 def publishEvent1(prefix: str, pub: EventPublisher):

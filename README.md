@@ -2,7 +2,7 @@
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
 
-Note: Python version 3.7 or greater is required.
+Note: Python version 3.7 is required.
 
 ## CSW Event Service
 
