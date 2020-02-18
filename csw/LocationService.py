@@ -170,17 +170,6 @@ class LocationService:
         if len(maybeResult) != 0:
             return Location.makeLocation(maybeResult[0])
 
-    # //  case class Register(registration: Registration)                                   extends LocationHttpMessage
-    # //  case class Unregister(connection: Connection)                                     extends LocationHttpMessage
-    # //  case object UnregisterAll                                                         extends LocationHttpMessage
-    # //  case class Find(connection: TypedConnection[Location])                            extends LocationHttpMessage
-    # //  case class Resolve(connection: TypedConnection[Location], within: FiniteDuration) extends LocationHttpMessage
-    # //  case object ListEntries                                                           extends LocationHttpMessage
-    # //  case class ListByComponentType(componentType: ComponentType)                      extends LocationHttpMessage
-    # //  case class ListByHostname(hostname: String)                                       extends LocationHttpMessage
-    # //  case class ListByConnectionType(connectionType: ConnectionType)                   extends LocationHttpMessage
-    # //  case class ListByPrefix(prefix: Prefix)                                           extends LocationHttpMessage
-
     @staticmethod
     def _list(jsonBody: str) -> List[Location]:
         r = requests.post(LocationService.postUri, json=json.loads(jsonBody))
