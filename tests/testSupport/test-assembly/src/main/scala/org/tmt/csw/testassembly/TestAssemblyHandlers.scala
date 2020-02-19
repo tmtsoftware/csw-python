@@ -52,33 +52,22 @@ object TestAssemblyHandlers {
 
   // Generate a test file with the JSON for the received events, as an easy way to compare with the expected values
   private val eventTestFile = new File("/tmp/PyTestAssemblyEventHandlers.out")
-  private var eventCount = 0
 
   // Actor to receive events
   private def eventHandler(log: Logger): Behavior[Event] = {
     def handleEvent(event: SystemEvent): Unit = {
       log.info(s"Received event: $event")
-      // Check that event time is recent
-      if (UTCTime
-            .now()
-            .value
-            .getEpochSecond - event.eventTime.value.getEpochSecond < 5) {
+      if (event.eventName.name.startsWith("testEvent")) {
+        // Check that event time is recent
         // Create the file when the first event is received from the test, close it on the last
-        val append = eventCount != 0
+        val append = event.eventName.name != "testEvent1"
         val testFd = new FileOutputStream(eventTestFile, append)
-        eventCount = eventCount + 1
         val ev: Event = event.copy(
           eventId = Id("test"),
           eventTime = UTCTime(Instant.ofEpochSecond(0)))
         val json = Json.encode(ev).toUtf8String + "\n"
         testFd.write(json.getBytes)
         testFd.close()
-        if (eventCount == eventNames.size) {
-          eventCount = 0
-        }
-      } else {
-        log.warn(
-          s"Event is too old: UTC Now: ${UTCTime.now().value}, Event Time: ${event.eventTime.value}")
       }
     }
 

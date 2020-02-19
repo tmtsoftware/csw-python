@@ -35,8 +35,8 @@ class TestEventsWithAssembly:
     sub = EventSubscriber()
     prefix = "CSW.TestPublisher"
 
-    def setup_method(self):
-        self.cleanup()
+    # def setup_method(self):
+    #     self.cleanup()
 
     def teardown_method(self):
         self.cleanup()
@@ -61,11 +61,11 @@ class TestEventsWithAssembly:
             self.publishEvent3()
             print("Published three events...")
             # make sure assembly has time to write the file
-            time.sleep(0.5)
-            # compare file created by assembly with known good version
-            assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
+            time.sleep(3)
             # compare file created from received events below with known good version
             assert filecmp.cmp(self.inFile, self.tmpInFile, False)
+            # compare file created by assembly with known good version
+            assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
             print("Event pub/sub tests passed")
         finally:
             print("Stopping subscriber...")

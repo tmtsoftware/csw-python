@@ -4,6 +4,10 @@ This package contains python APIs for the [TMT Common Software (CSW)](https://gi
 
 Note: Python version 3.7 is required.
 
+The latest release has been published to https://pypi.org/project/tmtpycsw/ and can be installed with:
+
+    pip install tmtpycsw
+
 ## CSW Event Service
 
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
@@ -15,7 +19,7 @@ You can publish events as well as subscribe to events in Python. See the example
 The `TestCommandServer` class lets you start an HTTP server that will accept CSW Setup commands.
 By overriding the `onSetup` and `onOneway` methods, you can handle commands being sent from a CSW component in Python code
 and return a CommandResponse to the component. The messages are serialized using JSON (events use CBOR, since talking directly to Redis).
-See the `examples/TestCommandServer` class for a code example.
+See the [tests/test_commands_with_assembly.py](tests/test_commands_with_assembly.py) class for a code example.
 
 ## Installation
 
@@ -142,21 +146,6 @@ class MyComponentHandlers(ComponentHandlers):
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
-        # filt = command.get("filter").values[0]
-        # encoder = command.get("encoder").values[0]
-        # print(f"filter = {filt}, encoder = {encoder}")
-
-        # --- Example return values ---
-
-        # return Completed(runId), None
-
-        # return Error(runId, "There is a problem ..."), None
-
-        # return Invalid(runId, MissingKeyIssue("Missing required key XXX")), None
-
-        # result = Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])])
-        # return Completed(runId, result), None
-
         if command.commandName == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
             return Started(runId, "Long running task in progress..."), task
@@ -202,5 +191,5 @@ class MyComponentHandlers(ComponentHandlers):
 
 
 # noinspection PyTypeChecker
-commandServer = CommandServer("csw.pycswTest", MyComponentHandlers())
+commandServer = CommandServer("CSW.pycswTest", MyComponentHandlers())
 ```

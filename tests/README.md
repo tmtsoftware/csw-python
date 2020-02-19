@@ -1,6 +1,12 @@
 # Running the Tests
 
-Before running the tests, start the CSW services:
+A script is provided to run the tests:
+
+    runTest.sh
+
+This assumes that csw-services.sh, sbt and pytest are in your shell path and that all the required python packages are installed.
+
+Alternatively, to manually run the tests: start the CSW services:
 
     csw-services.sh start
 
