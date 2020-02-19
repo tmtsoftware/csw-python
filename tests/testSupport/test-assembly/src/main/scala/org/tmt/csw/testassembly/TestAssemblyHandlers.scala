@@ -43,6 +43,7 @@ object TestAssemblyHandlers {
   // Actor to receive events
   private def eventHandler(log: Logger): Behavior[Event] = {
     def handleEvent(event: SystemEvent): Unit = {
+      log.info(s"Received event: $event")
       // Check that event time is recent
       if (UTCTime
             .now()
