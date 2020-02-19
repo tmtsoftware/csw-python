@@ -9,6 +9,7 @@ from aiohttp.web_response import Response
 import atexit
 import uuid
 
+from aiohttp.web_runner import GracefulExit
 from aiohttp.web_ws import WebSocketResponse
 from dataclasses_json import dataclass_json
 
@@ -51,6 +52,7 @@ class QueryFinal:
         timeoutInSeconds = obj['timeoutInSeconds']
         return QueryFinal(runId, timeoutInSeconds)
 
+
 @dataclass
 @dataclass_json
 class SubscribeCurrentState:
@@ -65,11 +67,13 @@ class SubscribeCurrentState:
         stateNames = obj["names"]
         return SubscribeCurrentState(stateNames)
 
+
 class CommandServer:
     """
     Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
     so that CSW components can locate it and send commands to it.
     """
+    app = web.Application()
     crm = CommandResponseManager()
 
     async def _handlePost(self, request: Request) -> Response:
@@ -89,7 +93,6 @@ class CommandServer:
             else:
                 commandResponse = self.handler.validateCommand(runId, command)
             responseDict = commandResponse.asDict()
-            print(f"XXX responseDict = {str(responseDict)}")
             return web.json_response(responseDict)
         else:
             raise Exception("Invalid Location type: " + method)
@@ -133,14 +136,17 @@ class CommandServer:
         locationService = LocationService()
         connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
         atexit.register(locationService.unregister, connection)
+        # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
 
-    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082, currentStatePublishSeconds: int = 2):
+    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
         self.handler = handler
-        app = web.Application()
-        app.add_routes([
+        self.port = port
+        self.app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
         self._registerWithLocationService(prefix, port)
-        web.run_app(app, port=port)
+
+    def start(self):
+        web.run_app(self.app, port=self.port)

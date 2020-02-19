@@ -18,19 +18,22 @@ from csw.EventPublisher import EventPublisher
 
 
 # Test that publishes events for an assembly running in the background (see ./testSupport).
-# Note: Requires that CSW event service is running (csw-services.sh start -es 6379) and the test assembly
+# Note: Requires that CSW event service is running (csw-services.sh start) and the test assembly
 # has been compiled and started. See README.md.
-# The assembly writes the received events as JSON to "/tmp/PyTestAssemblyHandlers.out" and we compare with
-# a known, valid copy. To test the subscriber API, another file "/tmp/PyTestAssemblyHandlers.in" is
+# The assembly writes the received events as JSON to "/tmp/PyTestAssemblyEventHandlers.out" and we compare with
+# a known, valid copy. To test the subscriber API, another file "/tmp/PyTestAssemblyEventHandlers.in" is
 # generated from the received events here.
-class TestWithAssembly:
+class TestEventsWithAssembly:
     dir = pathlib.Path(__file__).parent.absolute()
-    inFileName = "PyTestAssemblyHandlers.in"
-    outFileName = "PyTestAssemblyHandlers.out"
+    inFileName = "PyTestAssemblyEventHandlers.in"
+    outFileName = "PyTestAssemblyEventHandlers.out"
     tmpInFile = f"/tmp/{inFileName}"
     tmpOutFile = f"/tmp/{outFileName}"
     inFile = f"{dir}/{inFileName}"
     outFile = f"{dir}/{outFileName}"
+    pub = EventPublisher()
+    sub = EventSubscriber()
+    prefix = "CSW.TestPublisher"
 
     def setup_method(self):
         self.cleanup()
@@ -45,18 +48,17 @@ class TestWithAssembly:
             os.remove(self.tmpOutFile)
 
     def test_pub_sub(self):
-
         time.sleep(1.0)
         print("Starting test...")
-        pub = EventPublisher()
-        sub = EventSubscriber()
-        prefix = "CSW.TestPublisher"
-        thread = sub.subscribe([prefix + "." + "testEvent1", prefix + "." + "testEvent2", prefix + "." + "testEvent3"],
-                               self.callback)
+        thread = self.sub.subscribe(
+            [self.prefix + "." + "testEvent1",
+             self.prefix + "." + "testEvent2",
+             self.prefix + "." + "testEvent3"],
+            self.callback)
         try:
-            self.publishEvent1(prefix, pub)
-            self.publishEvent2(prefix, pub)
-            self.publishEvent3(prefix, pub)
+            self.publishEvent1()
+            self.publishEvent2()
+            self.publishEvent3()
             print("Published three events...")
             # make sure assembly has time to write the file
             time.sleep(0.5)
@@ -69,25 +71,25 @@ class TestWithAssembly:
             print("Stopping subscriber...")
             thread.stop()
 
-    def publishEvent1(self, prefix: str, pub: EventPublisher):
+    def publishEvent1(self):
         keyName = "assemblyEventValue"
         keyType = 'DoubleKey'
         values = [42.0]
         param = Parameter(keyName, keyType, values)
         paramSet = [param]
-        event = SystemEvent(prefix, "testEvent1", paramSet)
-        pub.publish(event)
+        event = SystemEvent(self.prefix, "testEvent1", paramSet)
+        self.pub.publish(event)
 
-    def publishEvent2(self, prefix: str, pub: EventPublisher):
+    def publishEvent2(self):
         intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
         intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
-        event = SystemEvent(prefix, "testEvent2", [intParam, intArrayParam, floatArrayParam, intMatrixParam])
-        pub.publish(event)
+        event = SystemEvent(self.prefix, "testEvent2", [intParam, intArrayParam, floatArrayParam, intMatrixParam])
+        self.pub.publish(event)
 
-    def publishEvent3(self, prefix: str, pub: EventPublisher):
+    def publishEvent3(self):
         intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
         floatParam = Parameter("floatValue", "FloatKey", [float(42.1)], "arcsec")
         longParam = Parameter("longValue", "LongKey", [42], "arcsec")
@@ -119,8 +121,8 @@ class TestWithAssembly:
 
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
-        event = SystemEvent(prefix, "testEvent3", paramSet)
-        pub.publish(event)
+        event = SystemEvent(self.prefix, "testEvent3", paramSet)
+        self.pub.publish(event)
 
     # Event subscriber callback
     def callback(self, systemEvent):

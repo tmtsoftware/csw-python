@@ -4,10 +4,6 @@ Before running the tests, start the CSW services:
 
     csw-services.sh start
 
-or, at least the event service:
-
-    csw-services.sh start -es 6379
-
 Then compile and start the test assembly:
 
     cd testSupport

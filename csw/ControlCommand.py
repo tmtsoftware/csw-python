@@ -18,7 +18,6 @@ class ControlCommand:
         """
         Returns a ControlCommand for the given dict.
         """
-        print(f'XXX obj = {str(obj)}')
         typ = obj["_type"]
         source = obj['source']
         commandName = obj['commandName']

@@ -33,6 +33,7 @@ class ConnectionInfo:
 @dataclass_json
 @dataclass
 class ResolveInfo:
+    _type: str
     connection: ConnectionInfo
     within: str
 
@@ -40,28 +41,28 @@ class ResolveInfo:
 @dataclass_json
 @dataclass
 class Location:
+    _type: str
     connection: ConnectionInfo
     uri: str
 
     @staticmethod
     def makeLocation(obj: dict):
-        data = json.dumps(list(obj.values())[0])
-        key = list(obj.keys())[0]
-        if key == "HttpLocation":
-            return HttpLocation.schema().loads(data)
-        elif key == "TcpLocation":
-            return TcpLocation.schema().loads(data)
-        elif key == "AkkaLocation":
-            return AkkaLocation.schema().loads(data)
+        typ = obj["_type"]
+        s = json.dumps(obj)
+        if typ == "HttpLocation":
+            return HttpLocation.schema().loads(s)
+        elif typ == "TcpLocation":
+            return TcpLocation.schema().loads(s)
+        elif typ == "AkkaLocation":
+            return AkkaLocation.schema().loads(s)
         else:
-            raise Exception("Invalid Location type: " + key)
+            raise Exception("Invalid Location type: " + typ)
 
 
 @dataclass_json
 @dataclass
 class AkkaLocation(Location):
-    prefix: str
-    actorRef: str
+    pass
 
 
 @dataclass_json
@@ -120,7 +121,6 @@ class LocationService:
         regJson = json.loads(registration.to_json())
         regJson['_type'] = registration.__class__.__name__
         jsonBody = f'{{"_type": "Register", "registration": {json.dumps(regJson)}}}'
-        print(f'XXX {jsonBody}')
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
@@ -132,6 +132,7 @@ class LocationService:
         :param connection: an already registered connection
         :return:
         """
+        print(f"Unregistering connection {connection} from the Location Service.")
         jsonBody = f'{{"_type": "Unregister", "connection": {connection.to_json()}}}'
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
@@ -161,8 +162,8 @@ class LocationService:
         :param withinSecs: max number of seconds to wait for the connection to be found
         :return: the Location
         """
-        resolveInfo = ResolveInfo(connection, f"{withinSecs} seconds")
-        jsonBody = f'{{"_type": "Resolve", "connection": {resolveInfo.to_json()}}}'
+        resolveInfo = ResolveInfo("Resolve", connection, f"{withinSecs} seconds")
+        jsonBody = resolveInfo.to_json()
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)

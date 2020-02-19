@@ -198,8 +198,7 @@ class Invalid(CommandResponse):
             "_type": self.__class__.__name__,
             'runId': self.runId,
             'issue': {
-                self.issue.__class__.__name__: {
-                    "reason": self.issue.reason
-                }
+                "_type": self.issue.__class__.__name__,
+                "reason": self.issue.reason
             }
         }
