@@ -12,12 +12,12 @@ The latest release has been published to https://pypi.org/project/tmtpycsw/ and 
 
 The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
 Python wrapper classes were added for convenience.
-You can publish events as well as subscribe to events in Python. See the examples directory for some code examples.
+You can publish events as well as subscribe to events in Python. See the tests and examples directories for some code examples.
 
 ## Command Service API
 
-The `TestCommandServer` class lets you start an HTTP server that will accept CSW Setup commands.
-By overriding the `onSetup` and `onOneway` methods, you can handle commands being sent from a CSW component in Python code
+The `CommandServer` class lets you start an HTTP server that will accept CSW Setup commands to implement an assembly or HCD in Python.
+By overriding the `onSetup` and `onOneway` methods of the `ComponentHandlers` class, you can handle commands being sent from a CSW component in Python code
 and return a CommandResponse to the component. The messages are serialized using JSON (events use CBOR, since talking directly to Redis).
 See the [tests/test_commands_with_assembly.py](tests/test_commands_with_assembly.py) class for a code example.
 
@@ -25,7 +25,7 @@ See the [tests/test_commands_with_assembly.py](tests/test_commands_with_assembly
 
 You can install the `tmtpycsw` package with pip3 (or pip for python3):
 
-    pip3 install --user -i https://test.pypi.org/simple/ --upgrade tmtpycsw
+    pip3 install --upgrade tmtpycsw
 
 ### Examples 
 
