@@ -121,7 +121,10 @@ class CommandIssue:
     reason: str
 
 
-@dataclass
+class HcdBusyIssue(CommandIssue):
+    """Returned when the HCD is busy and can't process a command"""
+
+
 class MissingKeyIssue(CommandIssue):
     """Returned when a command is missing a required key/parameter"""
 
