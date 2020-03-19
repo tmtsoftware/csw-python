@@ -67,6 +67,7 @@ object TestAssemblyHandlers {
           eventTime = UTCTime(Instant.ofEpochSecond(0)))
         val json = Json.encode(ev).toUtf8String + "\n"
         testFd.write(json.getBytes)
+        log.info(s"XXX Writing to $eventTestFile")
         testFd.close()
       }
     }
