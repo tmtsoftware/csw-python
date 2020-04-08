@@ -140,6 +140,14 @@ class CommandServer:
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
 
     def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+        """
+        Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
+        so that CSW components can locate it and send commands to it.
+        :param prefix: a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
+                        subsystem names and name is the name of the command server
+        :param handler: command handler notified when commands are received
+        :param port:    optional port for HTTP server
+        """
         self.handler = handler
         self.port = port
         self.app.add_routes([

@@ -193,3 +193,5 @@ class MyComponentHandlers(ComponentHandlers):
 # noinspection PyTypeChecker
 commandServer = CommandServer("CSW.pycswTest", MyComponentHandlers())
 ```
+
+Note that in the above example "CSW.pycswTest" is the prefix for the command service, in the format: $subsystem.$name.
