@@ -37,6 +37,9 @@ class EqFrame(Enum):
 
 
 class SolarSystemObject(Enum):
+    """
+    Enum type: Represents the possible values for a Solar System Object.
+    """
     Mercury = 0
     Venus = 1
     Moon = 2

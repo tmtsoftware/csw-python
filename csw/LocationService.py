@@ -10,6 +10,9 @@ import json
 # Python API for CSW Location Service
 
 class ComponentType(Enum):
+    """
+    Enum type: Represents a type of the CSW Component.
+    """
     Assembly = "assembly"
     HCD = "hcd"
     Container = "container"
@@ -18,9 +21,15 @@ class ComponentType(Enum):
 
 
 class ConnectionType(Enum):
+    """
+    Enum type: Represents a type of connection offered by the Component.
+    Note that AkkaType is for Akka Actor based connections.
+    Python applications can only communicate via HTTP or TCP connections.
+    """
     HttpType = "http"
     TcpType = "tcp"
     AkkaType = "akka"
+
 
 @dataclass_json
 @dataclass
@@ -46,7 +55,7 @@ class Location:
     uri: str
 
     @staticmethod
-    def makeLocation(obj: dict):
+    def _makeLocation(obj: dict):
         typ = obj["_type"]
         s = json.dumps(obj)
         if typ == "HttpLocation":
@@ -103,6 +112,7 @@ class TcpRegistration(Registration):
     Used to register a tcp based service with the Location Service.
     """
 
+
 class LocationService:
     baseUri = "http://127.0.0.1:7654/"
     postUri = f"{baseUri}post-endpoint"
@@ -150,7 +160,7 @@ class LocationService:
             raise Exception(r.text)
         maybeResult = json.loads(r.text)
         if len(maybeResult) != 0:
-            return Location.makeLocation(maybeResult[0])
+            return Location._makeLocation(maybeResult[0])
 
     # "within":"2 seconds"}}
     def resolve(self, connection: ConnectionInfo, withinSecs: int = "5") -> Location:
@@ -169,14 +179,14 @@ class LocationService:
             raise Exception(r.text)
         maybeResult = json.loads(r.text)
         if len(maybeResult) != 0:
-            return Location.makeLocation(maybeResult[0])
+            return Location._makeLocation(maybeResult[0])
 
     @staticmethod
     def _list(jsonBody: str) -> List[Location]:
         r = requests.post(LocationService.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        return list(map(lambda x: Location.makeLocation(x), json.loads(r.text)))
+        return list(map(lambda x: Location._makeLocation(x), json.loads(r.text)))
 
     @dispatch()
     def list(self) -> List[Location]:

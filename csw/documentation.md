@@ -12,7 +12,7 @@ not clear.
 
 ### Python Dependencies:
 
-The following Python packages need to be installed with pip (pip3):
+The following Python dependencies need to be installed with pip (pip3):
 
 * astropy
 * cbor2
@@ -32,8 +32,10 @@ The latest release has been published to https://pypi.org/project/tmtpycsw/ and 
 ## CSW Location Service
 
 The Location Service can be used to register, list and lookup CSW services.
+Python applications can access `tcp` and `http` based services, but not `akka` services,
+which are based on akka actors.
 
-For example:
+The following code demonstrates the Python API for the Location Service:
 
 ```python
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
@@ -51,11 +53,6 @@ def test_location_service():
     # List the registered HCDs
     print("\nHCDs:")
     for i in locationService.list(ComponentType.HCD):
-        print("    " + str(i))
-
-    # List the registered http connections
-    print("\nConnections on 192.168.178.78")
-    for i in locationService.list("192.168.178.78"):
         print("    " + str(i))
 
     # List the registered http connections

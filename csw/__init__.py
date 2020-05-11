@@ -9,4 +9,3 @@ See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentati
 
 .. include:: ./documentation.md
 """
-
