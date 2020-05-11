@@ -18,25 +18,43 @@ from csw.ComponentHandlers import ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 
+# Ignore generated functions in API docs
+__pdoc__ = {}
+def _pdocIgnoreGenerated(className: str):
+    __pdoc__[f"{className}.from_dict"] = False
+    __pdoc__[f"{className}.from_json"] = False
+    __pdoc__[f"{className}.schema"] = False
+    __pdoc__[f"{className}.to_dict"] = False
+    __pdoc__[f"{className}.to_json"] = False
 
+_pdocIgnoreGenerated("Validate")
 @dataclass
 @dataclass_json
 class Validate:
     controlCommand: ControlCommand
 
 
+_pdocIgnoreGenerated("Submit")
 @dataclass
 @dataclass_json
 class Submit:
     controlCommand: ControlCommand
 
 
+_pdocIgnoreGenerated("Oneway")
 @dataclass
 @dataclass_json
 class Oneway:
+    """
+    Represents a command that does not require or expect a response
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    """
     controlCommand: ControlCommand
 
 
+_pdocIgnoreGenerated("QueryFinal")
 @dataclass
 @dataclass_json
 class QueryFinal:
@@ -44,7 +62,7 @@ class QueryFinal:
     timeoutInSeconds: int
 
     @staticmethod
-    def fromDict(obj):
+    def _fromDict(obj):
         """
         Returns a ControlCommand for the given dict.
         """
@@ -53,13 +71,14 @@ class QueryFinal:
         return QueryFinal(runId, timeoutInSeconds)
 
 
+_pdocIgnoreGenerated("SubscribeCurrentState")
 @dataclass
 @dataclass_json
 class SubscribeCurrentState:
     stateNames: List[str]
 
     @staticmethod
-    def fromDict(obj):
+    def _fromDict(obj):
         """
         Returns a SubscribeCurrentState for the given dict.
         """
@@ -73,33 +92,33 @@ class CommandServer:
     Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
     so that CSW components can locate it and send commands to it.
     """
-    app = web.Application()
-    crm = CommandResponseManager()
+    _app = web.Application()
+    _crm = CommandResponseManager()
 
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
         method = obj['_type']
         if method in {'Submit', 'Oneway', 'Validate'}:
-            command = ControlCommand.fromDict(obj['controlCommand'])
+            command = ControlCommand._fromDict(obj['controlCommand'])
             runId = str(uuid.uuid4())
             if method == 'Submit':
                 commandResponse, task = self.handler.onSubmit(runId, command)
                 if task is not None:
                     # noinspection PyTypeChecker
-                    self.crm.addTask(runId, task)
+                    self._crm.addTask(runId, task)
                     print("Long running task in progress...")
             elif method == 'Oneway':
                 commandResponse = self.handler.onOneway(runId, command)
             else:
                 commandResponse = self.handler.validateCommand(runId, command)
-            responseDict = commandResponse.asDict()
+            responseDict = commandResponse._asDict()
             return web.json_response(responseDict)
         else:
             raise Exception("Invalid Location type: " + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
-        commandResponse = await self.crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
-        responseDict = commandResponse.asDict()
+        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
+        responseDict = commandResponse._asDict()
         return web.json_response(responseDict)
 
     async def _handleWs(self, request: Request) -> WebSocketResponse:
@@ -115,12 +134,12 @@ class CommandServer:
                     obj = json.loads(msg.data)
                     method = obj['_type']
                     if method == "QueryFinal":
-                        queryFinal = QueryFinal.fromDict(obj)
+                        queryFinal = QueryFinal._fromDict(obj)
                         resp = await self._handleQueryFinal(queryFinal)
                         await ws.send_str(resp.text)
                         await ws.close()
                     elif method == "SubscribeCurrentState":
-                        stateNames = SubscribeCurrentState.fromDict(obj).stateNames
+                        stateNames = SubscribeCurrentState._fromDict(obj).stateNames
                         print(f"Received SubscribeCurrentState: stateNames = {stateNames}")
                         self.handler._subscribeCurrentState(stateNames, ws)
                     else:
@@ -143,18 +162,20 @@ class CommandServer:
         """
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
         so that CSW components can locate it and send commands to it.
-        :param prefix: a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
-                        subsystem names and name is the name of the command server
-        :param handler: command handler notified when commands are received
-        :param port:    optional port for HTTP server
+
+        Args:
+            prefix (str): a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
+                          subsystem names and name is the name of the command server
+            handler (ComponentHandlers): command handler notified when commands are received
+            port (int): optional port for HTTP server
         """
         self.handler = handler
         self.port = port
-        self.app.add_routes([
+        self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
         self._registerWithLocationService(prefix, port)
 
     def start(self):
-        web.run_app(self.app, port=self.port)
+        web.run_app(self._app, port=self.port)

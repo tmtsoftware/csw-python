@@ -30,35 +30,38 @@ class Event:
     def eventType(self) -> str:
         """
         This is only here to make the Event class abstract.
-        :return: the type of the event
+
+        Returns: str
+            the type of the event
         """
         pass
 
     @staticmethod
-    def fromDict(obj):
+    def _fromDict(obj):
         """
         Returns a Event for the given dict.
         """
         typ = obj['_type']
         assert (typ in {"SystemEvent", "ObserveEvent"})
-        paramSet = list(map(lambda p: Parameter.fromDict(p), obj['paramSet']))
-        eventTime = EventTime.fromDict(obj['eventTime'])
+        paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
+        eventTime = EventTime._fromDict(obj['eventTime'])
         if typ == 'SystemEvent':
             return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
         else:
             return ObserveEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: dict
+            a dictionary corresponding to this object
         """
         return {
             "_type": self.__class__.__name__,
             'eventId': self.eventId,
             'source': self.source,
             'eventName': self.eventName,
-            'eventTime': self.eventTime.asDict(),
-            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
+            'eventTime': self.eventTime._asDict(),
+            'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }
 
     def isInvalid(self):
@@ -67,8 +70,12 @@ class Event:
     def get(self, keyName: str):
         """
         Gets the parameter with the given name, or else returns None
-        :param str keyName: parameter name
-        :return: the parameter, if found
+
+        Args:
+            keyName (str): parameter name
+
+        Returns: Parameter|None
+            the parameter, if found
         """
         for p in self.paramSet:
             if p.keyName == keyName:
@@ -77,8 +84,12 @@ class Event:
     def exists(self, keyName: str):
         """
         Returns true if the parameter with the given name is present in the event
-        :param str keyName: parameter name
-        :return: true if the parameter is found
+
+        Args:
+            keyName (str): parameter name
+
+        Returns: bool
+            true if the parameter is found
         """
         for p in self.paramSet:
             if p.keyName == keyName:

@@ -18,9 +18,9 @@ class EventPublisher:
         """
         Publish an event to the Event Service
 
-        :param Event event: Event to be published
-        :return: None
+        Args:
+            event (Event): Event to be published
         """
         event_key = event.source + "." + event.eventName
-        obj = cbor2.dumps(event.asDict())
+        obj = cbor2.dumps(event._asDict())
         self.__redis.publish(event_key, obj)

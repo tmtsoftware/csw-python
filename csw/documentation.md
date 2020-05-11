@@ -1,3 +1,13 @@
+## Introduction
+
+This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw),
+including the
+[Location Service](https://tmtsoftware.github.io/csw/services/location.html),
+[Event Service](https://tmtsoftware.github.io/csw/services/event.html) and
+[Command Service](https://tmtsoftware.github.io/csw/commons/command.html) (receiving end only at this point).
+
+See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentation.
+
 Note that all APIs here assume that the CSW services are running (Run `csw-services.sh start`).
 
 The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
@@ -82,13 +92,16 @@ def test_location_service():
 The type of the return value from methods that return a location is a subclass of
 [Location](LocationService.html#csw.LocationService.Location).
 
-You can find more information about the Location Service [here](https://tmtsoftware.github.io/csw/services/location.html).
+You can find more information about the Location Service in the 
+ [API docs](LocationService.html#csw.LocationService.LocationService) 
+and the [CSW Location Service docs](https://tmtsoftware.github.io/csw/services/location.html).
 
 ## CSW Event Service
 
-The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) uses CBOR to serialize and deserialize events that are stored in Redis.
-Python wrapper classes were added for convenience.
-You can publish events as well as subscribe to events in Python. 
+The python API for the [CSW Event Service](https://tmtsoftware.github.io/csw/services/event.html) 
+uses CBOR to serialize and deserialize events that are stored in Redis.
+[Python wrapper classes](Event.html) were added for convenience.
+You can [publish](EventPublisher.html) events as well as [subscribe](EventSubscriber.html) to events in Python. 
 
 For example, to subscribe to an event named `myAssemblyEvent` from `testassembly` in the CSW subsystem,
 you can call `EventSubscriber().subscribe`:
@@ -117,7 +130,7 @@ class TestSubscriber3:
                 print(f"Found: {p.keyName}")
 ```
 
-See [here](csw/Event.html) for the structure of an event. There are two types of events:
+See [here](Event.html) for the structure of an event. There are two types of events:
 
 * [SystemEvent](csw.Event.SystemEvent) - used to publish data
 
@@ -127,7 +140,89 @@ In the above example, the callback expects SystemEvents.
 
 ## Command Service API
 
-The `CommandServer` class lets you start an HTTP server that will accept CSW Setup commands to implement an assembly or HCD in Python.
-By overriding the `onSetup` and `onOneway` methods of the `ComponentHandlers` class, you can handle commands being sent from a CSW component in Python code
-and return a CommandResponse to the component. The messages are serialized using JSON (events use CBOR, since talking directly to Redis).
-See the [tests/test_commands_with_assembly.py](tests/test_commands_with_assembly.py) class for a code example.
+In the current version there is no support for command service clients. 
+For now it assumed that Python code will be used to implement or help implement an HCD, for example, 
+but not send commands to other components. This may be added in a future version.
+
+The [CommandServer](CommandServer.html) class lets you start an HTTP server that will accept 
+CSW Setup commands to implement an assembly or HCD in Python.
+By overriding the `onSetup` and `onOneway` methods of the [ComponentHandlers](ComponentHandlers.html) 
+class, you can handle commands being sent from a CSW component in Python code
+and return a [CommandResponse](CommandResponse.html) to the component. 
+The messages are serialized using JSON (events use CBOR, since talking directly to Redis).
+
+Below is an example command server that accepts different types of commands.
+Note that a *long running command* should do the work in another thread and
+return the [CommandResponse](CommandResponse.html) later, while a *simple command* 
+returns immediately, possibly with a [Result](CommandResponse.html#csw.CommandResponse.Result).
+If an error occurs, [Error](CommandResponse.html#csw.CommandResponse.Error) should be returned.
+If the command is invalid , the server should return [Invalid](CommandResponse.html#csw.CommandResponse.Invalid)
+
+```python
+import sys
+import os
+import asyncio
+from asyncio import Task
+from typing import List
+from aiohttp.web_runner import GracefulExit
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
+    Error, Accepted, Started, UnsupportedCommandIssue
+from csw.CommandServer import CommandServer, ComponentHandlers
+from csw.ControlCommand import ControlCommand
+from csw.CurrentState import CurrentState
+from csw.Parameter import Parameter
+
+class MyComponentHandlers(ComponentHandlers):
+    prefix = "CSW.pycswTest"
+    commandServer: CommandServer = None
+
+    async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
+        await asyncio.sleep(3)
+        print("Long running task completed")
+        # TODO: Do this in a timer task
+        await self.publishCurrentStates()
+        return Completed(runId)
+
+    def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
+        n = len(command.paramSet)
+        print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
+        if command.commandName == "LongRunningCommand":
+            task = asyncio.create_task(self.longRunningCommand(runId, command))
+            return Started(runId, "Long running task in progress..."), task
+        elif command.commandName == "SimpleCommand":
+            return Completed(runId), None
+        elif command.commandName == "ResultCommand":
+            result = Result([Parameter("myValue", 'DoubleKey', [42.0])])
+            return Completed(runId, result), None
+        elif command.commandName == "ErrorCommand":
+            return Error(runId, "Error command received"), None
+        elif command.commandName == "InvalidCommand":
+            return Invalid(runId, MissingKeyIssue("Missing required key XXX")), None
+        else:
+            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName}")), None
+
+    def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
+        n = len(command.paramSet)
+        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.\nTEST PASSED.")
+        raise GracefulExit()
+
+    def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
+        return Accepted(runId)
+
+    # Returns the current state
+    def currentStates(self) -> List[CurrentState]:
+        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
+        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
+        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
+        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
+        return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+
+def test_command_server():
+    handlers = MyComponentHandlers()
+    commandServer = CommandServer(handlers.prefix, handlers)
+    handlers.commandServer = commandServer
+    commandServer.start()
+```
+

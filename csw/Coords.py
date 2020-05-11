@@ -67,7 +67,7 @@ class Coord:
     tag: Tag
 
     @staticmethod
-    def fromDict(obj: dict):
+    def _fromDict(obj: dict):
         switcher = {
             "EqCoord": EqCoord,
             "SolarSystemCoord": SolarSystemCoord,
@@ -78,7 +78,7 @@ class Coord:
         typ = obj["_type"]
         return switcher[typ].fromValueDict(obj)
 
-    def asDict(self):
+    def _asDict(self):
         pass
 
 
@@ -103,7 +103,7 @@ class EqCoord(Coord):
         """
         return EqCoord(Tag(tag), Angle(ra), Angle(dec), frame, catalogName, ProperMotion(pm[0], pm[1]))
 
-    def asDict(self):
+    def _asDict(self):
         return {
             "_type": self.__class__.__name__,
             "tag": self.tag.name,
@@ -137,7 +137,7 @@ class SolarSystemCoord(Coord):
     def make(tag: str, body: SolarSystemObject):
         return SolarSystemCoord(Tag(tag), body)
 
-    def asDict(self):
+    def _asDict(self):
         return {
             "_type": self.__class__.__name__,
             "tag": self.tag.name,
@@ -177,7 +177,7 @@ class MinorPlanetCoord(Coord):
         return MinorPlanetCoord(Tag(tag), epoch, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
                                 meanDistance, eccentricity, Angle(meanAnomaly))
 
-    def asDict(self):
+    def _asDict(self):
         return {
             "_type": self.__class__.__name__,
             "tag": self.tag.name,
@@ -229,7 +229,7 @@ class CometCoord(Coord):
                           Angle(argOfPerihelion),
                           perihelionDistance, eccentricity)
 
-    def asDict(self):
+    def _asDict(self):
         return {
             "_type": self.__class__.__name__,
             "tag": self.tag.name,
@@ -271,7 +271,7 @@ class AltAzCoord(Coord):
         """
         return AltAzCoord(Tag(tag), Angle(alt), Angle(az))
 
-    def asDict(self):
+    def _asDict(self):
         return {
             "_type": self.__class__.__name__,
             "tag": self.tag.name,

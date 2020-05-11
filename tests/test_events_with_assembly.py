@@ -133,6 +133,6 @@ class TestEventsWithAssembly:
         systemEvent.eventTime = EventTime(0, 0)
         mode = "w" if (systemEvent.eventName == "testEvent1") else "a"
         f = open(self.tmpInFile, mode)
-        jsonStr = str(systemEvent.asDict())
+        jsonStr = str(systemEvent._asDict())
         f.write(f"{jsonStr}\n")
         f.close()

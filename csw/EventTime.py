@@ -10,11 +10,11 @@ class EventTime:
     seconds: int
     nanos: int
 
-    def asDict(self):
+    def _asDict(self):
         return asdict(self)
 
     @staticmethod
-    def fromDict(obj: dict):
+    def _fromDict(obj: dict):
         return EventTime(**obj)
 
     @staticmethod

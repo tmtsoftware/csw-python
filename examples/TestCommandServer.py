@@ -22,9 +22,13 @@ class MyComponentHandlers(ComponentHandlers):
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
         Overrides the base class onSubmit method to handle commands from a CSW component
-        :param runId: unique id for this command
-        :param command: contains the ControlCommand from CSW
-        :return: a subclass of CommandResponse that is serialized and passed back to the CSW component
+
+        Args:
+            runId (str): unique id for this command
+            command (ControlCommand): contains the ControlCommand from CSW
+
+        Returns: (CommandResponse, Task)
+            a subclass of CommandResponse that is serialized and passed back to the CSW component
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
@@ -57,9 +61,13 @@ class MyComponentHandlers(ComponentHandlers):
     def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class onOneway method to handle commands from a CSW component.
-        :param runId: unique id for this command
-        :param command: contains the ControlCommand from CSW
-        :return: an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
+
+        Args:
+            runId (str): unique id for this command
+            command (ControlCommand): contains the ControlCommand from CSW
+
+        Returns: CommandResponse
+            an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
@@ -71,9 +79,13 @@ class MyComponentHandlers(ComponentHandlers):
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         """
         Overrides the base class validate method to verify that the given command is valid.
-        :param runId: unique id for this command
-        :param command: contains the ControlCommand from CSW
-        :return: an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
+
+        Args:
+            runId (str): unique id for this command
+            command (ControlCommand): contains the ControlCommand from CSW
+
+        Returns: CommandResponse
+            an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
         """
         return Accepted(runId)
 

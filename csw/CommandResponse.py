@@ -12,9 +12,9 @@ class CommandResponse:
     """
     runId: str
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: XXX: a dictionary corresponding to this object
         """
         return {
             "_type": self.__class__.__name__,
@@ -39,9 +39,10 @@ class Error(CommandResponse):
     """Represents a negative response that describes an error in executing the command"""
     message: str
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: dict
+            a dictionary corresponding to this object
         """
         return {
             "_type": self.__class__.__name__,
@@ -55,9 +56,10 @@ class Locked(CommandResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
     message: str
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: dict
+            a dictionary corresponding to this object
         """
         return {
             "_type": self.__class__.__name__,
@@ -71,9 +73,10 @@ class Started(CommandResponse):
     """Represents an intermediate response stating a long running command has been started"""
     message: str
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: dict
+            a dictionary corresponding to this object
         """
         return {
             "_type": self.__class__.__name__,
@@ -87,12 +90,13 @@ class Result:
     """A result containing parameters for command response"""
     paramSet: List[Parameter]
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: dict
+            a dictionary corresponding to this object
         """
         return {
-            'paramSet': list(map(lambda p: p.asDict(), self.paramSet))
+            'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }
 
 
@@ -101,16 +105,17 @@ class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
     result: Result = Result([])
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary corresponding to this object
+        Returns: dict
+            a dictionary corresponding to this object
         """
         d = {
             "_type": self.__class__.__name__,
             'runId': self.runId,
         }
         if len(self.result.paramSet) != 0:
-            d['result'] = self.result.asDict()
+            d['result'] = self.result._asDict()
         return d
 
 
@@ -193,9 +198,10 @@ class OtherIssue(CommandIssue):
 class Invalid(CommandResponse):
     issue: CommandIssue
 
-    def asDict(self):
+    def _asDict(self):
         """
-        :return: a dictionary for this object
+        Returns: dict
+            a dictionary for this object
         """
         return {
             "_type": self.__class__.__name__,
