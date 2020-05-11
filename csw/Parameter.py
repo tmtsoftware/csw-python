@@ -13,7 +13,7 @@ class Parameter:
     Creates a Parameter (keys with values, units).
     See https://tmtsoftware.github.io/csw/0.7.0-RC1/messages/keys-parameters.html for key type names.
     See https://tmtsoftware.github.io/csw/0.7.0-RC1/messages/units.html for list of unit names.
-    'values' is an array of values, or a nested array for array and matrix types.
+    :param values: an array of values, or a nested array for array and matrix types.
     """
     keyName: str
     keyType: str
