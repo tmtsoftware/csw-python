@@ -76,7 +76,7 @@ class Coord:
             "AltAzCoord": AltAzCoord
         }
         typ = obj["_type"]
-        return switcher[typ].fromValueDict(obj)
+        return switcher[typ]._fromValueDict(obj)
 
     def _asDict(self):
         pass
@@ -115,7 +115,7 @@ class EqCoord(Coord):
         }
 
     @staticmethod
-    def fromValueDict(obj: dict):
+    def _fromValueDict(obj: dict):
         return EqCoord(
             tag=Tag(obj["tag"]),
             ra=_CswAngle(obj["ra"]).toAngle().to(u.deg),
@@ -145,7 +145,7 @@ class SolarSystemCoord(Coord):
         }
 
     @staticmethod
-    def fromValueDict(obj: dict):
+    def _fromValueDict(obj: dict):
         return SolarSystemCoord(
             tag=Tag(obj["tag"]),
             body=SolarSystemObject[obj["body"]]
@@ -191,7 +191,7 @@ class MinorPlanetCoord(Coord):
         }
 
     @staticmethod
-    def fromValueDict(obj: dict):
+    def _fromValueDict(obj: dict):
         return MinorPlanetCoord(
             tag=Tag(obj["tag"]),
             epoch=obj["epoch"],
@@ -242,7 +242,7 @@ class CometCoord(Coord):
         }
 
     @staticmethod
-    def fromValueDict(obj: dict):
+    def _fromValueDict(obj: dict):
         return CometCoord(
             tag=Tag(obj["tag"]),
             epochOfPerihelion=obj["epochOfPerihelion"],
@@ -280,7 +280,7 @@ class AltAzCoord(Coord):
         }
 
     @staticmethod
-    def fromValueDict(obj: dict):
+    def _fromValueDict(obj: dict):
         return AltAzCoord(
             tag=Tag(obj["tag"]),
             alt=_CswAngle(obj["alt"]).toAngle().to(u.deg),

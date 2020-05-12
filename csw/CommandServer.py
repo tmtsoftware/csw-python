@@ -31,6 +31,12 @@ _pdocIgnoreGenerated("Validate")
 @dataclass
 @dataclass_json
 class Validate:
+    """
+    A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    """
     controlCommand: ControlCommand
 
 
@@ -38,6 +44,12 @@ _pdocIgnoreGenerated("Submit")
 @dataclass
 @dataclass_json
 class Submit:
+    """
+    Represents a command that requires a response (of type CommandResponse).
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    """
     controlCommand: ControlCommand
 
 
@@ -58,6 +70,14 @@ _pdocIgnoreGenerated("QueryFinal")
 @dataclass
 @dataclass_json
 class QueryFinal:
+    """
+    A message sent to query the final result of a long running command.
+    The response should be a CommandResponse.
+
+    Args:
+        runId (str): The command's runId
+        timeoutInSeconds (int) amount of time to wait
+    """
     runId: str
     timeoutInSeconds: int
 
@@ -75,6 +95,12 @@ _pdocIgnoreGenerated("SubscribeCurrentState")
 @dataclass
 @dataclass_json
 class SubscribeCurrentState:
+    """
+    Message used to subscribe to the current state of a component.
+
+    Args:
+        stateNames (List[str]) list of current state names to subscribe to
+    """
     stateNames: List[str]
 
     @staticmethod
@@ -178,4 +204,7 @@ class CommandServer:
         self._registerWithLocationService(prefix, port)
 
     def start(self):
+        """
+        Starts the command http server in a thread
+        """
         web.run_app(self._app, port=self.port)

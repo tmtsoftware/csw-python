@@ -50,7 +50,7 @@ class ComponentHandlers:
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         """
-       Validates the given command
+        Validates the given command
 
         Args:
             runId (str): unique id for this command

@@ -77,9 +77,15 @@ class ControlCommand:
 
 @dataclass
 class Setup(ControlCommand):
+    """
+    A Setup is a command that can be sent to an HCD or Assembly.
+    """
     pass
 
 
 @dataclass
 class Observe(ControlCommand):
+    """
+    An Observe is a special command that can be sent to an HCD or Assembly.
+    """
     pass

@@ -13,7 +13,7 @@ class Event:
     Abstract base class that creates an Event that can be published to the event service
     (Don't use this class directly: The system expects a SystemEvent or an ObserveEvent).
 
-    Args
+    Args:
         source (str): prefix representing source of the event
         eventName (str): the name of event
         paramSet (list): list of Parameter (keys with values)
@@ -99,6 +99,17 @@ class Event:
 
 @dataclass
 class SystemEvent(Event):
+    """
+    An event type for publishing changes in system data.
+
+    Args:
+        source (str): prefix representing source of the event
+        eventName (str): the name of event
+        paramSet (list): list of Parameter (keys with values)
+        eventTime (EventTime): the time the event was created (defaults to current time)
+        eventId (str): event id (optional: Should leave empty unless received from event service)
+
+    """
     @abstractmethod
     def eventType(self) -> str:
         return "SystemEvent"
@@ -106,6 +117,17 @@ class SystemEvent(Event):
 
 @dataclass
 class ObserveEvent(Event):
+    """
+    An event type fired when an observation has taken place.
+
+    Args:
+        source (str): prefix representing source of the event
+        eventName (str): the name of event
+        paramSet (list): list of Parameter (keys with values)
+        eventTime (EventTime): the time the event was created (defaults to current time)
+        eventId (str): event id (optional: Should leave empty unless received from event service)
+
+    """
     @abstractmethod
     def eventType(self) -> str:
         return "ObserveEvent"

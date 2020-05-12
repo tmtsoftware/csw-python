@@ -132,9 +132,9 @@ class TestSubscriber3:
 
 See [here](Event.html) for the structure of an event. There are two types of events:
 
-* [SystemEvent](csw.Event.SystemEvent) - used to publish data
+* [SystemEvent](Event.html#csw.Event.SystemEvent) - used to publish data
 
-* [ObserveEvent](csw.Event.ObserveEvent) - a special event published when an observation completes
+* [ObserveEvent](Event.html#csw.Event.ObserveEvent) - a special event published when an observation completes
 
 In the above example, the callback expects SystemEvents. 
 
