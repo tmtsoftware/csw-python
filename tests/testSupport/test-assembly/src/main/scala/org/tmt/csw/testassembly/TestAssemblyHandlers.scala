@@ -166,11 +166,8 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     import Coords._
 
     val basePosKey = CoordKey.make("BasePosition")
-    val cmdKey1: Key[Float] =
-      KeyType.FloatKey.make("cmdValue")
-    val cmdKey1b: Key[Float] =
-      KeyType.FloatKey.make("cmdValue")
-    KeyType.StructKey.make("cmdStructValue")
+    val cmdKey1: Key[Float] = KeyType.FloatKey.make("cmdValue")
+    val cmdKey1b: Key[Float] = KeyType.FloatKey.make("cmdValue")
     val cmdKey2b: Key[Struct] =
       KeyType.StructKey.make("cmdStructValueB")
     val cmdKey3: Key[Int] =

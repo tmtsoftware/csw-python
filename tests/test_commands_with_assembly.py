@@ -12,9 +12,11 @@ from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, Mis
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter
+from csw.Parameter import Parameter, Struct
+
 
 class MyComponentHandlers(ComponentHandlers):
+    print("XXX MyComponentHandlers")
     prefix = "CSW.pycswTest"
     commandServer: CommandServer = None
 
@@ -25,9 +27,25 @@ class MyComponentHandlers(ComponentHandlers):
         await self.publishCurrentStates()
         return Completed(runId)
 
+    # Checks the command's contents, shows how to access the parameters
+    # See ./testSupport/test-assembly/src/main/scala/org/tmt/csw/testassembly/TestAssemblyHandlers.scala#makeTestCommand
+    # for where the command was created.
+    def _checkCommand(self, command: ControlCommand):
+        assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
+        assert(list(command.get("cmdValue").values)[0] == 1.0)
+
+        # Access a Struct value
+        structVal = list(command.get("cmdStructValueB").values)[0]
+        # s.__class__ = Struct
+        assert(structVal.paramSet[0].values[0] == 1.0)
+        assert(structVal.paramSet[0].keyName == "cmdValue")
+        assert(structVal.paramSet[0].keyType == "Float")
+
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
-        Overrides the base class onSubmit method to handle commands from a CSW component
+        Overrides the base class onSubmit method to handle commands from a CSW component.
+        See ./testSupport/test-assembly/src/main/scala/org/tmt/csw/testassembly/TestAssemblyHandlers.scala#makeTestCommand
+        for the contents of the command's parameters.
 
         Args:
             runId (str): unique id for this command
@@ -37,7 +55,9 @@ class MyComponentHandlers(ComponentHandlers):
             a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
             For long running commands, you can respond with Started(runId, "...") and a task that completes the work in the background.
         """
+        self._checkCommand(command)
         n = len(command.paramSet)
+        print("XXX onSubmit")
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
         # filt = command.get("filter").values[0]
         # encoder = command.get("encoder").values[0]
@@ -96,6 +116,7 @@ class MyComponentHandlers(ComponentHandlers):
         return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
 
 def test_command_server():
+    print("XXX test_command_server")
     handlers = MyComponentHandlers()
     commandServer = CommandServer(handlers.prefix, handlers)
     handlers.commandServer = commandServer
