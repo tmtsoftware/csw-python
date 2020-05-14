@@ -14,6 +14,6 @@ cd ..
 # give the background assembly time to initialize
 sleep 10
 # Run the python tests
-pytest --show-capture=yes
+pytest --capture=tee-sys
 kill $assemblyPid
 csw-services.sh stop  >> $logfile 2>&1

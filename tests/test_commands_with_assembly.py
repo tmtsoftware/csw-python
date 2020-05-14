@@ -16,7 +16,6 @@ from csw.Parameter import Parameter, Struct
 
 
 class MyComponentHandlers(ComponentHandlers):
-    print("XXX MyComponentHandlers")
     prefix = "CSW.pycswTest"
     commandServer: CommandServer = None
 
@@ -57,7 +56,6 @@ class MyComponentHandlers(ComponentHandlers):
         """
         self._checkCommand(command)
         n = len(command.paramSet)
-        print("XXX onSubmit")
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
         # filt = command.get("filter").values[0]
         # encoder = command.get("encoder").values[0]
@@ -116,7 +114,6 @@ class MyComponentHandlers(ComponentHandlers):
         return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
 
 def test_command_server():
-    print("XXX test_command_server")
     handlers = MyComponentHandlers()
     commandServer = CommandServer(handlers.prefix, handlers)
     handlers.commandServer = commandServer

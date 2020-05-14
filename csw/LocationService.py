@@ -114,11 +114,21 @@ class Registration:
 _pdocIgnoreGenerated("HttpRegistration")
 @dataclass_json
 @dataclass
+class NetworkType:
+    """
+    NetworkType enum {Public, Private)
+    """
+    _type: str
+
+_pdocIgnoreGenerated("HttpRegistration")
+@dataclass_json
+@dataclass
 class HttpRegistration(Registration):
     """
     Used to register an http based service with the Location Service.
     """
     path: str = ""
+    networkType: NetworkType = NetworkType("Public")
 
 
 _pdocIgnoreGenerated("TcpRegistration")
