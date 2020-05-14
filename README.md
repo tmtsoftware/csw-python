@@ -10,7 +10,8 @@ The latest release has been published to https://pypi.org/project/tmtpycsw/ and 
 
 ## API Documentation
 
-Run `make doc` to generate the API documentation for the Python classes. Then open `build/csw/index.html`. 
+Run `make doc` to generate the user manual and API documentation for the Python classes. 
+Then open `build/csw/index.html`. 
 (Note: Requires that pdoc3 is installed: To install, run: `pip3 install pdoc3`.)
 
 ## CSW Event Service

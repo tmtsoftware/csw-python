@@ -111,14 +111,14 @@ class Registration:
     port: int
 
 
-_pdocIgnoreGenerated("HttpRegistration")
-@dataclass_json
-@dataclass
-class NetworkType:
-    """
-    NetworkType enum {Public, Private)
-    """
-    _type: str
+# _pdocIgnoreGenerated("NetworkType")
+# @dataclass_json
+# @dataclass
+# class NetworkType:
+#     """
+#     NetworkType enum {Public, Private)
+#     """
+#     _type: str
 
 _pdocIgnoreGenerated("HttpRegistration")
 @dataclass_json
@@ -128,7 +128,7 @@ class HttpRegistration(Registration):
     Used to register an http based service with the Location Service.
     """
     path: str = ""
-    networkType: NetworkType = NetworkType("Public")
+    # networkType: NetworkType = NetworkType("Public")
 
 
 _pdocIgnoreGenerated("TcpRegistration")
