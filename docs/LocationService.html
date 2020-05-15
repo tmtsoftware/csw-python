@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>csw.LocationService API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>csw.LocationService</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from typing import List
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
+from enum import Enum
+from multipledispatch import dispatch
+import requests
+import json
+
+# Ignore generated functions in API docs
+__pdoc__ = {}
+def _pdocIgnoreGenerated(className: str):
+    __pdoc__[f&#34;{className}.from_dict&#34;] = False
+    __pdoc__[f&#34;{className}.from_json&#34;] = False
+    __pdoc__[f&#34;{className}.schema&#34;] = False
+    __pdoc__[f&#34;{className}.to_dict&#34;] = False
+    __pdoc__[f&#34;{className}.to_json&#34;] = False
+
+
+# Python API for CSW Location Service
+
+class ComponentType(Enum):
+    &#34;&#34;&#34;
+    Enum type: Represents a type of the CSW Component.
+    &#34;&#34;&#34;
+    Assembly = &#34;assembly&#34;
+    HCD = &#34;hcd&#34;
+    Container = &#34;container&#34;
+    Service = &#34;service&#34;
+    Sequencer = &#34;sequencer&#34;
+
+
+class ConnectionType(Enum):
+    &#34;&#34;&#34;
+    Enum type: Represents a type of connection offered by the Component.
+    Note that AkkaType is for Akka Actor based connections.
+    Python applications can only communicate via HTTP or TCP connections.
+    &#34;&#34;&#34;
+    HttpType = &#34;http&#34;
+    TcpType = &#34;tcp&#34;
+    AkkaType = &#34;akka&#34;
+
+
+_pdocIgnoreGenerated(&#34;ConnectionInfo&#34;)
+@dataclass_json
+@dataclass
+class ConnectionInfo:
+    prefix: str
+    componentType: str
+    connectionType: str
+
+
+_pdocIgnoreGenerated(&#34;ResolveInfo&#34;)
+@dataclass_json
+@dataclass
+class ResolveInfo:
+    _type: str
+    connection: ConnectionInfo
+    within: str
+
+_pdocIgnoreGenerated(&#34;Location&#34;)
+@dataclass_json
+@dataclass
+class Location:
+    _type: str
+    connection: ConnectionInfo
+    uri: str
+
+    @staticmethod
+    def _makeLocation(obj: dict):
+        typ = obj[&#34;_type&#34;]
+        s = json.dumps(obj)
+        if typ == &#34;HttpLocation&#34;:
+            return HttpLocation.schema().loads(s)
+        elif typ == &#34;TcpLocation&#34;:
+            return TcpLocation.schema().loads(s)
+        elif typ == &#34;AkkaLocation&#34;:
+            return AkkaLocation.schema().loads(s)
+        else:
+            raise Exception(&#34;Invalid Location type: &#34; + typ)
+
+
+_pdocIgnoreGenerated(&#34;AkkaLocation&#34;)
+@dataclass_json
+@dataclass
+class AkkaLocation(Location):
+    pass
+
+
+_pdocIgnoreGenerated(&#34;TcpLocation&#34;)
+@dataclass_json
+@dataclass
+class TcpLocation(Location):
+    pass
+
+
+_pdocIgnoreGenerated(&#34;HttpLocation&#34;)
+@dataclass_json
+@dataclass
+class HttpLocation(Location):
+    pass
+
+
+_pdocIgnoreGenerated(&#34;Registration&#34;)
+@dataclass_json
+@dataclass
+class Registration:
+    &#34;&#34;&#34;
+    Abstract base class for registering with the location service
+    &#34;&#34;&#34;
+    connection: ConnectionInfo
+    port: int
+
+
+# _pdocIgnoreGenerated(&#34;NetworkType&#34;)
+# @dataclass_json
+# @dataclass
+# class NetworkType:
+#     &#34;&#34;&#34;
+#     NetworkType enum {Public, Private)
+#     &#34;&#34;&#34;
+#     _type: str
+
+_pdocIgnoreGenerated(&#34;HttpRegistration&#34;)
+@dataclass_json
+@dataclass
+class HttpRegistration(Registration):
+    &#34;&#34;&#34;
+    Used to register an http based service with the Location Service.
+    &#34;&#34;&#34;
+    path: str = &#34;&#34;
+    # networkType: NetworkType = NetworkType(&#34;Public&#34;)
+
+
+_pdocIgnoreGenerated(&#34;TcpRegistration&#34;)
+@dataclass_json
+@dataclass
+class TcpRegistration(Registration):
+    &#34;&#34;&#34;
+    Used to register a tcp based service with the Location Service.
+    &#34;&#34;&#34;
+
+
+class LocationService:
+    baseUri = &#34;http://127.0.0.1:7654/&#34;
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+
+    # {&#34;_type&#34;:&#34;Register&#34;,&#34;registration&#34;:{&#34;_type&#34;:&#34;AkkaRegistration&#34;,&#34;connection&#34;:{&#34;prefix&#34;:&#34;CSW.testakkaservice_1&#34;,&#34;componentType&#34;:&#34;service&#34;,&#34;connectionType&#34;:&#34;akka&#34;},&#34;actorRefURI&#34;:&#34;akka://TestAkkaServiceApp@192.168.178.32:40221/user/TestAkkaService1#1774679661&#34;}}
+    #
+    def register(self, registration: Registration) -&gt; ConnectionInfo:
+        &#34;&#34;&#34;
+        Registers a connection.
+
+        Args:
+            registration (Registration): the Registration holding the connection and it&#39;s corresponding location to register with LocationService
+
+        Returns: ConnectionInfo
+            an object describing the connection
+        &#34;&#34;&#34;
+        regType = registration.__class__.__name__
+        regJson = json.loads(registration.to_json())
+        regJson[&#39;_type&#39;] = registration.__class__.__name__
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;Register&#34;, &#34;registration&#34;: {json.dumps(regJson)}}}&#39;
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        return registration.connection
+
+    def unregister(self, connection: ConnectionInfo):
+        &#34;&#34;&#34;
+        Unregisters a connection.
+
+        Args:
+            connection (ConnectionInfo): an already registered connection
+        &#34;&#34;&#34;
+        print(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+
+    def find(self, connection: ConnectionInfo) -&gt; Location:
+        &#34;&#34;&#34;
+        Resolves the location for a connection from the local cache
+
+        Args:
+            connection (ConnectionInfo): an already registered connection
+
+        Returns: Location
+            the Location
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;Find&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location._makeLocation(maybeResult[0])
+
+    # &#34;within&#34;:&#34;2 seconds&#34;}}
+    def resolve(self, connection: ConnectionInfo, withinSecs: int = &#34;5&#34;) -&gt; Location:
+        &#34;&#34;&#34;
+        Resolves the location for a connection from the local cache, if not found waits for the event to arrive
+        within specified time limit
+
+        Args:
+            connection (ConnectionInfo): an already registered connection
+            withinSecs (int): max number of seconds to wait for the connection to be found
+
+        Returns: Location
+            the Location
+        &#34;&#34;&#34;
+        resolveInfo = ResolveInfo(&#34;Resolve&#34;, connection, f&#34;{withinSecs} seconds&#34;)
+        jsonBody = resolveInfo.to_json()
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location._makeLocation(maybeResult[0])
+
+    @staticmethod
+    def _list(jsonBody: str) -&gt; List[Location]:
+        r = requests.post(LocationService.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        return list(map(lambda x: Location._makeLocation(x), json.loads(r.text)))
+
+    @dispatch()
+    def list(self) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations registered.
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = &#39;{&#34;_type&#34;: &#34;ListEntries&#34;}&#39;
+        return self._list(jsonBody)
+
+    @dispatch(ComponentType)
+    def list(self, componentType: ComponentType) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists components of the given component type
+
+        Args:
+            componentType (ComponentType): the type of component to list
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByComponentType&#34;, &#34;componentType&#34;: &#34;{componentType.value}&#34;}}&#39;
+        return self._list(jsonBody)
+
+    @dispatch(str)
+    def list(self, hostname: str) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations registered on the given hostname
+
+        Args:
+            hostname (str): restrict result to this host
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByHostname&#34;, &#34;hostname&#34;: &#34;{hostname}&#34;}}&#39;
+        return self._list(jsonBody)
+
+    @dispatch(ConnectionType)
+    def list(self, connectionType: ConnectionType) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations registered with the given connection type
+
+        Args:
+            connectionType (ConnectionType): restrict result to this connection type
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByConnectionType&#34;, &#34;connectionType&#34;: &#34;{connectionType.value}&#34;}}&#39;
+        return self._list(jsonBody)
+
+    def listByPrefix(self, prefix: str) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations with the given prefix
+
+        Args:
+            prefix (str): restrict result to this prefix
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByPrefix&#34;, &#34;prefix&#34;: &#34;{prefix}&#34;}}&#39;
+        return self._list(jsonBody)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="csw.LocationService.AkkaLocation"><code class="flex name class">
+<span>class <span class="ident">AkkaLocation</span></span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>AkkaLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AkkaLocation(Location):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></li>
+</ul>
+</dd>
+<dt id="csw.LocationService.ComponentType"><code class="flex name class">
+<span>class <span class="ident">ComponentType</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Enum type: Represents a type of the CSW Component.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ComponentType(Enum):
+    &#34;&#34;&#34;
+    Enum type: Represents a type of the CSW Component.
+    &#34;&#34;&#34;
+    Assembly = &#34;assembly&#34;
+    HCD = &#34;hcd&#34;
+    Container = &#34;container&#34;
+    Service = &#34;service&#34;
+    Sequencer = &#34;sequencer&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.LocationService.ComponentType.Assembly"><code class="name">var <span class="ident">Assembly</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.ComponentType.Container"><code class="name">var <span class="ident">Container</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.ComponentType.HCD"><code class="name">var <span class="ident">HCD</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.ComponentType.Sequencer"><code class="name">var <span class="ident">Sequencer</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.ComponentType.Service"><code class="name">var <span class="ident">Service</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.LocationService.ConnectionInfo"><code class="flex name class">
+<span>class <span class="ident">ConnectionInfo</span></span>
+<span>(</span><span>prefix: str, componentType: str, connectionType: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ConnectionInfo(prefix: str, componentType: str, connectionType: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ConnectionInfo:
+    prefix: str
+    componentType: str
+    connectionType: str</code></pre>
+</details>
+</dd>
+<dt id="csw.LocationService.ConnectionType"><code class="flex name class">
+<span>class <span class="ident">ConnectionType</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Enum type: Represents a type of connection offered by the Component.
+Note that AkkaType is for Akka Actor based connections.
+Python applications can only communicate via HTTP or TCP connections.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ConnectionType(Enum):
+    &#34;&#34;&#34;
+    Enum type: Represents a type of connection offered by the Component.
+    Note that AkkaType is for Akka Actor based connections.
+    Python applications can only communicate via HTTP or TCP connections.
+    &#34;&#34;&#34;
+    HttpType = &#34;http&#34;
+    TcpType = &#34;tcp&#34;
+    AkkaType = &#34;akka&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.LocationService.ConnectionType.AkkaType"><code class="name">var <span class="ident">AkkaType</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.ConnectionType.HttpType"><code class="name">var <span class="ident">HttpType</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.ConnectionType.TcpType"><code class="name">var <span class="ident">TcpType</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.LocationService.HttpLocation"><code class="flex name class">
+<span>class <span class="ident">HttpLocation</span></span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>HttpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HttpLocation(Location):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></li>
+</ul>
+</dd>
+<dt id="csw.LocationService.HttpRegistration"><code class="flex name class">
+<span>class <span class="ident">HttpRegistration</span></span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used to register an http based service with the Location Service.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HttpRegistration(Registration):
+    &#34;&#34;&#34;
+    Used to register an http based service with the Location Service.
+    &#34;&#34;&#34;
+    path: str = &#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.LocationService.HttpRegistration.path"><code class="name">var <span class="ident">path</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.LocationService.Location"><code class="flex name class">
+<span>class <span class="ident">Location</span></span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Location(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Location:
+    _type: str
+    connection: ConnectionInfo
+    uri: str
+
+    @staticmethod
+    def _makeLocation(obj: dict):
+        typ = obj[&#34;_type&#34;]
+        s = json.dumps(obj)
+        if typ == &#34;HttpLocation&#34;:
+            return HttpLocation.schema().loads(s)
+        elif typ == &#34;TcpLocation&#34;:
+            return TcpLocation.schema().loads(s)
+        elif typ == &#34;AkkaLocation&#34;:
+            return AkkaLocation.schema().loads(s)
+        else:
+            raise Exception(&#34;Invalid Location type: &#34; + typ)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.AkkaLocation" href="#csw.LocationService.AkkaLocation">AkkaLocation</a></li>
+<li><a title="csw.LocationService.HttpLocation" href="#csw.LocationService.HttpLocation">HttpLocation</a></li>
+<li><a title="csw.LocationService.TcpLocation" href="#csw.LocationService.TcpLocation">TcpLocation</a></li>
+</ul>
+</dd>
+<dt id="csw.LocationService.LocationService"><code class="flex name class">
+<span>class <span class="ident">LocationService</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LocationService:
+    baseUri = &#34;http://127.0.0.1:7654/&#34;
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+
+    # {&#34;_type&#34;:&#34;Register&#34;,&#34;registration&#34;:{&#34;_type&#34;:&#34;AkkaRegistration&#34;,&#34;connection&#34;:{&#34;prefix&#34;:&#34;CSW.testakkaservice_1&#34;,&#34;componentType&#34;:&#34;service&#34;,&#34;connectionType&#34;:&#34;akka&#34;},&#34;actorRefURI&#34;:&#34;akka://TestAkkaServiceApp@192.168.178.32:40221/user/TestAkkaService1#1774679661&#34;}}
+    #
+    def register(self, registration: Registration) -&gt; ConnectionInfo:
+        &#34;&#34;&#34;
+        Registers a connection.
+
+        Args:
+            registration (Registration): the Registration holding the connection and it&#39;s corresponding location to register with LocationService
+
+        Returns: ConnectionInfo
+            an object describing the connection
+        &#34;&#34;&#34;
+        regType = registration.__class__.__name__
+        regJson = json.loads(registration.to_json())
+        regJson[&#39;_type&#39;] = registration.__class__.__name__
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;Register&#34;, &#34;registration&#34;: {json.dumps(regJson)}}}&#39;
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        return registration.connection
+
+    def unregister(self, connection: ConnectionInfo):
+        &#34;&#34;&#34;
+        Unregisters a connection.
+
+        Args:
+            connection (ConnectionInfo): an already registered connection
+        &#34;&#34;&#34;
+        print(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+
+    def find(self, connection: ConnectionInfo) -&gt; Location:
+        &#34;&#34;&#34;
+        Resolves the location for a connection from the local cache
+
+        Args:
+            connection (ConnectionInfo): an already registered connection
+
+        Returns: Location
+            the Location
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;Find&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location._makeLocation(maybeResult[0])
+
+    # &#34;within&#34;:&#34;2 seconds&#34;}}
+    def resolve(self, connection: ConnectionInfo, withinSecs: int = &#34;5&#34;) -&gt; Location:
+        &#34;&#34;&#34;
+        Resolves the location for a connection from the local cache, if not found waits for the event to arrive
+        within specified time limit
+
+        Args:
+            connection (ConnectionInfo): an already registered connection
+            withinSecs (int): max number of seconds to wait for the connection to be found
+
+        Returns: Location
+            the Location
+        &#34;&#34;&#34;
+        resolveInfo = ResolveInfo(&#34;Resolve&#34;, connection, f&#34;{withinSecs} seconds&#34;)
+        jsonBody = resolveInfo.to_json()
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location._makeLocation(maybeResult[0])
+
+    @staticmethod
+    def _list(jsonBody: str) -&gt; List[Location]:
+        r = requests.post(LocationService.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        return list(map(lambda x: Location._makeLocation(x), json.loads(r.text)))
+
+    @dispatch()
+    def list(self) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations registered.
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = &#39;{&#34;_type&#34;: &#34;ListEntries&#34;}&#39;
+        return self._list(jsonBody)
+
+    @dispatch(ComponentType)
+    def list(self, componentType: ComponentType) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists components of the given component type
+
+        Args:
+            componentType (ComponentType): the type of component to list
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByComponentType&#34;, &#34;componentType&#34;: &#34;{componentType.value}&#34;}}&#39;
+        return self._list(jsonBody)
+
+    @dispatch(str)
+    def list(self, hostname: str) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations registered on the given hostname
+
+        Args:
+            hostname (str): restrict result to this host
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByHostname&#34;, &#34;hostname&#34;: &#34;{hostname}&#34;}}&#39;
+        return self._list(jsonBody)
+
+    @dispatch(ConnectionType)
+    def list(self, connectionType: ConnectionType) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations registered with the given connection type
+
+        Args:
+            connectionType (ConnectionType): restrict result to this connection type
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByConnectionType&#34;, &#34;connectionType&#34;: &#34;{connectionType.value}&#34;}}&#39;
+        return self._list(jsonBody)
+
+    def listByPrefix(self, prefix: str) -&gt; List[Location]:
+        &#34;&#34;&#34;
+        Lists all locations with the given prefix
+
+        Args:
+            prefix (str): restrict result to this prefix
+
+        Returns: List[Location]
+            list of locations
+        &#34;&#34;&#34;
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByPrefix&#34;, &#34;prefix&#34;: &#34;{prefix}&#34;}}&#39;
+        return self._list(jsonBody)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.LocationService.LocationService.baseUri"><code class="name">var <span class="ident">baseUri</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.LocationService.postUri"><code class="name">var <span class="ident">postUri</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.LocationService.wsUri"><code class="name">var <span class="ident">wsUri</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.LocationService.LocationService.find"><code class="name flex">
+<span>def <span class="ident">find</span></span>(<span>self, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>) -> <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resolves the location for a connection from the local cache</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>connection</code></strong> :&ensp;<code><a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></code></dt>
+<dd>an already registered connection</dd>
+<dt><strong><code>Returns</code></strong> :&ensp;<code><a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></code></dt>
+<dd>the Location</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find(self, connection: ConnectionInfo) -&gt; Location:
+    &#34;&#34;&#34;
+    Resolves the location for a connection from the local cache
+
+    Args:
+        connection (ConnectionInfo): an already registered connection
+
+    Returns: Location
+        the Location
+    &#34;&#34;&#34;
+    jsonBody = f&#39;{{&#34;_type&#34;: &#34;Find&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
+    r = requests.post(self.postUri, json=json.loads(jsonBody))
+    if not r.ok:
+        raise Exception(r.text)
+    maybeResult = json.loads(r.text)
+    if len(maybeResult) != 0:
+        return Location._makeLocation(maybeResult[0])</code></pre>
+</details>
+</dd>
+<dt id="csw.LocationService.LocationService.list"><code class="name flex">
+<span>def <span class="ident">list</span></span>(<span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Dispatch methods based on type signature</p>
+<p>See Also:
+Dispatcher</p></div>
+</dd>
+<dt id="csw.LocationService.LocationService.listByPrefix"><code class="name flex">
+<span>def <span class="ident">listByPrefix</span></span>(<span>self, prefix: str) -> List[<a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Lists all locations with the given prefix</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>prefix</code></strong> :&ensp;<code>str</code></dt>
+<dd>restrict result to this prefix</dd>
+<dt><strong><code>Returns</code></strong> :&ensp;<code>List[<a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>]</code></dt>
+<dd>list of locations</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def listByPrefix(self, prefix: str) -&gt; List[Location]:
+    &#34;&#34;&#34;
+    Lists all locations with the given prefix
+
+    Args:
+        prefix (str): restrict result to this prefix
+
+    Returns: List[Location]
+        list of locations
+    &#34;&#34;&#34;
+    jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByPrefix&#34;, &#34;prefix&#34;: &#34;{prefix}&#34;}}&#39;
+    return self._list(jsonBody)</code></pre>
+</details>
+</dd>
+<dt id="csw.LocationService.LocationService.register"><code class="name flex">
+<span>def <span class="ident">register</span></span>(<span>self, registration: <a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a>) -> <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Registers a connection.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>registration</code></strong> :&ensp;<code><a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a></code></dt>
+<dd>the Registration holding the connection and it's corresponding location to register with LocationService</dd>
+<dt><strong><code>Returns</code></strong> :&ensp;<code><a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></code></dt>
+<dd>an object describing the connection</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register(self, registration: Registration) -&gt; ConnectionInfo:
+    &#34;&#34;&#34;
+    Registers a connection.
+
+    Args:
+        registration (Registration): the Registration holding the connection and it&#39;s corresponding location to register with LocationService
+
+    Returns: ConnectionInfo
+        an object describing the connection
+    &#34;&#34;&#34;
+    regType = registration.__class__.__name__
+    regJson = json.loads(registration.to_json())
+    regJson[&#39;_type&#39;] = registration.__class__.__name__
+    jsonBody = f&#39;{{&#34;_type&#34;: &#34;Register&#34;, &#34;registration&#34;: {json.dumps(regJson)}}}&#39;
+    r = requests.post(self.postUri, json=json.loads(jsonBody))
+    if not r.ok:
+        raise Exception(r.text)
+    return registration.connection</code></pre>
+</details>
+</dd>
+<dt id="csw.LocationService.LocationService.resolve"><code class="name flex">
+<span>def <span class="ident">resolve</span></span>(<span>self, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, withinSecs: int = '5') -> <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resolves the location for a connection from the local cache, if not found waits for the event to arrive
+within specified time limit</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>connection</code></strong> :&ensp;<code><a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></code></dt>
+<dd>an already registered connection</dd>
+<dt><strong><code>withinSecs</code></strong> :&ensp;<code>int</code></dt>
+<dd>max number of seconds to wait for the connection to be found</dd>
+<dt><strong><code>Returns</code></strong> :&ensp;<code><a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></code></dt>
+<dd>the Location</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve(self, connection: ConnectionInfo, withinSecs: int = &#34;5&#34;) -&gt; Location:
+    &#34;&#34;&#34;
+    Resolves the location for a connection from the local cache, if not found waits for the event to arrive
+    within specified time limit
+
+    Args:
+        connection (ConnectionInfo): an already registered connection
+        withinSecs (int): max number of seconds to wait for the connection to be found
+
+    Returns: Location
+        the Location
+    &#34;&#34;&#34;
+    resolveInfo = ResolveInfo(&#34;Resolve&#34;, connection, f&#34;{withinSecs} seconds&#34;)
+    jsonBody = resolveInfo.to_json()
+    r = requests.post(self.postUri, json=json.loads(jsonBody))
+    if not r.ok:
+        raise Exception(r.text)
+    maybeResult = json.loads(r.text)
+    if len(maybeResult) != 0:
+        return Location._makeLocation(maybeResult[0])</code></pre>
+</details>
+</dd>
+<dt id="csw.LocationService.LocationService.unregister"><code class="name flex">
+<span>def <span class="ident">unregister</span></span>(<span>self, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Unregisters a connection.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>connection</code></strong> :&ensp;<code><a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></code></dt>
+<dd>an already registered connection</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unregister(self, connection: ConnectionInfo):
+    &#34;&#34;&#34;
+    Unregisters a connection.
+
+    Args:
+        connection (ConnectionInfo): an already registered connection
+    &#34;&#34;&#34;
+    print(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+    jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
+    r = requests.post(self.postUri, json=json.loads(jsonBody))
+    if not r.ok:
+        raise Exception(r.text)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.LocationService.Registration"><code class="flex name class">
+<span>class <span class="ident">Registration</span></span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract base class for registering with the location service</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Registration:
+    &#34;&#34;&#34;
+    Abstract base class for registering with the location service
+    &#34;&#34;&#34;
+    connection: ConnectionInfo
+    port: int</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.HttpRegistration" href="#csw.LocationService.HttpRegistration">HttpRegistration</a></li>
+<li><a title="csw.LocationService.TcpRegistration" href="#csw.LocationService.TcpRegistration">TcpRegistration</a></li>
+</ul>
+</dd>
+<dt id="csw.LocationService.ResolveInfo"><code class="flex name class">
+<span>class <span class="ident">ResolveInfo</span></span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, within: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ResolveInfo(_type: str, connection: csw.LocationService.ConnectionInfo, within: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ResolveInfo:
+    _type: str
+    connection: ConnectionInfo
+    within: str</code></pre>
+</details>
+</dd>
+<dt id="csw.LocationService.TcpLocation"><code class="flex name class">
+<span>class <span class="ident">TcpLocation</span></span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>TcpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TcpLocation(Location):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></li>
+</ul>
+</dd>
+<dt id="csw.LocationService.TcpRegistration"><code class="flex name class">
+<span>class <span class="ident">TcpRegistration</span></span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used to register a tcp based service with the Location Service.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TcpRegistration(Registration):
+    &#34;&#34;&#34;
+    Used to register a tcp based service with the Location Service.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="csw" href="index.html">csw</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="csw.LocationService.AkkaLocation" href="#csw.LocationService.AkkaLocation">AkkaLocation</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.ComponentType" href="#csw.LocationService.ComponentType">ComponentType</a></code></h4>
+<ul class="">
+<li><code><a title="csw.LocationService.ComponentType.Assembly" href="#csw.LocationService.ComponentType.Assembly">Assembly</a></code></li>
+<li><code><a title="csw.LocationService.ComponentType.Container" href="#csw.LocationService.ComponentType.Container">Container</a></code></li>
+<li><code><a title="csw.LocationService.ComponentType.HCD" href="#csw.LocationService.ComponentType.HCD">HCD</a></code></li>
+<li><code><a title="csw.LocationService.ComponentType.Sequencer" href="#csw.LocationService.ComponentType.Sequencer">Sequencer</a></code></li>
+<li><code><a title="csw.LocationService.ComponentType.Service" href="#csw.LocationService.ComponentType.Service">Service</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.ConnectionType" href="#csw.LocationService.ConnectionType">ConnectionType</a></code></h4>
+<ul class="">
+<li><code><a title="csw.LocationService.ConnectionType.AkkaType" href="#csw.LocationService.ConnectionType.AkkaType">AkkaType</a></code></li>
+<li><code><a title="csw.LocationService.ConnectionType.HttpType" href="#csw.LocationService.ConnectionType.HttpType">HttpType</a></code></li>
+<li><code><a title="csw.LocationService.ConnectionType.TcpType" href="#csw.LocationService.ConnectionType.TcpType">TcpType</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.HttpLocation" href="#csw.LocationService.HttpLocation">HttpLocation</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.HttpRegistration" href="#csw.LocationService.HttpRegistration">HttpRegistration</a></code></h4>
+<ul class="">
+<li><code><a title="csw.LocationService.HttpRegistration.path" href="#csw.LocationService.HttpRegistration.path">path</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.LocationService" href="#csw.LocationService.LocationService">LocationService</a></code></h4>
+<ul class="two-column">
+<li><code><a title="csw.LocationService.LocationService.baseUri" href="#csw.LocationService.LocationService.baseUri">baseUri</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.find" href="#csw.LocationService.LocationService.find">find</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.list" href="#csw.LocationService.LocationService.list">list</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.listByPrefix" href="#csw.LocationService.LocationService.listByPrefix">listByPrefix</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.postUri" href="#csw.LocationService.LocationService.postUri">postUri</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.register" href="#csw.LocationService.LocationService.register">register</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.resolve" href="#csw.LocationService.LocationService.resolve">resolve</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.unregister" href="#csw.LocationService.LocationService.unregister">unregister</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.wsUri" href="#csw.LocationService.LocationService.wsUri">wsUri</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.ResolveInfo" href="#csw.LocationService.ResolveInfo">ResolveInfo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.TcpLocation" href="#csw.LocationService.TcpLocation">TcpLocation</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.TcpRegistration" href="#csw.LocationService.TcpRegistration">TcpRegistration</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

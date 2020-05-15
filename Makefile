@@ -2,7 +2,7 @@ all: doc
 
 # Generate the documentation (under build/csw)
 doc:
-	pdoc --force --html --output-dir build csw
+	pdoc --force --html --output-dir docs csw
 
 # Run tests against an included, Scala based assembly
 test: all
