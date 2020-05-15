@@ -1,6 +1,7 @@
 # tmtpycsw - Python3 CSW APIs
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
+You can find the Python documentation for this project [here](https://tmtsoftware.github.io/pycsw/index.html).
 
 Note: Python version 3.8 is required.
 
