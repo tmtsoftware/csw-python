@@ -3,6 +3,8 @@ all: doc
 # Generate the documentation (under build/csw)
 doc:
 	pdoc --force --html --output-dir docs csw
+	rm docs/*.html
+	cp build/csw/*.html docs
 
 # Run tests against an included, Scala based assembly
 test: all
@@ -10,8 +12,6 @@ test: all
 
 # Upload release (requires username, password)
 release: doc
-	rm docs/*.html
-	cp build/csw/*.html docs
 	python3 -m pip install --user --upgrade setuptools wheel
 	python3 setup.py sdist bdist_wheel
 	python3 -m pip install --user --upgrade twine

@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>csw.CommandServer API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>csw.CommandServer</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import json
+from dataclasses import dataclass
+from typing import List
+
+import aiohttp
+from aiohttp import web, WSMessage
+from aiohttp.web_request import Request
+from aiohttp.web_response import Response
+import atexit
+import uuid
+
+from aiohttp.web_runner import GracefulExit
+from aiohttp.web_ws import WebSocketResponse
+from dataclasses_json import dataclass_json
+
+from csw.CommandResponseManager import CommandResponseManager
+from csw.ComponentHandlers import ComponentHandlers
+from csw.ControlCommand import ControlCommand
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+
+# Ignore generated functions in API docs
+__pdoc__ = {}
+def _pdocIgnoreGenerated(className: str):
+    __pdoc__[f&#34;{className}.from_dict&#34;] = False
+    __pdoc__[f&#34;{className}.from_json&#34;] = False
+    __pdoc__[f&#34;{className}.schema&#34;] = False
+    __pdoc__[f&#34;{className}.to_dict&#34;] = False
+    __pdoc__[f&#34;{className}.to_json&#34;] = False
+
+_pdocIgnoreGenerated(&#34;Validate&#34;)
+@dataclass
+@dataclass_json
+class Validate:
+    &#34;&#34;&#34;
+    A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    &#34;&#34;&#34;
+    controlCommand: ControlCommand
+
+
+_pdocIgnoreGenerated(&#34;Submit&#34;)
+@dataclass
+@dataclass_json
+class Submit:
+    &#34;&#34;&#34;
+    Represents a command that requires a response (of type CommandResponse).
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    &#34;&#34;&#34;
+    controlCommand: ControlCommand
+
+
+_pdocIgnoreGenerated(&#34;Oneway&#34;)
+@dataclass
+@dataclass_json
+class Oneway:
+    &#34;&#34;&#34;
+    Represents a command that does not require or expect a response
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    &#34;&#34;&#34;
+    controlCommand: ControlCommand
+
+
+_pdocIgnoreGenerated(&#34;QueryFinal&#34;)
+@dataclass
+@dataclass_json
+class QueryFinal:
+    &#34;&#34;&#34;
+    A message sent to query the final result of a long running command.
+    The response should be a CommandResponse.
+
+    Args:
+        runId (str): The command&#39;s runId
+        timeoutInSeconds (int) amount of time to wait
+    &#34;&#34;&#34;
+    runId: str
+    timeoutInSeconds: int
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a ControlCommand for the given dict.
+        &#34;&#34;&#34;
+        runId = obj[&#39;runId&#39;]
+        timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
+        return QueryFinal(runId, timeoutInSeconds)
+
+
+_pdocIgnoreGenerated(&#34;SubscribeCurrentState&#34;)
+@dataclass
+@dataclass_json
+class SubscribeCurrentState:
+    &#34;&#34;&#34;
+    Message used to subscribe to the current state of a component.
+
+    Args:
+        stateNames (List[str]) list of current state names to subscribe to
+    &#34;&#34;&#34;
+    stateNames: List[str]
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a SubscribeCurrentState for the given dict.
+        &#34;&#34;&#34;
+        # typ = obj[&#34;_type&#34;]
+        stateNames = obj[&#34;names&#34;]
+        return SubscribeCurrentState(stateNames)
+
+
+class CommandServer:
+    &#34;&#34;&#34;
+    Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
+    so that CSW components can locate it and send commands to it.
+    &#34;&#34;&#34;
+    _app = web.Application()
+    _crm = CommandResponseManager()
+
+    async def _handlePost(self, request: Request) -&gt; Response:
+        obj = await request.json()
+        method = obj[&#39;_type&#39;]
+        if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
+            command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+            runId = str(uuid.uuid4())
+            if method == &#39;Submit&#39;:
+                commandResponse, task = self.handler.onSubmit(runId, command)
+                if task is not None:
+                    # noinspection PyTypeChecker
+                    self._crm.addTask(runId, task)
+                    print(&#34;Long running task in progress...&#34;)
+            elif method == &#39;Oneway&#39;:
+                commandResponse = self.handler.onOneway(runId, command)
+            else:
+                commandResponse = self.handler.validateCommand(runId, command)
+            responseDict = commandResponse._asDict()
+            return web.json_response(responseDict)
+        else:
+            raise Exception(&#34;Invalid Location type: &#34; + method)
+
+    async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
+        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
+        responseDict = commandResponse._asDict()
+        return web.json_response(responseDict)
+
+    async def _handleWs(self, request: Request) -&gt; WebSocketResponse:
+        ws = web.WebSocketResponse()
+        await ws.prepare(request)
+        msg: WSMessage
+        async for msg in ws:
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                if msg.data == &#39;close&#39;:
+                    print(&#34;Received ws close message&#34;)
+                    await ws.close()
+                else:
+                    obj = json.loads(msg.data)
+                    method = obj[&#39;_type&#39;]
+                    if method == &#34;QueryFinal&#34;:
+                        queryFinal = QueryFinal._fromDict(obj)
+                        resp = await self._handleQueryFinal(queryFinal)
+                        await ws.send_str(resp.text)
+                        await ws.close()
+                    elif method == &#34;SubscribeCurrentState&#34;:
+                        stateNames = SubscribeCurrentState._fromDict(obj).stateNames
+                        print(f&#34;Received SubscribeCurrentState: stateNames = {stateNames}&#34;)
+                        self.handler._subscribeCurrentState(stateNames, ws)
+                    else:
+                        print(f&#34;Warning: Received unknown ws message: {str(msg.data)}&#34;)
+            elif msg.type == aiohttp.WSMsgType.ERROR:
+                print(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
+        print(&#39;websocket connection closed&#39;)
+        return ws
+
+    @staticmethod
+    def _registerWithLocationService(prefix: str, port: int):
+        print(&#34;Registering with location service using port &#34; + str(port))
+        locationService = LocationService()
+        connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
+        atexit.register(locationService.unregister, connection)
+        # locationService.unregister(connection)
+        locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
+
+    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+        &#34;&#34;&#34;
+        Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
+        so that CSW components can locate it and send commands to it.
+
+        Args:
+            prefix (str): a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
+                          subsystem names and name is the name of the command server
+            handler (ComponentHandlers): command handler notified when commands are received
+            port (int): optional port for HTTP server
+        &#34;&#34;&#34;
+        self.handler = handler
+        self.port = port
+        self._app.add_routes([
+            web.post(&#39;/post-endpoint&#39;, self._handlePost),
+            web.get(&#34;/websocket-endpoint&#34;, self._handleWs)
+        ])
+        self._registerWithLocationService(prefix, port)
+
+    def start(self):
+        &#34;&#34;&#34;
+        Starts the command http server in a thread
+        &#34;&#34;&#34;
+        web.run_app(self._app, port=self.port)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="csw.CommandServer.CommandServer"><code class="flex name class">
+<span>class <span class="ident">CommandServer</span></span>
+<span>(</span><span>prefix: str, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 8082)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
+so that CSW components can locate it and send commands to it.</p>
+<p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
+so that CSW components can locate it and send commands to it.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>prefix</code></strong> :&ensp;<code>str</code></dt>
+<dd>a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
+subsystem names and name is the name of the command server</dd>
+<dt><strong><code>handler</code></strong> :&ensp;<code>ComponentHandlers</code></dt>
+<dd>command handler notified when commands are received</dd>
+<dt><strong><code>port</code></strong> :&ensp;<code>int</code></dt>
+<dd>optional port for HTTP server</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CommandServer:
+    &#34;&#34;&#34;
+    Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
+    so that CSW components can locate it and send commands to it.
+    &#34;&#34;&#34;
+    _app = web.Application()
+    _crm = CommandResponseManager()
+
+    async def _handlePost(self, request: Request) -&gt; Response:
+        obj = await request.json()
+        method = obj[&#39;_type&#39;]
+        if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
+            command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+            runId = str(uuid.uuid4())
+            if method == &#39;Submit&#39;:
+                commandResponse, task = self.handler.onSubmit(runId, command)
+                if task is not None:
+                    # noinspection PyTypeChecker
+                    self._crm.addTask(runId, task)
+                    print(&#34;Long running task in progress...&#34;)
+            elif method == &#39;Oneway&#39;:
+                commandResponse = self.handler.onOneway(runId, command)
+            else:
+                commandResponse = self.handler.validateCommand(runId, command)
+            responseDict = commandResponse._asDict()
+            return web.json_response(responseDict)
+        else:
+            raise Exception(&#34;Invalid Location type: &#34; + method)
+
+    async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
+        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
+        responseDict = commandResponse._asDict()
+        return web.json_response(responseDict)
+
+    async def _handleWs(self, request: Request) -&gt; WebSocketResponse:
+        ws = web.WebSocketResponse()
+        await ws.prepare(request)
+        msg: WSMessage
+        async for msg in ws:
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                if msg.data == &#39;close&#39;:
+                    print(&#34;Received ws close message&#34;)
+                    await ws.close()
+                else:
+                    obj = json.loads(msg.data)
+                    method = obj[&#39;_type&#39;]
+                    if method == &#34;QueryFinal&#34;:
+                        queryFinal = QueryFinal._fromDict(obj)
+                        resp = await self._handleQueryFinal(queryFinal)
+                        await ws.send_str(resp.text)
+                        await ws.close()
+                    elif method == &#34;SubscribeCurrentState&#34;:
+                        stateNames = SubscribeCurrentState._fromDict(obj).stateNames
+                        print(f&#34;Received SubscribeCurrentState: stateNames = {stateNames}&#34;)
+                        self.handler._subscribeCurrentState(stateNames, ws)
+                    else:
+                        print(f&#34;Warning: Received unknown ws message: {str(msg.data)}&#34;)
+            elif msg.type == aiohttp.WSMsgType.ERROR:
+                print(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
+        print(&#39;websocket connection closed&#39;)
+        return ws
+
+    @staticmethod
+    def _registerWithLocationService(prefix: str, port: int):
+        print(&#34;Registering with location service using port &#34; + str(port))
+        locationService = LocationService()
+        connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
+        atexit.register(locationService.unregister, connection)
+        # locationService.unregister(connection)
+        locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
+
+    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+        &#34;&#34;&#34;
+        Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
+        so that CSW components can locate it and send commands to it.
+
+        Args:
+            prefix (str): a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
+                          subsystem names and name is the name of the command server
+            handler (ComponentHandlers): command handler notified when commands are received
+            port (int): optional port for HTTP server
+        &#34;&#34;&#34;
+        self.handler = handler
+        self.port = port
+        self._app.add_routes([
+            web.post(&#39;/post-endpoint&#39;, self._handlePost),
+            web.get(&#34;/websocket-endpoint&#34;, self._handleWs)
+        ])
+        self._registerWithLocationService(prefix, port)
+
+    def start(self):
+        &#34;&#34;&#34;
+        Starts the command http server in a thread
+        &#34;&#34;&#34;
+        web.run_app(self._app, port=self.port)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.CommandServer.CommandServer.start"><code class="name flex">
+<span>def <span class="ident">start</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starts the command http server in a thread</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def start(self):
+    &#34;&#34;&#34;
+    Starts the command http server in a thread
+    &#34;&#34;&#34;
+    web.run_app(self._app, port=self.port)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.CommandServer.Oneway"><code class="flex name class">
+<span>class <span class="ident">Oneway</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents a command that does not require or expect a response</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>The command to send</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Oneway:
+    &#34;&#34;&#34;
+    Represents a command that does not require or expect a response
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    &#34;&#34;&#34;
+    controlCommand: ControlCommand</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandServer.QueryFinal"><code class="flex name class">
+<span>class <span class="ident">QueryFinal</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A message sent to query the final result of a long running command.
+The response should be a CommandResponse.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
+<dd>The command's runId</dd>
+</dl>
+<p>timeoutInSeconds (int) amount of time to wait</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QueryFinal:
+    &#34;&#34;&#34;
+    A message sent to query the final result of a long running command.
+    The response should be a CommandResponse.
+
+    Args:
+        runId (str): The command&#39;s runId
+        timeoutInSeconds (int) amount of time to wait
+    &#34;&#34;&#34;
+    runId: str
+    timeoutInSeconds: int
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a ControlCommand for the given dict.
+        &#34;&#34;&#34;
+        runId = obj[&#39;runId&#39;]
+        timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
+        return QueryFinal(runId, timeoutInSeconds)</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandServer.Submit"><code class="flex name class">
+<span>class <span class="ident">Submit</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents a command that requires a response (of type CommandResponse).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>The command to send</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Submit:
+    &#34;&#34;&#34;
+    Represents a command that requires a response (of type CommandResponse).
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    &#34;&#34;&#34;
+    controlCommand: ControlCommand</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandServer.SubscribeCurrentState"><code class="flex name class">
+<span>class <span class="ident">SubscribeCurrentState</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Message used to subscribe to the current state of a component.</p>
+<h2 id="args">Args</h2>
+<p>stateNames (List[str]) list of current state names to subscribe to</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SubscribeCurrentState:
+    &#34;&#34;&#34;
+    Message used to subscribe to the current state of a component.
+
+    Args:
+        stateNames (List[str]) list of current state names to subscribe to
+    &#34;&#34;&#34;
+    stateNames: List[str]
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a SubscribeCurrentState for the given dict.
+        &#34;&#34;&#34;
+        # typ = obj[&#34;_type&#34;]
+        stateNames = obj[&#34;names&#34;]
+        return SubscribeCurrentState(stateNames)</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandServer.Validate"><code class="flex name class">
+<span>class <span class="ident">Validate</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>The command to send</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Validate:
+    &#34;&#34;&#34;
+    A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.
+
+    Args:
+        controlCommand (ControlCommand): The command to send
+    &#34;&#34;&#34;
+    controlCommand: ControlCommand</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="csw" href="index.html">csw</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="csw.CommandServer.CommandServer" href="#csw.CommandServer.CommandServer">CommandServer</a></code></h4>
+<ul class="">
+<li><code><a title="csw.CommandServer.CommandServer.start" href="#csw.CommandServer.CommandServer.start">start</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.CommandServer.Oneway" href="#csw.CommandServer.Oneway">Oneway</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.CommandServer.QueryFinal" href="#csw.CommandServer.QueryFinal">QueryFinal</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.CommandServer.Submit" href="#csw.CommandServer.Submit">Submit</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.CommandServer.SubscribeCurrentState" href="#csw.CommandServer.SubscribeCurrentState">SubscribeCurrentState</a></code></h4>
+</li>
+<li>
+<h4><code><a title="csw.CommandServer.Validate" href="#csw.CommandServer.Validate">Validate</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
