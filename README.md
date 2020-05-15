@@ -10,7 +10,7 @@ The latest release has been published to https://pypi.org/project/tmtpycsw/ and 
 
 ## API Documentation
 
-See the [here](https://tmtsoftware.github.io/pycsw/index.html) for and overview and 
+See [here](https://tmtsoftware.github.io/pycsw/index.html) for an overview of this package and the 
 generated API documentation.
 
 Run `make doc` to generate the user manual and API documentation for the Python classes. 
