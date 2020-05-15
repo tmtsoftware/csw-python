@@ -140,10 +140,6 @@ class SubscribeCurrentState:
 
 
 class CommandServer:
-    &#34;&#34;&#34;
-    Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
-    so that CSW components can locate it and send commands to it.
-    &#34;&#34;&#34;
     _app = web.Application()
     _crm = CommandResponseManager()
 
@@ -250,9 +246,7 @@ class CommandServer:
 <span>(</span><span>prefix: str, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 8082)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
-so that CSW components can locate it and send commands to it.</p>
-<p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
+<div class="desc"><p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
 so that CSW components can locate it and send commands to it.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -269,10 +263,6 @@ subsystem names and name is the name of the command server</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class CommandServer:
-    &#34;&#34;&#34;
-    Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
-    so that CSW components can locate it and send commands to it.
-    &#34;&#34;&#34;
     _app = web.Application()
     _crm = CommandResponseManager()
 

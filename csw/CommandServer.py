@@ -114,10 +114,6 @@ class SubscribeCurrentState:
 
 
 class CommandServer:
-    """
-    Creates an HTTP server that can receive CSW commands and registers it with the Location Service,
-    so that CSW components can locate it and send commands to it.
-    """
     _app = web.Application()
     _crm = CommandResponseManager()
 
