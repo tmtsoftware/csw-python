@@ -8,6 +8,8 @@ including the
 
 See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentation.
 
+You can find the [tmtpycsw sources](https://github.com/tmtsoftware/pycsw) on GitHub.
+
 Note that all APIs here assume that the CSW services are running 
 For example, during development, run: `csw-services.sh --version v2.0.1 start`.
 (Replace v2.0.1 with the version of CSW you want to test against.)
