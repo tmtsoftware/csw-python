@@ -2,7 +2,7 @@ all: doc
 
 # Generate the documentation (under build/csw)
 doc:
-	pdoc --force --html --output-dir docs csw
+	pdoc --force --html --output-dir build csw
 	rm docs/*.html
 	cp build/csw/*.html docs/
 
