@@ -60,9 +60,13 @@ class ProperMotion:
 @dataclass
 class Coord:
     """
-    In Scala this is the base trait of the coordinate types.
+    This is the base class of the coordinate types.
     If the key type is CoordKey, the value type can be any of the Coord subtypes.
     The dict key gives the class name.
+
+    Args:
+        tag (Tag): a label to indicate the use of the coordinate
+
     """
     tag: Tag
 

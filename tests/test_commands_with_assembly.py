@@ -1,12 +1,18 @@
 import sys
 import os
 import asyncio
+import traceback
 from asyncio import Task
 from typing import List
 
 from aiohttp.web_runner import GracefulExit
+from astropy.coordinates import Angle
+from astropy import units as u
+from termcolor import colored
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from csw.Coords import ProperMotion, EqCoord
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
@@ -29,16 +35,28 @@ class MyComponentHandlers(ComponentHandlers):
     # Checks the command's contents, shows how to access the parameters
     # See ./testSupport/test-assembly/src/main/scala/org/tmt/csw/testassembly/TestAssemblyHandlers.scala#makeTestCommand
     # for where the command was created.
+    # noinspection PyUnresolvedReferences
     def _checkCommand(self, command: ControlCommand):
-        assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
-        assert(list(command.get("cmdValue").values)[0] == 1.0)
+        try:
+            assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
+            assert(list(command.get("cmdValue").values)[0] == 1.0)
 
-        # Access a Struct value
-        structVal = list(command.get("cmdStructValueB").values)[0]
-        # s.__class__ = Struct
-        assert(structVal.paramSet[0].values[0] == 1.0)
-        assert(structVal.paramSet[0].keyName == "cmdValue")
-        assert(structVal.paramSet[0].keyType == "Float")
+            # Access a Struct value
+            struct: Struct = list(command.get("cmdStructValueB").values)[0]
+            # s.__class__ = Struct
+            assert(struct.paramSet[0].keyName == "cmdValue")
+            assert(struct.paramSet[0].keyType == "FloatKey")
+            assert(struct.paramSet[0].values[0] == 1.0)
+
+            # Access a coordinate value
+            eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
+            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
+            assert(eqCoord.ra == Angle("12:13:14.15 hours"))
+            assert(eqCoord.dec == Angle("-30:31:32.3 deg"))
+
+        except:
+            print(f"_checkCommand: {colored('TEST FAILED', 'red')}")
+            traceback.print_exc()
 
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
@@ -88,7 +106,7 @@ class MyComponentHandlers(ComponentHandlers):
             a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)
         """
         n = len(command.paramSet)
-        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.\nTEST PASSED.")
+        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.\n{colored('TEST PASSED', 'green')}.")
         raise GracefulExit()
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:

@@ -8,7 +8,9 @@ including the
 
 See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentation.
 
-Note that all APIs here assume that the CSW services are running (Run `csw-services.sh start`).
+Note that all APIs here assume that the CSW services are running 
+For example, during development, run: `csw-services.sh --version v2.0.1 start`.
+(Replace v2.0.1 with the version of CSW you want to test against.)
 
 The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
 with the difference that in some cases the Python types are simpler, due to less strict typing.
@@ -33,6 +35,10 @@ The following Python dependencies need to be installed with pip (pip3):
 * aiohttp
 * dataclasses-json
 
+For running the tests:
+
+* pytest
+* termcolor
 
 The latest release has been published to https://pypi.org/project/tmtpycsw/ and can be installed with:
 
@@ -154,7 +160,7 @@ The messages are serialized using JSON (events use CBOR, since talking directly 
 Below is an example command server that accepts different types of commands.
 Note that a *long running command* should do the work in another thread and
 return the [CommandResponse](CommandResponse.html) later, while a *simple command* 
-returns immediately, possibly with a [Result](CommandResponse.html#csw.CommandResponse.Result).
+returns the command response immediately, possibly with a [Result](CommandResponse.html#csw.CommandResponse.Result).
 If an error occurs, [Error](CommandResponse.html#csw.CommandResponse.Error) should be returned.
 If the command is invalid , the server should return [Invalid](CommandResponse.html#csw.CommandResponse.Invalid)
 
@@ -226,3 +232,46 @@ def test_command_server():
     commandServer.start()
 ```
 
+## Working with Parameters
+
+When receiving events or handling commands, you need to be able to unpack the [parameter](Parameter.html) list.
+This package provides wrappers for all of the CSW parameter classes.
+
+Normally you should know what parameters to expect, based on the ICD or by looking at the sender's code.
+For example, assuming you know that a received command contains a key named "cmdValue" with the key type `FloatKey`,
+you can access the values like this (Parameters may always contain multiple values):
+
+```python
+            assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
+            assert(list(command.get("cmdValue").values)[0] == 1.0)
+```
+
+For more complicated types, the key type may be
+ [StructKey](https://tmtsoftware.github.io/csw/params/keys-parameters.html#domain-specific-types),
+ meaning that the parameter contains 
+its own parameter list. In the example below, we extract the first Struct value and then check the
+first value of a struct member named "cmdValue" of type Float:
+
+```python
+
+            # Access a Struct value
+            struct: Struct = list(command.get("cmdStructValue").values)[0]
+            assert(struct.paramSet[0].keyName == "cmdValue")
+            assert(struct.paramSet[0].keyType == "FloatKey")
+            assert(struct.paramSet[0].values[0] == 1.0)
+```
+
+CSW also defines a number of 
+[coordinate types](https://tmtsoftware.github.io/csw/params/keys-parameters.html#coordinate-types) for parameters.
+The following example gets the first value of the "BasePosition", which is expected to be an 
+[EqCoord](Coords.html#csw.Coords.EqCoord). The ra and dec fields are represented in Python as
+[Astropy Angles](https://docs.astropy.org/en/stable/api/astropy.coordinates.Angle.html).
+
+```python
+
+            # Access a coordinate value
+            eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
+            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
+            assert(eqCoord.ra == Angle("12:13:14.15 hours"))
+            assert(eqCoord.dec == Angle("-30:31:32.3 deg"))
+```
