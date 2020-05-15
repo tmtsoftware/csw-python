@@ -4,7 +4,7 @@ all: doc
 doc:
 	pdoc --force --html --output-dir docs csw
 	rm docs/*.html
-	cp build/csw/*.html docs
+	cp build/csw/*.html docs/
 
 # Run tests against an included, Scala based assembly
 test: all
