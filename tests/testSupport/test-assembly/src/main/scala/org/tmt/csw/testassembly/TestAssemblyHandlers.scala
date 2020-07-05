@@ -1,7 +1,6 @@
 package org.tmt.csw.testassembly
 
 import java.io.{File, FileOutputStream}
-import java.time.Instant
 
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
@@ -62,12 +61,16 @@ object TestAssemblyHandlers {
         // Create the file when the first event is received from the test, close it on the last
         val append = event.eventName.name != "testEvent1"
         val testFd = new FileOutputStream(eventTestFile, append)
-        val ev: Event = event.copy(
-          eventId = Id("test"),
-          eventTime = UTCTime(Instant.ofEpochSecond(0)))
+        val ev: Event = event
         val json = Json.encode(ev).toUtf8String + "\n"
-        testFd.write(json.getBytes)
-        log.info(s"XXX Writing to $eventTestFile")
+        // SystemEvent constructor is private, but we need to change two fields in order to compare results
+        val jsonStr1 =
+          json.replaceAll("\"eventId\":\"[^\"]*\"", "\"eventId\":\"test\"")
+        val jsonStr2 = jsonStr1.replaceAll(
+          "\"eventTime\":\"[^\"]*\"",
+          "\"eventTime\":\"1970-01-01T00:00:00Z\"")
+        testFd.write(jsonStr2.getBytes)
+        log.debug(s"XXX Writing to $eventTestFile")
         testFd.close()
       }
     }
@@ -111,13 +114,15 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   implicit def timeout: Timeout = new Timeout(20.seconds)
 
   private val log = loggerFactory.getLogger
+
   // See tests/test_commands_with_assembly.py
   private val pythonConnection = HttpConnection(
     ComponentId(Prefix(CSW, "pycswTest"), ComponentType.Service))
 
+  log.info("Initializing test assembly...")
+  startSubscribingToEvents()
+
   override def initialize(): Future[Unit] = {
-    log.info("Initializing test assembly...")
-    startSubscribingToEvents()
     Future.unit
   }
 

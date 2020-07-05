@@ -137,14 +137,14 @@ class Registration:
     port: int
 
 
-# _pdocIgnoreGenerated(&#34;NetworkType&#34;)
-# @dataclass_json
-# @dataclass
-# class NetworkType:
-#     &#34;&#34;&#34;
-#     NetworkType enum {Public, Private)
-#     &#34;&#34;&#34;
-#     _type: str
+_pdocIgnoreGenerated(&#34;NetworkType&#34;)
+@dataclass_json
+@dataclass
+class NetworkType:
+    &#34;&#34;&#34;
+    NetworkType enum {Public, Private)
+    &#34;&#34;&#34;
+    _type: str
 
 _pdocIgnoreGenerated(&#34;HttpRegistration&#34;)
 @dataclass_json
@@ -154,7 +154,7 @@ class HttpRegistration(Registration):
     Used to register an http based service with the Location Service.
     &#34;&#34;&#34;
     path: str = &#34;&#34;
-    # networkType: NetworkType = NetworkType(&#34;Public&#34;)
+    networkType: NetworkType = NetworkType(&#34;Public&#34;)
 
 
 _pdocIgnoreGenerated(&#34;TcpRegistration&#34;)
@@ -472,7 +472,7 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </dd>
 <dt id="csw.LocationService.HttpRegistration"><code class="flex name class">
 <span>class <span class="ident">HttpRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '')</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '', networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = NetworkType(_type='Public'))</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register an http based service with the Location Service.</p></div>
@@ -484,7 +484,8 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
     &#34;&#34;&#34;
     Used to register an http based service with the Location Service.
     &#34;&#34;&#34;
-    path: str = &#34;&#34;</code></pre>
+    path: str = &#34;&#34;
+    networkType: NetworkType = NetworkType(&#34;Public&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -492,6 +493,10 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="csw.LocationService.HttpRegistration.networkType"><code class="name">var <span class="ident">networkType</span> : <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.LocationService.HttpRegistration.path"><code class="name">var <span class="ident">path</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
@@ -891,6 +896,23 @@ within specified time limit</p>
 </dd>
 </dl>
 </dd>
+<dt id="csw.LocationService.NetworkType"><code class="flex name class">
+<span>class <span class="ident">NetworkType</span></span>
+<span>(</span><span>_type: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>NetworkType enum {Public, Private)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NetworkType:
+    &#34;&#34;&#34;
+    NetworkType enum {Public, Private)
+    &#34;&#34;&#34;
+    _type: str</code></pre>
+</details>
+</dd>
 <dt id="csw.LocationService.Registration"><code class="flex name class">
 <span>class <span class="ident">Registration</span></span>
 <span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int)</span>
@@ -1014,6 +1036,7 @@ within specified time limit</p>
 <li>
 <h4><code><a title="csw.LocationService.HttpRegistration" href="#csw.LocationService.HttpRegistration">HttpRegistration</a></code></h4>
 <ul class="">
+<li><code><a title="csw.LocationService.HttpRegistration.networkType" href="#csw.LocationService.HttpRegistration.networkType">networkType</a></code></li>
 <li><code><a title="csw.LocationService.HttpRegistration.path" href="#csw.LocationService.HttpRegistration.path">path</a></code></li>
 </ul>
 </li>
@@ -1033,6 +1056,9 @@ within specified time limit</p>
 <li><code><a title="csw.LocationService.LocationService.unregister" href="#csw.LocationService.LocationService.unregister">unregister</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.wsUri" href="#csw.LocationService.LocationService.wsUri">wsUri</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a></code></h4>
 </li>
 <li>
 <h4><code><a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a></code></h4>
