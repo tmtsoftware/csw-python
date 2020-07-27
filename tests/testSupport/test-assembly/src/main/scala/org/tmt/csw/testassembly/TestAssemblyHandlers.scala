@@ -295,7 +295,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
           if e.getMessage.startsWith(
             "The http server closed the connection unexpectedly") =>
       case e: Exception =>
-        log.error("Error sending command to python test", ex = e)
+        log.error("Error sending OneWay command to python test", ex = e)
     }
   }
 }

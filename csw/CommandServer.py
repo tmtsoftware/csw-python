@@ -1,4 +1,5 @@
 import json
+import traceback
 from dataclasses import dataclass
 from typing import List
 
@@ -9,7 +10,6 @@ from aiohttp.web_response import Response
 import atexit
 import uuid
 
-from aiohttp.web_runner import GracefulExit
 from aiohttp.web_ws import WebSocketResponse
 from dataclasses_json import dataclass_json
 
@@ -20,6 +20,8 @@ from csw.LocationService import LocationService, ConnectionInfo, ComponentType, 
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
+
+
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f"{className}.from_dict"] = False
     __pdoc__[f"{className}.from_json"] = False
@@ -27,9 +29,12 @@ def _pdocIgnoreGenerated(className: str):
     __pdoc__[f"{className}.to_dict"] = False
     __pdoc__[f"{className}.to_json"] = False
 
+
 _pdocIgnoreGenerated("Validate")
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class Validate:
     """
     A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.
@@ -41,8 +46,10 @@ class Validate:
 
 
 _pdocIgnoreGenerated("Submit")
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class Submit:
     """
     Represents a command that requires a response (of type CommandResponse).
@@ -54,8 +61,10 @@ class Submit:
 
 
 _pdocIgnoreGenerated("Oneway")
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class Oneway:
     """
     Represents a command that does not require or expect a response
@@ -67,8 +76,10 @@ class Oneway:
 
 
 _pdocIgnoreGenerated("QueryFinal")
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class QueryFinal:
     """
     A message sent to query the final result of a long running command.
@@ -86,14 +97,19 @@ class QueryFinal:
         """
         Returns a ControlCommand for the given dict.
         """
-        runId = obj['runId']
-        timeoutInSeconds = obj['timeoutInSeconds']
-        return QueryFinal(runId, timeoutInSeconds)
+        try:
+            runId = obj['runId']
+            timeoutInSeconds = obj['timeoutInSeconds']
+            return QueryFinal(runId, timeoutInSeconds)
+        except:
+            traceback.print_exc()
 
 
 _pdocIgnoreGenerated("SubscribeCurrentState")
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class SubscribeCurrentState:
     """
     Message used to subscribe to the current state of a component.
@@ -119,6 +135,7 @@ class CommandServer:
 
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
+        # print(f"received post: {str(obj)}")
         method = obj['_type']
         if method in {'Submit', 'Oneway', 'Validate'}:
             command = ControlCommand._fromDict(obj['controlCommand'])
@@ -154,6 +171,7 @@ class CommandServer:
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
+                    # print(f"received message: {str(obj)}")
                     method = obj['_type']
                     if method == "QueryFinal":
                         queryFinal = QueryFinal._fromDict(obj)

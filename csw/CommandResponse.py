@@ -110,13 +110,11 @@ class Completed(CommandResponse):
         Returns: dict
             a dictionary corresponding to this object
         """
-        d = {
+        return {
             "_type": self.__class__.__name__,
             'runId': self.runId,
+            'result': self.result._asDict()
         }
-        if len(self.result.paramSet) != 0:
-            d['result'] = self.result._asDict()
-        return d
 
 
 # --- Invalid ---
