@@ -136,13 +136,11 @@ class Completed(CommandResponse):
         Returns: dict
             a dictionary corresponding to this object
         &#34;&#34;&#34;
-        d = {
+        return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
+            &#39;result&#39;: self.result._asDict()
         }
-        if len(self.result.paramSet) != 0:
-            d[&#39;result&#39;] = self.result._asDict()
-        return d
 
 
 # --- Invalid ---
@@ -396,13 +394,11 @@ Note that oneway and validate responses are limited to Accepted, Invalid or Lock
         Returns: dict
             a dictionary corresponding to this object
         &#34;&#34;&#34;
-        d = {
+        return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
-        }
-        if len(self.result.paramSet) != 0:
-            d[&#39;result&#39;] = self.result._asDict()
-        return d</code></pre>
+            &#39;result&#39;: self.result._asDict()
+        }</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

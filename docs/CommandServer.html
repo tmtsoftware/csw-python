@@ -25,6 +25,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
+import traceback
 from dataclasses import dataclass
 from typing import List
 
@@ -35,7 +36,6 @@ from aiohttp.web_response import Response
 import atexit
 import uuid
 
-from aiohttp.web_runner import GracefulExit
 from aiohttp.web_ws import WebSocketResponse
 from dataclasses_json import dataclass_json
 
@@ -46,6 +46,8 @@ from csw.LocationService import LocationService, ConnectionInfo, ComponentType, 
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
+
+
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f&#34;{className}.from_dict&#34;] = False
     __pdoc__[f&#34;{className}.from_json&#34;] = False
@@ -53,9 +55,12 @@ def _pdocIgnoreGenerated(className: str):
     __pdoc__[f&#34;{className}.to_dict&#34;] = False
     __pdoc__[f&#34;{className}.to_json&#34;] = False
 
+
 _pdocIgnoreGenerated(&#34;Validate&#34;)
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class Validate:
     &#34;&#34;&#34;
     A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.
@@ -67,8 +72,10 @@ class Validate:
 
 
 _pdocIgnoreGenerated(&#34;Submit&#34;)
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class Submit:
     &#34;&#34;&#34;
     Represents a command that requires a response (of type CommandResponse).
@@ -80,8 +87,10 @@ class Submit:
 
 
 _pdocIgnoreGenerated(&#34;Oneway&#34;)
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class Oneway:
     &#34;&#34;&#34;
     Represents a command that does not require or expect a response
@@ -93,8 +102,10 @@ class Oneway:
 
 
 _pdocIgnoreGenerated(&#34;QueryFinal&#34;)
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class QueryFinal:
     &#34;&#34;&#34;
     A message sent to query the final result of a long running command.
@@ -112,14 +123,19 @@ class QueryFinal:
         &#34;&#34;&#34;
         Returns a ControlCommand for the given dict.
         &#34;&#34;&#34;
-        runId = obj[&#39;runId&#39;]
-        timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
-        return QueryFinal(runId, timeoutInSeconds)
+        try:
+            runId = obj[&#39;runId&#39;]
+            timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
+            return QueryFinal(runId, timeoutInSeconds)
+        except:
+            traceback.print_exc()
 
 
 _pdocIgnoreGenerated(&#34;SubscribeCurrentState&#34;)
-@dataclass
+
+
 @dataclass_json
+@dataclass
 class SubscribeCurrentState:
     &#34;&#34;&#34;
     Message used to subscribe to the current state of a component.
@@ -145,6 +161,7 @@ class CommandServer:
 
     async def _handlePost(self, request: Request) -&gt; Response:
         obj = await request.json()
+        # print(f&#34;received post: {str(obj)}&#34;)
         method = obj[&#39;_type&#39;]
         if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
             command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
@@ -180,6 +197,7 @@ class CommandServer:
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
+                    # print(f&#34;received message: {str(obj)}&#34;)
                     method = obj[&#39;_type&#39;]
                     if method == &#34;QueryFinal&#34;:
                         queryFinal = QueryFinal._fromDict(obj)
@@ -268,6 +286,7 @@ subsystem names and name is the name of the command server</dd>
 
     async def _handlePost(self, request: Request) -&gt; Response:
         obj = await request.json()
+        # print(f&#34;received post: {str(obj)}&#34;)
         method = obj[&#39;_type&#39;]
         if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
             command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
@@ -303,6 +322,7 @@ subsystem names and name is the name of the command server</dd>
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
+                    # print(f&#34;received message: {str(obj)}&#34;)
                     method = obj[&#39;_type&#39;]
                     if method == &#34;QueryFinal&#34;:
                         queryFinal = QueryFinal._fromDict(obj)
@@ -376,6 +396,7 @@ subsystem names and name is the name of the command server</dd>
 </dd>
 <dt id="csw.CommandServer.Oneway"><code class="flex name class">
 <span>class <span class="ident">Oneway</span></span>
+<span>(</span><span>controlCommand: <a title="csw.ControlCommand.ControlCommand" href="ControlCommand.html#csw.ControlCommand.ControlCommand">ControlCommand</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a command that does not require or expect a response</p>
@@ -400,6 +421,7 @@ subsystem names and name is the name of the command server</dd>
 </dd>
 <dt id="csw.CommandServer.QueryFinal"><code class="flex name class">
 <span>class <span class="ident">QueryFinal</span></span>
+<span>(</span><span>runId: str, timeoutInSeconds: int)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>A message sent to query the final result of a long running command.
@@ -431,13 +453,17 @@ The response should be a CommandResponse.</p>
         &#34;&#34;&#34;
         Returns a ControlCommand for the given dict.
         &#34;&#34;&#34;
-        runId = obj[&#39;runId&#39;]
-        timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
-        return QueryFinal(runId, timeoutInSeconds)</code></pre>
+        try:
+            runId = obj[&#39;runId&#39;]
+            timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
+            return QueryFinal(runId, timeoutInSeconds)
+        except:
+            traceback.print_exc()</code></pre>
 </details>
 </dd>
 <dt id="csw.CommandServer.Submit"><code class="flex name class">
 <span>class <span class="ident">Submit</span></span>
+<span>(</span><span>controlCommand: <a title="csw.ControlCommand.ControlCommand" href="ControlCommand.html#csw.ControlCommand.ControlCommand">ControlCommand</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a command that requires a response (of type CommandResponse).</p>
@@ -462,6 +488,7 @@ The response should be a CommandResponse.</p>
 </dd>
 <dt id="csw.CommandServer.SubscribeCurrentState"><code class="flex name class">
 <span>class <span class="ident">SubscribeCurrentState</span></span>
+<span>(</span><span>stateNames: List[str])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Message used to subscribe to the current state of a component.</p>
@@ -492,6 +519,7 @@ The response should be a CommandResponse.</p>
 </dd>
 <dt id="csw.CommandServer.Validate"><code class="flex name class">
 <span>class <span class="ident">Validate</span></span>
+<span>(</span><span>controlCommand: <a title="csw.ControlCommand.ControlCommand" href="ControlCommand.html#csw.ControlCommand.ControlCommand">ControlCommand</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.</p>
