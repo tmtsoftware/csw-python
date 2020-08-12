@@ -28,16 +28,11 @@
 
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-#from csw.LocationService import LocationService, ComponentType, ConnectionType
-#from urllib.parse import urlparse
 
 
 class EventSubscriber:
 
     def __init__(self):
-        # loc = LocationService().find(&#34;EventServer&#34;, ComponentType.Service, ConnectionType.TcpType)
-        # uri = urlparse(loc.uri)
-        # self.__redis = RedisConnector(host=uri.hostname, port=uri.port)
         self.__redis = RedisConnector()
 
     @staticmethod
@@ -96,9 +91,6 @@ class EventSubscriber:
 <pre><code class="python">class EventSubscriber:
 
     def __init__(self):
-        # loc = LocationService().find(&#34;EventServer&#34;, ComponentType.Service, ConnectionType.TcpType)
-        # uri = urlparse(loc.uri)
-        # self.__redis = RedisConnector(host=uri.hostname, port=uri.port)
         self.__redis = RedisConnector()
 
     @staticmethod

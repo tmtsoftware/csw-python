@@ -25,7 +25,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from typing import List
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from dataclasses_json import dataclass_json
 from enum import Enum
 from multipledispatch import dispatch
@@ -90,6 +90,7 @@ class Location:
     _type: str
     connection: ConnectionInfo
     uri: str
+    metadata: dict
 
     @staticmethod
     def _makeLocation(obj: dict):
@@ -155,6 +156,7 @@ class HttpRegistration(Registration):
     &#34;&#34;&#34;
     path: str = &#34;&#34;
     networkType: NetworkType = NetworkType(&#34;Public&#34;)
+    metadata: dict = field(default_factory=dict)
 
 
 _pdocIgnoreGenerated(&#34;TcpRegistration&#34;)
@@ -164,6 +166,7 @@ class TcpRegistration(Registration):
     &#34;&#34;&#34;
     Used to register a tcp based service with the Location Service.
     &#34;&#34;&#34;
+    metadata: dict = field(default_factory=dict)
 
 
 class LocationService:
@@ -330,10 +333,10 @@ class LocationService:
 <dl>
 <dt id="csw.LocationService.AkkaLocation"><code class="flex name class">
 <span>class <span class="ident">AkkaLocation</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>AkkaLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<div class="desc"><p>AkkaLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -454,10 +457,10 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </dd>
 <dt id="csw.LocationService.HttpLocation"><code class="flex name class">
 <span>class <span class="ident">HttpLocation</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>HttpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<div class="desc"><p>HttpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -472,7 +475,7 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </dd>
 <dt id="csw.LocationService.HttpRegistration"><code class="flex name class">
 <span>class <span class="ident">HttpRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '', networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = NetworkType(_type='Public'))</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '', networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = NetworkType(_type='Public'), metadata: dict = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register an http based service with the Location Service.</p></div>
@@ -485,7 +488,8 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
     Used to register an http based service with the Location Service.
     &#34;&#34;&#34;
     path: str = &#34;&#34;
-    networkType: NetworkType = NetworkType(&#34;Public&#34;)</code></pre>
+    networkType: NetworkType = NetworkType(&#34;Public&#34;)
+    metadata: dict = field(default_factory=dict)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -505,10 +509,10 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </dd>
 <dt id="csw.LocationService.Location"><code class="flex name class">
 <span>class <span class="ident">Location</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Location(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<div class="desc"><p>Location(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -517,6 +521,7 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
     _type: str
     connection: ConnectionInfo
     uri: str
+    metadata: dict
 
     @staticmethod
     def _makeLocation(obj: dict):
@@ -954,10 +959,10 @@ within specified time limit</p>
 </dd>
 <dt id="csw.LocationService.TcpLocation"><code class="flex name class">
 <span>class <span class="ident">TcpLocation</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str)</span>
+<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>TcpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str)</p></div>
+<div class="desc"><p>TcpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -972,7 +977,7 @@ within specified time limit</p>
 </dd>
 <dt id="csw.LocationService.TcpRegistration"><code class="flex name class">
 <span>class <span class="ident">TcpRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int)</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, metadata: dict = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register a tcp based service with the Location Service.</p></div>
@@ -983,7 +988,8 @@ within specified time limit</p>
 <pre><code class="python">class TcpRegistration(Registration):
     &#34;&#34;&#34;
     Used to register a tcp based service with the Location Service.
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+    metadata: dict = field(default_factory=dict)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
