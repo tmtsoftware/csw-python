@@ -1,18 +1,24 @@
+from urllib.parse import urlparse
+
 import redis
 from typing import List
+
+from redis.sentinel import Sentinel
+
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, LocationService
 
 
 class RedisConnector:
 
-    def __init__(self, host: str = 'localhost', port: int = 6379):
+    def __init__(self):
         """
         Events are posted to Redis. This is internal class used to access Redis.
-
-        Args:
-            host (str): the host redis is running on (default: localhost)
-            port (int): the redis port (default: 6379)
         """
-        self.__redis = redis.Redis(host=host, port=port)
+        conn = ConnectionInfo("CSW.EventServer", ComponentType.Service.value, ConnectionType.TcpType.value)
+        loc = LocationService().find(conn)
+        uri = urlparse(loc.uri)
+        sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
+        self.__redis = sentinel.master_for('eventServer', socket_timeout=0.1)
         self.__redis_pubsub = self.__redis.pubsub()
 
     def close(self):

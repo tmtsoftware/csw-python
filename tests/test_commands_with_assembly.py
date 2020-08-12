@@ -7,7 +7,6 @@ from typing import List
 
 from aiohttp.web_runner import GracefulExit
 from astropy.coordinates import Angle
-from astropy import units as u
 from termcolor import colored
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

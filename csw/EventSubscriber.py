@@ -2,16 +2,11 @@ import cbor2
 
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-#from csw.LocationService import LocationService, ComponentType, ConnectionType
-#from urllib.parse import urlparse
 
 
 class EventSubscriber:
 
     def __init__(self):
-        # loc = LocationService().find("EventServer", ComponentType.Service, ConnectionType.TcpType)
-        # uri = urlparse(loc.uri)
-        # self.__redis = RedisConnector(host=uri.hostname, port=uri.port)
         self.__redis = RedisConnector()
 
     @staticmethod

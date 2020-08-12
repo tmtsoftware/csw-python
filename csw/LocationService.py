@@ -1,5 +1,5 @@
 from typing import List
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from dataclasses_json import dataclass_json
 from enum import Enum
 from multipledispatch import dispatch
@@ -64,6 +64,7 @@ class Location:
     _type: str
     connection: ConnectionInfo
     uri: str
+    metadata: dict
 
     @staticmethod
     def _makeLocation(obj: dict):
@@ -129,6 +130,7 @@ class HttpRegistration(Registration):
     """
     path: str = ""
     networkType: NetworkType = NetworkType("Public")
+    metadata: dict = field(default_factory=dict)
 
 
 _pdocIgnoreGenerated("TcpRegistration")
@@ -138,6 +140,7 @@ class TcpRegistration(Registration):
     """
     Used to register a tcp based service with the Location Service.
     """
+    metadata: dict = field(default_factory=dict)
 
 
 class LocationService:
