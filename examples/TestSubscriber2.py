@@ -5,11 +5,12 @@ from csw.EventSubscriber import EventSubscriber
 class TestSubscriber2:
 
     def __init__(self):
-        eventKey = "CSW.testassembly.myAssemblyEvent"
-        EventSubscriber().subscribe([eventKey], self.callback)
+        self.eventKey = "CSW.testassembly.*"
+        self.eventSubscriber = EventSubscriber()
+        self.count = 0
+        self.eventThread = self.eventSubscriber.pSubscribe([self.eventKey], self.callback)
 
-    @staticmethod
-    def callback(systemEvent):
+    def callback(self, systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
             print(f"    with values: {i.keyName}: {i.values}")
@@ -19,6 +20,11 @@ class TestSubscriber2:
             p = systemEvent.get("assemblyEventValue")
             if p is not None:
                 print(f"Found: {p.keyName}")
+        self.count = self.count + 1
+        if (self.count > 4):
+            # self.eventSubscriber.pUnsubscribe([self.eventKey])
+            self.eventSubscriber.pUnsubscribe([])
+            self.eventThread.stop()
 
 
 def main():

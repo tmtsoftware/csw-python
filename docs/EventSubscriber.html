@@ -55,6 +55,42 @@ class EventSubscriber:
         &#34;&#34;&#34;
         return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
 
+    def unsubscribe(self, eventKeyList: list):
+        &#34;&#34;&#34;
+        Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
+
+        Args:
+            eventKeyList (list): list of event key (Strings) to unsubscribe from
+        &#34;&#34;&#34;
+        return self.__redis.unsubscribe(eventKeyList)
+
+    def pSubscribe(self, eventKeyList: list, callback):
+        &#34;&#34;&#34;
+        Start a subscription to system events in event service, specifying a callback
+        to be called when an event in the list has its value updated.
+        In this case the keys are treated as glob-style patterns:
+        h?llo subscribes to hello, hallo and hxllo,
+        h*llo subscribes to hllo and heeeello,
+        h[ae]llo subscribes to hello and hallo, but not hillo.
+
+        Args:
+            eventKeyList (list): list of event key (string patterns) to subscribe to
+            callback (function): function to be called when event updates. Should take Event and return void
+
+        Returns: PubSubWorkerThread
+            subscription thread. Use .stop() method to stop subscription.
+        &#34;&#34;&#34;
+        return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+
+    def pUnsubscribe(self, eventKeyList: list):
+        &#34;&#34;&#34;
+        Unsubscribes to the given list of event key patterns (or all keys, if eventKeyList is empty)
+
+        Args:
+            eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
+        &#34;&#34;&#34;
+        return self.__redis.pUnsubscribe(eventKeyList)
+
     def get(self, eventKey: str):
         &#34;&#34;&#34;
         Get an event from the Event Service
@@ -113,6 +149,42 @@ class EventSubscriber:
         &#34;&#34;&#34;
         return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
 
+    def unsubscribe(self, eventKeyList: list):
+        &#34;&#34;&#34;
+        Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
+
+        Args:
+            eventKeyList (list): list of event key (Strings) to unsubscribe from
+        &#34;&#34;&#34;
+        return self.__redis.unsubscribe(eventKeyList)
+
+    def pSubscribe(self, eventKeyList: list, callback):
+        &#34;&#34;&#34;
+        Start a subscription to system events in event service, specifying a callback
+        to be called when an event in the list has its value updated.
+        In this case the keys are treated as glob-style patterns:
+        h?llo subscribes to hello, hallo and hxllo,
+        h*llo subscribes to hllo and heeeello,
+        h[ae]llo subscribes to hello and hallo, but not hillo.
+
+        Args:
+            eventKeyList (list): list of event key (string patterns) to subscribe to
+            callback (function): function to be called when event updates. Should take Event and return void
+
+        Returns: PubSubWorkerThread
+            subscription thread. Use .stop() method to stop subscription.
+        &#34;&#34;&#34;
+        return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+
+    def pUnsubscribe(self, eventKeyList: list):
+        &#34;&#34;&#34;
+        Unsubscribes to the given list of event key patterns (or all keys, if eventKeyList is empty)
+
+        Args:
+            eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
+        &#34;&#34;&#34;
+        return self.__redis.pUnsubscribe(eventKeyList)
+
     def get(self, eventKey: str):
         &#34;&#34;&#34;
         Get an event from the Event Service
@@ -161,6 +233,72 @@ Should be source prefix + "." + event name.</dd>
     return event</code></pre>
 </details>
 </dd>
+<dt id="csw.EventSubscriber.EventSubscriber.pSubscribe"><code class="name flex">
+<span>def <span class="ident">pSubscribe</span></span>(<span>self, eventKeyList: list, callback)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start a subscription to system events in event service, specifying a callback
+to be called when an event in the list has its value updated.
+In this case the keys are treated as glob-style patterns:
+h?llo subscribes to hello, hallo and hxllo,
+h*llo subscribes to hllo and heeeello,
+h[ae]llo subscribes to hello and hallo, but not hillo.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of event key (string patterns) to subscribe to</dd>
+<dt><strong><code>callback</code></strong> :&ensp;<code>function</code></dt>
+<dd>function to be called when event updates. Should take Event and return void</dd>
+<dt><strong><code>Returns</code></strong> :&ensp;<code>PubSubWorkerThread</code></dt>
+<dd>subscription thread. Use .stop() method to stop subscription.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pSubscribe(self, eventKeyList: list, callback):
+    &#34;&#34;&#34;
+    Start a subscription to system events in event service, specifying a callback
+    to be called when an event in the list has its value updated.
+    In this case the keys are treated as glob-style patterns:
+    h?llo subscribes to hello, hallo and hxllo,
+    h*llo subscribes to hllo and heeeello,
+    h[ae]llo subscribes to hello and hallo, but not hillo.
+
+    Args:
+        eventKeyList (list): list of event key (string patterns) to subscribe to
+        callback (function): function to be called when event updates. Should take Event and return void
+
+    Returns: PubSubWorkerThread
+        subscription thread. Use .stop() method to stop subscription.
+    &#34;&#34;&#34;
+    return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))</code></pre>
+</details>
+</dd>
+<dt id="csw.EventSubscriber.EventSubscriber.pUnsubscribe"><code class="name flex">
+<span>def <span class="ident">pUnsubscribe</span></span>(<span>self, eventKeyList: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Unsubscribes to the given list of event key patterns (or all keys, if eventKeyList is empty)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of event key patterns (Strings) to unsubscribe from</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pUnsubscribe(self, eventKeyList: list):
+    &#34;&#34;&#34;
+    Unsubscribes to the given list of event key patterns (or all keys, if eventKeyList is empty)
+
+    Args:
+        eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
+    &#34;&#34;&#34;
+    return self.__redis.pUnsubscribe(eventKeyList)</code></pre>
+</details>
+</dd>
 <dt id="csw.EventSubscriber.EventSubscriber.subscribe"><code class="name flex">
 <span>def <span class="ident">subscribe</span></span>(<span>self, eventKeyList: list, callback)</span>
 </code></dt>
@@ -195,6 +333,30 @@ to be called when an event in the list has its value updated.</p>
     return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))</code></pre>
 </details>
 </dd>
+<dt id="csw.EventSubscriber.EventSubscriber.unsubscribe"><code class="name flex">
+<span>def <span class="ident">unsubscribe</span></span>(<span>self, eventKeyList: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of event key (Strings) to unsubscribe from</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unsubscribe(self, eventKeyList: list):
+    &#34;&#34;&#34;
+    Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
+
+    Args:
+        eventKeyList (list): list of event key (Strings) to unsubscribe from
+    &#34;&#34;&#34;
+    return self.__redis.unsubscribe(eventKeyList)</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -217,7 +379,10 @@ to be called when an event in the list has its value updated.</p>
 <h4><code><a title="csw.EventSubscriber.EventSubscriber" href="#csw.EventSubscriber.EventSubscriber">EventSubscriber</a></code></h4>
 <ul class="">
 <li><code><a title="csw.EventSubscriber.EventSubscriber.get" href="#csw.EventSubscriber.EventSubscriber.get">get</a></code></li>
+<li><code><a title="csw.EventSubscriber.EventSubscriber.pSubscribe" href="#csw.EventSubscriber.EventSubscriber.pSubscribe">pSubscribe</a></code></li>
+<li><code><a title="csw.EventSubscriber.EventSubscriber.pUnsubscribe" href="#csw.EventSubscriber.EventSubscriber.pUnsubscribe">pUnsubscribe</a></code></li>
 <li><code><a title="csw.EventSubscriber.EventSubscriber.subscribe" href="#csw.EventSubscriber.EventSubscriber.subscribe">subscribe</a></code></li>
+<li><code><a title="csw.EventSubscriber.EventSubscriber.unsubscribe" href="#csw.EventSubscriber.EventSubscriber.unsubscribe">unsubscribe</a></code></li>
 </ul>
 </li>
 </ul>

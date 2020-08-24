@@ -39,6 +39,40 @@ class RedisConnector:
         self.__redis_pubsub.subscribe(**d)
         return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
 
+    def unsubscribe(self, keyList: List[str]):
+        """
+        Unsubscribe to the list of event keys
+
+        Args:
+            keyList (List[str]): list of keys to unsubscribe from
+        """
+        self.__redis_pubsub.unsubscribe(keyList)
+
+    def pSubscribe(self, keyList: List[str], callback):
+        """
+        Set up a Redis subscription on specified keys with specified callback on value changes.
+        In this case the keys are treated as glob-style patterns.
+
+        Args:
+            keyList (List[str]): list of key patterns to subscribe to
+            callback (function): callback called when item changes.  Should take a Redis message type.
+
+        Returns: PubSubWorkerThread
+            subscription thread. Use .stop() method to stop subscription
+        """
+        d = dict.fromkeys(keyList, callback)
+        self.__redis_pubsub.psubscribe(**d)
+        return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+
+    def pUnsubscribe(self, keyList: List[str]):
+        """
+        Unsubscribe to the list of event key patterns
+
+        Args:
+            keyList (List[str]): list of key patterns to unsubscribe from
+        """
+        self.__redis_pubsub.punsubscribe(keyList)
+
     def publish(self, key: str, encodedValue: bytes):
         """
         Publish CBOR encoded event string to Redis

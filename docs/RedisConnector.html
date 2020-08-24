@@ -65,6 +65,40 @@ class RedisConnector:
         self.__redis_pubsub.subscribe(**d)
         return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
 
+    def unsubscribe(self, keyList: List[str]):
+        &#34;&#34;&#34;
+        Unsubscribe to the list of event keys
+
+        Args:
+            keyList (List[str]): list of keys to unsubscribe from
+        &#34;&#34;&#34;
+        self.__redis_pubsub.unsubscribe(keyList)
+
+    def pSubscribe(self, keyList: List[str], callback):
+        &#34;&#34;&#34;
+        Set up a Redis subscription on specified keys with specified callback on value changes.
+        In this case the keys are treated as glob-style patterns.
+
+        Args:
+            keyList (List[str]): list of key patterns to subscribe to
+            callback (function): callback called when item changes.  Should take a Redis message type.
+
+        Returns: PubSubWorkerThread
+            subscription thread. Use .stop() method to stop subscription
+        &#34;&#34;&#34;
+        d = dict.fromkeys(keyList, callback)
+        self.__redis_pubsub.psubscribe(**d)
+        return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+
+    def pUnsubscribe(self, keyList: List[str]):
+        &#34;&#34;&#34;
+        Unsubscribe to the list of event key patterns
+
+        Args:
+            keyList (List[str]): list of key patterns to unsubscribe from
+        &#34;&#34;&#34;
+        self.__redis_pubsub.punsubscribe(keyList)
+
     def publish(self, key: str, encodedValue: bytes):
         &#34;&#34;&#34;
         Publish CBOR encoded event string to Redis
@@ -138,6 +172,40 @@ class RedisConnector:
         self.__redis_pubsub.subscribe(**d)
         return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
 
+    def unsubscribe(self, keyList: List[str]):
+        &#34;&#34;&#34;
+        Unsubscribe to the list of event keys
+
+        Args:
+            keyList (List[str]): list of keys to unsubscribe from
+        &#34;&#34;&#34;
+        self.__redis_pubsub.unsubscribe(keyList)
+
+    def pSubscribe(self, keyList: List[str], callback):
+        &#34;&#34;&#34;
+        Set up a Redis subscription on specified keys with specified callback on value changes.
+        In this case the keys are treated as glob-style patterns.
+
+        Args:
+            keyList (List[str]): list of key patterns to subscribe to
+            callback (function): callback called when item changes.  Should take a Redis message type.
+
+        Returns: PubSubWorkerThread
+            subscription thread. Use .stop() method to stop subscription
+        &#34;&#34;&#34;
+        d = dict.fromkeys(keyList, callback)
+        self.__redis_pubsub.psubscribe(**d)
+        return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+
+    def pUnsubscribe(self, keyList: List[str]):
+        &#34;&#34;&#34;
+        Unsubscribe to the list of event key patterns
+
+        Args:
+            keyList (List[str]): list of key patterns to unsubscribe from
+        &#34;&#34;&#34;
+        self.__redis_pubsub.punsubscribe(keyList)
+
     def publish(self, key: str, encodedValue: bytes):
         &#34;&#34;&#34;
         Publish CBOR encoded event string to Redis
@@ -206,6 +274,67 @@ Should be source prefix + "." + event name.</dd>
     return self.__redis.get(key)</code></pre>
 </details>
 </dd>
+<dt id="csw.RedisConnector.RedisConnector.pSubscribe"><code class="name flex">
+<span>def <span class="ident">pSubscribe</span></span>(<span>self, keyList: List[str], callback)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set up a Redis subscription on specified keys with specified callback on value changes.
+In this case the keys are treated as glob-style patterns.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyList</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>list of key patterns to subscribe to</dd>
+<dt><strong><code>callback</code></strong> :&ensp;<code>function</code></dt>
+<dd>callback called when item changes.
+Should take a Redis message type.</dd>
+<dt><strong><code>Returns</code></strong> :&ensp;<code>PubSubWorkerThread</code></dt>
+<dd>subscription thread. Use .stop() method to stop subscription</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pSubscribe(self, keyList: List[str], callback):
+    &#34;&#34;&#34;
+    Set up a Redis subscription on specified keys with specified callback on value changes.
+    In this case the keys are treated as glob-style patterns.
+
+    Args:
+        keyList (List[str]): list of key patterns to subscribe to
+        callback (function): callback called when item changes.  Should take a Redis message type.
+
+    Returns: PubSubWorkerThread
+        subscription thread. Use .stop() method to stop subscription
+    &#34;&#34;&#34;
+    d = dict.fromkeys(keyList, callback)
+    self.__redis_pubsub.psubscribe(**d)
+    return self.__redis_pubsub.run_in_thread(sleep_time=0.001)</code></pre>
+</details>
+</dd>
+<dt id="csw.RedisConnector.RedisConnector.pUnsubscribe"><code class="name flex">
+<span>def <span class="ident">pUnsubscribe</span></span>(<span>self, keyList: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Unsubscribe to the list of event key patterns</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyList</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>list of key patterns to unsubscribe from</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pUnsubscribe(self, keyList: List[str]):
+    &#34;&#34;&#34;
+    Unsubscribe to the list of event key patterns
+
+    Args:
+        keyList (List[str]): list of key patterns to unsubscribe from
+    &#34;&#34;&#34;
+    self.__redis_pubsub.punsubscribe(keyList)</code></pre>
+</details>
+</dd>
 <dt id="csw.RedisConnector.RedisConnector.publish"><code class="name flex">
 <span>def <span class="ident">publish</span></span>(<span>self, key: str, encodedValue: bytes)</span>
 </code></dt>
@@ -270,6 +399,30 @@ Should take a Redis message type.</dd>
     return self.__redis_pubsub.run_in_thread(sleep_time=0.001)</code></pre>
 </details>
 </dd>
+<dt id="csw.RedisConnector.RedisConnector.unsubscribe"><code class="name flex">
+<span>def <span class="ident">unsubscribe</span></span>(<span>self, keyList: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Unsubscribe to the list of event keys</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyList</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>list of keys to unsubscribe from</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unsubscribe(self, keyList: List[str]):
+    &#34;&#34;&#34;
+    Unsubscribe to the list of event keys
+
+    Args:
+        keyList (List[str]): list of keys to unsubscribe from
+    &#34;&#34;&#34;
+    self.__redis_pubsub.unsubscribe(keyList)</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -290,11 +443,14 @@ Should take a Redis message type.</dd>
 <ul>
 <li>
 <h4><code><a title="csw.RedisConnector.RedisConnector" href="#csw.RedisConnector.RedisConnector">RedisConnector</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="csw.RedisConnector.RedisConnector.close" href="#csw.RedisConnector.RedisConnector.close">close</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.get" href="#csw.RedisConnector.RedisConnector.get">get</a></code></li>
+<li><code><a title="csw.RedisConnector.RedisConnector.pSubscribe" href="#csw.RedisConnector.RedisConnector.pSubscribe">pSubscribe</a></code></li>
+<li><code><a title="csw.RedisConnector.RedisConnector.pUnsubscribe" href="#csw.RedisConnector.RedisConnector.pUnsubscribe">pUnsubscribe</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.publish" href="#csw.RedisConnector.RedisConnector.publish">publish</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.subscribe" href="#csw.RedisConnector.RedisConnector.subscribe">subscribe</a></code></li>
+<li><code><a title="csw.RedisConnector.RedisConnector.unsubscribe" href="#csw.RedisConnector.RedisConnector.unsubscribe">unsubscribe</a></code></li>
 </ul>
 </li>
 </ul>

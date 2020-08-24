@@ -1,15 +1,23 @@
+from csw.Event import Event
 from csw.EventSubscriber import EventSubscriber
 
 # Test subscribing to events
 class TestSubscriber1:
 
     def __init__(self):
-        eventKey = "CSW.testassembly.myAssemblyEvent"
-        EventSubscriber().subscribe([eventKey], self.callback)
+        self.count = 0
+        self.eventKey = "CSW.testassembly.myAssemblyEvent"
+        self.eventSubscriber = EventSubscriber()
+        self.eventThread = self.eventSubscriber.subscribe([self.eventKey], self.callback)
 
-    @staticmethod
-    def callback(event):
+    def callback(self, event: Event):
         print(f"Event value = {event.paramSet[0].values[0]}")
+        self.count = self.count + 1
+        if (self.count > 4):
+            self.eventSubscriber.unsubscribe([self.eventKey])
+            self.eventThread.stop()
+
+
 
 def main():
     TestSubscriber1()
