@@ -6,7 +6,6 @@ import time
 from _pytest import pathlib
 
 from csw.EventSubscriber import EventSubscriber
-from csw.EventTime import EventTime
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -39,7 +38,8 @@ class TestEventsWithAssembly:
     #     self.cleanup()
 
     def teardown_method(self):
-        self.cleanup()
+        pass
+        # self.cleanup()
 
     def cleanup(self):
         if os.path.exists(self.tmpInFile):
@@ -78,6 +78,7 @@ class TestEventsWithAssembly:
         param = Parameter(keyName, keyType, values)
         paramSet = [param]
         event = SystemEvent(self.prefix, "testEvent1", paramSet)
+        print(f"Publishing event {event}")
         self.pub.publish(event)
 
     def publishEvent2(self):
@@ -126,11 +127,11 @@ class TestEventsWithAssembly:
 
     # Event subscriber callback
     def callback(self, systemEvent):
-        print(f"Received system event '{systemEvent.eventName}'")
+        print(f"Received system event '{systemEvent}'")
         # Save event to file as JSON like dict (Not JSON, since byte arrays are not serializable in python),
         # but change the date and id for comparison
         systemEvent.eventId = "test"
-        systemEvent.eventTime = EventTime(0, 0)
+        systemEvent.eventTime = "1970-01-01T00:00:00Z"
         mode = "w" if (systemEvent.eventName == "testEvent1") else "a"
         f = open(self.tmpInFile, mode)
         jsonStr = str(systemEvent._asDict())

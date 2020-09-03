@@ -24,14 +24,13 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import uuid
+<pre><code class="python">import datetime
+import uuid
 from dataclasses import dataclass
 from typing import List
 from abc import abstractmethod
 
 from csw.Parameter import Parameter
-from csw.EventTime import EventTime
-
 
 @dataclass
 class Event:
@@ -49,7 +48,7 @@ class Event:
     source: str
     eventName: str
     paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.fromSystem()
+    eventTime: str = datetime.datetime.utcnow().isoformat()
     eventId: str = str(uuid.uuid4())
 
     @abstractmethod
@@ -70,7 +69,7 @@ class Event:
         typ = obj[&#39;_type&#39;]
         assert (typ in {&#34;SystemEvent&#34;, &#34;ObserveEvent&#34;})
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
-        eventTime = EventTime._fromDict(obj[&#39;eventTime&#39;])
+        eventTime = obj[&#39;eventTime&#39;]
         if typ == &#39;SystemEvent&#39;:
             return SystemEvent(obj[&#39;source&#39;], obj[&#39;eventName&#39;], paramSet, eventTime, obj[&#39;eventId&#39;])
         else:
@@ -86,7 +85,7 @@ class Event:
             &#39;eventId&#39;: self.eventId,
             &#39;source&#39;: self.source,
             &#39;eventName&#39;: self.eventName,
-            &#39;eventTime&#39;: self.eventTime._asDict(),
+            &#39;eventTime&#39;: self.eventTime,
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
 
@@ -170,7 +169,7 @@ class ObserveEvent(Event):
 <dl>
 <dt id="csw.Event.Event"><code class="flex name class">
 <span>class <span class="ident">Event</span></span>
-<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1598274029, nanos=333114624), eventId: str = 'e119e414-85f1-4e06-a63b-00a9ba2cb48e')</span>
+<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: str = '2020-09-03T21:51:54.887949', eventId: str = 'c1b5bef0-186d-44ce-b0fd-2c24d1f45cc4')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Abstract base class that creates an Event that can be published to the event service
@@ -207,7 +206,7 @@ class ObserveEvent(Event):
     source: str
     eventName: str
     paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.fromSystem()
+    eventTime: str = datetime.datetime.utcnow().isoformat()
     eventId: str = str(uuid.uuid4())
 
     @abstractmethod
@@ -228,7 +227,7 @@ class ObserveEvent(Event):
         typ = obj[&#39;_type&#39;]
         assert (typ in {&#34;SystemEvent&#34;, &#34;ObserveEvent&#34;})
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
-        eventTime = EventTime._fromDict(obj[&#39;eventTime&#39;])
+        eventTime = obj[&#39;eventTime&#39;]
         if typ == &#39;SystemEvent&#39;:
             return SystemEvent(obj[&#39;source&#39;], obj[&#39;eventName&#39;], paramSet, eventTime, obj[&#39;eventId&#39;])
         else:
@@ -244,7 +243,7 @@ class ObserveEvent(Event):
             &#39;eventId&#39;: self.eventId,
             &#39;source&#39;: self.source,
             &#39;eventName&#39;: self.eventName,
-            &#39;eventTime&#39;: self.eventTime._asDict(),
+            &#39;eventTime&#39;: self.eventTime,
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
 
@@ -291,7 +290,7 @@ class ObserveEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.Event.eventTime"><code class="name">var <span class="ident">eventTime</span> : <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a></code></dt>
+<dt id="csw.Event.Event.eventTime"><code class="name">var <span class="ident">eventTime</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -400,7 +399,7 @@ def eventType(self) -&gt; str:
 </dd>
 <dt id="csw.Event.ObserveEvent"><code class="flex name class">
 <span>class <span class="ident">ObserveEvent</span></span>
-<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1598274029, nanos=333114624), eventId: str = 'e119e414-85f1-4e06-a63b-00a9ba2cb48e')</span>
+<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: str = '2020-09-03T21:51:54.887949', eventId: str = 'c1b5bef0-186d-44ce-b0fd-2c24d1f45cc4')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An event type fired when an observation has taken place.</p>
@@ -454,7 +453,7 @@ def eventType(self) -&gt; str:
 </dd>
 <dt id="csw.Event.SystemEvent"><code class="flex name class">
 <span>class <span class="ident">SystemEvent</span></span>
-<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1598274029, nanos=333114624), eventId: str = 'e119e414-85f1-4e06-a63b-00a9ba2cb48e')</span>
+<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: str = '2020-09-03T21:51:54.887949', eventId: str = 'c1b5bef0-186d-44ce-b0fd-2c24d1f45cc4')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An event type for publishing changes in system data.</p>

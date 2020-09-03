@@ -1,11 +1,10 @@
+import datetime
 import uuid
 from dataclasses import dataclass
 from typing import List
 from abc import abstractmethod
 
 from csw.Parameter import Parameter
-from csw.EventTime import EventTime
-
 
 @dataclass
 class Event:
@@ -23,7 +22,7 @@ class Event:
     source: str
     eventName: str
     paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.fromSystem()
+    eventTime: str = datetime.datetime.utcnow().isoformat()
     eventId: str = str(uuid.uuid4())
 
     @abstractmethod
@@ -44,7 +43,7 @@ class Event:
         typ = obj['_type']
         assert (typ in {"SystemEvent", "ObserveEvent"})
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
-        eventTime = EventTime._fromDict(obj['eventTime'])
+        eventTime = obj['eventTime']
         if typ == 'SystemEvent':
             return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
         else:
@@ -60,7 +59,7 @@ class Event:
             'eventId': self.eventId,
             'source': self.source,
             'eventName': self.eventName,
-            'eventTime': self.eventTime._asDict(),
+            'eventTime': self.eventTime,
             'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }
 

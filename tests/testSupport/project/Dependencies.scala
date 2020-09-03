@@ -20,7 +20,6 @@ object Dependencies {
 
   val TestDeploy = Seq(
     CSW.`csw-framework`,
-    CSW.`csw-logging-client`,
     CSW.`csw-testkit` % Test
   )
 }
