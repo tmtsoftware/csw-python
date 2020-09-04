@@ -41,7 +41,7 @@ class TestPublisher3:
 
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam, structParam]
-        event = SystemEvent("csw.assembly", "myAssemblyEvent", paramSet)
+        event = SystemEvent("CSW.testassembly", "myAssemblyEvent", paramSet)
         self.pub.publish(event)
 
 

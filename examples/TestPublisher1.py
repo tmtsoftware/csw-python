@@ -3,7 +3,7 @@ from csw.EventPublisher import EventPublisher
 from csw.Parameter import Parameter
 
 # Test publishing events
-source = "csw.assembly"
+source = "CSW.testassembly"
 eventName = "myAssemblyEvent"
 
 keyName = "assemblyEventValue"

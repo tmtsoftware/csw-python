@@ -11,7 +11,7 @@ class TestSubscriber1:
         self.eventThread = self.eventSubscriber.subscribe([self.eventKey], self.callback)
 
     def callback(self, event: Event):
-        print(f"Event value = {event.paramSet[0].values[0]}")
+        print(f"Event = {event} (Event Time = {event.eventTime.str()}")
         self.count = self.count + 1
         if (self.count > 4):
             self.eventSubscriber.unsubscribe([self.eventKey])
