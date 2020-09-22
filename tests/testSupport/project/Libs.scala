@@ -11,7 +11,7 @@ object Libs {
 }
 
 object AkkaHttp {
-  val Version                = "10.2.0-M1"
+  val Version                = "10.2.0"
   val `akka-http-spray-json` = "com.typesafe.akka" %% "akka-http-spray-json" % Version
 }
 
