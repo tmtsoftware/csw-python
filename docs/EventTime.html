@@ -24,8 +24,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import datetime
-import time
+<pre><code class="python">from datetime import datetime,timezone
 from dataclasses import dataclass, asdict
 
 
@@ -39,7 +38,7 @@ class EventTime:
 
     def str(self):
         secs = self.seconds + self.nanos / 1e9
-        dt = datetime.datetime.fromtimestamp(secs)
+        dt = datetime.fromtimestamp(secs, timezone.utc)
         return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)
 
     def _asDict(self):
@@ -54,9 +53,9 @@ class EventTime:
         &#34;&#34;&#34;
         Returns an EventTime with the current time.
         &#34;&#34;&#34;
-        t = time.time()
+        t = datetime.now(timezone.utc).timestamp()
         seconds = int(t)
-        nanos = int((t - seconds) * 1000000000)
+        nanos = int((t - seconds) * 1e9)
         return EventTime(seconds, nanos)</code></pre>
 </details>
 </section>
@@ -88,7 +87,7 @@ class EventTime:
 
     def str(self):
         secs = self.seconds + self.nanos / 1e9
-        dt = datetime.datetime.fromtimestamp(secs)
+        dt = datetime.fromtimestamp(secs, timezone.utc)
         return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)
 
     def _asDict(self):
@@ -103,9 +102,9 @@ class EventTime:
         &#34;&#34;&#34;
         Returns an EventTime with the current time.
         &#34;&#34;&#34;
-        t = time.time()
+        t = datetime.now(timezone.utc).timestamp()
         seconds = int(t)
-        nanos = int((t - seconds) * 1000000000)
+        nanos = int((t - seconds) * 1e9)
         return EventTime(seconds, nanos)</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -124,9 +123,9 @@ def fromSystem():
     &#34;&#34;&#34;
     Returns an EventTime with the current time.
     &#34;&#34;&#34;
-    t = time.time()
+    t = datetime.now(timezone.utc).timestamp()
     seconds = int(t)
-    nanos = int((t - seconds) * 1000000000)
+    nanos = int((t - seconds) * 1e9)
     return EventTime(seconds, nanos)</code></pre>
 </details>
 </dd>
@@ -144,7 +143,7 @@ def fromSystem():
 </summary>
 <pre><code class="python">def str(self):
     secs = self.seconds + self.nanos / 1e9
-    dt = datetime.datetime.fromtimestamp(secs)
+    dt = datetime.fromtimestamp(secs, timezone.utc)
     return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)</code></pre>
 </details>
 </dd>
