@@ -24,67 +24,61 @@ import java.util.concurrent.CompletableFuture;
  */
 public class JTestHcdHandlers extends JComponentHandlers {
 
-    private final JCswContext cswCtx;
-    private final ILogger log;
+  private final JCswContext cswCtx;
+  private final ILogger log;
 
-    JTestHcdHandlers(ActorContext<TopLevelActorMessage> ctx,JCswContext cswCtx) {
-        super(ctx, cswCtx);
-        this.cswCtx = cswCtx;
-        this.log = cswCtx.loggerFactory().getLogger(getClass());
-    }
+  JTestHcdHandlers(ActorContext<TopLevelActorMessage> ctx, JCswContext cswCtx) {
+    super(ctx, cswCtx);
+    this.cswCtx = cswCtx;
+    this.log = cswCtx.loggerFactory().getLogger(getClass());
+  }
 
-    @Override
-    public CompletableFuture<Void> jInitialize() {
+  @Override
+  public void jInitialize() {
     log.info("Initializing test HCD...");
-    return CompletableFuture.runAsync(() -> {
+  }
 
-        });
-    }
+  @Override
+  public void jOnShutdown() {
+  }
 
-    @Override
-    public CompletableFuture<Void> jOnShutdown() {
-        return CompletableFuture.runAsync(() -> {
+  @Override
+  public void onLocationTrackingEvent(TrackingEvent trackingEvent) {
 
-        });
-    }
+  }
 
-    @Override
-    public void onLocationTrackingEvent(TrackingEvent trackingEvent) {
+  @Override
+  public CommandResponse.ValidateCommandResponse validateCommand(Id runId, ControlCommand controlCommand) {
+    return new CommandResponse.Accepted(runId);
+  }
 
-    }
+  @Override
+  public CommandResponse.SubmitResponse onSubmit(Id runId, ControlCommand controlCommand) {
+    return new CommandResponse.Completed(runId);
+  }
 
-    @Override
-    public CommandResponse.ValidateCommandResponse validateCommand(Id runId, ControlCommand controlCommand) {
-        return new CommandResponse.Accepted(runId);
-    }
+  @Override
+  public void onOneway(Id runId, ControlCommand controlCommand) {
 
-    @Override
-    public CommandResponse.SubmitResponse onSubmit(Id runId, ControlCommand controlCommand) {
-        return new CommandResponse.Completed(runId);
-    }
+  }
 
-    @Override
-    public void onOneway(Id runId, ControlCommand controlCommand) {
+  @Override
+  public void onGoOffline() {
 
-    }
+  }
 
-    @Override
-    public void onGoOffline() {
+  @Override
+  public void onGoOnline() {
 
-    }
+  }
 
-    @Override
-    public void onGoOnline() {
+  @Override
+  public void onDiagnosticMode(UTCTime startTime, String hint) {
 
-    }
+  }
 
-    @Override
-    public void onDiagnosticMode(UTCTime startTime, String hint){
+  @Override
+  public void onOperationsMode() {
 
-    }
-
-    @Override
-    public void onOperationsMode() {
-
-    }
+  }
 }
