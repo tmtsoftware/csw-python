@@ -122,9 +122,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   log.info("Initializing test assembly...")
   startSubscribingToEvents()
 
-  override def initialize(): Future[Unit] = {
-    Future.unit
-  }
+  override def initialize(): Unit = {}
 
   private def startSubscribingToEvents(): Unit = {
     val eventHandlerActor = ctx.spawn(eventHandler(log), "eventHandlerActor")
@@ -153,9 +151,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
 
   override def onOneway(runId: Id, controlCommand: ControlCommand): Unit = {}
 
-  override def onShutdown(): Future[Unit] = {
-    Future.unit
-  }
+  override def onShutdown(): Unit = {}
 
   override def onGoOffline(): Unit = {}
 

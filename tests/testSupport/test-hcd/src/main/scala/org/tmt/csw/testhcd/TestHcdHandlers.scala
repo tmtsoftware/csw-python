@@ -28,9 +28,8 @@ class TestHcdHandlers(ctx: ActorContext[TopLevelActorMessage],
   implicit val ec: ExecutionContextExecutor = ctx.executionContext
   private val log = loggerFactory.getLogger
 
-  override def initialize(): Future[Unit] = {
+  override def initialize(): Unit = {
     log.info("Initializing test HCD...")
-    Future.unit
   }
 
   override def onLocationTrackingEvent(trackingEvent: TrackingEvent): Unit = {}
@@ -45,7 +44,7 @@ class TestHcdHandlers(ctx: ActorContext[TopLevelActorMessage],
 
   override def onOneway(runId: Id, controlCommand: ControlCommand): Unit = {}
 
-  override def onShutdown(): Future[Unit] = { Future.unit }
+  override def onShutdown(): Unit = {}
 
   override def onGoOffline(): Unit = {}
 

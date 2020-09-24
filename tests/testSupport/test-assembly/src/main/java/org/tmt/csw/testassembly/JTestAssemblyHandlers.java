@@ -33,18 +33,12 @@ public class JTestAssemblyHandlers extends JComponentHandlers {
     }
 
     @Override
-    public CompletableFuture<Void> jInitialize() {
+  public void jInitialize() {
     log.info("Initializing test assembly...");
-    return CompletableFuture.runAsync(() -> {
-
-        });
     }
 
     @Override
-    public CompletableFuture<Void> jOnShutdown() {
-        return CompletableFuture.runAsync(() -> {
-
-        });
+  public void jOnShutdown() {
     }
 
     @Override
