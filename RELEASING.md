@@ -13,3 +13,6 @@
 
 * Run "make release" in top level dir
   (Note: Requires username/password for pypi.org).
+
+* Make GitHub release
+
