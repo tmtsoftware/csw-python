@@ -5,10 +5,10 @@ from csw.EventSubscriber import EventSubscriber
 class TestSubscriber2:
 
     def __init__(self):
-        self.eventKey = "CSW.testassembly.*"
+        self.eventKey = "CSW.testassembly.myAssemblyEvent"
         self.eventSubscriber = EventSubscriber()
         self.count = 0
-        self.eventThread = self.eventSubscriber.pSubscribe([self.eventKey], self.callback)
+        self.eventThread = self.eventSubscriber.subscribe([self.eventKey], self.callback)
 
     def callback(self, systemEvent):
         print(f"Received system event '{systemEvent.eventName}'")
@@ -22,8 +22,7 @@ class TestSubscriber2:
                 print(f"Found: {p.keyName}")
         self.count = self.count + 1
         if (self.count > 4):
-            # self.eventSubscriber.pUnsubscribe([self.eventKey])
-            self.eventSubscriber.pUnsubscribe([])
+            self.eventSubscriber.unsubscribe([self.eventKey])
             self.eventThread.stop()
 
 

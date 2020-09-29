@@ -11,8 +11,6 @@ All notable changes to this project will be documented in this file.
 
 - Added unsubscribe method to EventSubscriber (Used to unsubscribe only: You can also call stop() on the event subscriber thread returned from the subscribe call to stop the listening thread.)
 
-- Added pSubscribe() and pUnsubscribe() methods to EventSubscriber (matching the CSW versions) for subscribing to an event key pattern
-
 ## [tmtpycsw v2.0.1] - 2020-05-15
 
 ### Added

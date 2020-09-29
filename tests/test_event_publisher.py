@@ -18,7 +18,6 @@ class TestEventPublisher:
     def test_pub_sub(self):
         pub = EventPublisher()
         sub = EventSubscriber()
-        sub2 = EventSubscriber()
 
         prefix = "CSW.assembly"
         eventName = "test_event"
@@ -30,13 +29,6 @@ class TestEventPublisher:
         paramSet = [param]
         event = SystemEvent(prefix, eventName, paramSet)
 
-        eventName2 = "test_event2"
-        eventKey2 = prefix + "." + eventName2
-        values2 = [42, 43, 44]
-        param2 = Parameter(keyName, keyType, values2)
-        paramSet2 = [param, param2]
-        event2 = SystemEvent(prefix, eventName2, paramSet2)
-
         thread = sub.subscribe([eventKey], self.callback)
         pub.publish(event)
         time.sleep(1)
@@ -45,15 +37,6 @@ class TestEventPublisher:
         assert (self.count == 1)
         sub.unsubscribe([eventKey])
         thread.stop()
-
-        thread2 = sub2.pSubscribe([prefix + ".*"], self.callback)
-        pub.publish(event2)
-        time.sleep(1)
-        e2 = sub.get(eventKey2)
-        assert (e2 == event2)
-        # assert (self.count == 2)
-        sub2.pUnsubscribe([prefix + ".*"])
-        thread2.stop()
 
     def callback(self, systemEvent):
         self.count = self.count + 1
