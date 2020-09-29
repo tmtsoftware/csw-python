@@ -5,7 +5,7 @@
 
 logfile=test.log
 set -v
-#csw-services.sh --version v2.0.1 start -e > $logfile 2>&1 &
+#csw-services.sh --version v3.0.0-M1 start -e > $logfile 2>&1 &
 csw-services.sh start -e > $logfile 2>&1 &
 cd testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
