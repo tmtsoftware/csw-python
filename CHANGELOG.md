@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [tmtpycsw vXXX] - 2020-XXX
+## [tmtpycsw v3.0.0-M1] - 2020-09-29
 
 ### Changed
 
-- Updated for latest csw version
+- Updated for latest csw version (v3.0.0-M1)
 
 - Changed event service code to get the redis sentinel location from the location service and use it (previously used hard coded host:port)
 
