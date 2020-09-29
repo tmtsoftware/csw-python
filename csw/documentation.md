@@ -11,8 +11,8 @@ See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentati
 You can find the [tmtpycsw sources](https://github.com/tmtsoftware/pycsw) on GitHub.
 
 Note that all APIs here assume that the CSW services are running 
-For example, during development, run: `csw-services.sh --version v2.0.1 start`.
-(Replace v2.0.1 with the version of CSW you want to test against.)
+For example, during development, run: `csw-services.sh --version v3.0.0-M1 start`.
+(Replace v3.0.0-M1 with the version of CSW you want to test against.)
 
 The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
 with the difference that in some cases the Python types are simpler, due to less strict typing.
@@ -44,7 +44,7 @@ For running the tests:
 
 The latest release has been published to https://pypi.org/project/tmtpycsw/ and can be installed with:
 
-    pip install tmtpycsw
+    pip3 install tmtpycsw
 
 
 ## CSW Location Service
@@ -170,16 +170,24 @@ If the command is invalid , the server should return [Invalid](CommandResponse.h
 import sys
 import os
 import asyncio
+import traceback
 from asyncio import Task
 from typing import List
+
 from aiohttp.web_runner import GracefulExit
+from astropy.coordinates import Angle
+from termcolor import colored
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from csw.Coords import ProperMotion, EqCoord
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter
+from csw.Parameter import Parameter, Struct
+
 
 class MyComponentHandlers(ComponentHandlers):
     prefix = "CSW.pycswTest"
@@ -192,9 +200,32 @@ class MyComponentHandlers(ComponentHandlers):
         await self.publishCurrentStates()
         return Completed(runId)
 
+    def _checkCommand(self, command: ControlCommand):
+        try:
+            assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
+            assert(list(command.get("cmdValue").values)[0] == 1.0)
+
+            # Access a Struct value
+            struct: Struct = list(command.get("cmdStructValueB").values)[0]
+            assert(struct.paramSet[0].keyName == "cmdValue")
+            assert(struct.paramSet[0].keyType == "FloatKey")
+            assert(struct.paramSet[0].values[0] == 1.0)
+
+            # Access a coordinate value
+            eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
+            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
+            assert(eqCoord.ra == Angle("12:13:14.15 hours"))
+            assert(eqCoord.dec == Angle("-30:31:32.3 deg"))
+
+        except:
+            print(f"_checkCommand: {colored('TEST FAILED', 'red')}")
+            traceback.print_exc()
+
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
+        self._checkCommand(command)
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
+
         if command.commandName == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
             return Started(runId, "Long running task in progress..."), task
@@ -212,7 +243,7 @@ class MyComponentHandlers(ComponentHandlers):
 
     def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
         n = len(command.paramSet)
-        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.\nTEST PASSED.")
+        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.\n{colored('TEST PASSED', 'green')}.")
         raise GracefulExit()
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
