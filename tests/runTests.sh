@@ -6,6 +6,10 @@
 CSW_VERSION=v3.0.0-M1
 
 logfile=test.log
+if ! hash csw-services.sh 2>/dev/null ; then
+    echo >&2 "Please install csw-services.sh (from csw sources or download csw-apps zip from csw GitHub release).  Aborting."
+    exit 1
+fi
 set -v
 csw-services.sh --version $CSW_VERSION start -e > $logfile 2>&1 &
 #csw-services.sh start -e > $logfile 2>&1 &
