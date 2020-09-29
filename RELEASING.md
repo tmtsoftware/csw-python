@@ -11,7 +11,7 @@
 * Run "make doc" in top level dir and check in the generated HTML docs
   (Note: Requires that pdoc3 is installed: To install, run: `pip3 install pdoc3`).
 
-* Run "make release" in top level dir
+* Optional: Run "make release" in top level dir
   (Note: Requires username/password for pypi.org).
 
 * Make GitHub release
