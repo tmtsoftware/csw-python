@@ -125,7 +125,10 @@ class SubscribeCurrentState:
         Returns a SubscribeCurrentState for the given dict.
         """
         # typ = obj["_type"]
-        stateNames = obj["names"]
+        if "names" in obj.keys():
+            stateNames = obj.get("names")
+        else:
+            stateNames = []
         return SubscribeCurrentState(stateNames)
 
 

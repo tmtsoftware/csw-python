@@ -234,6 +234,10 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   private def sendCommandsToPython(location: Location): Unit = {
     log.info(s"XXX python based service is located: $location")
     val pythonService = CommandServiceFactory.make(location)
+    pythonService.subscribeCurrentState { cs =>
+      log.info(s"Received current state from python service: $cs")
+
+    }
     try {
       val longRunningCommand = makeTestCommand("LongRunningCommand")
       val validateResponse =

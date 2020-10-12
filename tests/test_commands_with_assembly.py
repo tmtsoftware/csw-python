@@ -25,10 +25,13 @@ class MyComponentHandlers(ComponentHandlers):
     commandServer: CommandServer = None
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
-        await asyncio.sleep(3)
-        print("Long running task completed")
+        await asyncio.sleep(1)
         # TODO: Do this in a timer task
         await self.publishCurrentStates()
+        await asyncio.sleep(1)
+        await self.publishCurrentStates()
+        await asyncio.sleep(1)
+        print("Long running task completed")
         return Completed(runId)
 
     # Checks the command's contents, shows how to access the parameters
