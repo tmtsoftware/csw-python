@@ -151,7 +151,10 @@ class SubscribeCurrentState:
         Returns a SubscribeCurrentState for the given dict.
         &#34;&#34;&#34;
         # typ = obj[&#34;_type&#34;]
-        stateNames = obj[&#34;names&#34;]
+        if &#34;names&#34; in obj.keys():
+            stateNames = obj.get(&#34;names&#34;)
+        else:
+            stateNames = []
         return SubscribeCurrentState(stateNames)
 
 
@@ -513,7 +516,10 @@ The response should be a CommandResponse.</p>
         Returns a SubscribeCurrentState for the given dict.
         &#34;&#34;&#34;
         # typ = obj[&#34;_type&#34;]
-        stateNames = obj[&#34;names&#34;]
+        if &#34;names&#34; in obj.keys():
+            stateNames = obj.get(&#34;names&#34;)
+        else:
+            stateNames = []
         return SubscribeCurrentState(stateNames)</code></pre>
 </details>
 </dd>
