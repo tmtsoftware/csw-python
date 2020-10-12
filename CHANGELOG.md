@@ -1,7 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [tmtpycsw v3.0.0-M1] - 2020-09-29
+## [tmtpycsw v3.0.2] - 2020-10-12
+
+### Changed
+
+- Fixed issue with "Current State" publishing from python code.
+
+## [tmtpycsw v3.0.1] - 2020-09-29
 
 ### Changed
 
