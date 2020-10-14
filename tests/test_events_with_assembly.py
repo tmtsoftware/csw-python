@@ -39,8 +39,8 @@ class TestEventsWithAssembly:
     #     self.cleanup()
 
     def teardown_method(self):
-        pass
-        # self.cleanup()
+        # pass
+        self.cleanup()
 
     def cleanup(self):
         if os.path.exists(self.tmpInFile):

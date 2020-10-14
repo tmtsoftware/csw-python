@@ -1,3 +1,4 @@
+import filecmp
 import sys
 import os
 import asyncio
@@ -5,6 +6,7 @@ import traceback
 from asyncio import Task
 from typing import List
 
+import pathlib
 from aiohttp.web_runner import GracefulExit
 from astropy.coordinates import Angle
 from termcolor import colored
@@ -19,10 +21,18 @@ from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter, Struct
 
-
 class MyComponentHandlers(ComponentHandlers):
     prefix = "CSW.pycswTest"
     commandServer: CommandServer = None
+    dir = pathlib.Path(__file__).parent.absolute()
+    outFileName = "PyTestAssemblyCommandResponses.out"
+    tmpOutFile = f"/tmp/{outFileName}"
+    outFile = f"{dir}/{outFileName}"
+
+    def cleanup(self):
+        self.showTestResults()
+        if os.path.exists(self.tmpOutFile):
+            os.remove(self.tmpOutFile)
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(1)
@@ -59,6 +69,11 @@ class MyComponentHandlers(ComponentHandlers):
         except:
             print(f"_checkCommand: {colored('TEST FAILED', 'red')}")
             traceback.print_exc()
+
+    def showTestResults(self):
+        # compare file created by assembly with known good version
+        assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
+        print(f"{colored('TEST PASSED', 'green')}.")
 
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
@@ -108,7 +123,7 @@ class MyComponentHandlers(ComponentHandlers):
             a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)
         """
         n = len(command.paramSet)
-        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.\n{colored('TEST PASSED', 'green')}.")
+        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.")
         raise GracefulExit()
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
@@ -139,3 +154,5 @@ def test_command_server():
     handlers.commandServer = commandServer
     print(f"Starting test command server on port {commandServer.port}")
     commandServer.start()
+    handlers.cleanup()
+

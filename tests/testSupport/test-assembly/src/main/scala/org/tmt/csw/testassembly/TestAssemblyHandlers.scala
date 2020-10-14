@@ -23,7 +23,7 @@ import csw.params.core.models.{Angle, Coords, Id, ProperMotion, Struct}
 import csw.params.events.{Event, EventKey, EventName, SystemEvent}
 import csw.params.core.formats.ParamCodecs._
 
-import scala.concurrent.{Await, ExecutionContextExecutor, Future}
+import scala.concurrent.{Await, ExecutionContextExecutor}
 import TestAssemblyHandlers._
 import akka.util.Timeout
 import csw.command.client.CommandServiceFactory
@@ -51,6 +51,10 @@ object TestAssemblyHandlers {
 
   // Generate a test file with the JSON for the received events, as an easy way to compare with the expected values
   private val eventTestFile = new File("/tmp/PyTestAssemblyEventHandlers.out")
+
+  // Generate a test file with the JSON for the received command responses, as an easy way to compare with the expected values
+  private val commandTestFile = new File(
+    "/tmp/PyTestAssemblyCommandResponses.out")
 
   // Actor to receive events
   private def eventHandler(log: Logger): Behavior[Event] = {
@@ -234,49 +238,57 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   private def sendCommandsToPython(location: Location): Unit = {
     log.info(s"XXX python based service is located: $location")
     val pythonService = CommandServiceFactory.make(location)
-    pythonService.subscribeCurrentState { cs =>
-      log.info(s"Received current state from python service: $cs")
 
+    val testFd = new FileOutputStream(commandTestFile)
+
+    def testLog(msg: String): Unit = {
+      log.info(msg)
+      val s = msg.replaceAll("Id\\([a-z0-9\\-]*\\)", "Id(test)")
+      testFd.write(s"$s\n".getBytes())
+    }
+
+    pythonService.subscribeCurrentState { cs =>
+      testLog(s"Received current state from python service: $cs")
     }
     try {
       val longRunningCommand = makeTestCommand("LongRunningCommand")
       val validateResponse =
         Await.result(pythonService.validate(longRunningCommand), 5.seconds)
-      log.info(
+      testLog(
         s"Response from validate command to ${pythonConnection.componentId.fullName}: $validateResponse")
 
       val firstCommandResponse =
         Await.result(pythonService.submit(longRunningCommand), 5.seconds)
-      log.info(
+      testLog(
         s"Initial response from submit of long running command to ${pythonConnection.componentId.fullName}: $firstCommandResponse")
       val finalCommandResponse = Await.result(
         pythonService.queryFinal(firstCommandResponse.runId),
         20.seconds)
-      log.info(
+      testLog(
         s"Final response from submit of long running command to ${pythonConnection.componentId.fullName}: $finalCommandResponse")
 
       val simpleCommand = makeTestCommand("SimpleCommand")
       val simpleCommandResponse =
         Await.result(pythonService.submit(simpleCommand), 5.seconds)
-      log.info(
+      testLog(
         s"Response from simple submit to ${pythonConnection.componentId.fullName}: $simpleCommandResponse")
 
       val resultCommand = makeTestCommand("ResultCommand")
       val resultCommandResponse =
         Await.result(pythonService.submit(resultCommand), 5.seconds)
-      log.info(
+      testLog(
         s"Response with result from submit to ${pythonConnection.componentId.fullName}: $resultCommandResponse")
 
       val errorCommand = makeTestCommand("ErrorCommand")
       val errorCommandResponse =
         Await.result(pythonService.submit(errorCommand), 5.seconds)
-      log.info(
+      testLog(
         s"Response from error command submit to ${pythonConnection.componentId.fullName}: $errorCommandResponse")
 
       val invalidCommand = makeTestCommand("InvalidCommand")
       val invalidCommandResponse =
         Await.result(pythonService.submit(invalidCommand), 5.seconds)
-      log.info(
+      testLog(
         s"Response from invalid command submit to ${pythonConnection.componentId.fullName}: $invalidCommandResponse")
     } catch {
       case e: Exception =>
@@ -286,10 +298,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     // Ignore the error that causes.
     try {
       val onewayCommand = makeTestCommand("OneWay")
-      val onewayResponse =
-        Await.result(pythonService.oneway(onewayCommand), 5.seconds)
-      log.info(
-        s"Response from oneway command to ${pythonConnection.componentId.fullName}: $onewayResponse")
+      Await.ready(pythonService.oneway(onewayCommand), 5.seconds)
     } catch {
       case e: RuntimeException
           if e.getMessage.startsWith(
@@ -297,5 +306,6 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       case e: Exception =>
         log.error("Error sending OneWay command to python test", ex = e)
     }
+    testFd.close()
   }
 }

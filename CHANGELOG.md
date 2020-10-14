@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v3.0.3] - 2020-10-14
+
+### Added
+
+- Added Command Service test
+
+### Changed
+
+- Updated dependencies
+
 ## [tmtpycsw v3.0.2] - 2020-10-12
 
 ### Changed
