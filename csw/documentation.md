@@ -21,7 +21,7 @@ not clear.
 
 ## Requirements
 
-* Python version 3.8.2 or newer
+* Python version 3.8.5 or newer
 * pdoc3 (`pip3 install pdoc3`)
 
 ### Python Dependencies:

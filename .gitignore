@@ -67,8 +67,6 @@ dkms.conf
 /pycsw.iml
 /dist/tmtpycsw-0.0.8.tar.gz
 /dist/tmtpycsw-0.0.8-py3-none-any.whl
-/Pipfile
-/Pipfile.lock
 target/
 /csw/xxx.json
 /tests/testSupport/test.log
