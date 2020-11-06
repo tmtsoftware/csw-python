@@ -18,6 +18,7 @@ fi
 
 set -v
 csw-services start -e > $logfile 2>&1 &
+cswServicesPid=$!
 cd testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
 test-deploy/target/universal/stage/bin/test-container-cmd-app --local test-deploy/src/main/resources/TestContainer.conf   >> $logfile 2>&1 &
@@ -28,4 +29,6 @@ sleep 10
 # Run the python tests
 pytest --capture=tee-sys
 kill $assemblyPid
-csw-services.sh stop  >> $logfile 2>&1
+#csw-services stop  >> $logfile 2>&1
+kill $cswServicesPid
+
