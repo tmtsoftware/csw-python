@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v3.0.4] - 2020-12-01
+
+### Changed
+
+- Updated for CSW-3.0.0-M1 and change in NetworkType JSON encoding
+
 ## [tmtpycsw v3.0.3] - 2020-10-14
 
 ### Added
