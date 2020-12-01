@@ -117,7 +117,7 @@ _pdocIgnoreGenerated("NetworkType")
 @dataclass
 class NetworkType:
     """
-    NetworkType enum {Public, Private)
+    NetworkType enum {Outside, Inside)
     """
     _type: str
 
@@ -129,7 +129,7 @@ class HttpRegistration(Registration):
     Used to register an http based service with the Location Service.
     """
     path: str = ""
-    networkType: NetworkType = NetworkType("Public")
+    networkType: NetworkType = NetworkType("Inside")
     metadata: dict = field(default_factory=dict)
 
 

@@ -145,7 +145,7 @@ _pdocIgnoreGenerated(&#34;NetworkType&#34;)
 @dataclass
 class NetworkType:
     &#34;&#34;&#34;
-    NetworkType enum {Public, Private)
+    NetworkType enum {Outside, Inside)
     &#34;&#34;&#34;
     _type: str
 
@@ -157,7 +157,7 @@ class HttpRegistration(Registration):
     Used to register an http based service with the Location Service.
     &#34;&#34;&#34;
     path: str = &#34;&#34;
-    networkType: NetworkType = NetworkType(&#34;Public&#34;)
+    networkType: NetworkType = NetworkType(&#34;Inside&#34;)
     metadata: dict = field(default_factory=dict)
 
 
@@ -522,7 +522,7 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </dd>
 <dt id="csw.LocationService.HttpRegistration"><code class="flex name class">
 <span>class <span class="ident">HttpRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '', networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = NetworkType(_type='Public'), metadata: dict = &lt;factory&gt;)</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '', networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = NetworkType(_type='Inside'), metadata: dict = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register an http based service with the Location Service.</p></div>
@@ -535,7 +535,7 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
     Used to register an http based service with the Location Service.
     &#34;&#34;&#34;
     path: str = &#34;&#34;
-    networkType: NetworkType = NetworkType(&#34;Public&#34;)
+    networkType: NetworkType = NetworkType(&#34;Inside&#34;)
     metadata: dict = field(default_factory=dict)</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -972,14 +972,14 @@ the Location</p></div>
 <span>(</span><span>_type: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>NetworkType enum {Public, Private)</p></div>
+<div class="desc"><p>NetworkType enum {Outside, Inside)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class NetworkType:
     &#34;&#34;&#34;
-    NetworkType enum {Public, Private)
+    NetworkType enum {Outside, Inside)
     &#34;&#34;&#34;
     _type: str</code></pre>
 </details>
