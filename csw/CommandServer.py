@@ -156,7 +156,7 @@ class CommandServer:
             responseDict = commandResponse._asDict()
             return web.json_response(responseDict)
         else:
-            raise Exception("Invalid Location type: " + method)
+            raise Exception("Invalid command type: " + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
         commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)

@@ -63,8 +63,7 @@ class ComponentHandlers:
 
     def currentStates(self) -> List[CurrentState]:
         """
-        Returns the current state for the component
-        :stateName str: the name of the current state to get
+        Returns the current states for the component
         """
         return []
 

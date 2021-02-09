@@ -77,7 +77,7 @@ class Location:
         elif typ == "AkkaLocation":
             return AkkaLocation.schema().loads(s)
         else:
-            raise Exception("Invalid Location type: " + typ)
+            raise Exception("Invalid location type: " + typ)
 
 
 _pdocIgnoreGenerated("AkkaLocation")
