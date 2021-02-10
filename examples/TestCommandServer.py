@@ -11,6 +11,7 @@ from csw.Parameter import Parameter
 
 
 class MyComponentHandlers(ComponentHandlers):
+    prefix = "CSW.pycswTest"
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(3)
@@ -71,9 +72,9 @@ class MyComponentHandlers(ComponentHandlers):
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
-        filt = command.get("filter").values[0]
-        encoder = command.get("encoder").values[0]
-        print(f"filter = {filt}, encoder = {encoder}")
+        # filt = command.get("filter").values[0]
+        # encoder = command.get("encoder").values[0]
+        # print(f"filter = {filt}, encoder = {encoder}")
         return Accepted(runId)
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
@@ -96,8 +97,12 @@ class MyComponentHandlers(ComponentHandlers):
         floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
         intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
-        return [CurrentState("csw.assembly", "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+        return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
 
 
 # noinspection PyTypeChecker
-commandServer = CommandServer("csw.pycswTest", MyComponentHandlers())
+handlers = MyComponentHandlers()
+commandServer = CommandServer(handlers.prefix, handlers)
+handlers.commandServer = commandServer
+print(f"Starting test command server on port {commandServer.port}")
+commandServer.start()

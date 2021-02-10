@@ -99,3 +99,11 @@ class ComponentHandlers:
         else:
             for stateName in stateNames:
                 self._addCurrentStateSubscriber(stateName, ws)
+
+    def _unsubscribeCurrentState(self, ws: WebSocketResponse):
+        """
+        Internal method used to unsubscribe a websocket from current state events
+        """
+        for stateName in self._currentStateSubscribers:
+            if ws in self._currentStateSubscribers[stateName]:
+                self._currentStateSubscribers[stateName].remove(ws)

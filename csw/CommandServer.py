@@ -190,6 +190,7 @@ class CommandServer:
             elif msg.type == aiohttp.WSMsgType.ERROR:
                 print('Error: ws connection closed with exception %s' % ws.exception())
         print('websocket connection closed')
+        self.handler._unsubscribeCurrentState(ws)
         return ws
 
     @staticmethod

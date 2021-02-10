@@ -184,7 +184,7 @@ class CommandServer:
             responseDict = commandResponse._asDict()
             return web.json_response(responseDict)
         else:
-            raise Exception(&#34;Invalid Location type: &#34; + method)
+            raise Exception(&#34;Invalid command type: &#34; + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
         commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
@@ -218,6 +218,7 @@ class CommandServer:
             elif msg.type == aiohttp.WSMsgType.ERROR:
                 print(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
         print(&#39;websocket connection closed&#39;)
+        self.handler._unsubscribeCurrentState(ws)
         return ws
 
     @staticmethod
@@ -309,7 +310,7 @@ subsystem names and name is the name of the command server</dd>
             responseDict = commandResponse._asDict()
             return web.json_response(responseDict)
         else:
-            raise Exception(&#34;Invalid Location type: &#34; + method)
+            raise Exception(&#34;Invalid command type: &#34; + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
         commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
@@ -343,6 +344,7 @@ subsystem names and name is the name of the command server</dd>
             elif msg.type == aiohttp.WSMsgType.ERROR:
                 print(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
         print(&#39;websocket connection closed&#39;)
+        self.handler._unsubscribeCurrentState(ws)
         return ws
 
     @staticmethod

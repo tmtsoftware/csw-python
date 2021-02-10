@@ -91,8 +91,7 @@ class ComponentHandlers:
 
     def currentStates(self) -&gt; List[CurrentState]:
         &#34;&#34;&#34;
-        Returns the current state for the component
-        :stateName str: the name of the current state to get
+        Returns the current states for the component
         &#34;&#34;&#34;
         return []
 
@@ -127,7 +126,15 @@ class ComponentHandlers:
             self._addCurrentStateSubscriber(&#34;&#34;, ws)
         else:
             for stateName in stateNames:
-                self._addCurrentStateSubscriber(stateName, ws)</code></pre>
+                self._addCurrentStateSubscriber(stateName, ws)
+
+    def _unsubscribeCurrentState(self, ws: WebSocketResponse):
+        &#34;&#34;&#34;
+        Internal method used to unsubscribe a websocket from current state events
+        &#34;&#34;&#34;
+        for stateName in self._currentStateSubscribers:
+            if ws in self._currentStateSubscribers[stateName]:
+                self._currentStateSubscribers[stateName].remove(ws)</code></pre>
 </details>
 </section>
 <section>
@@ -203,8 +210,7 @@ component.</p></div>
 
     def currentStates(self) -&gt; List[CurrentState]:
         &#34;&#34;&#34;
-        Returns the current state for the component
-        :stateName str: the name of the current state to get
+        Returns the current states for the component
         &#34;&#34;&#34;
         return []
 
@@ -239,7 +245,15 @@ component.</p></div>
             self._addCurrentStateSubscriber(&#34;&#34;, ws)
         else:
             for stateName in stateNames:
-                self._addCurrentStateSubscriber(stateName, ws)</code></pre>
+                self._addCurrentStateSubscriber(stateName, ws)
+
+    def _unsubscribeCurrentState(self, ws: WebSocketResponse):
+        &#34;&#34;&#34;
+        Internal method used to unsubscribe a websocket from current state events
+        &#34;&#34;&#34;
+        for stateName in self._currentStateSubscribers:
+            if ws in self._currentStateSubscribers[stateName]:
+                self._currentStateSubscribers[stateName].remove(ws)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -247,16 +261,14 @@ component.</p></div>
 <span>def <span class="ident">currentStates</span></span>(<span>self) ‑> List[<a title="csw.CurrentState.CurrentState" href="CurrentState.html#csw.CurrentState.CurrentState">CurrentState</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the current state for the component
-:stateName str: the name of the current state to get</p></div>
+<div class="desc"><p>Returns the current states for the component</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def currentStates(self) -&gt; List[CurrentState]:
     &#34;&#34;&#34;
-    Returns the current state for the component
-    :stateName str: the name of the current state to get
+    Returns the current states for the component
     &#34;&#34;&#34;
     return []</code></pre>
 </details>

@@ -1,7 +1,6 @@
 package org.tmt.csw.testassembly
 
 import java.io.{File, FileOutputStream}
-
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import csw.command.client.messages.TopLevelActorMessage
@@ -247,9 +246,10 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       testFd.write(s"$s\n".getBytes())
     }
 
-    pythonService.subscribeCurrentState { cs =>
+    val currentStateSubscription = pythonService.subscribeCurrentState { cs =>
       testLog(s"Received current state from python service: $cs")
     }
+
     try {
       val longRunningCommand = makeTestCommand("LongRunningCommand")
       val validateResponse =
@@ -272,6 +272,9 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
         Await.result(pythonService.submit(simpleCommand), 5.seconds)
       testLog(
         s"Response from simple submit to ${pythonConnection.componentId.fullName}: $simpleCommandResponse")
+
+      // Test cancel of current state subscription
+      currentStateSubscription.cancel()
 
       val resultCommand = makeTestCommand("ResultCommand")
       val resultCommandResponse =
