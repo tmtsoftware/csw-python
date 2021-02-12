@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v3.0.6] - 2020-12-01
+
+### Changed
+
+- Updated for CSW-3.0.1
+
+- Added code to unsubscribe current state subscribers on web socket close
+
 ## [tmtpycsw v3.0.4] - 2020-12-01
 
 ### Changed
