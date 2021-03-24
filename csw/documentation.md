@@ -10,9 +10,8 @@ See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentati
 
 You can find the [tmtpycsw sources](https://github.com/tmtsoftware/pycsw) on GitHub.
 
-Note that all APIs here assume that the CSW services are running 
-For example, during development, run: `csw-services.sh --version v3.0.0-M1 start`.
-(Replace v3.0.0-M1 with the version of CSW you want to test against.)
+Note that all APIs here assume that the CSW services (version 3.0.1) are running 
+For example, during development, run: `csw-services start`.
 
 The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
 with the difference that in some cases the Python types are simpler, due to less strict typing.

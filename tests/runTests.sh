@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script that starts the CSW services, compiles and runs the test assembly and then runs the python tests.
-# Assumes that csw-services.sh, sbt, pytest are all in your shell path.
+# Assumes that csw-services, sbt, pytest are all in your shell path.
 
 CSW_VERSION=3.0.1
 

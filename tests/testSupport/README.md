@@ -19,14 +19,8 @@ See [here](https://www.scala-sbt.org/1.0/docs/Setup.html) for instructions on in
 ## Prerequisites for running Components
 
 The CSW services need to be running before starting the components. 
-This is done by starting the `csw-services.sh` script, which is installed as part of the csw build.
-If you are not building csw from the sources, you can get the script as follows:
-
- - Download csw-apps zip from https://github.com/tmtsoftware/csw/releases.
- - Unzip the downloaded zip.
- - Go to the bin directory where you will find `csw-services.sh` script.
- - Run `./csw_services.sh --help` to get more information.
- - Run `./csw_services.sh start` to start the location service and config server.
+This is done by running `csw-services start`.
+See [here](https://tmtsoftware.github.io/csw/3.0.1/apps/cswservices.html) for more information.
 
 ## Building the HCD and Assembly Applications
 

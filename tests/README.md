@@ -4,11 +4,12 @@ A script is provided to run the tests:
 
     runTest.sh
 
-This assumes that csw-services.sh, sbt and pytest are in your shell path and that all the required python packages are installed.
+This assumes that csw-services (version 3.0.1), sbt and pytest are in your shell path and that all the required python packages are installed. See [here](https://tmtsoftware.github.io/csw/3.0.1/apps/cswservices.html) for 
+how to install csw-services.
 
 Alternatively, to manually run the tests: start the CSW services:
 
-    csw-services.sh start
+    csw-services start
 
 Then compile and start the test assembly:
 
@@ -20,7 +21,5 @@ Then, to run the tests, run:
 
     pytest
 
-in this directory. Afterwards, kill the assembly with Ctrl-C and stop the CSW services with:
-
-    csw-services.sh stop
+in this directory. Afterwards, kill the assembly and csw-services with Ctrl-C.
 

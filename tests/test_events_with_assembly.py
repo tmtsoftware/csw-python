@@ -18,7 +18,7 @@ from csw.EventPublisher import EventPublisher
 
 
 # Test that publishes events for an assembly running in the background (see ./testSupport).
-# Note: Requires that CSW event service is running (csw-services.sh start) and the test assembly
+# Note: Requires that CSW event service is running (csw-services start) and the test assembly
 # has been compiled and started. See README.md.
 # The assembly writes the received events as JSON to "/tmp/PyTestAssemblyEventHandlers.out" and we compare with
 # a known, valid copy. To test the subscriber API, another file "/tmp/PyTestAssemblyEventHandlers.in" is
