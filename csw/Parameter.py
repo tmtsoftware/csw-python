@@ -38,7 +38,7 @@ class Parameter:
         Returns:
             simple param value, or a dictionary if keytype is StructKey
         """
-        if keyType in coordTypes.union({"StructKey"}):
+        if keyType in coordTypes.union({"StructKey", "TAITimeKey", "UTCTimeKey"}):
             return param._asDict()
         else:
             return param
