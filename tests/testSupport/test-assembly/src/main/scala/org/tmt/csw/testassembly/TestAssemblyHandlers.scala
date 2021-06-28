@@ -39,7 +39,7 @@ import scala.concurrent.duration._
 
 object TestAssemblyHandlers {
 
-  // Event published by C code and subscribed to here
+  // Event published by python code and subscribed to here
   private val prefix = Prefix(CSW, "TestPublisher")
   private val eventNames = List(
     "testEvent1",
