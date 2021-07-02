@@ -4,7 +4,7 @@ A script is provided to run the tests:
 
     runTest.sh
 
-This assumes that csw-services (version 3.0.1), sbt and pytest are in your shell path and that all the required python packages are installed. See [here](https://tmtsoftware.github.io/csw/3.0.1/apps/cswservices.html) for 
+This assumes that csw-services (version 4.0.0-M1), sbt and pytest are in your shell path and that all the required python packages are installed. See [here](https://tmtsoftware.github.io/csw/apps/cswservices.html) for 
 how to install csw-services.
 
 Alternatively, to manually run the tests: start the CSW services:

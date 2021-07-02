@@ -21,6 +21,7 @@ from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter, Struct
 
+
 class MyComponentHandlers(ComponentHandlers):
     prefix = "CSW.pycswTest"
     commandServer: CommandServer = None
@@ -50,21 +51,21 @@ class MyComponentHandlers(ComponentHandlers):
     # noinspection PyUnresolvedReferences
     def _checkCommand(self, command: ControlCommand):
         try:
-            assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
-            assert(list(command.get("cmdValue").values)[0] == 1.0)
+            assert (command.get("cmdValue").values == [1.0, 2.0, 3.0])
+            assert (list(command.get("cmdValue").values)[0] == 1.0)
 
             # Access a Struct value
             struct: Struct = list(command.get("cmdStructValueB").values)[0]
             # s.__class__ = Struct
-            assert(struct.paramSet[0].keyName == "cmdValue")
-            assert(struct.paramSet[0].keyType == "FloatKey")
-            assert(struct.paramSet[0].values[0] == 1.0)
+            assert (struct.paramSet[0].keyName == "cmdValue")
+            assert (struct.paramSet[0].keyType == "FloatKey")
+            assert (struct.paramSet[0].values[0] == 1.0)
 
             # Access a coordinate value
             eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
-            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
-            assert(eqCoord.ra == Angle("12:13:14.15 hours"))
-            assert(eqCoord.dec == Angle("-30:31:32.3 deg"))
+            assert (eqCoord.pm == ProperMotion(0.5, 2.33))
+            assert (eqCoord.ra == Angle("12:13:14.15 hours"))
+            assert (eqCoord.dec == Angle("-30:31:32.3 deg"))
 
         except:
             print(f"_checkCommand: {colored('TEST FAILED', 'red')}")
@@ -72,6 +73,7 @@ class MyComponentHandlers(ComponentHandlers):
 
     def showTestResults(self):
         # compare file created by assembly with known good version
+        print(f"Comparing results: {self.outFile}, {self.tmpOutFile}")
         assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
         print(f"{colored('TEST PASSED', 'green')}.")
 
@@ -148,11 +150,14 @@ class MyComponentHandlers(ComponentHandlers):
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
         return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
 
+
 def test_command_server():
     handlers = MyComponentHandlers()
     commandServer = CommandServer(handlers.prefix, handlers)
     handlers.commandServer = commandServer
     print(f"Starting test command server on port {commandServer.port}")
-    commandServer.start()
+    try:
+        commandServer.start()
+    except GracefulExit:
+        pass
     handlers.cleanup()
-

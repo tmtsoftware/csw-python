@@ -2,7 +2,7 @@
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
 
-Note: Python version 3.8.6 was used for testing.
+Note: Python version 3.9 was used for testing.
 
 The latest release has been published to https://pypi.org/project/tmtpycsw/ and can be installed with:
 
@@ -15,4 +15,4 @@ generated API documentation.
 
 Run `make doc` to generate the user manual and API documentation for the Python classes. 
 Then open `build/csw/index.html`. 
-(Note: Requires that pdoc3 is installed: To install, run: `pip3 install pdoc3`.)
+(Note: Requires that pdoc is installed: To install, run: `pip install pdoc`.)
