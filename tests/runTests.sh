@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script that starts the CSW services, compiles and runs the test assembly and then runs the python tests.
-# Assumes that csw-services, sbt, pytest are all in your shell path.
+# Assumes that cs, sbt, pytest are all in your shell path.
 
 #CSW_VERSION=4.0.0-M1
 CSW_VERSION=87d677d5ad39b6781619f1f866c90ee6ec448c5b
@@ -11,9 +11,8 @@ if ! hash cs 2>/dev/null ; then
     echo >&2 "Please install coursier (https://get-coursier.io/).  Aborting."
     exit 1
 fi
-set -v
+set -x
 cs launch csw-services:$CSW_VERSION -- start -e > $logfile 2>&1 &
-cswServicesPid=$!
 cd testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
 test-deploy/target/universal/stage/bin/test-container-cmd-app --local test-deploy/src/main/resources/TestContainer.conf   >> $logfile 2>&1 &
@@ -24,6 +23,5 @@ sleep 10
 # Run the python tests
 pytest --capture=tee-sys
 kill $assemblyPid
-#csw-services stop  >> $logfile 2>&1
-kill $cswServicesPid
-
+# Kill csw-services
+kill `ps aux | grep 'csw-services' | grep -v grep | awk '{print $2}'`
