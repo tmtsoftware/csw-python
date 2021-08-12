@@ -3,21 +3,16 @@
 # Script that starts the CSW services, compiles and runs the test assembly and then runs the python tests.
 # Assumes that csw-services, sbt, pytest are all in your shell path.
 
-CSW_VERSION=4.0.0-M1
+#CSW_VERSION=4.0.0-M1
+CSW_VERSION=87d677d5ad39b6781619f1f866c90ee6ec448c5b
 
 logfile=test.log
-if ! hash csw-services 2>/dev/null ; then
-    echo >&2 "Please install csw-services (run: cs install csw-services $CSW_VERSION).  Aborting."
+if ! hash cs 2>/dev/null ; then
+    echo >&2 "Please install coursier (https://get-coursier.io/).  Aborting."
     exit 1
 fi
-csw_services_version=`csw-services --help | grep Main | sed -e 's/Main //'`
-if test "$csw_services_version" != "$CSW_VERSION"; then
-    echo >&2 "CSW services version $csw_services_version != $CSW_VERSION: Please install csw-services (run: cs install csw-services $CSW_VERSION).  Aborting."
-    exit 1
-fi
-
 set -v
-csw-services start -e > $logfile 2>&1 &
+cs launch csw-services:$CSW_VERSION -- start -e > $logfile 2>&1 &
 cswServicesPid=$!
 cd testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
