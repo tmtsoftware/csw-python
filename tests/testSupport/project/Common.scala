@@ -36,7 +36,6 @@ object Common extends AutoPlugin {
     ),
     resolvers ++= Seq(
       "jitpack" at "https://jitpack.io",
-//      "bintray" at "https://jcenter.bintray.com",
       Resolver.bintrayRepo("lonelyplanet", "maven")
     ),
     version := "0.0.1",
