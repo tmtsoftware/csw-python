@@ -185,7 +185,7 @@ from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, Mis
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter, Struct
+from csw.Parameter import Parameter
 
 
 class MyComponentHandlers(ComponentHandlers):
@@ -203,12 +203,6 @@ class MyComponentHandlers(ComponentHandlers):
         try:
             assert(command.get(&quot;cmdValue&quot;).values == [1.0, 2.0, 3.0])
             assert(list(command.get(&quot;cmdValue&quot;).values)[0] == 1.0)
-
-            # Access a Struct value
-            struct: Struct = list(command.get(&quot;cmdStructValueB&quot;).values)[0]
-            assert(struct.paramSet[0].keyName == &quot;cmdValue&quot;)
-            assert(struct.paramSet[0].keyType == &quot;FloatKey&quot;)
-            assert(struct.paramSet[0].values[0] == 1.0)
 
             # Access a coordinate value
             eqCoord: EqCoord = list(command.get(&quot;BasePosition&quot;).values)[0]
@@ -271,18 +265,6 @@ For example, assuming you know that a received command contains a key named "cmd
 you can access the values like this (Parameters may always contain multiple values):</p>
 <pre><code class="language-python">            assert(command.get(&quot;cmdValue&quot;).values == [1.0, 2.0, 3.0])
             assert(list(command.get(&quot;cmdValue&quot;).values)[0] == 1.0)
-</code></pre>
-<p>For more complicated types, the key type may be
-<a href="https://tmtsoftware.github.io/csw/params/keys-parameters.html#domain-specific-types">StructKey</a>,
-meaning that the parameter contains
-its own parameter list. In the example below, we extract the first Struct value and then check the
-first value of a struct member named "cmdValue" of type Float:</p>
-<pre><code class="language-python">
-            # Access a Struct value
-            struct: Struct = list(command.get(&quot;cmdStructValue&quot;).values)[0]
-            assert(struct.paramSet[0].keyName == &quot;cmdValue&quot;)
-            assert(struct.paramSet[0].keyType == &quot;FloatKey&quot;)
-            assert(struct.paramSet[0].values[0] == 1.0)
 </code></pre>
 <p>CSW also defines a number of
 <a href="https://tmtsoftware.github.io/csw/params/keys-parameters.html#coordinate-types">coordinate types</a> for parameters.

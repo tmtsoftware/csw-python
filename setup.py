@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tmtpycsw",
-    version="3.0.6",
-    python_requires='>=3.8.6',
+    version="4.0.0",
+    python_requires='>=3.9.5',
     author="Allan Brighton",
     author_email="allanexus@gmail.com",
     description="A python API for TMT CSW services",

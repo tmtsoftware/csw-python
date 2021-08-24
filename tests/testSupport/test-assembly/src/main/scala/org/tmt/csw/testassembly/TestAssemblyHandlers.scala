@@ -18,7 +18,7 @@ import csw.logging.api.scaladsl.Logger
 import csw.params.commands.CommandResponse._
 import csw.params.commands.{CommandName, ControlCommand, Setup}
 import csw.time.core.models.UTCTime
-import csw.params.core.models.{Angle, Coords, Id, ProperMotion, Struct}
+import csw.params.core.models.{Angle, Coords, Id, ProperMotion}
 import csw.params.events.{Event, EventKey, EventName, SystemEvent}
 import csw.params.core.formats.ParamCodecs._
 
@@ -172,8 +172,6 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     val basePosKey = CoordKey.make("BasePosition")
     val cmdKey1: Key[Float] = KeyType.FloatKey.make("cmdValue")
     val cmdKey1b: Key[Float] = KeyType.FloatKey.make("cmdValue")
-    val cmdKey2b: Key[Struct] =
-      KeyType.StructKey.make("cmdStructValueB")
     val cmdKey3: Key[Int] =
       KeyType.IntKey.make("cmdStructValue3")
     val cmdKey4: Key[Byte] =
@@ -219,17 +217,6 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     Setup(componentInfo.prefix, CommandName(commandName), None)
       .add(posParam)
       .add(cmdKey1b.set(1.0f, 2.0f, 3.0f))
-      .add(
-        cmdKey2b.set(
-          Struct()
-            .add(cmdKey1.set(1.0f))
-            .add(cmdKey3.set(1, 2, 3)),
-          Struct()
-            .add(cmdKey1.set(2.0f))
-            .add(cmdKey3.set(4, 5, 6))
-            .add(cmdKey4.set(9.toByte, 10.toByte))
-        )
-      )
   }
 
   // Send some test commands to the python based command service

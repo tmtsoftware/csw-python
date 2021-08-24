@@ -29,16 +29,16 @@ class Parameter:
     @staticmethod
     def _paramValueOrDict(keyType: str, param):
         """
-        Internal recursive method that handles StructKey types
+        Internal method that also handles coord and time types
 
         Args:
             keyType (str): parameter's key type
-            param: parameter value, which might be a primitive type or another param for Struct types
+            param: parameter value
 
         Returns:
-            simple param value, or a dictionary if keytype is StructKey
+            param value
         """
-        if keyType in coordTypes.union({"StructKey", "TAITimeKey", "UTCTimeKey"}):
+        if keyType in coordTypes.union({"TAITimeKey", "UTCTimeKey"}):
             return param._asDict()
         else:
             return param
@@ -46,19 +46,17 @@ class Parameter:
     @staticmethod
     def _paramValueFromDict(keyType: str, obj):
         """
-        Internal recursive method that handles StructKey types
+        Internal recursive method that also handles Coord types
 
         Args:
 
             keyType (str): parameter's key type
-            obj: parameter value, which might be a primitive type or another param for Struct types
+            obj: parameter value
 
         Returns: object
-            simple param value, or a Struct object if keytype is StructKey
+            param value
         """
-        if keyType == "StructKey":
-            return Struct._fromDict(obj)
-        elif keyType in coordTypes:
+        if keyType in coordTypes:
             return Coord._fromDict(obj)
         else:
             return obj
@@ -94,20 +92,3 @@ class Parameter:
         return Parameter(obj['keyName'], keyType, values, obj['units'])
 
 
-# -----------------
-# Struct parameter
-# -----------------
-@dataclass
-class Struct:
-    """
-    Creates a Struct (value when key is "StructKey").
-    'paramSet' is a list of Parameters that make up the Struct
-    """
-    paramSet: List[Parameter]
-
-    def _asDict(self):
-        return {"paramSet": list(map(lambda p: p._asDict(), self.paramSet))}
-
-    @staticmethod
-    def _fromDict(obj: dict):
-        return Struct(list(map(lambda p: Parameter._fromDict(p), obj['paramSet'])))

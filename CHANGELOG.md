@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v4.0.0] - 2021-08-24
+
+### Changed
+
+- Updated for CSW-4.0.0-RC1
+
+- Removed CSW `struct` parameter type
+
+- Published to https://pypi.org/project/tmtpycsw/4.0.0/
+
 ## [tmtpycsw v3.0.6] - 2020-12-01
 
 ### Changed

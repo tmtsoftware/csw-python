@@ -19,7 +19,7 @@ from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, Mis
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter, Struct
+from csw.Parameter import Parameter
 
 
 class MyComponentHandlers(ComponentHandlers):
@@ -53,13 +53,6 @@ class MyComponentHandlers(ComponentHandlers):
         try:
             assert (command.get("cmdValue").values == [1.0, 2.0, 3.0])
             assert (list(command.get("cmdValue").values)[0] == 1.0)
-
-            # Access a Struct value
-            struct: Struct = list(command.get("cmdStructValueB").values)[0]
-            # s.__class__ = Struct
-            assert (struct.paramSet[0].keyName == "cmdValue")
-            assert (struct.paramSet[0].keyType == "FloatKey")
-            assert (struct.paramSet[0].values[0] == 1.0)
 
             # Access a coordinate value
             eqCoord: EqCoord = list(command.get("BasePosition").values)[0]

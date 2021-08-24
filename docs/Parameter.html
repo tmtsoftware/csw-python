@@ -57,16 +57,16 @@ class Parameter:
     @staticmethod
     def _paramValueOrDict(keyType: str, param):
         &#34;&#34;&#34;
-        Internal recursive method that handles StructKey types
+        Internal method that also handles coord and time types
 
         Args:
             keyType (str): parameter&#39;s key type
-            param: parameter value, which might be a primitive type or another param for Struct types
+            param: parameter value
 
         Returns:
-            simple param value, or a dictionary if keytype is StructKey
+            param value
         &#34;&#34;&#34;
-        if keyType in coordTypes.union({&#34;StructKey&#34;, &#34;TAITimeKey&#34;, &#34;UTCTimeKey&#34;}):
+        if keyType in coordTypes.union({&#34;TAITimeKey&#34;, &#34;UTCTimeKey&#34;}):
             return param._asDict()
         else:
             return param
@@ -74,19 +74,17 @@ class Parameter:
     @staticmethod
     def _paramValueFromDict(keyType: str, obj):
         &#34;&#34;&#34;
-        Internal recursive method that handles StructKey types
+        Internal recursive method that also handles Coord types
 
         Args:
 
             keyType (str): parameter&#39;s key type
-            obj: parameter value, which might be a primitive type or another param for Struct types
+            obj: parameter value
 
         Returns: object
-            simple param value, or a Struct object if keytype is StructKey
+            param value
         &#34;&#34;&#34;
-        if keyType == &#34;StructKey&#34;:
-            return Struct._fromDict(obj)
-        elif keyType in coordTypes:
+        if keyType in coordTypes:
             return Coord._fromDict(obj)
         else:
             return obj
@@ -119,26 +117,7 @@ class Parameter:
             values = obj[&#39;values&#39;]
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p), obj[&#39;values&#39;]))
-        return Parameter(obj[&#39;keyName&#39;], keyType, values, obj[&#39;units&#39;])
-
-
-# -----------------
-# Struct parameter
-# -----------------
-@dataclass
-class Struct:
-    &#34;&#34;&#34;
-    Creates a Struct (value when key is &#34;StructKey&#34;).
-    &#39;paramSet&#39; is a list of Parameters that make up the Struct
-    &#34;&#34;&#34;
-    paramSet: List[Parameter]
-
-    def _asDict(self):
-        return {&#34;paramSet&#34;: list(map(lambda p: p._asDict(), self.paramSet))}
-
-    @staticmethod
-    def _fromDict(obj: dict):
-        return Struct(list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;])))</code></pre>
+        return Parameter(obj[&#39;keyName&#39;], keyType, values, obj[&#39;units&#39;])</code></pre>
 </details>
 </section>
 <section>
@@ -195,16 +174,16 @@ class Parameter:
     @staticmethod
     def _paramValueOrDict(keyType: str, param):
         &#34;&#34;&#34;
-        Internal recursive method that handles StructKey types
+        Internal method that also handles coord and time types
 
         Args:
             keyType (str): parameter&#39;s key type
-            param: parameter value, which might be a primitive type or another param for Struct types
+            param: parameter value
 
         Returns:
-            simple param value, or a dictionary if keytype is StructKey
+            param value
         &#34;&#34;&#34;
-        if keyType in coordTypes.union({&#34;StructKey&#34;, &#34;TAITimeKey&#34;, &#34;UTCTimeKey&#34;}):
+        if keyType in coordTypes.union({&#34;TAITimeKey&#34;, &#34;UTCTimeKey&#34;}):
             return param._asDict()
         else:
             return param
@@ -212,19 +191,17 @@ class Parameter:
     @staticmethod
     def _paramValueFromDict(keyType: str, obj):
         &#34;&#34;&#34;
-        Internal recursive method that handles StructKey types
+        Internal recursive method that also handles Coord types
 
         Args:
 
             keyType (str): parameter&#39;s key type
-            obj: parameter value, which might be a primitive type or another param for Struct types
+            obj: parameter value
 
         Returns: object
-            simple param value, or a Struct object if keytype is StructKey
+            param value
         &#34;&#34;&#34;
-        if keyType == &#34;StructKey&#34;:
-            return Struct._fromDict(obj)
-        elif keyType in coordTypes:
+        if keyType in coordTypes:
             return Coord._fromDict(obj)
         else:
             return obj
@@ -279,40 +256,6 @@ class Parameter:
 </dd>
 </dl>
 </dd>
-<dt id="csw.Parameter.Struct"><code class="flex name class">
-<span>class <span class="ident">Struct</span></span>
-<span>(</span><span>paramSet: List[<a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a>])</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Creates a Struct (value when key is "StructKey").
-'paramSet' is a list of Parameters that make up the Struct</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@dataclass
-class Struct:
-    &#34;&#34;&#34;
-    Creates a Struct (value when key is &#34;StructKey&#34;).
-    &#39;paramSet&#39; is a list of Parameters that make up the Struct
-    &#34;&#34;&#34;
-    paramSet: List[Parameter]
-
-    def _asDict(self):
-        return {&#34;paramSet&#34;: list(map(lambda p: p._asDict(), self.paramSet))}
-
-    @staticmethod
-    def _fromDict(obj: dict):
-        return Struct(list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;])))</code></pre>
-</details>
-<h3>Class variables</h3>
-<dl>
-<dt id="csw.Parameter.Struct.paramSet"><code class="name">var <span class="ident">paramSet</span> : List[<a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a>]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
 </dl>
 </section>
 </article>
@@ -336,12 +279,6 @@ class Struct:
 <li><code><a title="csw.Parameter.Parameter.keyType" href="#csw.Parameter.Parameter.keyType">keyType</a></code></li>
 <li><code><a title="csw.Parameter.Parameter.units" href="#csw.Parameter.Parameter.units">units</a></code></li>
 <li><code><a title="csw.Parameter.Parameter.values" href="#csw.Parameter.Parameter.values">values</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="csw.Parameter.Struct" href="#csw.Parameter.Struct">Struct</a></code></h4>
-<ul class="">
-<li><code><a title="csw.Parameter.Struct.paramSet" href="#csw.Parameter.Struct.paramSet">paramSet</a></code></li>
 </ul>
 </li>
 </ul>

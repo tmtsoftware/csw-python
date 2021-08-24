@@ -185,7 +185,7 @@ from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, Mis
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter, Struct
+from csw.Parameter import Parameter
 
 
 class MyComponentHandlers(ComponentHandlers):
@@ -203,12 +203,6 @@ class MyComponentHandlers(ComponentHandlers):
         try:
             assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
             assert(list(command.get("cmdValue").values)[0] == 1.0)
-
-            # Access a Struct value
-            struct: Struct = list(command.get("cmdStructValueB").values)[0]
-            assert(struct.paramSet[0].keyName == "cmdValue")
-            assert(struct.paramSet[0].keyType == "FloatKey")
-            assert(struct.paramSet[0].values[0] == 1.0)
 
             # Access a coordinate value
             eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
@@ -276,21 +270,6 @@ you can access the values like this (Parameters may always contain multiple valu
 ```python
             assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
             assert(list(command.get("cmdValue").values)[0] == 1.0)
-```
-
-For more complicated types, the key type may be
- [StructKey](https://tmtsoftware.github.io/csw/params/keys-parameters.html#domain-specific-types),
- meaning that the parameter contains 
-its own parameter list. In the example below, we extract the first Struct value and then check the
-first value of a struct member named "cmdValue" of type Float:
-
-```python
-
-            # Access a Struct value
-            struct: Struct = list(command.get("cmdStructValue").values)[0]
-            assert(struct.paramSet[0].keyName == "cmdValue")
-            assert(struct.paramSet[0].keyType == "FloatKey")
-            assert(struct.paramSet[0].values[0] == 1.0)
 ```
 
 CSW also defines a number of 
