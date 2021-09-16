@@ -22,3 +22,13 @@ release: doc
 	python3 setup.py sdist bdist_wheel
 	python3 -m pip install --upgrade twine
 	python3 -m twine upload dist/*
+
+# Create a virtual env in the .venv dir
+# To activate this project's virtualenv, run pipenv shell.
+# Alternatively, run a command inside the virtualenv with pipenv run
+# (or source one of the scripts in the .venv/bin dir)
+venv:
+	rm -rf .venv
+	mkdir .venv
+	pip install --user --upgrade pipenv
+	pipenv install
