@@ -17,6 +17,7 @@ dataclasses-json = "*"
 pathlib = "*"
 termcolor = "*"
 pytest = "*"
+structlog = "*"
 
 [requires]
 python_version = "3.9"

@@ -90,6 +90,7 @@ class Result:
     """A result containing parameters for command response"""
     paramSet: List[Parameter]
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         """
         Returns: dict
@@ -105,6 +106,7 @@ class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
     result: Result = Result([])
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         """
         Returns: dict

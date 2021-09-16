@@ -28,6 +28,8 @@
 </summary>
 <pre><code class="python">from typing import List
 from dataclasses import dataclass, field
+
+import structlog
 from dataclasses_json import dataclass_json
 from enum import Enum
 from multipledispatch import dispatch
@@ -172,6 +174,7 @@ class TcpRegistration(Registration):
 
 
 class LocationService:
+    log = structlog.get_logger()
     baseUri = &#34;http://127.0.0.1:7654/&#34;
     postUri = f&#34;{baseUri}post-endpoint&#34;
     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
@@ -204,7 +207,7 @@ class LocationService:
         Args:
             connection (ConnectionInfo): an already registered connection
         &#34;&#34;&#34;
-        print(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+        self.log.debug(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
@@ -629,6 +632,7 @@ class Location:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class LocationService:
+    log = structlog.get_logger()
     baseUri = &#34;http://127.0.0.1:7654/&#34;
     postUri = f&#34;{baseUri}post-endpoint&#34;
     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
@@ -661,7 +665,7 @@ class Location:
         Args:
             connection (ConnectionInfo): an already registered connection
         &#34;&#34;&#34;
-        print(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+        self.log.debug(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
@@ -783,6 +787,10 @@ class Location:
 <h3>Class variables</h3>
 <dl>
 <dt id="csw.LocationService.LocationService.baseUri"><code class="name">var <span class="ident">baseUri</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.LocationService.log"><code class="name">var <span class="ident">log</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -968,7 +976,7 @@ the Location</p></div>
     Args:
         connection (ConnectionInfo): an already registered connection
     &#34;&#34;&#34;
-    print(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+    self.log.debug(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
     jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
     r = requests.post(self.postUri, json=json.loads(jsonBody))
     if not r.ok:
@@ -1207,6 +1215,7 @@ class TcpRegistration(Registration):
 <li><code><a title="csw.LocationService.LocationService.find" href="#csw.LocationService.LocationService.find">find</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.list" href="#csw.LocationService.LocationService.list">list</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.listByPrefix" href="#csw.LocationService.LocationService.listByPrefix">listByPrefix</a></code></li>
+<li><code><a title="csw.LocationService.LocationService.log" href="#csw.LocationService.LocationService.log">log</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.postUri" href="#csw.LocationService.LocationService.postUri">postUri</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.register" href="#csw.LocationService.LocationService.register">register</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.resolve" href="#csw.LocationService.LocationService.resolve">resolve</a></code></li>

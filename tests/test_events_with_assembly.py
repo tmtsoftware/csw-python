@@ -3,6 +3,7 @@ import sys
 import os
 import time
 
+import structlog
 from _pytest import pathlib
 
 from csw.EventSubscriber import EventSubscriber
@@ -24,6 +25,7 @@ from csw.EventPublisher import EventPublisher
 # a known, valid copy. To test the subscriber API, another file "/tmp/PyTestAssemblyEventHandlers.in" is
 # generated from the received events here.
 class TestEventsWithAssembly:
+    log = structlog.get_logger()
     dir = pathlib.Path(__file__).parent.absolute()
     inFileName = "PyTestAssemblyEventHandlers.in"
     outFileName = "PyTestAssemblyEventHandlers.out"
@@ -50,7 +52,7 @@ class TestEventsWithAssembly:
 
     def test_pub_sub(self):
         time.sleep(1.0)
-        print("Starting test...")
+        self.log.debug("Starting test...")
         thread = self.sub.subscribe(
             [self.prefix + "." + "testEvent1",
              self.prefix + "." + "testEvent2",
@@ -60,16 +62,16 @@ class TestEventsWithAssembly:
             self.publishEvent1()
             self.publishEvent2()
             self.publishEvent3()
-            print("Published three events...")
+            self.log.debug("Published three events...")
             # make sure assembly has time to write the file
             time.sleep(3)
             # compare file created from received events below with known good version
             assert filecmp.cmp(self.inFile, self.tmpInFile, False)
             # compare file created by assembly with known good version
             assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
-            print("Event pub/sub tests passed")
+            self.log.debug("Event pub/sub tests passed")
         finally:
-            print("Stopping subscriber...")
+            self.log.debug("Stopping subscriber...")
             thread.stop()
 
     def publishEvent1(self):
@@ -79,7 +81,7 @@ class TestEventsWithAssembly:
         param = Parameter(keyName, keyType, values)
         paramSet = [param]
         event = SystemEvent(self.prefix, "testEvent1", paramSet)
-        print(f"Publishing event {event}")
+        self.log.debug(f"Publishing event {event}")
         self.pub.publish(event)
 
     def publishEvent2(self):
@@ -124,7 +126,7 @@ class TestEventsWithAssembly:
 
     # Event subscriber callback
     def callback(self, systemEvent):
-        print(f"Received system event '{systemEvent}'")
+        self.log.debug(f"Received system event '{systemEvent}'")
         # Save event to file as JSON like dict (Not JSON, since byte arrays are not serializable in python),
         # but change the date and id for comparison
         systemEvent.eventId = "test"

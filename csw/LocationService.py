@@ -1,5 +1,7 @@
 from typing import List
 from dataclasses import dataclass, field
+
+import structlog
 from dataclasses_json import dataclass_json
 from enum import Enum
 from multipledispatch import dispatch
@@ -144,6 +146,7 @@ class TcpRegistration(Registration):
 
 
 class LocationService:
+    log = structlog.get_logger()
     baseUri = "http://127.0.0.1:7654/"
     postUri = f"{baseUri}post-endpoint"
     wsUri = f"{baseUri}websocket-endpoint"
@@ -176,7 +179,7 @@ class LocationService:
         Args:
             connection (ConnectionInfo): an already registered connection
         """
-        print(f"Unregistering connection {connection} from the Location Service.")
+        self.log.debug(f"Unregistering connection {connection} from the Location Service.")
         jsonBody = f'{{"_type": "Unregister", "connection": {connection.to_json()}}}'
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:

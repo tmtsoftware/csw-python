@@ -7,6 +7,8 @@ from asyncio import Task
 from typing import List
 
 import pathlib
+
+import structlog
 from aiohttp.web_runner import GracefulExit
 from astropy.coordinates import Angle
 from termcolor import colored
@@ -22,7 +24,9 @@ from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
 
 
+# noinspection PyTypeChecker,PyBroadException
 class MyComponentHandlers(ComponentHandlers):
+    log = structlog.get_logger()
     prefix = "CSW.pycswTest"
     commandServer: CommandServer = None
     dir = pathlib.Path(__file__).parent.absolute()
@@ -42,7 +46,7 @@ class MyComponentHandlers(ComponentHandlers):
         await asyncio.sleep(1)
         await self.publishCurrentStates()
         await asyncio.sleep(1)
-        print("Long running task completed")
+        self.log.debug("Long running task completed")
         return Completed(runId)
 
     # Checks the command's contents, shows how to access the parameters
@@ -61,14 +65,14 @@ class MyComponentHandlers(ComponentHandlers):
             assert (eqCoord.dec == Angle("-30:31:32.3 deg"))
 
         except:
-            print(f"_checkCommand: {colored('TEST FAILED', 'red')}")
+            self.log.debug(f"_checkCommand: {colored('TEST FAILED', 'red')}")
             traceback.print_exc()
 
     def showTestResults(self):
         # compare file created by assembly with known good version
-        print(f"Comparing results: {self.outFile}, {self.tmpOutFile}")
+        self.log.debug(f"Comparing results: {self.outFile}, {self.tmpOutFile}")
         assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
-        print(f"{colored('TEST PASSED', 'green')}.")
+        self.log.debug(f"{colored('TEST PASSED', 'green')}.")
 
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
@@ -86,10 +90,10 @@ class MyComponentHandlers(ComponentHandlers):
         """
         self._checkCommand(command)
         n = len(command.paramSet)
-        print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
+        self.log.debug(f"MyComponentHandlers Received setup {str(command)} with {n} params")
         # filt = command.get("filter").values[0]
         # encoder = command.get("encoder").values[0]
-        # print(f"filter = {filt}, encoder = {encoder}")
+        # self.log.debug(f"filter = {filt}, encoder = {encoder}")
 
         if command.commandName == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
@@ -118,7 +122,7 @@ class MyComponentHandlers(ComponentHandlers):
             a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)
         """
         n = len(command.paramSet)
-        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params.")
+        self.log.debug(f"MyComponentHandlers Received oneway {str(command)} with {n} params.")
         raise GracefulExit()
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:

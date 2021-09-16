@@ -57,18 +57,22 @@ venv
 # Kernel Module Compile Results
 *.mod*
 *.cmd
+*.iml
+*.rdb
+*.gz
+*.whl
 .tmp_versions/
 modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
 /build/
+/out/
 /tmtpycsw.egg-info/
 /pycsw.iml
 /dist/tmtpycsw-0.0.8.tar.gz
 /dist/tmtpycsw-0.0.8-py3-none-any.whl
 target/
-/csw/xxx.json
 /tests/testSupport/test.log
 /tests/test.log
 /dist/tmtpycsw-2.0.0.tar.gz

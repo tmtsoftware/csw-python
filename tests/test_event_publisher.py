@@ -2,6 +2,8 @@ import sys
 import os
 import time
 
+import structlog
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from csw.EventSubscriber import EventSubscriber
@@ -11,6 +13,7 @@ from csw.Event import SystemEvent
 
 
 class TestEventPublisher:
+    log = structlog.get_logger()
     count = 0
 
     # Simple test that publishes an event and subscribes to it
@@ -40,12 +43,12 @@ class TestEventPublisher:
 
     def callback(self, systemEvent):
         self.count = self.count + 1
-        print(f"Received system event '{systemEvent.eventName}'")
+        self.log.debug(f"Received system event '{systemEvent.eventName}'")
         for i in systemEvent.paramSet:
-            print(f"    with values: {i.keyName}: {i.values}")
+            self.log.debug(f"    with values: {i.keyName}: {i.values}")
         if systemEvent.isInvalid():
-            print("    Invalid")
+            self.log.debug("    Invalid")
         if systemEvent.exists("testEventValue"):
             p = systemEvent.get("testEventValue")
             if p is not None:
-                print(f"Found: {p.keyName}")
+                self.log.debug(f"Found: {p.keyName}")

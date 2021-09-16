@@ -13,6 +13,7 @@ class ControlCommand:
     maybeObsId: List[str]
     paramSet: List[Parameter]
 
+    # noinspection PyProtectedMember
     @staticmethod
     def _fromDict(obj):
         """
@@ -29,6 +30,7 @@ class ControlCommand:
         else:
             return Observe(source, commandName, maybeObsId, paramSet)
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         """
         Returns: dict

@@ -16,7 +16,7 @@ object AkkaHttp {
 }
 
 object CSW {
-  val Version = "4.0.0-RC1"
+  val Version = "4.0.0-RC2"
 //  val Version = "0.1.0-SNAPSHOT"
 //  val Version = "87d677d5ad39b6781619f1f866c90ee6ec448c5b"
 

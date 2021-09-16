@@ -26,7 +26,7 @@ release: doc
 # Create a virtual env in the .venv dir
 # To activate this project's virtualenv, run pipenv shell.
 # Alternatively, run a command inside the virtualenv with pipenv run
-# (or source one of the scripts in the .venv/bin dir)
+# (or source one of the activate* scripts in the .venv/bin dir)
 venv:
 	rm -rf .venv
 	mkdir .venv

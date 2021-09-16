@@ -118,6 +118,7 @@ class Result:
     &#34;&#34;&#34;A result containing parameters for command response&#34;&#34;&#34;
     paramSet: List[Parameter]
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         &#34;&#34;&#34;
         Returns: dict
@@ -133,6 +134,7 @@ class Completed(CommandResponse):
     &#34;&#34;&#34;Represents a positive response stating completion of command&#34;&#34;&#34;
     result: Result = Result([])
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         &#34;&#34;&#34;
         Returns: dict
@@ -431,6 +433,7 @@ class Completed(CommandResponse):
     &#34;&#34;&#34;Represents a positive response stating completion of command&#34;&#34;&#34;
     result: Result = Result([])
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         &#34;&#34;&#34;
         Returns: dict
@@ -785,6 +788,7 @@ class Result:
     &#34;&#34;&#34;A result containing parameters for command response&#34;&#34;&#34;
     paramSet: List[Parameter]
 
+    # noinspection PyProtectedMember
     def _asDict(self):
         &#34;&#34;&#34;
         Returns: dict

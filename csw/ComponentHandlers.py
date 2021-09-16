@@ -1,6 +1,7 @@
 import json
 from typing import List
 
+import structlog
 from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import CommandResponse, Accepted, Error
@@ -16,6 +17,8 @@ class ComponentHandlers:
     Subclasses can override onSubmit, onOneway, validateCommand, and currentState to implement the behavior of the
     component.
     """
+
+    log = structlog.get_logger()
 
     # map of current state name to list of websockets going to subscribers
     _currentStateSubscribers = {}
@@ -80,7 +83,7 @@ class ComponentHandlers:
             dict = currentState._asDict()
             cs = json.dumps(dict)
             for ws in subscribers:
-                print(f"Publishing current state: {cs}")
+                self.log.debug(f"Publishing current state: {cs}")
                 await ws.send_str(cs)
 
     def _addCurrentStateSubscriber(self, stateName: str, ws: WebSocketResponse):
