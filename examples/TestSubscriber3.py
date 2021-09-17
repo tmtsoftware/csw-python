@@ -12,7 +12,7 @@ class TestSubscriber3:
     def callback(systemEvent):
         print(f"Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'")
         for i in systemEvent.paramSet:
-            print(f"    with values: {i.keyName}({i.keyType}): {i.values}")
+            print(f"    with values: {i.keyName}({i.keyType.name}): {i.values}")
         if systemEvent.isInvalid():
             print("    Invalid")
         if systemEvent.exists("assemblyEventValue"):

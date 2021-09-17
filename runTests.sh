@@ -13,15 +13,15 @@ if ! hash cs 2>/dev/null ; then
 fi
 set -x
 cs launch csw-services:$CSW_VERSION -- start -e > $logfile 2>&1 &
-cd testSupport || exit 1
+cd tests/testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
 test-deploy/target/universal/stage/bin/test-container-cmd-app --local test-deploy/src/main/resources/TestContainer.conf   >> $logfile 2>&1 &
 assemblyPid=$!
-cd ..
+cd ../..
 # give the background assembly time to initialize
 sleep 10
-# Run the python tests
-pytest --capture=tee-sys
+# Run the python tests (add -s option to see stdout)
+pipenv run python -m pytest tests
 kill $assemblyPid
 # Kill csw-services
 kill `ps aux | grep 'csw-services' | grep -v grep | awk '{print $2}'`

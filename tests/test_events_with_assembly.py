@@ -6,6 +6,8 @@ import time
 import structlog
 from _pytest import pathlib
 
+from csw.KeyType import KeyType
+from csw.Units import Units
 from csw.EventSubscriber import EventSubscriber
 from csw.EventTime import EventTime
 
@@ -76,7 +78,7 @@ class TestEventsWithAssembly:
 
     def publishEvent1(self):
         keyName = "assemblyEventValue"
-        keyType = 'DoubleKey'
+        keyType = KeyType.DoubleKey
         values = [42.0]
         param = Parameter(keyName, keyType, values)
         paramSet = [param]
@@ -85,30 +87,30 @@ class TestEventsWithAssembly:
         self.pub.publish(event)
 
     def publishEvent2(self):
-        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
-        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
-        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
+        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
+        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
+        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.marcsec)
+        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
         event = SystemEvent(self.prefix, "testEvent2", [intParam, intArrayParam, floatArrayParam, intMatrixParam])
         self.pub.publish(event)
 
     def publishEvent3(self):
-        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
-        floatParam = Parameter("floatValue", "FloatKey", [float(42.1)], "arcsec")
-        longParam = Parameter("longValue", "LongKey", [42], "arcsec")
-        shortParam = Parameter("shortValue", "ShortKey", [42], "arcsec")
-        byteParam = Parameter("byteValue", "ByteKey", b'\xDE\xAD\xBE\xEF')
-        booleanParam = Parameter("booleanValue", "BooleanKey", [True, False], "arcsec")
+        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
+        floatParam = Parameter("floatValue", KeyType.FloatKey, [float(42.1)], Units.arcsec)
+        longParam = Parameter("longValue", KeyType.LongKey, [42], Units.arcsec)
+        shortParam = Parameter("shortValue", KeyType.ShortKey, [42], Units.arcsec)
+        byteParam = Parameter("byteValue", KeyType.ByteKey, b'\xDE\xAD\xBE\xEF')
+        booleanParam = Parameter("booleanValue", KeyType.BooleanKey, [True, False], Units.arcsec)
 
-        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
-        doubleArrayParam = Parameter("DoubleArrayValue", "DoubleArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "arcsec")
+        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
+        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.arcsec)
+        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.arcsec)
 
-        byteArrayParam = Parameter("ByteArrayValue", "ByteArrayKey", [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
+        byteArrayParam = Parameter("ByteArrayValue", KeyType.ByteArrayKey, [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
 
-        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
+        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
 
         eqCoord = EqCoord.make(ra="12:13:14.15 hours", dec="-30:31:32.3 deg", frame=EqFrame.FK5, pm=(0.5, 2.33))
         solarSystemCoord = SolarSystemCoord.make("BASE", SolarSystemObject.Venus)
@@ -116,7 +118,7 @@ class TestEventsWithAssembly:
                                                  "220 deg")
         cometCoord = CometCoord.make("BASE", 2000.0, "90 deg", "2 deg", "100 deg", 1.4, 0.234)
         altAzCoord = AltAzCoord.make("301 deg", "42.5 deg")
-        coordsParam = Parameter("CoordParam", "CoordKey",
+        coordsParam = Parameter("CoordParam", KeyType.CoordKey,
                                 [eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord, altAzCoord])
 
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,

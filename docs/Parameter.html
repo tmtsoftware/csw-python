@@ -30,55 +30,55 @@
 
 from typing import List
 
+from csw.Units import Units
+from csw.KeyType import KeyType
 from csw.Coords import Coord
 
-coordTypes = {&#34;CoordKey&#34;, &#34;EqCoordKey&#34;, &#34;SolarSystemCoordKey&#34;, &#34;MinorPlanetCoordKey&#34;, &#34;CometCoordKey&#34;}
+coordTypes = {KeyType.CoordKey, KeyType.EqCoordKey, KeyType.SolarSystemCoordKey, KeyType.MinorPlanetCoordKey, KeyType.CometCoordKey}
 
 
 @dataclass
 class Parameter:
     &#34;&#34;&#34;
     Creates a Parameter (keys with values, units).
-    See https://tmtsoftware.github.io/csw/params/keys-parameters.html for key type names.
-    See https://tmtsoftware.github.io/csw/params/units.html for list of unit names.
 
     Args:
 
         keyName (str): name of the key
-        keyType (str): type of the key (see above link)
+        keyType (KeyType): type of the key
         values (object): an array of values, or a nested array for array and matrix types.
-        units (str): units of the values (see above link).
+        units (Units): units of the values.
     &#34;&#34;&#34;
     keyName: str
-    keyType: str
+    keyType: KeyType
     values: object
-    units: str = &#34;NoUnits&#34;
+    units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: str, param):
+    def _paramValueOrDict(keyType: KeyType, param):
         &#34;&#34;&#34;
         Internal method that also handles coord and time types
 
         Args:
-            keyType (str): parameter&#39;s key type
+            keyType (KeyType): parameter&#39;s key type
             param: parameter value
 
         Returns:
             param value
         &#34;&#34;&#34;
-        if keyType in coordTypes.union({&#34;TAITimeKey&#34;, &#34;UTCTimeKey&#34;}):
+        if keyType in coordTypes.union({KeyType.TAITimeKey, KeyType.UTCTimeKey}):
             return param._asDict()
         else:
             return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: str, obj):
+    def _paramValueFromDict(keyType: KeyType, obj):
         &#34;&#34;&#34;
         Internal recursive method that also handles Coord types
 
         Args:
 
-            keyType (str): parameter&#39;s key type
+            keyType (KeyType): parameter&#39;s key type
             obj: parameter value
 
         Returns: object
@@ -92,16 +92,16 @@ class Parameter:
     # noinspection PyTypeChecker
     def _asDict(self):
         # Note that bytes are stored in a byte string (b&#39;...&#39;) instead of a list or array
-        if self.keyType == &#34;ByteKey&#34;:
+        if self.keyType == KeyType.ByteKey:
             values = self.values
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p), self.values))
 
         return {
-            self.keyType: {
+            self.keyType.name: {
                 &#39;keyName&#39;: self.keyName,
                 &#39;values&#39;: values,
-                &#39;units&#39;: self.units
+                &#39;units&#39;: self.units.name
             }
         }
 
@@ -110,14 +110,15 @@ class Parameter:
         &#34;&#34;&#34;
         Returns a Parameter for the given dict.
         &#34;&#34;&#34;
-        keyType = next(iter(obj))
-        obj = obj[keyType]
+        k = next(iter(obj))
+        keyType = KeyType[k]
+        obj = obj[k]
 
-        if keyType == &#34;ByteKey&#34;:
+        if keyType == KeyType.ByteKey:
             values = obj[&#39;values&#39;]
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p), obj[&#39;values&#39;]))
-        return Parameter(obj[&#39;keyName&#39;], keyType, values, obj[&#39;units&#39;])</code></pre>
+        return Parameter(obj[&#39;keyName&#39;], keyType, values, Units[obj[&#39;units&#39;]])</code></pre>
 </details>
 </section>
 <section>
@@ -131,22 +132,20 @@ class Parameter:
 <dl>
 <dt id="csw.Parameter.Parameter"><code class="flex name class">
 <span>class <span class="ident">Parameter</span></span>
-<span>(</span><span>keyName: str, keyType: str, values: object, units: str = 'NoUnits')</span>
+<span>(</span><span>keyName: str, keyType: <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a>, values: object, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a Parameter (keys with values, units).
-See <a href="https://tmtsoftware.github.io/csw/params/keys-parameters.html">https://tmtsoftware.github.io/csw/params/keys-parameters.html</a> for key type names.
-See <a href="https://tmtsoftware.github.io/csw/params/units.html">https://tmtsoftware.github.io/csw/params/units.html</a> for list of unit names.</p>
+<div class="desc"><p>Creates a Parameter (keys with values, units).</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>keyName</code></strong> :&ensp;<code>str</code></dt>
 <dd>name of the key</dd>
-<dt><strong><code>keyType</code></strong> :&ensp;<code>str</code></dt>
-<dd>type of the key (see above link)</dd>
+<dt><strong><code>keyType</code></strong> :&ensp;<code>KeyType</code></dt>
+<dd>type of the key</dd>
 <dt><strong><code>values</code></strong> :&ensp;<code>object</code></dt>
 <dd>an array of values, or a nested array for array and matrix types.</dd>
-<dt><strong><code>units</code></strong> :&ensp;<code>str</code></dt>
-<dd>units of the values (see above link).</dd>
+<dt><strong><code>units</code></strong> :&ensp;<code>Units</code></dt>
+<dd>units of the values.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -156,46 +155,44 @@ See <a href="https://tmtsoftware.github.io/csw/params/units.html">https://tmtsof
 class Parameter:
     &#34;&#34;&#34;
     Creates a Parameter (keys with values, units).
-    See https://tmtsoftware.github.io/csw/params/keys-parameters.html for key type names.
-    See https://tmtsoftware.github.io/csw/params/units.html for list of unit names.
 
     Args:
 
         keyName (str): name of the key
-        keyType (str): type of the key (see above link)
+        keyType (KeyType): type of the key
         values (object): an array of values, or a nested array for array and matrix types.
-        units (str): units of the values (see above link).
+        units (Units): units of the values.
     &#34;&#34;&#34;
     keyName: str
-    keyType: str
+    keyType: KeyType
     values: object
-    units: str = &#34;NoUnits&#34;
+    units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: str, param):
+    def _paramValueOrDict(keyType: KeyType, param):
         &#34;&#34;&#34;
         Internal method that also handles coord and time types
 
         Args:
-            keyType (str): parameter&#39;s key type
+            keyType (KeyType): parameter&#39;s key type
             param: parameter value
 
         Returns:
             param value
         &#34;&#34;&#34;
-        if keyType in coordTypes.union({&#34;TAITimeKey&#34;, &#34;UTCTimeKey&#34;}):
+        if keyType in coordTypes.union({KeyType.TAITimeKey, KeyType.UTCTimeKey}):
             return param._asDict()
         else:
             return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: str, obj):
+    def _paramValueFromDict(keyType: KeyType, obj):
         &#34;&#34;&#34;
         Internal recursive method that also handles Coord types
 
         Args:
 
-            keyType (str): parameter&#39;s key type
+            keyType (KeyType): parameter&#39;s key type
             obj: parameter value
 
         Returns: object
@@ -209,16 +206,16 @@ class Parameter:
     # noinspection PyTypeChecker
     def _asDict(self):
         # Note that bytes are stored in a byte string (b&#39;...&#39;) instead of a list or array
-        if self.keyType == &#34;ByteKey&#34;:
+        if self.keyType == KeyType.ByteKey:
             values = self.values
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p), self.values))
 
         return {
-            self.keyType: {
+            self.keyType.name: {
                 &#39;keyName&#39;: self.keyName,
                 &#39;values&#39;: values,
-                &#39;units&#39;: self.units
+                &#39;units&#39;: self.units.name
             }
         }
 
@@ -227,14 +224,15 @@ class Parameter:
         &#34;&#34;&#34;
         Returns a Parameter for the given dict.
         &#34;&#34;&#34;
-        keyType = next(iter(obj))
-        obj = obj[keyType]
+        k = next(iter(obj))
+        keyType = KeyType[k]
+        obj = obj[k]
 
-        if keyType == &#34;ByteKey&#34;:
+        if keyType == KeyType.ByteKey:
             values = obj[&#39;values&#39;]
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p), obj[&#39;values&#39;]))
-        return Parameter(obj[&#39;keyName&#39;], keyType, values, obj[&#39;units&#39;])</code></pre>
+        return Parameter(obj[&#39;keyName&#39;], keyType, values, Units[obj[&#39;units&#39;]])</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -242,11 +240,11 @@ class Parameter:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Parameter.Parameter.keyType"><code class="name">var <span class="ident">keyType</span> : str</code></dt>
+<dt id="csw.Parameter.Parameter.keyType"><code class="name">var <span class="ident">keyType</span> : <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Parameter.Parameter.units"><code class="name">var <span class="ident">units</span> : str</code></dt>
+<dt id="csw.Parameter.Parameter.units"><code class="name">var <span class="ident">units</span> : <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

@@ -2,13 +2,15 @@ all: doc
 
 # Generate the documentation (under build/csw)
 doc:
-	pdoc --force --html --output-dir build csw
+	test -d .venv || $(MAKE) venv
+	pipenv run pdoc --force --html --output-dir build csw
 	rm docs/*.html
 	cp build/csw/*.html docs/
 
 # Run tests against an included, Scala based assembly
 test: all
-	(cd tests; runTests.sh)
+	test -d .venv || $(MAKE) venv
+	runTests.sh
 
 # Remove generated files
 clean:

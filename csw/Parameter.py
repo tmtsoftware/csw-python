@@ -2,55 +2,55 @@ from dataclasses import dataclass
 
 from typing import List
 
+from csw.Units import Units
+from csw.KeyType import KeyType
 from csw.Coords import Coord
 
-coordTypes = {"CoordKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey"}
+coordTypes = {KeyType.CoordKey, KeyType.EqCoordKey, KeyType.SolarSystemCoordKey, KeyType.MinorPlanetCoordKey, KeyType.CometCoordKey}
 
 
 @dataclass
 class Parameter:
     """
     Creates a Parameter (keys with values, units).
-    See https://tmtsoftware.github.io/csw/params/keys-parameters.html for key type names.
-    See https://tmtsoftware.github.io/csw/params/units.html for list of unit names.
 
     Args:
 
         keyName (str): name of the key
-        keyType (str): type of the key (see above link)
+        keyType (KeyType): type of the key
         values (object): an array of values, or a nested array for array and matrix types.
-        units (str): units of the values (see above link).
+        units (Units): units of the values.
     """
     keyName: str
-    keyType: str
+    keyType: KeyType
     values: object
-    units: str = "NoUnits"
+    units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: str, param):
+    def _paramValueOrDict(keyType: KeyType, param):
         """
         Internal method that also handles coord and time types
 
         Args:
-            keyType (str): parameter's key type
+            keyType (KeyType): parameter's key type
             param: parameter value
 
         Returns:
             param value
         """
-        if keyType in coordTypes.union({"TAITimeKey", "UTCTimeKey"}):
+        if keyType in coordTypes.union({KeyType.TAITimeKey, KeyType.UTCTimeKey}):
             return param._asDict()
         else:
             return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: str, obj):
+    def _paramValueFromDict(keyType: KeyType, obj):
         """
         Internal recursive method that also handles Coord types
 
         Args:
 
-            keyType (str): parameter's key type
+            keyType (KeyType): parameter's key type
             obj: parameter value
 
         Returns: object
@@ -64,16 +64,16 @@ class Parameter:
     # noinspection PyTypeChecker
     def _asDict(self):
         # Note that bytes are stored in a byte string (b'...') instead of a list or array
-        if self.keyType == "ByteKey":
+        if self.keyType == KeyType.ByteKey:
             values = self.values
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p), self.values))
 
         return {
-            self.keyType: {
+            self.keyType.name: {
                 'keyName': self.keyName,
                 'values': values,
-                'units': self.units
+                'units': self.units.name
             }
         }
 
@@ -82,13 +82,14 @@ class Parameter:
         """
         Returns a Parameter for the given dict.
         """
-        keyType = next(iter(obj))
-        obj = obj[keyType]
+        k = next(iter(obj))
+        keyType = KeyType[k]
+        obj = obj[k]
 
-        if keyType == "ByteKey":
+        if keyType == KeyType.ByteKey:
             values = obj['values']
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p), obj['values']))
-        return Parameter(obj['keyName'], keyType, values, obj['units'])
+        return Parameter(obj['keyName'], keyType, values, Units[obj['units']])
 
 

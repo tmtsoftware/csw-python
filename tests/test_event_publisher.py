@@ -4,8 +4,9 @@ import time
 
 import structlog
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from csw.KeyType import KeyType
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
 from csw.Parameter import Parameter
@@ -26,7 +27,7 @@ class TestEventPublisher:
         eventName = "test_event"
         eventKey = prefix + "." + eventName
         keyName = "testEventValue"
-        keyType = 'IntKey'
+        keyType = KeyType.IntKey
         values = [42]
         param = Parameter(keyName, keyType, values)
         paramSet = [param]

@@ -15,6 +15,8 @@ from termcolor import colored
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from csw.KeyType import KeyType
+from csw.Units import Units
 from csw.Coords import ProperMotion, EqCoord
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
@@ -101,7 +103,7 @@ class MyComponentHandlers(ComponentHandlers):
         elif command.commandName == "SimpleCommand":
             return Completed(runId), None
         elif command.commandName == "ResultCommand":
-            result = Result([Parameter("myValue", 'DoubleKey', [42.0])])
+            result = Result([Parameter("myValue", KeyType.DoubleKey, [42.0])])
             return Completed(runId, result), None
         elif command.commandName == "ErrorCommand":
             return Error(runId, "Error command received"), None
@@ -140,11 +142,12 @@ class MyComponentHandlers(ComponentHandlers):
 
     # Returns the current state
     def currentStates(self) -> List[CurrentState]:
-        intParam = Parameter("IntValue", "IntKey", [42], "arcsec")
-        intArrayParam = Parameter("IntArrayValue", "IntArrayKey", [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", "FloatArrayKey", [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], "marcsec")
-        intMatrixParam = Parameter("IntMatrixValue", "IntMatrixKey",
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], "meter")
+        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
+        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
+        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                                    Units.marcsec)
+        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
+                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
         return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
 
 
