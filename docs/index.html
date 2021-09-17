@@ -30,19 +30,24 @@ including the
 <a href="https://tmtsoftware.github.io/csw/commons/command.html">Command Service</a> (receiving end only at this point).</p>
 <p>See <a href="https://tmtsoftware.github.io/csw/index.html">here</a> for the CSW documentation.</p>
 <p>You can find the <a href="https://github.com/tmtsoftware/pycsw">tmtpycsw sources</a> on GitHub.</p>
-<p>Note that all APIs here assume that the CSW services (version 3.0.1) are running
+<p>Note that all APIs here assume that the CSW services (version 4.0.0) are running
 For example, during development, run: <code>csw-services start</code>.</p>
 <p>The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
-with the difference that in some cases the Python types are simpler, due to less strict typing.
-This means that you can in general refer to the CSW Scala and Java documentation, if something is
-not clear.</p>
+with the difference that in some cases the Python types are simpler, due to less strict typing.</p>
 <h2 id="requirements">Requirements</h2>
 <ul>
-<li>Python version 3.8.5 or newer</li>
+<li>Python version 3.9.5 or newer</li>
+<li>pip (pip3 on Linux)</li>
 <li>pdoc3 (<code>pip3 install pdoc3</code>)</li>
+<li>pipenv (latest)</li>
 </ul>
 <h3 id="python-dependencies">Python Dependencies:</h3>
-<p>The following Python dependencies need to be installed with pip (pip3):</p>
+<p>The following Python dependencies are required and can be installed in a local "virtual environment"
+by typing:</p>
+<pre><code>make venv
+</code></pre>
+<p>This uses pip and pipenv to create a .venv directory containing the dependencies and python interpreter.</p>
+<p>Dependecies:</p>
 <ul>
 <li>astropy</li>
 <li>cbor2</li>
@@ -66,45 +71,54 @@ not clear.</p>
 Python applications can access <code>tcp</code> and <code>http</code> based services, but not <code>akka</code> services,
 which are based on akka actors.</p>
 <p>The following code demonstrates the Python API for the Location Service:</p>
-<pre><code class="language-python">from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+<pre><code class="language-python">import structlog
+
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+
 
 # Demonstrate usage of the Python Location Service API
 
 def test_location_service():
-    locationService = LocationService()
+ log = structlog.get_logger()
+ locationService = LocationService()
 
-    # List all registered connections
-    print(&quot;\nAll Locations:&quot;)
-    for i in locationService.list():
-        print(&quot;    &quot; + str(i))
+ # List all registered connections
+ log.debug(&quot;\nAll Locations:&quot;)
+ for i in locationService.list():
+  log.debug(&quot;    &quot; + str(i))
 
-    # List the registered HCDs
-    print(&quot;\nHCDs:&quot;)
-    for i in locationService.list(ComponentType.HCD):
-        print(&quot;    &quot; + str(i))
+ # List the registered HCDs
+ log.debug(&quot;\nHCDs:&quot;)
+ for i in locationService.list(ComponentType.HCD):
+  log.debug(&quot;    &quot; + str(i))
 
-    # List the registered http connections
-    print(&quot;\nHTTP connections:&quot;)
-    for i in locationService.list(ConnectionType.HttpType):
-        print(&quot;    &quot; + str(i))
+ # List the registered http connections
+ log.debug(&quot;\nConnections on 192.168.178.78&quot;)
+ for i in locationService.list(&quot;192.168.178.78&quot;):
+  log.debug(&quot;    &quot; + str(i))
 
-    # Register a connection
-    connection = ConnectionInfo(&quot;csw.myComp&quot;, ComponentType.Service.value, ConnectionType.HttpType.value)
-    reg = HttpRegistration(connection, 8080, path=&quot;myservice/test&quot;)
-    regResult = locationService.register(reg)
-    print(&quot;\nRegistration result: &quot; + str(regResult))
+ # List the registered http connections
+ log.debug(&quot;\nHTTP connections:&quot;)
+ for i in locationService.list(ConnectionType.HttpType):
+  log.debug(&quot;    &quot; + str(i))
 
-    # Find a connection
-    location1 = locationService.find(connection)
-    print(&quot;location1 = &quot; + str(location1))
+ # Register a connection
+ connection = ConnectionInfo(&quot;csw.myComp&quot;, ComponentType.Service.value, ConnectionType.HttpType.value)
+ reg = HttpRegistration(connection, 8080, path=&quot;myservice/test&quot;)
+ regResult = locationService.register(reg)
+ log.debug(&quot;\nRegistration result: &quot; + str(regResult))
 
-    # Resolve a connection (waiting if needed)
-    location2 = locationService.resolve(connection)
-    print(&quot;location2 = &quot; + str(location2))
+ # Find a connection
+ location1 = locationService.find(connection)
+ log.debug(&quot;location1 = &quot; + str(location1))
 
-    # Unregister
-    unregResult = locationService.unregister(connection)
-    print(&quot;\nUnregister result: &quot; + str(unregResult))
+ # Resolve a connection (waiting if needed)
+ location2 = locationService.resolve(connection)
+ log.debug(&quot;location2 = &quot; + str(location2))
+
+ # Unregister
+ unregResult = locationService.unregister(connection)
+ log.debug(&quot;\nUnregister result: &quot; + str(unregResult))
 </code></pre>
 <p>The type of the return value from methods that return a location is a subclass of
 <a href="LocationService.html#csw.LocationService.Location">Location</a>.</p>
@@ -124,21 +138,21 @@ you can call <code><a title="csw.EventSubscriber" href="EventSubscriber.html">cs
 # Test subscribing to events
 class TestSubscriber3:
 
-    def __init__(self):
-        eventKey = &quot;CSW.testassembly.myAssemblyEvent&quot;
-        EventSubscriber().subscribe([eventKey], self.callback)
+ def __init__(self):
+  eventKey = &quot;CSW.testassembly.myAssemblyEvent&quot;
+  EventSubscriber().subscribe([eventKey], self.callback)
 
-    @staticmethod
-    def callback(systemEvent):
-        print(f&quot;Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'&quot;)
-        for i in systemEvent.paramSet:
-            print(f&quot;    with values: {i.keyName}({i.keyType}): {i.values}&quot;)
-        if systemEvent.isInvalid():
-            print(&quot;    Invalid&quot;)
-        if systemEvent.exists(&quot;assemblyEventValue&quot;):
-            p = systemEvent.get(&quot;assemblyEventValue&quot;)
-            if p is not None:
-                print(f&quot;Found: {p.keyName}&quot;)
+ @staticmethod
+ def callback(systemEvent):
+  print(f&quot;Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'&quot;)
+  for i in systemEvent.paramSet:
+   print(f&quot;    with values: {i.keyName}({i.keyType.name}): {i.values}&quot;)
+  if systemEvent.isInvalid():
+   print(&quot;    Invalid&quot;)
+  if systemEvent.exists(&quot;assemblyEventValue&quot;):
+   p = systemEvent.get(&quot;assemblyEventValue&quot;)
+   if p is not None:
+    print(f&quot;Found: {p.keyName}&quot;)
 </code></pre>
 <p>See <a href="Event.html">here</a> for the structure of an event. There are two types of events:</p>
 <ul>
@@ -166,96 +180,100 @@ return the <a href="CommandResponse.html">CommandResponse</a> later, while a <em
 returns the command response immediately, possibly with a <a href="CommandResponse.html#csw.CommandResponse.Result">Result</a>.
 If an error occurs, <a href="CommandResponse.html#csw.CommandResponse.Error">Error</a> should be returned.
 If the command is invalid , the server should return <a href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a></p>
-<pre><code class="language-python">import sys
-import os
-import asyncio
-import traceback
+<pre><code class="language-python">import asyncio
 from asyncio import Task
 from typing import List
 
-from aiohttp.web_runner import GracefulExit
-from astropy.coordinates import Angle
-from termcolor import colored
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from csw.Coords import ProperMotion, EqCoord
-from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
-    Error, Accepted, Started, UnsupportedCommandIssue
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue,
+ Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
+from csw.KeyType import KeyType
+from csw.Units import Units
 
 
 class MyComponentHandlers(ComponentHandlers):
-    prefix = &quot;CSW.pycswTest&quot;
-    commandServer: CommandServer = None
+ prefix = &quot;CSW.pycswTest&quot;
 
-    async def longRunningCommand(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
-        await asyncio.sleep(3)
-        print(&quot;Long running task completed&quot;)
-        # TODO: Do this in a timer task
-        await self.publishCurrentStates()
-        return Completed(runId)
+ async def longRunningCommand(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
+  await asyncio.sleep(3)
+  print(&quot;Long running task completed&quot;)
+  # TODO: Do this in a timer task
+  await self.publishCurrentStates()
+  return Completed(runId)
 
-    def _checkCommand(self, command: ControlCommand):
-        try:
-            assert(command.get(&quot;cmdValue&quot;).values == [1.0, 2.0, 3.0])
-            assert(list(command.get(&quot;cmdValue&quot;).values)[0] == 1.0)
+ def onSubmit(self, runId: str, command: ControlCommand) -&gt; (CommandResponse, Task):
+  &quot;&quot;&quot;
+  Overrides the base class onSubmit method to handle commands from a CSW component
 
-            # Access a coordinate value
-            eqCoord: EqCoord = list(command.get(&quot;BasePosition&quot;).values)[0]
-            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
-            assert(eqCoord.ra == Angle(&quot;12:13:14.15 hours&quot;))
-            assert(eqCoord.dec == Angle(&quot;-30:31:32.3 deg&quot;))
+  Args:
+      runId (str): unique id for this command
+      command (ControlCommand): contains the ControlCommand from CSW
 
-        except:
-            print(f&quot;_checkCommand: {colored('TEST FAILED', 'red')}&quot;)
-            traceback.print_exc()
+  Returns: (CommandResponse, Task)
+      a subclass of CommandResponse that is serialized and passed back to the CSW component
+  &quot;&quot;&quot;
+  n = len(command.paramSet)
+  print(f&quot;MyComponentHandlers Received setup {str(command)} with {n} params&quot;)
 
-    def onSubmit(self, runId: str, command: ControlCommand) -&gt; (CommandResponse, Task):
-        self._checkCommand(command)
-        n = len(command.paramSet)
-        print(f&quot;MyComponentHandlers Received setup {str(command)} with {n} params&quot;)
+  if command.commandName == &quot;LongRunningCommand&quot;:
+   task = asyncio.create_task(self.longRunningCommand(runId, command))
+   return Started(runId, &quot;Long running task in progress...&quot;), task
+  elif command.commandName == &quot;SimpleCommand&quot;:
+   return Completed(runId), None
+  elif command.commandName == &quot;ResultCommand&quot;:
+   result = Result([Parameter(&quot;myValue&quot;, KeyType.DoubleKey, [42.0])])
+   return Completed(runId, result), None
+  else:
+   return Invalid(runId, UnsupportedCommandIssue(f&quot;Unknown command: {command.commandName}&quot;)), None
 
-        if command.commandName == &quot;LongRunningCommand&quot;:
-            task = asyncio.create_task(self.longRunningCommand(runId, command))
-            return Started(runId, &quot;Long running task in progress...&quot;), task
-        elif command.commandName == &quot;SimpleCommand&quot;:
-            return Completed(runId), None
-        elif command.commandName == &quot;ResultCommand&quot;:
-            result = Result([Parameter(&quot;myValue&quot;, 'DoubleKey', [42.0])])
-            return Completed(runId, result), None
-        elif command.commandName == &quot;ErrorCommand&quot;:
-            return Error(runId, &quot;Error command received&quot;), None
-        elif command.commandName == &quot;InvalidCommand&quot;:
-            return Invalid(runId, MissingKeyIssue(&quot;Missing required key XXX&quot;)), None
-        else:
-            return Invalid(runId, UnsupportedCommandIssue(f&quot;Unknown command: {command.commandName}&quot;)), None
+ def onOneway(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
+  &quot;&quot;&quot;
+  Overrides the base class onOneway method to handle commands from a CSW component.
 
-    def onOneway(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
-        n = len(command.paramSet)
-        print(f&quot;MyComponentHandlers Received oneway {str(command)} with {n} params.\n{colored('TEST PASSED', 'green')}.&quot;)
-        raise GracefulExit()
+  Args:
+      runId (str): unique id for this command
+      command (ControlCommand): contains the ControlCommand from CSW
 
-    def validateCommand(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
-        return Accepted(runId)
+  Returns: CommandResponse
+      an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
+  &quot;&quot;&quot;
+  n = len(command.paramSet)
+  print(f&quot;MyComponentHandlers Received oneway {str(command)} with {n} params&quot;)
+  return Accepted(runId)
 
-    # Returns the current state
-    def currentStates(self) -&gt; List[CurrentState]:
-        intParam = Parameter(&quot;IntValue&quot;, &quot;IntKey&quot;, [42], &quot;arcsec&quot;)
-        intArrayParam = Parameter(&quot;IntArrayValue&quot;, &quot;IntArrayKey&quot;, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter(&quot;FloatArrayValue&quot;, &quot;FloatArrayKey&quot;, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], &quot;marcsec&quot;)
-        intMatrixParam = Parameter(&quot;IntMatrixValue&quot;, &quot;IntMatrixKey&quot;,
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], &quot;meter&quot;)
-        return [CurrentState(self.prefix, &quot;PyCswState&quot;, [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+ def validateCommand(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
+  &quot;&quot;&quot;
+  Overrides the base class validate method to verify that the given command is valid.
 
-def test_command_server():
-    handlers = MyComponentHandlers()
-    commandServer = CommandServer(handlers.prefix, handlers)
-    handlers.commandServer = commandServer
-    commandServer.start()
+  Args:
+      runId (str): unique id for this command
+      command (ControlCommand): contains the ControlCommand from CSW
+
+  Returns: CommandResponse
+      an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
+  &quot;&quot;&quot;
+  return Accepted(runId)
+
+ # Returns the current state
+ def currentStates(self) -&gt; List[CurrentState]:
+  intParam = Parameter(&quot;IntValue&quot;, KeyType.IntKey, [42], Units.arcsec)
+  intArrayParam = Parameter(&quot;IntArrayValue&quot;, KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
+  floatArrayParam = Parameter(&quot;FloatArrayValue&quot;, KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                              Units.marcsec)
+  intMatrixParam = Parameter(&quot;IntMatrixValue&quot;, KeyType.IntMatrixKey,
+                             [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
+  return [CurrentState(self.prefix, &quot;PyCswState&quot;, [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+
+
+# noinspection PyTypeChecker
+handlers = MyComponentHandlers()
+commandServer = CommandServer(handlers.prefix, handlers)
+handlers.commandServer = commandServer
+print(f&quot;Starting test command server on port {commandServer.port}&quot;)
+commandServer.start()
 </code></pre>
 <h2 id="working-with-parameters">Working with Parameters</h2>
 <p>When receiving events or handling commands, you need to be able to unpack the <a href="Parameter.html">parameter</a> list.
@@ -283,7 +301,7 @@ The following example gets the first value of the "BasePosition", which is expec
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-.. include:: ./documentation.md
+.. include:: ../documentation.md
 &#34;&#34;&#34;</code></pre>
 </details>
 </section>

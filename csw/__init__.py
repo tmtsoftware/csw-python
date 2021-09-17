@@ -1,4 +1,4 @@
 """
-.. include:: ./documentation.md
+.. include:: ../documentation.md
 """
 

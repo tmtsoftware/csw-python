@@ -2,6 +2,7 @@ import structlog
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 
+
 # Demonstrate usage of the Python Location Service API
 
 def test_location_service():
