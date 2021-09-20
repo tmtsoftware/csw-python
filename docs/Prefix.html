@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>csw.UTCTime API documentation</title>
+<title>csw.Prefix API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,46 +19,40 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>csw.UTCTime</code></h1>
+<h1 class="title">Module <code>csw.Prefix</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime,timezone
-from dataclasses import dataclass, asdict
+<pre><code class="python">from dataclasses import dataclass
+
+from csw.Subsystem import Subsystems
 
 
 @dataclass
-class UTCTime:
+class Prefix:
     &#34;&#34;&#34;
-    Creates a UTCTime containing seconds since the epoch (1970) and the offset from seconds in nanoseconds
+    A class representing a component prefix, made up of the subsystem and the component name.
+    Note: Component name should not contain leading or trailing spaces or a hyphen (-).
     &#34;&#34;&#34;
-    seconds: int
-    nanos: int
+    subsystem: Subsystems
+    componentName: str
+
+    def __init__(self, subsystem: Subsystems, componentName: str):
+        assert (componentName == componentName.strip())
+        assert (&#34;-&#34; not in componentName)
+        self.subsystem = subsystem
+        self.componentName = componentName
 
     def __str__(self):
-        secs = self.seconds + self.nanos / 1e9
-        dt = datetime.fromtimestamp(secs, timezone.utc)
-        return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)
+        return f&#34;{self.subsystem.name}.{self.componentName}&#34;
 
-    def _asDict(self):
-        return asdict(self)
-
-    @staticmethod
-    def _fromDict(obj: dict):
-        return UTCTime(**obj)
-
-    @staticmethod
-    def fromSystem():
-        &#34;&#34;&#34;
-        Returns a UTCTime with the current time.
-        &#34;&#34;&#34;
-        t = datetime.now(timezone.utc).timestamp()
-        seconds = int(t)
-        nanos = int((t - seconds) * 1e9)
-        return UTCTime(seconds, nanos)</code></pre>
+    @classmethod
+    def from_str(class_object, prefixStr: str):
+        [s, c] = prefixStr.split(&#39;.&#39;, 1)
+        return class_object(Subsystems[s.upper()], c)</code></pre>
 </details>
 </section>
 <section>
@@ -70,77 +64,66 @@ class UTCTime:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="csw.UTCTime.UTCTime"><code class="flex name class">
-<span>class <span class="ident">UTCTime</span></span>
-<span>(</span><span>seconds: int, nanos: int)</span>
+<dt id="csw.Prefix.Prefix"><code class="flex name class">
+<span>class <span class="ident">Prefix</span></span>
+<span>(</span><span>subsystem: <a title="csw.Subsystem.Subsystems" href="Subsystem.html#csw.Subsystem.Subsystems">Subsystems</a>, componentName: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a UTCTime containing seconds since the epoch (1970) and the offset from seconds in nanoseconds</p></div>
+<div class="desc"><p>A class representing a component prefix, made up of the subsystem and the component name.
+Note: Component name should not contain leading or trailing spaces or a hyphen (-).</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class UTCTime:
+class Prefix:
     &#34;&#34;&#34;
-    Creates a UTCTime containing seconds since the epoch (1970) and the offset from seconds in nanoseconds
+    A class representing a component prefix, made up of the subsystem and the component name.
+    Note: Component name should not contain leading or trailing spaces or a hyphen (-).
     &#34;&#34;&#34;
-    seconds: int
-    nanos: int
+    subsystem: Subsystems
+    componentName: str
+
+    def __init__(self, subsystem: Subsystems, componentName: str):
+        assert (componentName == componentName.strip())
+        assert (&#34;-&#34; not in componentName)
+        self.subsystem = subsystem
+        self.componentName = componentName
 
     def __str__(self):
-        secs = self.seconds + self.nanos / 1e9
-        dt = datetime.fromtimestamp(secs, timezone.utc)
-        return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)
+        return f&#34;{self.subsystem.name}.{self.componentName}&#34;
 
-    def _asDict(self):
-        return asdict(self)
-
-    @staticmethod
-    def _fromDict(obj: dict):
-        return UTCTime(**obj)
-
-    @staticmethod
-    def fromSystem():
-        &#34;&#34;&#34;
-        Returns a UTCTime with the current time.
-        &#34;&#34;&#34;
-        t = datetime.now(timezone.utc).timestamp()
-        seconds = int(t)
-        nanos = int((t - seconds) * 1e9)
-        return UTCTime(seconds, nanos)</code></pre>
+    @classmethod
+    def from_str(class_object, prefixStr: str):
+        [s, c] = prefixStr.split(&#39;.&#39;, 1)
+        return class_object(Subsystems[s.upper()], c)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.UTCTime.UTCTime.nanos"><code class="name">var <span class="ident">nanos</span> : int</code></dt>
+<dt id="csw.Prefix.Prefix.componentName"><code class="name">var <span class="ident">componentName</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.UTCTime.UTCTime.seconds"><code class="name">var <span class="ident">seconds</span> : int</code></dt>
+<dt id="csw.Prefix.Prefix.subsystem"><code class="name">var <span class="ident">subsystem</span> : <a title="csw.Subsystem.Subsystems" href="Subsystem.html#csw.Subsystem.Subsystems">Subsystems</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
 <dl>
-<dt id="csw.UTCTime.UTCTime.fromSystem"><code class="name flex">
-<span>def <span class="ident">fromSystem</span></span>(<span>)</span>
+<dt id="csw.Prefix.Prefix.from_str"><code class="name flex">
+<span>def <span class="ident">from_str</span></span>(<span>prefixStr: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a UTCTime with the current time.</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@staticmethod
-def fromSystem():
-    &#34;&#34;&#34;
-    Returns a UTCTime with the current time.
-    &#34;&#34;&#34;
-    t = datetime.now(timezone.utc).timestamp()
-    seconds = int(t)
-    nanos = int((t - seconds) * 1e9)
-    return UTCTime(seconds, nanos)</code></pre>
+<pre><code class="python">@classmethod
+def from_str(class_object, prefixStr: str):
+    [s, c] = prefixStr.split(&#39;.&#39;, 1)
+    return class_object(Subsystems[s.upper()], c)</code></pre>
 </details>
 </dd>
 </dl>
@@ -162,11 +145,11 @@ def fromSystem():
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="csw.UTCTime.UTCTime" href="#csw.UTCTime.UTCTime">UTCTime</a></code></h4>
+<h4><code><a title="csw.Prefix.Prefix" href="#csw.Prefix.Prefix">Prefix</a></code></h4>
 <ul class="">
-<li><code><a title="csw.UTCTime.UTCTime.fromSystem" href="#csw.UTCTime.UTCTime.fromSystem">fromSystem</a></code></li>
-<li><code><a title="csw.UTCTime.UTCTime.nanos" href="#csw.UTCTime.UTCTime.nanos">nanos</a></code></li>
-<li><code><a title="csw.UTCTime.UTCTime.seconds" href="#csw.UTCTime.UTCTime.seconds">seconds</a></code></li>
+<li><code><a title="csw.Prefix.Prefix.componentName" href="#csw.Prefix.Prefix.componentName">componentName</a></code></li>
+<li><code><a title="csw.Prefix.Prefix.from_str" href="#csw.Prefix.Prefix.from_str">from_str</a></code></li>
+<li><code><a title="csw.Prefix.Prefix.subsystem" href="#csw.Prefix.Prefix.subsystem">subsystem</a></code></li>
 </ul>
 </li>
 </ul>

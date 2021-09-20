@@ -229,7 +229,7 @@ class CommandServer:
     def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug(&#34;Registering with location service using port &#34; + str(port))
         locationService = LocationService()
-        connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
+        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
         # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
@@ -355,7 +355,7 @@ subsystem names and name is the name of the command server</dd>
     def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug(&#34;Registering with location service using port &#34; + str(port))
         locationService = LocationService()
-        connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
+        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
         # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))

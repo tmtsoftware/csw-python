@@ -58,7 +58,7 @@ class CurrentState:
             a dictionary corresponding to this object
         &#34;&#34;&#34;
         d = {
-            &#39;prefix&#39;: self.prefix,
+            &#39;prefix&#39;: str(self.prefix),
             &#39;stateName&#39;: self.stateName,
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
@@ -139,7 +139,7 @@ class CurrentState:
             a dictionary corresponding to this object
         &#34;&#34;&#34;
         d = {
-            &#39;prefix&#39;: self.prefix,
+            &#39;prefix&#39;: str(self.prefix),
             &#39;stateName&#39;: self.stateName,
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }

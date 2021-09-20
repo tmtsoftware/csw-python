@@ -56,6 +56,12 @@ _pdocIgnoreGenerated("ConnectionInfo")
 
 @dataclass_json
 @dataclass
+class ComponentId:
+    prefix: str
+    componentType: str
+
+@dataclass_json
+@dataclass
 class ConnectionInfo:
     prefix: str
     componentType: str
@@ -117,7 +123,6 @@ _pdocIgnoreGenerated("TcpLocation")
 @dataclass_json
 @dataclass
 class TcpLocation(Location):
-    port: int = 0
     pass
 
 

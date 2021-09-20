@@ -4,9 +4,12 @@ import time
 import json
 
 import structlog
+from _pytest import pathlib
 
+from csw.Subsystem import Subsystems
+from csw.Prefix import Prefix
 from csw.LocationService import ComponentType, ConnectionInfo, HttpRegistration, TcpRegistration, \
-    AkkaRegistration
+    AkkaRegistration, ComponentId, ConnectionType, AkkaLocation, HttpLocation, TcpLocation
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -16,7 +19,8 @@ class TestCswContract:
 
     # Validate against contract file produced by csw
     def test_location_service_models(self):
-        with open('location_models.json') as json_file:
+        dir = pathlib.Path(__file__).parent.absolute()
+        with open(f"{dir}/location_models.json") as json_file:
             data = json.load(json_file)
             for p in data['ComponentType']:
                 assert (ComponentType[p].value == p)
@@ -26,20 +30,31 @@ class TestCswContract:
                 assert (connectionInfo.to_dict() == p)
             for p in data['Registration']:
                 regType = p['_type']
-                self.log.debug(f"XXX regType = {regType} ({regType.__class__})")
-                # TODO: for Python-3.10.x
-                # match regType:
-                #     case "HttpRegistration":
-                #         registration = HttpRegistration.from_dict(p)
-                #     case "TcpRegistration":
-                #         registration = TcpRegistration.from_dict(p)
-                #     case "AkkaRegistration":
-                #         registration = AkkaRegistration.from_dict(p)
                 if (regType == "HttpRegistration"):
-                        registration = HttpRegistration.from_dict(p)
+                    registration = HttpRegistration.from_dict(p)
                 elif (regType == "TcpRegistration"):
-                        registration = TcpRegistration.from_dict(p)
+                    registration = TcpRegistration.from_dict(p)
                 elif (regType == "AkkaRegistration"):
-                        registration = AkkaRegistration.from_dict(p)
-                self.log.debug(f"XXX registration = {registration} ({registration.__class__})")
+                    registration = AkkaRegistration.from_dict(p)
                 assert (registration.to_dict() == p)
+            for p in data['ComponentId']:
+                componentId = ComponentId.from_dict(p)
+                self.log.debug(f"ComponentId: {componentId}")
+                assert (componentId.to_dict() == p)
+            for p in data['Prefix']:
+                prefix = Prefix.from_str(p)
+                assert (str(prefix) == p)
+            for p in data['ConnectionType']:
+                assert (ConnectionType(p).value == p)
+            for p in data['Subsystem']:
+                assert (Subsystems[p].name == p)
+            for p in data['Location']:
+                locType = p['_type']
+                if (locType == "AkkaLocation"):
+                    loc = AkkaLocation.from_dict(p)
+                elif (locType == "HttpLocation"):
+                    loc = HttpLocation.from_dict(p)
+                elif (locType == "TcpLocation"):
+                    loc = TcpLocation.from_dict(p)
+                self.log.debug(f"Location: {loc}")
+                assert (loc.to_dict() == p)

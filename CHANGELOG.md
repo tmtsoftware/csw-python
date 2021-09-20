@@ -1,6 +1,23 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v4.0.0rc2] - 2021-09-
+
+### Changed
+
+- Changed type of "prefix" arguments from str to Prefix, matching CSW API
+- Changed type of event name args to EventName, same as CSW API
+- Updated Location Service Registration classes to more closely match CSW APIs
+
+### Added
+
+- Added EventKey class and used it instead of str for event keys
+- Adding logging support (use: `log = structlog.get_logger()`)
+- Added enums for KeyType, Subsystem, Units
+- Added missing ComponentType values (SequenceComponent, Machine) and changed case to match CSW API
+- Added ComponentId class and additional constructor for ConnectionInfo
+- Added tests, updated existing examples and tests
+
 ## [tmtpycsw v4.0.0rc1] - 2021-08-24
 
 ### Changed

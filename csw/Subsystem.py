@@ -44,4 +44,4 @@ class Subsystems(Enum):
     TCS = Subsystem("Telescope Control System")
     TINS = Subsystem("Test Instruments")
     WFOS = Subsystem("Wide Field Optical Spectrograph")
-    CONTAINER = Subsystem("Container Subsystem")
+    Container = Subsystem("Container Subsystem")
