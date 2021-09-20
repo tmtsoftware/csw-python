@@ -201,7 +201,7 @@ class CommandServer:
     def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug("Registering with location service using port " + str(port))
         locationService = LocationService()
-        connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
+        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
         # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))

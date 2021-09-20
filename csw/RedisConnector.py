@@ -17,7 +17,7 @@ class RedisConnector:
         Events are posted to Redis. This is internal class used to access Redis.
         """
         prefix = Prefix(Subsystems.CSW, "EventServer")
-        conn = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.TcpType.value)
+        conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
         loc = LocationService().find(conn)
         uri = urlparse(loc.uri)
         sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)

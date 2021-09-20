@@ -2,7 +2,7 @@ from typing import List
 from dataclasses import dataclass, field
 
 import structlog
-from dataclasses_json import dataclass_json, config
+from dataclasses_json import dataclass_json
 from enum import Enum
 from multipledispatch import dispatch
 import requests
@@ -48,23 +48,17 @@ class ConnectionType(Enum):
 _pdocIgnoreGenerated("ConnectionInfo")
 
 
-def _decodePrefix(prefix: str):
-    return Prefix.from_str(prefix)
-
-def _encodePrefix(prefix: Prefix):
-    return str(prefix)
-
-
 @dataclass_json
 @dataclass
 class ConnectionInfo:
-    prefix: Prefix = field(
-        metadata=config(
-            encoder=_encodePrefix,
-            decoder=_decodePrefix)
-    )
+    prefix: str
     componentType: str
     connectionType: str
+
+    @staticmethod
+    def make(prefix: Prefix, componentType: ComponentType, connectionType: ConnectionType):
+        return ConnectionInfo(str(prefix), componentType.value, connectionType.value)
+
 
 _pdocIgnoreGenerated("ResolveInfo")
 
@@ -231,7 +225,6 @@ class LocationService:
             the Location
         """
         jsonBody = f'{{"_type": "Find", "connection": {connection.to_json()}}}'
-        print(f"XXX json = {jsonBody}")
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)

@@ -13,8 +13,8 @@ class Prefix:
     componentName: str
 
     def __init__(self, subsystem: Subsystems, componentName: str):
-        assert(componentName == componentName.strip())
-        assert("-" not in componentName)
+        assert (componentName == componentName.strip())
+        assert ("-" not in componentName)
         self.subsystem = subsystem
         self.componentName = componentName
 

@@ -33,7 +33,7 @@ def test_location_service():
 
     # Register a connection
     prefix = Prefix(Subsystems.CSW, "myComp")
-    connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
+    connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
     reg = HttpRegistration(connection, 8080, path="myservice/test")
     regResult = locationService.register(reg)
     log.debug("\nRegistration result: " + str(regResult))
