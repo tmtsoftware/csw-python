@@ -23,15 +23,21 @@ def _pdocIgnoreGenerated(className: str):
 
 # Python API for CSW Location Service
 
+# TODO: Add Location Service subscribe / TrackingEvent
+
+#  "ComponentType" : [ "Container", "HCD", "Assembly", "Sequencer", "SequenceComponent", "Service", "Machine" ],
+
 class ComponentType(Enum):
     """
     Enum type: Represents a type of the CSW Component.
     """
-    Assembly = "assembly"
-    HCD = "hcd"
-    Container = "container"
-    Service = "service"
-    Sequencer = "sequencer"
+    Assembly = "Assembly"
+    HCD = "HCD"
+    Container = "Container"
+    Service = "Service"
+    Sequencer = "Sequencer"
+    SequenceComponent = "SequenceComponent"
+    Machine = "Machine"
 
 
 class ConnectionType(Enum):
@@ -111,6 +117,7 @@ _pdocIgnoreGenerated("TcpLocation")
 @dataclass_json
 @dataclass
 class TcpLocation(Location):
+    port: int = 0
     pass
 
 
@@ -133,7 +140,6 @@ class Registration:
     Abstract base class for registering with the location service
     """
     connection: ConnectionInfo
-    port: int
 
 
 _pdocIgnoreGenerated("NetworkType")
@@ -157,9 +163,21 @@ class HttpRegistration(Registration):
     """
     Used to register an http based service with the Location Service.
     """
+    port: int
     path: str = ""
     networkType: NetworkType = NetworkType("Inside")
     metadata: dict = field(default_factory=dict)
+    _type: str = "HttpRegistration"
+
+@dataclass_json
+@dataclass
+class AkkaRegistration(Registration):
+    """
+    Used to register an http based service with the Location Service.
+    """
+    actorRefURI: str
+    metadata: dict = field(default_factory=dict)
+    _type: str = "AkkaRegistration"
 
 
 _pdocIgnoreGenerated("TcpRegistration")
@@ -171,7 +189,9 @@ class TcpRegistration(Registration):
     """
     Used to register a tcp based service with the Location Service.
     """
+    port: int
     metadata: dict = field(default_factory=dict)
+    _type: str = "TcpRegistration"
 
 
 class LocationService:
@@ -192,7 +212,7 @@ class LocationService:
         Returns: ConnectionInfo
             an object describing the connection
         """
-        regType = registration.__class__.__name__
+        # regType = registration.__class__.__name__
         regJson = json.loads(registration.to_json())
         regJson['_type'] = registration.__class__.__name__
         jsonBody = f'{{"_type": "Register", "registration": {json.dumps(regJson)}}}'

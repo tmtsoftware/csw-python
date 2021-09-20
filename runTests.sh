@@ -3,14 +3,15 @@
 # Script that starts the CSW services, compiles and runs the test assembly and then runs the python tests.
 # Assumes that cs, sbt, pytest are all in your shell path.
 
+# Make sure we can find sbt, cs, pipenv
+hash sbt 2>/dev/null || { echo >&2 "Please install sbt first.  Aborting."; exit 1; }
+hash pipenv 2>/dev/null || { echo >&2 "Please install pipenv first.  Aborting."; exit 1; }
+hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1; }
+
 CSW_VERSION=4.0.0-RC2
 #CSW_VERSION=87d677d5ad39b6781619f1f866c90ee6ec448c5b
 
 logfile=test.log
-if ! hash cs 2>/dev/null ; then
-    echo >&2 "Please install coursier (https://get-coursier.io/).  Aborting."
-    exit 1
-fi
 set -x
 cs launch csw-services:$CSW_VERSION -- start -e > $logfile 2>&1 &
 cd tests/testSupport || exit 1

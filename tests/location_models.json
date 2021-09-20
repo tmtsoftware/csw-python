@@ -1,0 +1,138 @@
+{
+  "TrackingEvent" : [ {
+    "_type" : "LocationUpdated",
+    "location" : {
+      "_type" : "AkkaLocation",
+      "connection" : {
+        "prefix" : "TCS.filter.wheel",
+        "componentType" : "HCD",
+        "connectionType" : "akka"
+      },
+      "uri" : "path",
+      "metadata" : {
+        "key1" : "value"
+      }
+    }
+  }, {
+    "_type" : "LocationRemoved",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "akka"
+    }
+  } ],
+  "ComponentType" : [ "Container", "HCD", "Assembly", "Sequencer", "SequenceComponent", "Service", "Machine" ],
+  "Connection" : [ {
+    "prefix" : "TCS.filter.wheel",
+    "componentType" : "HCD",
+    "connectionType" : "akka"
+  }, {
+    "prefix" : "TCS.filter.wheel",
+    "componentType" : "HCD",
+    "connectionType" : "http"
+  }, {
+    "prefix" : "TCS.filter.wheel",
+    "componentType" : "HCD",
+    "connectionType" : "tcp"
+  } ],
+  "Registration" : [ {
+    "_type" : "AkkaRegistration",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "akka"
+    },
+    "actorRefURI" : "path",
+    "metadata" : {
+      "key1" : "value"
+    }
+  }, {
+    "_type" : "HttpRegistration",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "http"
+    },
+    "port" : 8080,
+    "path" : "path",
+    "networkType" : {
+      "_type" : "Inside"
+    },
+    "metadata" : { }
+  }, {
+    "_type" : "HttpRegistration",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "http"
+    },
+    "port" : 8080,
+    "path" : "path",
+    "networkType" : {
+      "_type" : "Outside"
+    },
+    "metadata" : { }
+  }, {
+    "_type" : "TcpRegistration",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "tcp"
+    },
+    "port" : 8080,
+    "metadata" : { }
+  } ],
+  "ComponentId" : [ {
+    "prefix" : "TCS.filter.wheel",
+    "componentType" : "HCD"
+  } ],
+  "Prefix" : [ "TCS.filter.wheel" ],
+  "LocationServiceError" : [ {
+    "_type" : "RegistrationFailed",
+    "msg" : "failure message"
+  }, {
+    "_type" : "OtherLocationIsRegistered",
+    "msg" : "failure message"
+  }, {
+    "_type" : "UnregistrationFailed",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "akka"
+    }
+  }, {
+    "_type" : "RegistrationListingFailed"
+  } ],
+  "ConnectionType" : [ "http", "tcp", "akka" ],
+  "Subsystem" : [ "AOESW", "APS", "CIS", "CLN", "CRYO", "CSW", "DMS", "DPS", "ENC", "ESEN", "ESW", "HNDL", "HQ", "IRIS", "LGSF", "M1COAT", "M1CS", "M1S", "M2COAT", "M2S", "M3S", "MODHIS", "NFIRAOS", "OSS", "REFR", "SCMS", "SER", "SOSS", "STR", "SUM", "TCS", "TINS", "WFOS", "Container" ],
+  "Location" : [ {
+    "_type" : "AkkaLocation",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "akka"
+    },
+    "uri" : "path",
+    "metadata" : {
+      "key1" : "value"
+    }
+  }, {
+    "_type" : "HttpLocation",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "http"
+    },
+    "uri" : "path",
+    "metadata" : { }
+  }, {
+    "_type" : "TcpLocation",
+    "connection" : {
+      "prefix" : "TCS.filter.wheel",
+      "componentType" : "HCD",
+      "connectionType" : "tcp"
+    },
+    "uri" : "path",
+    "metadata" : { }
+  } ]
+}
