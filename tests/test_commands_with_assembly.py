@@ -99,20 +99,20 @@ class MyComponentHandlers(ComponentHandlers):
         # encoder = command.get("encoder").values[0]
         # self.log.debug(f"filter = {filt}, encoder = {encoder}")
 
-        if command.commandName == "LongRunningCommand":
+        if command.commandName.name == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
             return Started(runId, "Long running task in progress..."), task
-        elif command.commandName == "SimpleCommand":
+        elif command.commandName.name == "SimpleCommand":
             return Completed(runId), None
-        elif command.commandName == "ResultCommand":
+        elif command.commandName.name == "ResultCommand":
             result = Result([Parameter("myValue", KeyType.DoubleKey, [42.0])])
             return Completed(runId, result), None
-        elif command.commandName == "ErrorCommand":
+        elif command.commandName.name == "ErrorCommand":
             return Error(runId, "Error command received"), None
-        elif command.commandName == "InvalidCommand":
+        elif command.commandName.name == "InvalidCommand":
             return Invalid(runId, MissingKeyIssue("Missing required key XXX")), None
         else:
-            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName}")), None
+            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName.name}")), None
 
     def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
         """

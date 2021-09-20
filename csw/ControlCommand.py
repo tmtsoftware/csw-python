@@ -3,6 +3,12 @@ from typing import List
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
+@dataclass
+class CommandName:
+    """
+    A wrapper class representing the name of a Command
+    """
+    name: str
 
 @dataclass
 class ControlCommand:
@@ -10,7 +16,7 @@ class ControlCommand:
     Represents a CSW command.
     """
     source: Prefix
-    commandName: str
+    commandName: CommandName
     maybeObsId: List[str]
     paramSet: List[Parameter]
 
@@ -22,7 +28,7 @@ class ControlCommand:
         """
         typ = obj["_type"]
         source = Prefix.from_str(obj['source'])
-        commandName = obj['commandName']
+        commandName = CommandName(obj['commandName'])
         maybeObsId = obj['maybeObsId'] if 'maybeObsId' in obj else ""
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
         assert (typ in {"Setup", "Observe"})
@@ -40,7 +46,7 @@ class ControlCommand:
         d = {
             '_type': self.__class__.__name__,
             'source': str(self.source),
-            'commandName': self.commandName,
+            'commandName': self.commandName.name,
             'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }
         if len(self.maybeObsId) != 0:

@@ -52,16 +52,16 @@ class MyComponentHandlers(ComponentHandlers):
         # result = Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])])
         # return Completed(runId, result), None
 
-        if command.commandName == "LongRunningCommand":
+        if command.commandName.name == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
             return Started(runId, "Long running task in progress..."), task
-        elif command.commandName == "SimpleCommand":
+        elif command.commandName.name == "SimpleCommand":
             return Completed(runId), None
-        elif command.commandName == "ResultCommand":
+        elif command.commandName.name == "ResultCommand":
             result = Result([Parameter("myValue", KeyType.DoubleKey, [42.0])])
             return Completed(runId, result), None
         else:
-            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName}")), None
+            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName.name}")), None
 
     def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
         """

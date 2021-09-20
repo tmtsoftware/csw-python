@@ -10,9 +10,11 @@ import json
 from csw.Prefix import Prefix
 
 # Ignore generated functions in API docs
+# noinspection SpellCheckingInspection
 __pdoc__ = {}
 
 
+# noinspection SpellCheckingInspection
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f"{className}.from_dict"] = False
     __pdoc__[f"{className}.from_json"] = False
@@ -59,6 +61,7 @@ _pdocIgnoreGenerated("ConnectionInfo")
 class ComponentId:
     prefix: str
     componentType: str
+
 
 @dataclass_json
 @dataclass
@@ -174,6 +177,7 @@ class HttpRegistration(Registration):
     metadata: dict = field(default_factory=dict)
     _type: str = "HttpRegistration"
 
+
 @dataclass_json
 @dataclass
 class AkkaRegistration(Registration):
@@ -199,20 +203,20 @@ class TcpRegistration(Registration):
     _type: str = "TcpRegistration"
 
 
+# noinspection PyProtectedMember
 class LocationService:
     log = structlog.get_logger()
     baseUri = "http://127.0.0.1:7654/"
     postUri = f"{baseUri}post-endpoint"
     wsUri = f"{baseUri}websocket-endpoint"
 
-    # {"_type":"Register","registration":{"_type":"AkkaRegistration","connection":{"prefix":"CSW.testakkaservice_1","componentType":"service","connectionType":"akka"},"actorRefURI":"akka://TestAkkaServiceApp@192.168.178.32:40221/user/TestAkkaService1#1774679661"}}
-    #
     def register(self, registration: Registration) -> ConnectionInfo:
         """
         Registers a connection.
 
         Args:
-            registration (Registration): the Registration holding the connection and it's corresponding location to register with LocationService
+            registration (Registration): the Registration holding the connection and it's corresponding location to
+            register with LocationService
 
         Returns: ConnectionInfo
             an object describing the connection
@@ -239,6 +243,14 @@ class LocationService:
         if not r.ok:
             raise Exception(r.text)
 
+    def _postJson(self, jsonBody: str) -> Location:
+        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        if not r.ok:
+            raise Exception(r.text)
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            return Location._makeLocation(maybeResult[0])
+
     def find(self, connection: ConnectionInfo) -> Location:
         """
         Resolves the location for a connection from the local cache
@@ -249,13 +261,7 @@ class LocationService:
         Returns: Location
             the Location
         """
-        jsonBody = f'{{"_type": "Find", "connection": {connection.to_json()}}}'
-        r = requests.post(self.postUri, json=json.loads(jsonBody))
-        if not r.ok:
-            raise Exception(r.text)
-        maybeResult = json.loads(r.text)
-        if len(maybeResult) != 0:
-            return Location._makeLocation(maybeResult[0])
+        return self._postJson(f'{{"_type": "Find", "connection": {connection.to_json()}}}')
 
     # "within":"2 seconds"}}
     def resolve(self, connection: ConnectionInfo, withinSecs: int = "5") -> Location:
@@ -271,13 +277,7 @@ class LocationService:
             the Location
         """
         resolveInfo = ResolveInfo("Resolve", connection, f"{withinSecs} seconds")
-        jsonBody = resolveInfo.to_json()
-        r = requests.post(self.postUri, json=json.loads(jsonBody))
-        if not r.ok:
-            raise Exception(r.text)
-        maybeResult = json.loads(r.text)
-        if len(maybeResult) != 0:
-            return Location._makeLocation(maybeResult[0])
+        return self._postJson(resolveInfo.to_json())
 
     @staticmethod
     def _list(jsonBody: str) -> List[Location]:
