@@ -24,12 +24,14 @@ from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ControlCommand import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 # noinspection PyTypeChecker,PyBroadException
 class MyComponentHandlers(ComponentHandlers):
     log = structlog.get_logger()
-    prefix = "CSW.pycswTest"
+    prefix = Prefix(Subsystems.CSW, "pycswTest")
     commandServer: CommandServer = None
     dir = pathlib.Path(__file__).parent.absolute()
     outFileName = "PyTestAssemblyCommandResponses.out"

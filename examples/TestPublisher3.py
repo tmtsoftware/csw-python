@@ -5,6 +5,9 @@ from csw.Event import SystemEvent
 from csw.EventPublisher import EventPublisher
 from csw.KeyType import KeyType
 from csw.Units import Units
+from csw.EventName import EventName
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 # Test publishing events
@@ -37,9 +40,11 @@ class TestPublisher3:
         coordsParam = Parameter("CoordParam", KeyType.CoordKey,
                                 [eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord, altAzCoord])
 
+        prefix = Prefix(Subsystems.CSW, "testassembly")
+        eventName = EventName("myAssemblyEvent")
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
-        event = SystemEvent("CSW.testassembly", "myAssemblyEvent", paramSet)
+        event = SystemEvent(prefix, eventName, paramSet)
         self.pub.publish(event)
 
 

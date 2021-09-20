@@ -45,12 +45,14 @@ from dataclasses_json import dataclass_json
 from csw.CommandResponseManager import CommandResponseManager
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ControlCommand import ControlCommand
+from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
 
 log = structlog.get_logger()
+
 
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f&#34;{className}.from_dict&#34;] = False
@@ -224,7 +226,7 @@ class CommandServer:
         return ws
 
     @staticmethod
-    def _registerWithLocationService(prefix: str, port: int):
+    def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug(&#34;Registering with location service using port &#34; + str(port))
         locationService = LocationService()
         connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
@@ -232,7 +234,7 @@ class CommandServer:
         # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
 
-    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
         &#34;&#34;&#34;
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
         so that CSW components can locate it and send commands to it.
@@ -269,7 +271,7 @@ class CommandServer:
 <dl>
 <dt id="csw.CommandServer.CommandServer"><code class="flex name class">
 <span>class <span class="ident">CommandServer</span></span>
-<span>(</span><span>prefix: str, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 8082)</span>
+<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 8082)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
@@ -350,7 +352,7 @@ subsystem names and name is the name of the command server</dd>
         return ws
 
     @staticmethod
-    def _registerWithLocationService(prefix: str, port: int):
+    def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug(&#34;Registering with location service using port &#34; + str(port))
         locationService = LocationService()
         connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
@@ -358,7 +360,7 @@ subsystem names and name is the name of the command server</dd>
         # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
 
-    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
         &#34;&#34;&#34;
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
         so that CSW components can locate it and send commands to it.

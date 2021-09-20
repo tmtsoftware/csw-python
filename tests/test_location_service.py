@@ -1,6 +1,8 @@
 import structlog
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 # Demonstrate usage of the Python Location Service API
@@ -30,7 +32,8 @@ def test_location_service():
         log.debug("    " + str(i))
 
     # Register a connection
-    connection = ConnectionInfo("csw.myComp", ComponentType.Service.value, ConnectionType.HttpType.value)
+    prefix = Prefix(Subsystems.CSW, "myComp")
+    connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
     reg = HttpRegistration(connection, 8080, path="myservice/test")
     regResult = locationService.register(reg)
     log.debug("\nRegistration result: " + str(regResult))

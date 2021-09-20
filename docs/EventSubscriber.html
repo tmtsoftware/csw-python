@@ -30,7 +30,7 @@
 
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-
+from csw.EventKey import EventKey
 
 class EventSubscriber:
 
@@ -43,28 +43,30 @@ class EventSubscriber:
         event = Event._fromDict(cbor2.loads(data))
         callback(event)
 
-    def subscribe(self, eventKeyList: list, callback):
+    def subscribe(self, eventKeyList: list[EventKey], callback):
         &#34;&#34;&#34;
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
         Args:
-            eventKeyList (list): list of event key (Strings) to subscribe to
+            eventKeyList (list[EventKey]): list of event EventKey to subscribe to
             callback (function): function to be called when event updates. Should take Event and return void
 
         Returns: PubSubWorkerThread
             subscription thread. Use .stop() method to stop subscription.
         &#34;&#34;&#34;
-        return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+        keyList = list(map(lambda k: str(k), eventKeyList))
+        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
 
-    def unsubscribe(self, eventKeyList: list):
+    def unsubscribe(self, eventKeyList: list[EventKey]):
         &#34;&#34;&#34;
         Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
         Args:
-            eventKeyList (list): list of event key (Strings) to unsubscribe from
+            eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         &#34;&#34;&#34;
-        return self.__redis.unsubscribe(eventKeyList)
+        keyList = list(map(lambda k: str(k), eventKeyList))
+        return self.__redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -94,17 +96,17 @@ class EventSubscriber:
     #     &#34;&#34;&#34;
     #     return self.__redis.pUnsubscribe(eventKeyList)
 
-    def get(self, eventKey: str):
+    def get(self, eventKey: EventKey):
         &#34;&#34;&#34;
         Get an event from the Event Service
 
         Args:
-            eventKey (str): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
+            eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
 
         Returns: Event
             Event obtained from Event Service, decoded into a Event
         &#34;&#34;&#34;
-        data = self.__redis.get(eventKey)
+        data = self.__redis.get(str(eventKey))
         event = Event._fromDict(cbor2.loads(data))
         return event</code></pre>
 </details>
@@ -138,28 +140,30 @@ class EventSubscriber:
         event = Event._fromDict(cbor2.loads(data))
         callback(event)
 
-    def subscribe(self, eventKeyList: list, callback):
+    def subscribe(self, eventKeyList: list[EventKey], callback):
         &#34;&#34;&#34;
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
         Args:
-            eventKeyList (list): list of event key (Strings) to subscribe to
+            eventKeyList (list[EventKey]): list of event EventKey to subscribe to
             callback (function): function to be called when event updates. Should take Event and return void
 
         Returns: PubSubWorkerThread
             subscription thread. Use .stop() method to stop subscription.
         &#34;&#34;&#34;
-        return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+        keyList = list(map(lambda k: str(k), eventKeyList))
+        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
 
-    def unsubscribe(self, eventKeyList: list):
+    def unsubscribe(self, eventKeyList: list[EventKey]):
         &#34;&#34;&#34;
         Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
         Args:
-            eventKeyList (list): list of event key (Strings) to unsubscribe from
+            eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         &#34;&#34;&#34;
-        return self.__redis.unsubscribe(eventKeyList)
+        keyList = list(map(lambda k: str(k), eventKeyList))
+        return self.__redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -189,30 +193,30 @@ class EventSubscriber:
     #     &#34;&#34;&#34;
     #     return self.__redis.pUnsubscribe(eventKeyList)
 
-    def get(self, eventKey: str):
+    def get(self, eventKey: EventKey):
         &#34;&#34;&#34;
         Get an event from the Event Service
 
         Args:
-            eventKey (str): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
+            eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
 
         Returns: Event
             Event obtained from Event Service, decoded into a Event
         &#34;&#34;&#34;
-        data = self.__redis.get(eventKey)
+        data = self.__redis.get(str(eventKey))
         event = Event._fromDict(cbor2.loads(data))
         return event</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
 <dt id="csw.EventSubscriber.EventSubscriber.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, eventKey: str)</span>
+<span>def <span class="ident">get</span></span>(<span>self, eventKey: <a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get an event from the Event Service</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>eventKey</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>eventKey</code></strong> :&ensp;<code>EventKey</code></dt>
 <dd>String specifying Redis key for event.
 Should be source prefix + "." + event name.</dd>
 </dl>
@@ -222,17 +226,17 @@ Event obtained from Event Service, decoded into a Event</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, eventKey: str):
+<pre><code class="python">def get(self, eventKey: EventKey):
     &#34;&#34;&#34;
     Get an event from the Event Service
 
     Args:
-        eventKey (str): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
+        eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
 
     Returns: Event
         Event obtained from Event Service, decoded into a Event
     &#34;&#34;&#34;
-    data = self.__redis.get(eventKey)
+    data = self.__redis.get(str(eventKey))
     event = Event._fromDict(cbor2.loads(data))
     return event</code></pre>
 </details>
@@ -245,8 +249,8 @@ Event obtained from Event Service, decoded into a Event</p></div>
 to be called when an event in the list has its value updated.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list</code></dt>
-<dd>list of event key (Strings) to subscribe to</dd>
+<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list[EventKey]</code></dt>
+<dd>list of event EventKey to subscribe to</dd>
 <dt><strong><code>callback</code></strong> :&ensp;<code>function</code></dt>
 <dd>function to be called when event updates. Should take Event and return void</dd>
 </dl>
@@ -256,19 +260,20 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def subscribe(self, eventKeyList: list, callback):
+<pre><code class="python">def subscribe(self, eventKeyList: list[EventKey], callback):
     &#34;&#34;&#34;
     Start a subscription to system events in event service, specifying a callback
     to be called when an event in the list has its value updated.
 
     Args:
-        eventKeyList (list): list of event key (Strings) to subscribe to
+        eventKeyList (list[EventKey]): list of event EventKey to subscribe to
         callback (function): function to be called when event updates. Should take Event and return void
 
     Returns: PubSubWorkerThread
         subscription thread. Use .stop() method to stop subscription.
     &#34;&#34;&#34;
-    return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))</code></pre>
+    keyList = list(map(lambda k: str(k), eventKeyList))
+    return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))</code></pre>
 </details>
 </dd>
 <dt id="csw.EventSubscriber.EventSubscriber.unsubscribe"><code class="name flex">
@@ -278,21 +283,22 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
 <div class="desc"><p>Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list</code></dt>
-<dd>list of event key (Strings) to unsubscribe from</dd>
+<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list[EventKey]</code></dt>
+<dd>list of EventKeys to unsubscribe from</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def unsubscribe(self, eventKeyList: list):
+<pre><code class="python">def unsubscribe(self, eventKeyList: list[EventKey]):
     &#34;&#34;&#34;
     Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
     Args:
-        eventKeyList (list): list of event key (Strings) to unsubscribe from
+        eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
     &#34;&#34;&#34;
-    return self.__redis.unsubscribe(eventKeyList)</code></pre>
+    keyList = list(map(lambda k: str(k), eventKeyList))
+    return self.__redis.unsubscribe(keyList)</code></pre>
 </details>
 </dd>
 </dl>

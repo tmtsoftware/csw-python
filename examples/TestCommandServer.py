@@ -10,10 +10,12 @@ from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
 from csw.KeyType import KeyType
 from csw.Units import Units
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 class MyComponentHandlers(ComponentHandlers):
-    prefix = "CSW.pycswTest"
+    prefix = Prefix(Subsystems.CSW, "pycswTest")
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(3)

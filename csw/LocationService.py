@@ -2,14 +2,17 @@ from typing import List
 from dataclasses import dataclass, field
 
 import structlog
-from dataclasses_json import dataclass_json
+from dataclasses_json import dataclass_json, config
 from enum import Enum
 from multipledispatch import dispatch
 import requests
 import json
+from csw.Prefix import Prefix
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
+
+
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f"{className}.from_dict"] = False
     __pdoc__[f"{className}.from_json"] = False
@@ -43,15 +46,29 @@ class ConnectionType(Enum):
 
 
 _pdocIgnoreGenerated("ConnectionInfo")
+
+
+def _decodePrefix(prefix: str):
+    return Prefix.from_str(prefix)
+
+def _encodePrefix(prefix: Prefix):
+    return str(prefix)
+
+
 @dataclass_json
 @dataclass
 class ConnectionInfo:
-    prefix: str
+    prefix: Prefix = field(
+        metadata=config(
+            encoder=_encodePrefix,
+            decoder=_decodePrefix)
+    )
     componentType: str
     connectionType: str
 
-
 _pdocIgnoreGenerated("ResolveInfo")
+
+
 @dataclass_json
 @dataclass
 class ResolveInfo:
@@ -59,7 +76,10 @@ class ResolveInfo:
     connection: ConnectionInfo
     within: str
 
+
 _pdocIgnoreGenerated("Location")
+
+
 @dataclass_json
 @dataclass
 class Location:
@@ -83,6 +103,8 @@ class Location:
 
 
 _pdocIgnoreGenerated("AkkaLocation")
+
+
 @dataclass_json
 @dataclass
 class AkkaLocation(Location):
@@ -90,6 +112,8 @@ class AkkaLocation(Location):
 
 
 _pdocIgnoreGenerated("TcpLocation")
+
+
 @dataclass_json
 @dataclass
 class TcpLocation(Location):
@@ -97,6 +121,8 @@ class TcpLocation(Location):
 
 
 _pdocIgnoreGenerated("HttpLocation")
+
+
 @dataclass_json
 @dataclass
 class HttpLocation(Location):
@@ -104,6 +130,8 @@ class HttpLocation(Location):
 
 
 _pdocIgnoreGenerated("Registration")
+
+
 @dataclass_json
 @dataclass
 class Registration:
@@ -115,6 +143,8 @@ class Registration:
 
 
 _pdocIgnoreGenerated("NetworkType")
+
+
 @dataclass_json
 @dataclass
 class NetworkType:
@@ -123,7 +153,10 @@ class NetworkType:
     """
     _type: str
 
+
 _pdocIgnoreGenerated("HttpRegistration")
+
+
 @dataclass_json
 @dataclass
 class HttpRegistration(Registration):
@@ -136,6 +169,8 @@ class HttpRegistration(Registration):
 
 
 _pdocIgnoreGenerated("TcpRegistration")
+
+
 @dataclass_json
 @dataclass
 class TcpRegistration(Registration):
@@ -196,6 +231,7 @@ class LocationService:
             the Location
         """
         jsonBody = f'{{"_type": "Find", "connection": {connection.to_json()}}}'
+        print(f"XXX json = {jsonBody}")
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
@@ -285,15 +321,15 @@ class LocationService:
         jsonBody = f'{{"_type": "ListByConnectionType", "connectionType": "{connectionType.value}"}}'
         return self._list(jsonBody)
 
-    def listByPrefix(self, prefix: str) -> List[Location]:
+    def listByPrefix(self, prefix: Prefix) -> List[Location]:
         """
         Lists all locations with the given prefix
 
         Args:
-            prefix (str): restrict result to this prefix
+            prefix (Prefix): restrict result to this prefix
 
         Returns: List[Location]
             list of locations
         """
-        jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{prefix}"}}'
+        jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{str(prefix)}"}}'
         return self._list(jsonBody)

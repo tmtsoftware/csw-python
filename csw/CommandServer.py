@@ -17,12 +17,14 @@ from dataclasses_json import dataclass_json
 from csw.CommandResponseManager import CommandResponseManager
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ControlCommand import ControlCommand
+from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
 
 log = structlog.get_logger()
+
 
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f"{className}.from_dict"] = False
@@ -196,7 +198,7 @@ class CommandServer:
         return ws
 
     @staticmethod
-    def _registerWithLocationService(prefix: str, port: int):
+    def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug("Registering with location service using port " + str(port))
         locationService = LocationService()
         connection = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.HttpType.value)
@@ -204,7 +206,7 @@ class CommandServer:
         # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
 
-    def __init__(self, prefix: str, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
         """
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
         so that CSW components can locate it and send commands to it.

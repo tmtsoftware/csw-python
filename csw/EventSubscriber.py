@@ -2,7 +2,7 @@ import cbor2
 
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
-
+from csw.EventKey import EventKey
 
 class EventSubscriber:
 
@@ -15,28 +15,30 @@ class EventSubscriber:
         event = Event._fromDict(cbor2.loads(data))
         callback(event)
 
-    def subscribe(self, eventKeyList: list, callback):
+    def subscribe(self, eventKeyList: list[EventKey], callback):
         """
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
         Args:
-            eventKeyList (list): list of event key (Strings) to subscribe to
+            eventKeyList (list[EventKey]): list of event EventKey to subscribe to
             callback (function): function to be called when event updates. Should take Event and return void
 
         Returns: PubSubWorkerThread
             subscription thread. Use .stop() method to stop subscription.
         """
-        return self.__redis.subscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+        keyList = list(map(lambda k: str(k), eventKeyList))
+        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
 
-    def unsubscribe(self, eventKeyList: list):
+    def unsubscribe(self, eventKeyList: list[EventKey]):
         """
         Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
         Args:
-            eventKeyList (list): list of event key (Strings) to unsubscribe from
+            eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         """
-        return self.__redis.unsubscribe(eventKeyList)
+        keyList = list(map(lambda k: str(k), eventKeyList))
+        return self.__redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -66,16 +68,16 @@ class EventSubscriber:
     #     """
     #     return self.__redis.pUnsubscribe(eventKeyList)
 
-    def get(self, eventKey: str):
+    def get(self, eventKey: EventKey):
         """
         Get an event from the Event Service
 
         Args:
-            eventKey (str): String specifying Redis key for event.  Should be source prefix + "." + event name.
+            eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + "." + event name.
 
         Returns: Event
             Event obtained from Event Service, decoded into a Event
         """
-        data = self.__redis.get(eventKey)
+        data = self.__redis.get(str(eventKey))
         event = Event._fromDict(cbor2.loads(data))
         return event

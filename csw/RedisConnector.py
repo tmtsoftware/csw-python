@@ -6,6 +6,8 @@ from typing import List
 from redis.sentinel import Sentinel
 
 from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, LocationService
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 class RedisConnector:
@@ -14,7 +16,8 @@ class RedisConnector:
         """
         Events are posted to Redis. This is internal class used to access Redis.
         """
-        conn = ConnectionInfo("CSW.EventServer", ComponentType.Service.value, ConnectionType.TcpType.value)
+        prefix = Prefix(Subsystems.CSW, "EventServer")
+        conn = ConnectionInfo(prefix, ComponentType.Service.value, ConnectionType.TcpType.value)
         loc = LocationService().find(conn)
         uri = urlparse(loc.uri)
         sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)

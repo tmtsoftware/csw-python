@@ -11,6 +11,10 @@ from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
 from csw.Parameter import Parameter
 from csw.Event import SystemEvent
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
+from csw.EventName import EventName
+from csw.EventKey import EventKey
 
 
 class TestEventPublisher:
@@ -23,9 +27,9 @@ class TestEventPublisher:
         pub = EventPublisher()
         sub = EventSubscriber()
 
-        prefix = "CSW.assembly"
-        eventName = "test_event"
-        eventKey = prefix + "." + eventName
+        prefix = Prefix(Subsystems.CSW, "assembly")
+        eventName = EventName("test_event")
+        eventKey = EventKey(prefix, eventName)
         keyName = "testEventValue"
         keyType = KeyType.IntKey
         values = [42]
@@ -44,7 +48,7 @@ class TestEventPublisher:
 
     def callback(self, systemEvent):
         self.count = self.count + 1
-        self.log.debug(f"Received system event '{systemEvent.eventName}'")
+        self.log.debug(f"Received system event '{systemEvent.eventName.name}'")
         for i in systemEvent.paramSet:
             self.log.debug(f"    with values: {i.keyName}: {i.values}")
         if systemEvent.isInvalid():

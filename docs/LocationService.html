@@ -35,6 +35,7 @@ from enum import Enum
 from multipledispatch import dispatch
 import requests
 import json
+from csw.Prefix import Prefix
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
@@ -74,7 +75,7 @@ _pdocIgnoreGenerated(&#34;ConnectionInfo&#34;)
 @dataclass_json
 @dataclass
 class ConnectionInfo:
-    prefix: str
+    prefix: Prefix
     componentType: str
     connectionType: str
 
@@ -313,7 +314,7 @@ class LocationService:
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByConnectionType&#34;, &#34;connectionType&#34;: &#34;{connectionType.value}&#34;}}&#39;
         return self._list(jsonBody)
 
-    def listByPrefix(self, prefix: str) -&gt; List[Location]:
+    def listByPrefix(self, prefix: Prefix) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists all locations with the given prefix
 
@@ -421,10 +422,10 @@ class AkkaLocation(Location):
 </dd>
 <dt id="csw.LocationService.ConnectionInfo"><code class="flex name class">
 <span>class <span class="ident">ConnectionInfo</span></span>
-<span>(</span><span>prefix: str, componentType: str, connectionType: str)</span>
+<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, componentType: str, connectionType: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>ConnectionInfo(prefix: str, componentType: str, connectionType: str)</p></div>
+<div class="desc"><p>ConnectionInfo(prefix: csw.Prefix.Prefix, componentType: str, connectionType: str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -432,7 +433,7 @@ class AkkaLocation(Location):
 <pre><code class="python">@dataclass_json
 @dataclass
 class ConnectionInfo:
-    prefix: str
+    prefix: Prefix
     componentType: str
     connectionType: str</code></pre>
 </details>
@@ -446,7 +447,7 @@ class ConnectionInfo:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.LocationService.ConnectionInfo.prefix"><code class="name">var <span class="ident">prefix</span> : str</code></dt>
+<dt id="csw.LocationService.ConnectionInfo.prefix"><code class="name">var <span class="ident">prefix</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -771,7 +772,7 @@ class Location:
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByConnectionType&#34;, &#34;connectionType&#34;: &#34;{connectionType.value}&#34;}}&#39;
         return self._list(jsonBody)
 
-    def listByPrefix(self, prefix: str) -&gt; List[Location]:
+    def listByPrefix(self, prefix: Prefix) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists all locations with the given prefix
 
@@ -849,7 +850,7 @@ the Location</p></div>
 Dispatcher</p></div>
 </dd>
 <dt id="csw.LocationService.LocationService.listByPrefix"><code class="name flex">
-<span>def <span class="ident">listByPrefix</span></span>(<span>self, prefix: str) ‑> List[<a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>]</span>
+<span>def <span class="ident">listByPrefix</span></span>(<span>self, prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>) ‑> List[<a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Lists all locations with the given prefix</p>
@@ -864,7 +865,7 @@ list of locations</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def listByPrefix(self, prefix: str) -&gt; List[Location]:
+<pre><code class="python">def listByPrefix(self, prefix: Prefix) -&gt; List[Location]:
     &#34;&#34;&#34;
     Lists all locations with the given prefix
 

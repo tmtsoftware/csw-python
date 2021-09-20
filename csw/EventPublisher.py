@@ -16,6 +16,6 @@ class EventPublisher:
         Args:
             event (Event): Event to be published
         """
-        event_key = event.source + "." + event.eventName
+        event_key = str(event.source) + "." + event.eventName.name
         obj = cbor2.dumps(event._asDict())
         self.__redis.publish(event_key, obj)

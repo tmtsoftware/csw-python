@@ -1,16 +1,20 @@
 from csw.EventSubscriber import EventSubscriber
+from csw.Subsystem import Subsystems
+from csw.Prefix import Prefix
+from csw.EventName import EventName
+from csw.EventKey import EventKey
 
 
 # Test subscribing to events
 class TestSubscriber3:
 
     def __init__(self):
-        eventKey = "CSW.testassembly.myAssemblyEvent"
-        EventSubscriber().subscribe([eventKey], self.callback)
+        self.eventKey = EventKey(Prefix(Subsystems.CSW, "testassembly"), EventName("myAssemblyEvent"))
+        EventSubscriber().subscribe([self.eventKey], self.callback)
 
     @staticmethod
     def callback(systemEvent):
-        print(f"Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'")
+        print(f"Received system event '{systemEvent.eventName.name}' with event time: '{systemEvent.eventTime}'")
         for i in systemEvent.paramSet:
             print(f"    with values: {i.keyName}({i.keyType.name}): {i.values}")
         if systemEvent.isInvalid():

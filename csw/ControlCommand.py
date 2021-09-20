@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 from csw.Parameter import Parameter
+from csw.Prefix import Prefix
 
 
 @dataclass
@@ -8,7 +9,7 @@ class ControlCommand:
     """
     Represents a CSW command.
     """
-    source: str
+    source: Prefix
     commandName: str
     maybeObsId: List[str]
     paramSet: List[Parameter]
@@ -20,7 +21,7 @@ class ControlCommand:
         Returns a ControlCommand for the given dict.
         """
         typ = obj["_type"]
-        source = obj['source']
+        source = Prefix.from_str(obj['source'])
         commandName = obj['commandName']
         maybeObsId = obj['maybeObsId'] if 'maybeObsId' in obj else ""
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
@@ -38,7 +39,7 @@ class ControlCommand:
         """
         d = {
             '_type': self.__class__.__name__,
-            'source': self.source,
+            'source': str(self.source),
             'commandName': self.commandName,
             'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }

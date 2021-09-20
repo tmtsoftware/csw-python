@@ -18,6 +18,10 @@ from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, Mi
 from csw.Parameter import Parameter
 from csw.Event import SystemEvent
 from csw.EventPublisher import EventPublisher
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
+from csw.EventName import EventName
+from csw.EventKey import EventKey
 
 
 # Test that publishes events for an assembly running in the background (see ./testSupport).
@@ -37,7 +41,7 @@ class TestEventsWithAssembly:
     outFile = f"{dir}/{outFileName}"
     pub = EventPublisher()
     sub = EventSubscriber()
-    prefix = "CSW.TestPublisher"
+    prefix = Prefix(Subsystems.CSW, "TestPublisher")
 
     # def setup_method(self):
     #     self.cleanup()
@@ -56,9 +60,9 @@ class TestEventsWithAssembly:
         time.sleep(1.0)
         self.log.debug("Starting test...")
         thread = self.sub.subscribe(
-            [self.prefix + "." + "testEvent1",
-             self.prefix + "." + "testEvent2",
-             self.prefix + "." + "testEvent3"],
+            [EventKey(self.prefix, EventName("testEvent1")),
+             EventKey(self.prefix, EventName("testEvent2")),
+             EventKey(self.prefix, EventName("testEvent3"))],
             self.callback)
         try:
             self.publishEvent1()
@@ -71,7 +75,7 @@ class TestEventsWithAssembly:
             assert filecmp.cmp(self.inFile, self.tmpInFile, False)
             # compare file created by assembly with known good version
             assert filecmp.cmp(self.outFile, self.tmpOutFile, False)
-            self.log.debug("Event pub/sub tests passed")
+            self.log.info("Event pub/sub tests passed")
         finally:
             self.log.debug("Stopping subscriber...")
             thread.stop()
@@ -82,17 +86,19 @@ class TestEventsWithAssembly:
         values = [42.0]
         param = Parameter(keyName, keyType, values)
         paramSet = [param]
-        event = SystemEvent(self.prefix, "testEvent1", paramSet)
+        event = SystemEvent(self.prefix, EventName("testEvent1"), paramSet)
         self.log.debug(f"Publishing event {event}")
         self.pub.publish(event)
 
     def publishEvent2(self):
         intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
         intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.marcsec)
+        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                                    Units.marcsec)
         intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-        event = SystemEvent(self.prefix, "testEvent2", [intParam, intArrayParam, floatArrayParam, intMatrixParam])
+        paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
+        event = SystemEvent(self.prefix, EventName("testEvent2"), paramSet)
         self.pub.publish(event)
 
     def publishEvent3(self):
@@ -104,8 +110,10 @@ class TestEventsWithAssembly:
         booleanParam = Parameter("booleanValue", KeyType.BooleanKey, [True, False], Units.arcsec)
 
         intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.arcsec)
-        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.arcsec)
+        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                                    Units.arcsec)
+        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                                     Units.arcsec)
 
         byteArrayParam = Parameter("ByteArrayValue", KeyType.ByteArrayKey, [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
 
@@ -123,7 +131,7 @@ class TestEventsWithAssembly:
 
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
-        event = SystemEvent(self.prefix, "testEvent3", paramSet)
+        event = SystemEvent(self.prefix, EventName("testEvent3"), paramSet)
         self.pub.publish(event)
 
     # Event subscriber callback
@@ -133,7 +141,7 @@ class TestEventsWithAssembly:
         # but change the date and id for comparison
         systemEvent.eventId = "test"
         systemEvent.eventTime = EventTime(0, 0)
-        mode = "w" if (systemEvent.eventName == "testEvent1") else "a"
+        mode = "w" if (systemEvent.eventName.name == "testEvent1") else "a"
         f = open(self.tmpInFile, mode)
         jsonStr = str(systemEvent._asDict())
         f.write(f"{jsonStr}\n")

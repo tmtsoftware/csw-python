@@ -33,6 +33,8 @@ from abc import abstractmethod
 
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
+from csw.Prefix import Prefix
+from csw.EventName import EventName
 
 
 @dataclass
@@ -42,14 +44,14 @@ class Event:
     (Don&#39;t use this class directly: The system expects a SystemEvent or an ObserveEvent).
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
     &#34;&#34;&#34;
-    source: str
-    eventName: str
+    source: Prefix
+    eventName: EventName
     paramSet: List[Parameter]
     eventTime: EventTime = EventTime.fromSystem()
     eventId: str = str(uuid.uuid4())
@@ -73,10 +75,13 @@ class Event:
         assert (typ in {&#34;SystemEvent&#34;, &#34;ObserveEvent&#34;})
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
         eventTime = EventTime._fromDict(obj[&#39;eventTime&#39;])
+        prefix = Prefix.from_str(obj[&#39;source&#39;])
+        eventName = EventName(obj[&#39;eventName&#39;])
+        eventId = obj[&#39;eventId&#39;]
         if typ == &#39;SystemEvent&#39;:
-            return SystemEvent(obj[&#39;source&#39;], obj[&#39;eventName&#39;], paramSet, eventTime, obj[&#39;eventId&#39;])
+            return SystemEvent(prefix, eventName, paramSet, eventTime, eventId)
         else:
-            return ObserveEvent(obj[&#39;source&#39;], obj[&#39;eventName&#39;], paramSet, eventTime, obj[&#39;eventId&#39;])
+            return ObserveEvent(prefix, eventName, paramSet, eventTime, eventId)
 
     def _asDict(self):
         &#34;&#34;&#34;
@@ -86,10 +91,10 @@ class Event:
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;eventId&#39;: self.eventId,
-            &#39;source&#39;: self.source,
-            &#39;eventName&#39;: self.eventName,
+            &#39;source&#39;: str(self.source),
+            &#39;eventName&#39;: self.eventName.name,
             &#39;eventTime&#39;: self.eventTime._asDict(),
-            &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
 
     def isInvalid(self):
@@ -131,8 +136,8 @@ class SystemEvent(Event):
     An event type for publishing changes in system data.
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
@@ -149,8 +154,8 @@ class ObserveEvent(Event):
     An event type fired when an observation has taken place.
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
@@ -172,16 +177,16 @@ class ObserveEvent(Event):
 <dl>
 <dt id="csw.Event.Event"><code class="flex name class">
 <span>class <span class="ident">Event</span></span>
-<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1631895554, nanos=679986000), eventId: str = 'e96b553a-de91-42f1-9b03-d87a5604983a')</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1631912003, nanos=876799106), eventId: str = '87fa0e7d-8429-4138-a922-d4331eeed704')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Abstract base class that creates an Event that can be published to the event service
 (Don't use this class directly: The system expects a SystemEvent or an ObserveEvent).</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>source</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -201,14 +206,14 @@ class Event:
     (Don&#39;t use this class directly: The system expects a SystemEvent or an ObserveEvent).
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
     &#34;&#34;&#34;
-    source: str
-    eventName: str
+    source: Prefix
+    eventName: EventName
     paramSet: List[Parameter]
     eventTime: EventTime = EventTime.fromSystem()
     eventId: str = str(uuid.uuid4())
@@ -232,10 +237,13 @@ class Event:
         assert (typ in {&#34;SystemEvent&#34;, &#34;ObserveEvent&#34;})
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
         eventTime = EventTime._fromDict(obj[&#39;eventTime&#39;])
+        prefix = Prefix.from_str(obj[&#39;source&#39;])
+        eventName = EventName(obj[&#39;eventName&#39;])
+        eventId = obj[&#39;eventId&#39;]
         if typ == &#39;SystemEvent&#39;:
-            return SystemEvent(obj[&#39;source&#39;], obj[&#39;eventName&#39;], paramSet, eventTime, obj[&#39;eventId&#39;])
+            return SystemEvent(prefix, eventName, paramSet, eventTime, eventId)
         else:
-            return ObserveEvent(obj[&#39;source&#39;], obj[&#39;eventName&#39;], paramSet, eventTime, obj[&#39;eventId&#39;])
+            return ObserveEvent(prefix, eventName, paramSet, eventTime, eventId)
 
     def _asDict(self):
         &#34;&#34;&#34;
@@ -245,10 +253,10 @@ class Event:
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;eventId&#39;: self.eventId,
-            &#39;source&#39;: self.source,
-            &#39;eventName&#39;: self.eventName,
+            &#39;source&#39;: str(self.source),
+            &#39;eventName&#39;: self.eventName.name,
             &#39;eventTime&#39;: self.eventTime._asDict(),
-            &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
 
     def isInvalid(self):
@@ -294,7 +302,7 @@ class Event:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.Event.eventName"><code class="name">var <span class="ident">eventName</span> : str</code></dt>
+<dt id="csw.Event.Event.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -306,7 +314,7 @@ class Event:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.Event.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dt id="csw.Event.Event.source"><code class="name">var <span class="ident">source</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -415,15 +423,15 @@ the parameter, if found</p></div>
 </dd>
 <dt id="csw.Event.ObserveEvent"><code class="flex name class">
 <span>class <span class="ident">ObserveEvent</span></span>
-<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1631895554, nanos=679986000), eventId: str = 'e96b553a-de91-42f1-9b03-d87a5604983a')</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1631912003, nanos=876799106), eventId: str = '87fa0e7d-8429-4138-a922-d4331eeed704')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An event type fired when an observation has taken place.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>source</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -442,8 +450,8 @@ class ObserveEvent(Event):
     An event type fired when an observation has taken place.
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
@@ -463,7 +471,7 @@ class ObserveEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.ObserveEvent.eventName"><code class="name">var <span class="ident">eventName</span> : str</code></dt>
+<dt id="csw.Event.ObserveEvent.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -475,7 +483,7 @@ class ObserveEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.ObserveEvent.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dt id="csw.Event.ObserveEvent.source"><code class="name">var <span class="ident">source</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -493,15 +501,15 @@ class ObserveEvent(Event):
 </dd>
 <dt id="csw.Event.SystemEvent"><code class="flex name class">
 <span>class <span class="ident">SystemEvent</span></span>
-<span>(</span><span>source: str, eventName: str, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1631895554, nanos=679986000), eventId: str = 'e96b553a-de91-42f1-9b03-d87a5604983a')</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1631912003, nanos=876799106), eventId: str = '87fa0e7d-8429-4138-a922-d4331eeed704')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An event type for publishing changes in system data.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>source</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -520,8 +528,8 @@ class SystemEvent(Event):
     An event type for publishing changes in system data.
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
@@ -541,7 +549,7 @@ class SystemEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.SystemEvent.eventName"><code class="name">var <span class="ident">eventName</span> : str</code></dt>
+<dt id="csw.Event.SystemEvent.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -553,7 +561,7 @@ class SystemEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.SystemEvent.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dt id="csw.Event.SystemEvent.source"><code class="name">var <span class="ident">source</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

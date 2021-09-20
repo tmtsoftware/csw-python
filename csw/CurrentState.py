@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 from csw.Parameter import Parameter
+from csw.Prefix import Prefix
 
 
 @dataclass
@@ -8,7 +9,7 @@ class CurrentState:
     """
     Represents the current state of a python based CSW component.
     """
-    prefix: str
+    prefix: Prefix
     stateName: str
     paramSet: List[Parameter]
 
@@ -18,7 +19,7 @@ class CurrentState:
         Returns a CurrentState for the given dict.
         """
         typ = obj['_type']
-        prefix = obj['prefix']
+        prefix = Prefix.from_str(obj['prefix'])
         stateName = obj['stateName']
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
         return CurrentState(prefix, stateName, paramSet)
@@ -29,7 +30,7 @@ class CurrentState:
             a dictionary corresponding to this object
         """
         d = {
-            'prefix': self.prefix,
+            'prefix': str(self.prefix),
             'stateName': self.stateName,
             'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }

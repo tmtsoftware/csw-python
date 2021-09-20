@@ -5,6 +5,8 @@ from abc import abstractmethod
 
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
+from csw.Prefix import Prefix
+from csw.EventName import EventName
 
 
 @dataclass
@@ -14,14 +16,14 @@ class Event:
     (Don't use this class directly: The system expects a SystemEvent or an ObserveEvent).
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
     """
-    source: str
-    eventName: str
+    source: Prefix
+    eventName: EventName
     paramSet: List[Parameter]
     eventTime: EventTime = EventTime.fromSystem()
     eventId: str = str(uuid.uuid4())
@@ -45,10 +47,13 @@ class Event:
         assert (typ in {"SystemEvent", "ObserveEvent"})
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
         eventTime = EventTime._fromDict(obj['eventTime'])
+        prefix = Prefix.from_str(obj['source'])
+        eventName = EventName(obj['eventName'])
+        eventId = obj['eventId']
         if typ == 'SystemEvent':
-            return SystemEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
+            return SystemEvent(prefix, eventName, paramSet, eventTime, eventId)
         else:
-            return ObserveEvent(obj['source'], obj['eventName'], paramSet, eventTime, obj['eventId'])
+            return ObserveEvent(prefix, eventName, paramSet, eventTime, eventId)
 
     def _asDict(self):
         """
@@ -58,10 +63,10 @@ class Event:
         return {
             "_type": self.__class__.__name__,
             'eventId': self.eventId,
-            'source': self.source,
-            'eventName': self.eventName,
+            'source': str(self.source),
+            'eventName': self.eventName.name,
             'eventTime': self.eventTime._asDict(),
-            'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
+                'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }
 
     def isInvalid(self):
@@ -103,8 +108,8 @@ class SystemEvent(Event):
     An event type for publishing changes in system data.
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)
@@ -121,8 +126,8 @@ class ObserveEvent(Event):
     An event type fired when an observation has taken place.
 
     Args:
-        source (str): prefix representing source of the event
-        eventName (str): the name of event
+        source (Prefix): prefix representing source of the event
+        eventName (EventName): the name of event
         paramSet (list): list of Parameter (keys with values)
         eventTime (EventTime): the time the event was created (defaults to current time)
         eventId (str): event id (optional: Should leave empty unless received from event service)

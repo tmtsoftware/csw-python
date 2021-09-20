@@ -11,7 +11,7 @@ class TAITime:
     seconds: int
     nanos: int
 
-    def str(self):
+    def __str__(self):
         secs = self.seconds + self.nanos / 1e9
         dt = datetime.fromtimestamp(secs, timezone.utc)
         return dt.strftime('%Y-%m-%dT%H:%M:%S.%f')
