@@ -44,7 +44,8 @@ object TestAssemblyHandlers {
   private val eventNames = List(
     "testEvent1",
     "testEvent2",
-    "testEvent3"
+    "testEvent3",
+    "testEvent4"
   ).map(EventName).toSet
   private val eventKeys = eventNames.map(EventKey(prefix, _))
 

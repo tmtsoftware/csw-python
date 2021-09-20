@@ -6,6 +6,7 @@ import json
 import structlog
 from _pytest import pathlib
 
+from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.Subsystem import Subsystems
 from csw.Prefix import Prefix
@@ -67,3 +68,5 @@ class TestCswContract:
             data = json.load(json_file)
             for p in data['Units']:
                 assert (Units[p].name == p)
+            # for p in data['UTCTime']:
+            #     assert (UTCTime(p) == p)

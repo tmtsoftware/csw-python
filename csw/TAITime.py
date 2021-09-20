@@ -1,6 +1,7 @@
-from datetime import datetime,timezone
+from datetime import datetime, timezone
 from dataclasses import dataclass, asdict
 from astropy.time import Time
+from dateutil import parser
 
 
 @dataclass
@@ -22,6 +23,16 @@ class TAITime:
     @staticmethod
     def _fromDict(obj: dict):
         return TAITime(**obj)
+
+    @staticmethod
+    def from_str(timeStr: str):
+        """
+        Returns a TAITime given a string in ISO format (ex: "2021-09-20T18:44:12.419084072Z").
+        """
+        t = parser.isoparse(timeStr).timestamp()
+        seconds = int(t)
+        nanos = int((t - seconds) * 1e9)
+        return TAITime(seconds, nanos)
 
     @staticmethod
     def fromSystem():

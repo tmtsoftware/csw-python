@@ -6,6 +6,8 @@ import time
 import structlog
 from _pytest import pathlib
 
+from csw.TAITime import TAITime
+from csw.UTCTime import UTCTime
 from csw.KeyType import KeyType
 from csw.Units import Units
 from csw.EventSubscriber import EventSubscriber
@@ -52,8 +54,8 @@ class TestEventsWithAssembly:
     def cleanup(self):
         if os.path.exists(self.tmpInFile):
             os.remove(self.tmpInFile)
-        if os.path.exists(self.tmpOutFile):
-            os.remove(self.tmpOutFile)
+        # if os.path.exists(self.tmpOutFile):
+        #     os.remove(self.tmpOutFile)
 
     def test_pub_sub(self):
         time.sleep(1.0)
@@ -67,6 +69,7 @@ class TestEventsWithAssembly:
             self.publishEvent1()
             self.publishEvent2()
             self.publishEvent3()
+            self.publishEvent4()
             self.log.debug("Published three events...")
             # make sure assembly has time to write the file
             time.sleep(3)
@@ -131,6 +134,20 @@ class TestEventsWithAssembly:
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
         event = SystemEvent(self.prefix, EventName("testEvent3"), paramSet)
+        self.pub.publish(event)
+
+    def publishEvent4(self):
+        keyName = "assemblyEventValue"
+        keyType = KeyType.UTCTimeKey
+        values = [UTCTime.from_str("2021-09-20T20:43:35.419053077Z")]
+        param = Parameter(keyName, keyType, values)
+        keyName2 = "assemblyEventValue2"
+        keyType2 = KeyType.TAITimeKey
+        values2 = [TAITime.from_str("2021-09-20T18:44:12.419084072Z")]
+        param2 = Parameter(keyName2, keyType2, values2)
+        paramSet = [param, param2]
+        event = SystemEvent(self.prefix, EventName("testEvent4"), paramSet)
+        self.log.debug(f"Publishing event {event}")
         self.pub.publish(event)
 
     # Event subscriber callback
