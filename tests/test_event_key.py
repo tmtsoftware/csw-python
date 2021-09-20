@@ -1,6 +1,6 @@
 from csw.Subsystem import Subsystems
 from csw.Prefix import Prefix
-from csw.EventName import EventName
+from csw.Event import EventName
 from csw.EventKey import EventKey
 
 

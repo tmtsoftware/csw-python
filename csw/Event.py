@@ -6,8 +6,13 @@ from abc import abstractmethod
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
 from csw.Prefix import Prefix
-from csw.EventName import EventName
 
+@dataclass
+class EventName:
+    """
+    A wrapper class representing the name of an Event
+    """
+    name: str
 
 @dataclass
 class Event:

@@ -16,11 +16,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
     CometCoord, AltAzCoord
 from csw.Parameter import Parameter
-from csw.Event import SystemEvent
+from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
-from csw.EventName import EventName
 from csw.EventKey import EventKey
 
 

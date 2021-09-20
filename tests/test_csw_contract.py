@@ -6,6 +6,7 @@ import json
 import structlog
 from _pytest import pathlib
 
+from csw.Units import Units
 from csw.Subsystem import Subsystems
 from csw.Prefix import Prefix
 from csw.LocationService import ComponentType, ConnectionInfo, HttpRegistration, TcpRegistration, \
@@ -17,13 +18,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 class TestCswContract:
     log = structlog.get_logger()
 
-    # Validate against contract file produced by csw
+    # Validate against Location Service model contract file produced by csw
     def test_location_service_models(self):
         dir = pathlib.Path(__file__).parent.absolute()
-        with open(f"{dir}/location_models.json") as json_file:
+        with open(f"{dir}/location-models.json") as json_file:
             data = json.load(json_file)
             for p in data['ComponentType']:
-                assert (ComponentType[p].value == p)
+                assert (ComponentType[p].name == p)
             for p in data['Connection']:
                 connectionInfo = ConnectionInfo.from_dict(p)
                 self.log.debug(f"Connection: {connectionInfo}")
@@ -58,3 +59,11 @@ class TestCswContract:
                     loc = TcpLocation.from_dict(p)
                 self.log.debug(f"Location: {loc}")
                 assert (loc.to_dict() == p)
+
+    # Validate against Command Service model contract file produced by csw
+    def test_command_service_models(self):
+        dir = pathlib.Path(__file__).parent.absolute()
+        with open(f"{dir}/command-models.json") as json_file:
+            data = json.load(json_file)
+            for p in data['Units']:
+                assert (Units[p].name == p)

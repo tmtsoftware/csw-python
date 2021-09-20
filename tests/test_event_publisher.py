@@ -10,10 +10,9 @@ from csw.KeyType import KeyType
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
 from csw.Parameter import Parameter
-from csw.Event import SystemEvent
+from csw.Event import SystemEvent, EventName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
-from csw.EventName import EventName
 from csw.EventKey import EventKey
 
 

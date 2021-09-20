@@ -1,11 +1,10 @@
 from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
     CometCoord, AltAzCoord
 from csw.Parameter import Parameter
-from csw.Event import SystemEvent
+from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.KeyType import KeyType
 from csw.Units import Units
-from csw.EventName import EventName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
 
@@ -23,8 +22,10 @@ class TestPublisher3:
         booleanParam = Parameter("booleanValue", KeyType.BooleanKey, [True, False], Units.arcsec)
 
         intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.arcsec)
-        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]], Units.arcsec)
+        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                                    Units.arcsec)
+        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
+                                     Units.arcsec)
 
         byteArrayParam = Parameter("ByteArrayValue", KeyType.ByteArrayKey, [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
 
