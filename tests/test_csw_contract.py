@@ -89,4 +89,5 @@ class TestCswContract:
                         if key not in ['UTCTimeKey', 'TAITimeKey']:
                             assert (entry == Parameter._fromDict(entry)._asDict())
             for p in data["CommandIssue"]:
+                # Check that the CommandIssue subclass exists
                 assert (p['_type'] in self.commandIssueSubclasses)
