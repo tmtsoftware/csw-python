@@ -15,7 +15,7 @@ class TAITime:
     def __str__(self):
         secs = self.seconds + self.nanos / 1e9
         dt = datetime.fromtimestamp(secs, timezone.utc)
-        return dt.strftime('%Y-%m-%dT%H:%M:%S.%f')
+        return dt.strftime('%Y-%m-%dT%H:%M:%S.%f') + "Z"
 
     def _asDict(self):
         return asdict(self)

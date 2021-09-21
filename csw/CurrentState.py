@@ -1,3 +1,4 @@
+import traceback
 from dataclasses import dataclass
 from typing import List
 from csw.Parameter import Parameter
@@ -29,12 +30,15 @@ class CurrentState:
         Returns: dict
             a dictionary corresponding to this object
         """
-        d = {
-            'prefix': str(self.prefix),
-            'stateName': self.stateName,
-            'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
-        }
-        return d
+        try:
+            d = {
+                'prefix': str(self.prefix),
+                'stateName': self.stateName,
+                'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
+            }
+            return d
+        except Exception as ex:
+            traceback.print_exc()
 
     def get(self, keyName: str):
         """

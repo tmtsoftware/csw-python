@@ -20,3 +20,16 @@ generated API documentation.
 Run `make doc` to generate the user manual and API documentation for the Python classes. 
 Then open `build/csw/index.html`. 
 (Note: Requires that pdoc is installed: To install, run: `pip install pdoc`.)
+
+## Running the tests
+
+You can run the tests by typing `make test`.
+This creates the .venv directory, if it does not exist, and then runs the `runTests.sh` script,
+which does some checks and then uses pytest to run the tests.
+
+Some of the tests require that csw-services and a Scala based CSW command service application are running in the background.
+These are started in the runTests.sh script. 
+Once they are running, you can run all the tests with:
+```
+pipenv run python -m pytest tests
+```

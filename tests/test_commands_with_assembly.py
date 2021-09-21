@@ -15,6 +15,8 @@ from termcolor import colored
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from csw.TAITime import TAITime
+from csw.UTCTime import UTCTime
 from csw.KeyType import KeyType
 from csw.Units import Units
 from csw.Coords import ProperMotion, EqCoord
@@ -150,7 +152,10 @@ class MyComponentHandlers(ComponentHandlers):
                                     Units.marcsec)
         intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-        return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+        utcTimeParam = Parameter("UTCTimeValue", KeyType.UTCTimeKey, [UTCTime.from_str("2021-09-17T09:17:08.608242344Z")])
+        taiTimeParam = Parameter("TAITimeValue", KeyType.TAITimeKey, [TAITime.from_str("2021-09-17T09:17:45.610701219Z")])
+        params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
+        return [CurrentState(self.prefix, "PyCswState", params)]
 
 
 def test_command_server():

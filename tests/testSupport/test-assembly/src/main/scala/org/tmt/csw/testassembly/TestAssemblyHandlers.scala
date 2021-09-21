@@ -6,18 +6,11 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import csw.command.client.messages.TopLevelActorMessage
 import csw.framework.models.CswContext
 import csw.framework.scaladsl.ComponentHandlers
-import csw.location.api.models.{
-  ComponentId,
-  ComponentType,
-  Location,
-  LocationRemoved,
-  LocationUpdated,
-  TrackingEvent
-}
+import csw.location.api.models.{ComponentId, ComponentType, Location, LocationRemoved, LocationUpdated, TrackingEvent}
 import csw.logging.api.scaladsl.Logger
 import csw.params.commands.CommandResponse._
 import csw.params.commands.{CommandName, ControlCommand, Setup}
-import csw.time.core.models.UTCTime
+import csw.time.core.models.{TAITime, UTCTime}
 import csw.params.core.models.{Angle, Coords, Id, ProperMotion}
 import csw.params.events.{Event, EventKey, EventName, SystemEvent}
 import csw.params.core.formats.ParamCodecs._
@@ -28,13 +21,14 @@ import akka.util.Timeout
 import csw.command.client.CommandServiceFactory
 import csw.location.api.models.Connection.HttpConnection
 import csw.params.core.generics.{Key, KeyType}
-import csw.params.core.generics.KeyType.CoordKey
+import csw.params.core.generics.KeyType.{CoordKey, TAITimeKey, UTCTimeKey}
 import csw.params.core.models.Coords.EqFrame.FK5
 import csw.params.core.models.Coords.SolarSystemObject.Venus
 import csw.prefix.models.Prefix
 import csw.prefix.models.Subsystem.CSW
 import io.bullet.borer.Json
 
+import java.time.Instant
 import scala.concurrent.duration._
 
 object TestAssemblyHandlers {
@@ -99,16 +93,16 @@ object TestAssemblyHandlers {
 }
 
 /**
-  * Domain specific logic should be written in below handlers.
-  * This handlers gets invoked when component receives messages/commands from other component/entity.
-  * For example, if one component sends Submit(Setup(args)) command to TestHcd,
-  * This will be first validated in the supervisor and then forwarded to Component TLA which first invokes validateCommand hook
-  * and if validation is successful, then onSubmit hook gets invoked.
-  * You can find more information on this here : https://tmtsoftware.github.io/csw/commons/framework.html
-  */
+ * Domain specific logic should be written in below handlers.
+ * This handlers gets invoked when component receives messages/commands from other component/entity.
+ * For example, if one component sends Submit(Setup(args)) command to TestHcd,
+ * This will be first validated in the supervisor and then forwarded to Component TLA which first invokes validateCommand hook
+ * and if validation is successful, then onSubmit hook gets invoked.
+ * You can find more information on this here : https://tmtsoftware.github.io/csw/commons/framework.html
+ */
 class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
                            cswCtx: CswContext)
-    extends ComponentHandlers(ctx, cswCtx) {
+  extends ComponentHandlers(ctx, cswCtx) {
 
   import cswCtx._
 
@@ -137,7 +131,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   override def onLocationTrackingEvent(trackingEvent: TrackingEvent): Unit = {
     trackingEvent match {
       case LocationUpdated(location)
-          if location.connection == pythonConnection =>
+        if location.connection == pythonConnection =>
         sendCommandsToPython(location)
       case LocationRemoved(connection) if connection == pythonConnection =>
         log.info(s"XXX python based service was removed from Location Service")
@@ -146,8 +140,8 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   }
 
   override def validateCommand(
-      runId: Id,
-      controlCommand: ControlCommand): ValidateCommandResponse = Accepted(runId)
+                                runId: Id,
+                                controlCommand: ControlCommand): ValidateCommandResponse = Accepted(runId)
 
   override def onSubmit(runId: Id,
                         controlCommand: ControlCommand): SubmitResponse =
@@ -171,12 +165,9 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     import Coords._
 
     val basePosKey = CoordKey.make("BasePosition")
-    val cmdKey1: Key[Float] = KeyType.FloatKey.make("cmdValue")
-    val cmdKey1b: Key[Float] = KeyType.FloatKey.make("cmdValue")
-    val cmdKey3: Key[Int] =
-      KeyType.IntKey.make("cmdStructValue3")
-    val cmdKey4: Key[Byte] =
-      KeyType.ByteKey.make("cmdStructValue4")
+    val cmdKey = KeyType.FloatKey.make("cmdValue")
+    val utcTimeKey = UTCTimeKey.make("utcTimeValue")
+    val taiTimeKey = TAITimeKey.make("taiTimeValue")
 
     val pm = ProperMotion(0.5, 2.33)
     val eqCoord = EqCoord(
@@ -214,10 +205,13 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       cometCoord,
       altAzCoord
     )
+    //    val timeParam =
 
     Setup(componentInfo.prefix, CommandName(commandName), None)
       .add(posParam)
-      .add(cmdKey1b.set(1.0f, 2.0f, 3.0f))
+      .add(cmdKey.set(1.0f, 2.0f, 3.0f))
+      .add(utcTimeKey.set(UTCTime(Instant.parse("2021-09-17T09:17:08.608242344Z"))))
+      .add(taiTimeKey.set(TAITime(Instant.parse("2021-09-17T09:17:45.610701219Z"))))
   }
 
   // Send some test commands to the python based command service
@@ -292,8 +286,8 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       Await.ready(pythonService.oneway(onewayCommand), 5.seconds)
     } catch {
       case e: RuntimeException
-          if e.getMessage.startsWith(
-            "The http server closed the connection unexpectedly") =>
+        if e.getMessage.startsWith(
+          "The http server closed the connection unexpectedly") =>
       case e: Exception =>
         log.error("Error sending OneWay command to python test", ex = e)
     }

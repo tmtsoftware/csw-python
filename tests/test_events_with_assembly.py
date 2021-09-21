@@ -54,8 +54,8 @@ class TestEventsWithAssembly:
     def cleanup(self):
         if os.path.exists(self.tmpInFile):
             os.remove(self.tmpInFile)
-        # if os.path.exists(self.tmpOutFile):
-        #     os.remove(self.tmpOutFile)
+        if os.path.exists(self.tmpOutFile):
+            os.remove(self.tmpOutFile)
 
     def test_pub_sub(self):
         time.sleep(1.0)

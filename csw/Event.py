@@ -50,7 +50,7 @@ class Event:
         """
         typ = obj['_type']
         assert (typ in {"SystemEvent", "ObserveEvent"})
-        paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
+        paramSet = list(map(lambda p: Parameter._fromDict(p, True), obj['paramSet']))
         eventTime = EventTime._fromDict(obj['eventTime'])
         prefix = Prefix.from_str(obj['source'])
         eventName = EventName(obj['eventName'])
@@ -71,7 +71,7 @@ class Event:
             'source': str(self.source),
             'eventName': self.eventName.name,
             'eventTime': self.eventTime._asDict(),
-                'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
+                'paramSet': list(map(lambda p: p._asDict(True), self.paramSet))
         }
 
     def isInvalid(self):

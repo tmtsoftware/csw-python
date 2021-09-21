@@ -68,5 +68,8 @@ class TestCswContract:
             data = json.load(json_file)
             for p in data['Units']:
                 assert (Units[p].name == p)
-            # for p in data['UTCTime']:
-            #     assert (UTCTime(p) == p)
+            for p in data['UTCTime']:
+                t1 = UTCTime.from_str(p)
+                t2 = UTCTime.from_str(str(t1))
+                self.log.debug(f"XXX p = {p}, t1 = {t1}, t2 = {t2}, str(t1) = {str(t1)}, str(t2) = {str(t2)}")
+                assert (t1.seconds == t2.seconds)
