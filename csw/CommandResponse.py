@@ -126,8 +126,16 @@ class CommandIssue:
     reason: str
 
 
-class HcdBusyIssue(CommandIssue):
+class IdNotAvailableIssue(CommandIssue):
+    """Returned when a CommandResponse associated with runId is not available"""
+
+
+class HCDBusyIssue(CommandIssue):
     """Returned when the HCD is busy and can't process a command"""
+
+
+class WrongCommandTypeIssue(CommandIssue):
+    """Returned when some given command type is not expected"""
 
 
 class MissingKeyIssue(CommandIssue):

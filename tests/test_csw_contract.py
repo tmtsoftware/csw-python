@@ -5,6 +5,7 @@ import json
 import structlog
 from _pytest import pathlib
 
+from csw.CommandResponse import CommandIssue
 from csw.Parameter import Parameter
 from csw.CurrentState import CurrentState
 from csw.UTCTime import UTCTime
@@ -19,6 +20,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 class TestCswContract:
     log = structlog.get_logger()
+
+    # names of subclasses of CommandIssue
+    commandIssueSubclasses = list(map(lambda c: c.__name__, CommandIssue.__subclasses__()))
 
     # Validate against Location Service model contract file produced by csw
     def test_location_service_models(self):
@@ -84,3 +88,5 @@ class TestCswContract:
                         # (ignore time values since resolution of fractional seconds is different in Typescript!)
                         if key not in ['UTCTimeKey', 'TAITimeKey']:
                             assert (entry == Parameter._fromDict(entry)._asDict())
+            for p in data["CommandIssue"]:
+                assert (p['_type'] in self.commandIssueSubclasses)
