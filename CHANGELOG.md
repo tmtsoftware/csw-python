@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Changed type of "prefix" arguments from str to Prefix, matching CSW API
 - Changed type of event name args to EventName, same as CSW API
 - Updated Location Service Registration classes to more closely match CSW APIs
+- Updated code to handle different time value formats in JSON and CBOR encodings of parameter values
 
 ### Added
 
