@@ -5,6 +5,7 @@ import json
 import structlog
 from _pytest import pathlib
 
+from csw.Parameter import Parameter
 from csw.CurrentState import CurrentState
 from csw.UTCTime import UTCTime
 from csw.Units import Units
@@ -74,4 +75,12 @@ class TestCswContract:
                 assert (t1 == t2)
             for p in data['CurrentState']:
                 cs = CurrentState._fromDict(p)
-                # Difference in time resolution!
+                assert (str(cs.prefix) == "CSW.ncc.trombone")
+                assert (str(cs.stateName) == "idle")
+                assert (len(cs.paramSet) == 25)
+                for entry in p['paramSet']:
+                    for key in entry:
+                        # Round-trip test
+                        # (ignore time values since resolution of fractional seconds is different in Typescript!)
+                        if key not in ['UTCTimeKey', 'TAITimeKey']:
+                            assert (entry == Parameter._fromDict(entry)._asDict())
