@@ -19,7 +19,6 @@ class CurrentState:
         """
         Returns a CurrentState for the given dict.
         """
-        typ = obj['_type']
         prefix = Prefix.from_str(obj['prefix'])
         stateName = obj['stateName']
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))

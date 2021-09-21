@@ -5,6 +5,7 @@ import json
 import structlog
 from _pytest import pathlib
 
+from csw.CurrentState import CurrentState
 from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.Subsystem import Subsystems
@@ -70,6 +71,7 @@ class TestCswContract:
             for p in data['UTCTime']:
                 t1 = UTCTime.from_str(p)
                 t2 = UTCTime.from_str(str(t1))
-                self.log.debug(f"XXX p = {p}, t1 = {t1}, t2 = {t2}, str(t1) = {str(t1)}, str(t2) = {str(t2)}")
-                assert (t1.seconds == t2.seconds)
-                assert (t1.nanos == t2.nanos)
+                assert (t1 == t2)
+            for p in data['CurrentState']:
+                cs = CurrentState._fromDict(p)
+                # Difference in time resolution!
