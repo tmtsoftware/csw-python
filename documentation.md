@@ -8,7 +8,7 @@ including the
 
 See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentation.
 
-You can find the [tmtpycsw sources](https://github.com/tmtsoftware/pycsw) on GitHub.
+You can find the [tmtpycsw sources](https://github.com/tmtsoftware/csw-python) on GitHub.
 
 Note that all APIs here assume that the CSW services (version 4.0.0) are running 
 For example, during development, run: `csw-services start`.

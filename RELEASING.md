@@ -1,6 +1,6 @@
 # Releasing
 
-* Check/update the pycsw version in setup.py
+* Check/update the tmtpycsw version in setup.py
 
 * Check/update the CSW version in test/testSupport/project/Libs.scala and tests/runTest.sh.
 

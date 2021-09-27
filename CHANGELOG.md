@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Renamed GitHub repo from pycsw to csw-python
+- Renamed GitHub repo from pycsw to csw-python (The pypi package is still named "tmtpycsw")
 - Changed type of "prefix" arguments from str to Prefix, matching CSW API
 - Changed type of event name arguments to EventName and command name to ComandName, in line with the CSW API
 - Updated Location Service Registration classes to more closely match CSW APIs

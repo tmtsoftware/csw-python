@@ -14,7 +14,7 @@ this project.
 
 ## Version compatibility
 
-| pycsw | csw |
+| csw-python | csw |
 |--------|------|
 | v4.0.0 | v4.0.0 |
 | v4.0.0rc1 | v4.0.0-RC1 |
@@ -30,7 +30,7 @@ this project.
 
 ## API Documentation
 
-See [here](https://tmtsoftware.github.io/pycsw/index.html) for an overview of this package and the 
+See [here](https://tmtsoftware.github.io/csw-python/index.html) for an overview of this package and the 
 generated API documentation.
 
 Run `make doc` to generate the user manual and API documentation for the Python classes. 
