@@ -3,11 +3,7 @@ import sbt._
 object Libs {
   val ScalaVersion = "2.13.1"
 
-  val `scalatest`       = "org.scalatest"          %% "scalatest"       % "3.0.8"  //Apache License 2.0
   val `scala-async`     = "org.scala-lang.modules" %% "scala-async"     % "0.10.0"  //BSD 3-clause "New" or "Revised" License
-  val `junit`           = "junit"                  %  "junit"           % "4.12"   //Eclipse Public License 1.0
-  val `junit-interface` = "com.novocode"           %  "junit-interface" % "0.11"   //BSD 2-clause "Simplified" License
-  val `mockito-scala`   = "org.mockito"            %% "mockito-scala"   % "1.7.1"
 }
 
 object AkkaHttp {
@@ -16,7 +12,7 @@ object AkkaHttp {
 }
 
 object CSW {
-  val Version = "4.0.0-RC2"
+  val Version = "4.0.0"
 //  val Version = "0.1.0-SNAPSHOT"
 //  val Version = "87d677d5ad39b6781619f1f866c90ee6ec448c5b"
 

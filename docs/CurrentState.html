@@ -26,7 +26,8 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from dataclasses import dataclass
+<pre><code class="python">import traceback
+from dataclasses import dataclass
 from typing import List
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
@@ -46,7 +47,6 @@ class CurrentState:
         &#34;&#34;&#34;
         Returns a CurrentState for the given dict.
         &#34;&#34;&#34;
-        typ = obj[&#39;_type&#39;]
         prefix = Prefix.from_str(obj[&#39;prefix&#39;])
         stateName = obj[&#39;stateName&#39;]
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
@@ -57,12 +57,15 @@ class CurrentState:
         Returns: dict
             a dictionary corresponding to this object
         &#34;&#34;&#34;
-        d = {
-            &#39;prefix&#39;: str(self.prefix),
-            &#39;stateName&#39;: self.stateName,
-            &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
-        }
-        return d
+        try:
+            d = {
+                &#39;prefix&#39;: str(self.prefix),
+                &#39;stateName&#39;: self.stateName,
+                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+            }
+            return d
+        except Exception as ex:
+            traceback.print_exc()
 
     def get(self, keyName: str):
         &#34;&#34;&#34;
@@ -127,7 +130,6 @@ class CurrentState:
         &#34;&#34;&#34;
         Returns a CurrentState for the given dict.
         &#34;&#34;&#34;
-        typ = obj[&#39;_type&#39;]
         prefix = Prefix.from_str(obj[&#39;prefix&#39;])
         stateName = obj[&#39;stateName&#39;]
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
@@ -138,12 +140,15 @@ class CurrentState:
         Returns: dict
             a dictionary corresponding to this object
         &#34;&#34;&#34;
-        d = {
-            &#39;prefix&#39;: str(self.prefix),
-            &#39;stateName&#39;: self.stateName,
-            &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
-        }
-        return d
+        try:
+            d = {
+                &#39;prefix&#39;: str(self.prefix),
+                &#39;stateName&#39;: self.stateName,
+                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+            }
+            return d
+        except Exception as ex:
+            traceback.print_exc()
 
     def get(self, keyName: str):
         &#34;&#34;&#34;

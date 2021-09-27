@@ -34,8 +34,13 @@ from abc import abstractmethod
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
 from csw.Prefix import Prefix
-from csw.EventName import EventName
 
+@dataclass
+class EventName:
+    &#34;&#34;&#34;
+    A wrapper class representing the name of an Event
+    &#34;&#34;&#34;
+    name: str
 
 @dataclass
 class Event:
@@ -73,7 +78,7 @@ class Event:
         &#34;&#34;&#34;
         typ = obj[&#39;_type&#39;]
         assert (typ in {&#34;SystemEvent&#34;, &#34;ObserveEvent&#34;})
-        paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
+        paramSet = list(map(lambda p: Parameter._fromDict(p, True), obj[&#39;paramSet&#39;]))
         eventTime = EventTime._fromDict(obj[&#39;eventTime&#39;])
         prefix = Prefix.from_str(obj[&#39;source&#39;])
         eventName = EventName(obj[&#39;eventName&#39;])
@@ -94,7 +99,7 @@ class Event:
             &#39;source&#39;: str(self.source),
             &#39;eventName&#39;: self.eventName.name,
             &#39;eventTime&#39;: self.eventTime._asDict(),
-                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+                &#39;paramSet&#39;: list(map(lambda p: p._asDict(True), self.paramSet))
         }
 
     def isInvalid(self):
@@ -177,7 +182,7 @@ class ObserveEvent(Event):
 <dl>
 <dt id="csw.Event.Event"><code class="flex name class">
 <span>class <span class="ident">Event</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1632167492, nanos=530030012), eventId: str = 'eaa817d6-1add-4ee7-95be-22a0371f8e59')</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1632741298, nanos=335967063), eventId: str = '558f2e20-23cb-43ff-a6d4-941c39d7ae6a')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Abstract base class that creates an Event that can be published to the event service
@@ -186,7 +191,7 @@ class ObserveEvent(Event):
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -235,7 +240,7 @@ class Event:
         &#34;&#34;&#34;
         typ = obj[&#39;_type&#39;]
         assert (typ in {&#34;SystemEvent&#34;, &#34;ObserveEvent&#34;})
-        paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
+        paramSet = list(map(lambda p: Parameter._fromDict(p, True), obj[&#39;paramSet&#39;]))
         eventTime = EventTime._fromDict(obj[&#39;eventTime&#39;])
         prefix = Prefix.from_str(obj[&#39;source&#39;])
         eventName = EventName(obj[&#39;eventName&#39;])
@@ -256,7 +261,7 @@ class Event:
             &#39;source&#39;: str(self.source),
             &#39;eventName&#39;: self.eventName.name,
             &#39;eventTime&#39;: self.eventTime._asDict(),
-                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+                &#39;paramSet&#39;: list(map(lambda p: p._asDict(True), self.paramSet))
         }
 
     def isInvalid(self):
@@ -302,7 +307,7 @@ class Event:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.Event.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
+<dt id="csw.Event.Event.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -421,9 +426,34 @@ the parameter, if found</p></div>
 </dd>
 </dl>
 </dd>
+<dt id="csw.Event.EventName"><code class="flex name class">
+<span>class <span class="ident">EventName</span></span>
+<span>(</span><span>name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A wrapper class representing the name of an Event</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class EventName:
+    &#34;&#34;&#34;
+    A wrapper class representing the name of an Event
+    &#34;&#34;&#34;
+    name: str</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.Event.EventName.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
 <dt id="csw.Event.ObserveEvent"><code class="flex name class">
 <span>class <span class="ident">ObserveEvent</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1632167492, nanos=530030012), eventId: str = 'eaa817d6-1add-4ee7-95be-22a0371f8e59')</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1632741298, nanos=335967063), eventId: str = '558f2e20-23cb-43ff-a6d4-941c39d7ae6a')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An event type fired when an observation has taken place.</p>
@@ -431,7 +461,7 @@ the parameter, if found</p></div>
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -471,7 +501,7 @@ class ObserveEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.ObserveEvent.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
+<dt id="csw.Event.ObserveEvent.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -501,7 +531,7 @@ class ObserveEvent(Event):
 </dd>
 <dt id="csw.Event.SystemEvent"><code class="flex name class">
 <span>class <span class="ident">SystemEvent</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1632167492, nanos=530030012), eventId: str = 'eaa817d6-1add-4ee7-95be-22a0371f8e59')</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, eventName: <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a>, paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>], eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = EventTime(seconds=1632741298, nanos=335967063), eventId: str = '558f2e20-23cb-43ff-a6d4-941c39d7ae6a')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An event type for publishing changes in system data.</p>
@@ -509,7 +539,7 @@ class ObserveEvent(Event):
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -549,7 +579,7 @@ class SystemEvent(Event):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Event.SystemEvent.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
+<dt id="csw.Event.SystemEvent.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -605,6 +635,12 @@ class SystemEvent(Event):
 <li><code><a title="csw.Event.Event.isInvalid" href="#csw.Event.Event.isInvalid">isInvalid</a></code></li>
 <li><code><a title="csw.Event.Event.paramSet" href="#csw.Event.Event.paramSet">paramSet</a></code></li>
 <li><code><a title="csw.Event.Event.source" href="#csw.Event.Event.source">source</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Event.EventName.name" href="#csw.Event.EventName.name">name</a></code></li>
 </ul>
 </li>
 <li>

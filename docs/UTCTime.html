@@ -26,9 +26,9 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime,timezone
+<pre><code class="python">from datetime import datetime, timezone
 from dataclasses import dataclass, asdict
-
+from dateutil import parser
 
 @dataclass
 class UTCTime:
@@ -41,7 +41,7 @@ class UTCTime:
     def __str__(self):
         secs = self.seconds + self.nanos / 1e9
         dt = datetime.fromtimestamp(secs, timezone.utc)
-        return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)
+        return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;) + &#34;Z&#34;
 
     def _asDict(self):
         return asdict(self)
@@ -49,6 +49,16 @@ class UTCTime:
     @staticmethod
     def _fromDict(obj: dict):
         return UTCTime(**obj)
+
+    @staticmethod
+    def from_str(timeStr: str):
+        &#34;&#34;&#34;
+        Returns a UTCTime given a string in ISO format (ex: &#34;2021-09-20T18:44:12.419084072Z&#34;).
+        &#34;&#34;&#34;
+        t = parser.isoparse(timeStr).timestamp()
+        seconds = int(t)
+        nanos = int((t - seconds) * 1e9)
+        return UTCTime(seconds, nanos)
 
     @staticmethod
     def fromSystem():
@@ -91,7 +101,7 @@ class UTCTime:
     def __str__(self):
         secs = self.seconds + self.nanos / 1e9
         dt = datetime.fromtimestamp(secs, timezone.utc)
-        return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;)
+        return dt.strftime(&#39;%Y-%m-%dT%H:%M:%S.%f&#39;) + &#34;Z&#34;
 
     def _asDict(self):
         return asdict(self)
@@ -99,6 +109,16 @@ class UTCTime:
     @staticmethod
     def _fromDict(obj: dict):
         return UTCTime(**obj)
+
+    @staticmethod
+    def from_str(timeStr: str):
+        &#34;&#34;&#34;
+        Returns a UTCTime given a string in ISO format (ex: &#34;2021-09-20T18:44:12.419084072Z&#34;).
+        &#34;&#34;&#34;
+        t = parser.isoparse(timeStr).timestamp()
+        seconds = int(t)
+        nanos = int((t - seconds) * 1e9)
+        return UTCTime(seconds, nanos)
 
     @staticmethod
     def fromSystem():
@@ -143,6 +163,26 @@ def fromSystem():
     return UTCTime(seconds, nanos)</code></pre>
 </details>
 </dd>
+<dt id="csw.UTCTime.UTCTime.from_str"><code class="name flex">
+<span>def <span class="ident">from_str</span></span>(<span>timeStr: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a UTCTime given a string in ISO format (ex: "2021-09-20T18:44:12.419084072Z").</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def from_str(timeStr: str):
+    &#34;&#34;&#34;
+    Returns a UTCTime given a string in ISO format (ex: &#34;2021-09-20T18:44:12.419084072Z&#34;).
+    &#34;&#34;&#34;
+    t = parser.isoparse(timeStr).timestamp()
+    seconds = int(t)
+    nanos = int((t - seconds) * 1e9)
+    return UTCTime(seconds, nanos)</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -165,6 +205,7 @@ def fromSystem():
 <h4><code><a title="csw.UTCTime.UTCTime" href="#csw.UTCTime.UTCTime">UTCTime</a></code></h4>
 <ul class="">
 <li><code><a title="csw.UTCTime.UTCTime.fromSystem" href="#csw.UTCTime.UTCTime.fromSystem">fromSystem</a></code></li>
+<li><code><a title="csw.UTCTime.UTCTime.from_str" href="#csw.UTCTime.UTCTime.from_str">from_str</a></code></li>
 <li><code><a title="csw.UTCTime.UTCTime.nanos" href="#csw.UTCTime.UTCTime.nanos">nanos</a></code></li>
 <li><code><a title="csw.UTCTime.UTCTime.seconds" href="#csw.UTCTime.UTCTime.seconds">seconds</a></code></li>
 </ul>

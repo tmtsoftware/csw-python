@@ -154,8 +154,16 @@ class CommandIssue:
     reason: str
 
 
-class HcdBusyIssue(CommandIssue):
+class IdNotAvailableIssue(CommandIssue):
+    &#34;&#34;&#34;Returned when a CommandResponse associated with runId is not available&#34;&#34;&#34;
+
+
+class HCDBusyIssue(CommandIssue):
     &#34;&#34;&#34;Returned when the HCD is busy and can&#39;t process a command&#34;&#34;&#34;
+
+
+class WrongCommandTypeIssue(CommandIssue):
+    &#34;&#34;&#34;Returned when some given command type is not expected&#34;&#34;&#34;
 
 
 class MissingKeyIssue(CommandIssue):
@@ -347,7 +355,8 @@ class CommandIssue:
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.AssemblyBusyIssue" href="#csw.CommandResponse.AssemblyBusyIssue">AssemblyBusyIssue</a></li>
-<li><a title="csw.CommandResponse.HcdBusyIssue" href="#csw.CommandResponse.HcdBusyIssue">HcdBusyIssue</a></li>
+<li><a title="csw.CommandResponse.HCDBusyIssue" href="#csw.CommandResponse.HCDBusyIssue">HCDBusyIssue</a></li>
+<li><a title="csw.CommandResponse.IdNotAvailableIssue" href="#csw.CommandResponse.IdNotAvailableIssue">IdNotAvailableIssue</a></li>
 <li><a title="csw.CommandResponse.MissingKeyIssue" href="#csw.CommandResponse.MissingKeyIssue">MissingKeyIssue</a></li>
 <li><a title="csw.CommandResponse.OtherIssue" href="#csw.CommandResponse.OtherIssue">OtherIssue</a></li>
 <li><a title="csw.CommandResponse.ParameterValueOutOfRangeIssue" href="#csw.CommandResponse.ParameterValueOutOfRangeIssue">ParameterValueOutOfRangeIssue</a></li>
@@ -358,6 +367,7 @@ class CommandIssue:
 <li><a title="csw.CommandResponse.UnresolvedLocationsIssue" href="#csw.CommandResponse.UnresolvedLocationsIssue">UnresolvedLocationsIssue</a></li>
 <li><a title="csw.CommandResponse.UnsupportedCommandInStateIssue" href="#csw.CommandResponse.UnsupportedCommandInStateIssue">UnsupportedCommandInStateIssue</a></li>
 <li><a title="csw.CommandResponse.UnsupportedCommandIssue" href="#csw.CommandResponse.UnsupportedCommandIssue">UnsupportedCommandIssue</a></li>
+<li><a title="csw.CommandResponse.WrongCommandTypeIssue" href="#csw.CommandResponse.WrongCommandTypeIssue">WrongCommandTypeIssue</a></li>
 <li><a title="csw.CommandResponse.WrongInternalStateIssue" href="#csw.CommandResponse.WrongInternalStateIssue">WrongInternalStateIssue</a></li>
 <li><a title="csw.CommandResponse.WrongNumberOfParametersIssue" href="#csw.CommandResponse.WrongNumberOfParametersIssue">WrongNumberOfParametersIssue</a></li>
 <li><a title="csw.CommandResponse.WrongParameterTypeIssue" href="#csw.CommandResponse.WrongParameterTypeIssue">WrongParameterTypeIssue</a></li>
@@ -495,8 +505,8 @@ class Error(CommandResponse):
 </dd>
 </dl>
 </dd>
-<dt id="csw.CommandResponse.HcdBusyIssue"><code class="flex name class">
-<span>class <span class="ident">HcdBusyIssue</span></span>
+<dt id="csw.CommandResponse.HCDBusyIssue"><code class="flex name class">
+<span>class <span class="ident">HCDBusyIssue</span></span>
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
@@ -505,7 +515,7 @@ class Error(CommandResponse):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class HcdBusyIssue(CommandIssue):
+<pre><code class="python">class HCDBusyIssue(CommandIssue):
     &#34;&#34;&#34;Returned when the HCD is busy and can&#39;t process a command&#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -514,7 +524,32 @@ class Error(CommandResponse):
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.CommandResponse.HcdBusyIssue.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
+<dt id="csw.CommandResponse.HCDBusyIssue.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.CommandResponse.IdNotAvailableIssue"><code class="flex name class">
+<span>class <span class="ident">IdNotAvailableIssue</span></span>
+<span>(</span><span>reason: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returned when a CommandResponse associated with runId is not available</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IdNotAvailableIssue(CommandIssue):
+    &#34;&#34;&#34;Returned when a CommandResponse associated with runId is not available&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.CommandResponse.IdNotAvailableIssue.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -919,6 +954,31 @@ class Started(CommandResponse):
 </dd>
 </dl>
 </dd>
+<dt id="csw.CommandResponse.WrongCommandTypeIssue"><code class="flex name class">
+<span>class <span class="ident">WrongCommandTypeIssue</span></span>
+<span>(</span><span>reason: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returned when some given command type is not expected</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WrongCommandTypeIssue(CommandIssue):
+    &#34;&#34;&#34;Returned when some given command type is not expected&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.CommandResponse.WrongCommandTypeIssue.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
 <dt id="csw.CommandResponse.WrongInternalStateIssue"><code class="flex name class">
 <span>class <span class="ident">WrongInternalStateIssue</span></span>
 <span>(</span><span>reason: str)</span>
@@ -1103,9 +1163,15 @@ class Started(CommandResponse):
 </ul>
 </li>
 <li>
-<h4><code><a title="csw.CommandResponse.HcdBusyIssue" href="#csw.CommandResponse.HcdBusyIssue">HcdBusyIssue</a></code></h4>
+<h4><code><a title="csw.CommandResponse.HCDBusyIssue" href="#csw.CommandResponse.HCDBusyIssue">HCDBusyIssue</a></code></h4>
 <ul class="">
-<li><code><a title="csw.CommandResponse.HcdBusyIssue.reason" href="#csw.CommandResponse.HcdBusyIssue.reason">reason</a></code></li>
+<li><code><a title="csw.CommandResponse.HCDBusyIssue.reason" href="#csw.CommandResponse.HCDBusyIssue.reason">reason</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.CommandResponse.IdNotAvailableIssue" href="#csw.CommandResponse.IdNotAvailableIssue">IdNotAvailableIssue</a></code></h4>
+<ul class="">
+<li><code><a title="csw.CommandResponse.IdNotAvailableIssue.reason" href="#csw.CommandResponse.IdNotAvailableIssue.reason">reason</a></code></li>
 </ul>
 </li>
 <li>
@@ -1190,6 +1256,12 @@ class Started(CommandResponse):
 <h4><code><a title="csw.CommandResponse.UnsupportedCommandIssue" href="#csw.CommandResponse.UnsupportedCommandIssue">UnsupportedCommandIssue</a></code></h4>
 <ul class="">
 <li><code><a title="csw.CommandResponse.UnsupportedCommandIssue.reason" href="#csw.CommandResponse.UnsupportedCommandIssue.reason">reason</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.CommandResponse.WrongCommandTypeIssue" href="#csw.CommandResponse.WrongCommandTypeIssue">WrongCommandTypeIssue</a></code></h4>
+<ul class="">
+<li><code><a title="csw.CommandResponse.WrongCommandTypeIssue.reason" href="#csw.CommandResponse.WrongCommandTypeIssue.reason">reason</a></code></li>
 </ul>
 </li>
 <li>

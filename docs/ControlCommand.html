@@ -31,6 +31,12 @@ from typing import List
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
+@dataclass
+class CommandName:
+    &#34;&#34;&#34;
+    A wrapper class representing the name of a Command
+    &#34;&#34;&#34;
+    name: str
 
 @dataclass
 class ControlCommand:
@@ -38,7 +44,7 @@ class ControlCommand:
     Represents a CSW command.
     &#34;&#34;&#34;
     source: Prefix
-    commandName: str
+    commandName: CommandName
     maybeObsId: List[str]
     paramSet: List[Parameter]
 
@@ -50,7 +56,7 @@ class ControlCommand:
         &#34;&#34;&#34;
         typ = obj[&#34;_type&#34;]
         source = Prefix.from_str(obj[&#39;source&#39;])
-        commandName = obj[&#39;commandName&#39;]
+        commandName = CommandName(obj[&#39;commandName&#39;])
         maybeObsId = obj[&#39;maybeObsId&#39;] if &#39;maybeObsId&#39; in obj else &#34;&#34;
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
         assert (typ in {&#34;Setup&#34;, &#34;Observe&#34;})
@@ -68,7 +74,7 @@ class ControlCommand:
         d = {
             &#39;_type&#39;: self.__class__.__name__,
             &#39;source&#39;: str(self.source),
-            &#39;commandName&#39;: self.commandName,
+            &#39;commandName&#39;: self.commandName.name,
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
         if len(self.maybeObsId) != 0:
@@ -131,9 +137,34 @@ class Observe(ControlCommand):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="csw.ControlCommand.CommandName"><code class="flex name class">
+<span>class <span class="ident">CommandName</span></span>
+<span>(</span><span>name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A wrapper class representing the name of a Command</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class CommandName:
+    &#34;&#34;&#34;
+    A wrapper class representing the name of a Command
+    &#34;&#34;&#34;
+    name: str</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.ControlCommand.CommandName.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
 <dt id="csw.ControlCommand.ControlCommand"><code class="flex name class">
 <span>class <span class="ident">ControlCommand</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: str, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a CSW command.</p></div>
@@ -147,7 +178,7 @@ class ControlCommand:
     Represents a CSW command.
     &#34;&#34;&#34;
     source: Prefix
-    commandName: str
+    commandName: CommandName
     maybeObsId: List[str]
     paramSet: List[Parameter]
 
@@ -159,7 +190,7 @@ class ControlCommand:
         &#34;&#34;&#34;
         typ = obj[&#34;_type&#34;]
         source = Prefix.from_str(obj[&#39;source&#39;])
-        commandName = obj[&#39;commandName&#39;]
+        commandName = CommandName(obj[&#39;commandName&#39;])
         maybeObsId = obj[&#39;maybeObsId&#39;] if &#39;maybeObsId&#39; in obj else &#34;&#34;
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
         assert (typ in {&#34;Setup&#34;, &#34;Observe&#34;})
@@ -177,7 +208,7 @@ class ControlCommand:
         d = {
             &#39;_type&#39;: self.__class__.__name__,
             &#39;source&#39;: str(self.source),
-            &#39;commandName&#39;: self.commandName,
+            &#39;commandName&#39;: self.commandName.name,
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
         if len(self.maybeObsId) != 0:
@@ -221,7 +252,7 @@ class ControlCommand:
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.ControlCommand.ControlCommand.commandName"><code class="name">var <span class="ident">commandName</span> : str</code></dt>
+<dt id="csw.ControlCommand.ControlCommand.commandName"><code class="name">var <span class="ident">commandName</span> : <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -307,7 +338,7 @@ the parameter, if found</p></div>
 </dd>
 <dt id="csw.ControlCommand.Observe"><code class="flex name class">
 <span>class <span class="ident">Observe</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: str, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An Observe is a special command that can be sent to an HCD or Assembly.</p></div>
@@ -328,7 +359,7 @@ class Observe(ControlCommand):
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.ControlCommand.Observe.commandName"><code class="name">var <span class="ident">commandName</span> : str</code></dt>
+<dt id="csw.ControlCommand.Observe.commandName"><code class="name">var <span class="ident">commandName</span> : <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -357,7 +388,7 @@ class Observe(ControlCommand):
 </dd>
 <dt id="csw.ControlCommand.Setup"><code class="flex name class">
 <span>class <span class="ident">Setup</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: str, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>A Setup is a command that can be sent to an HCD or Assembly.</p></div>
@@ -378,7 +409,7 @@ class Setup(ControlCommand):
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.ControlCommand.Setup.commandName"><code class="name">var <span class="ident">commandName</span> : str</code></dt>
+<dt id="csw.ControlCommand.Setup.commandName"><code class="name">var <span class="ident">commandName</span> : <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -421,6 +452,12 @@ class Setup(ControlCommand):
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
+<li>
+<h4><code><a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a></code></h4>
+<ul class="">
+<li><code><a title="csw.ControlCommand.CommandName.name" href="#csw.ControlCommand.CommandName.name">name</a></code></li>
+</ul>
+</li>
 <li>
 <h4><code><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></code></h4>
 <ul class="two-column">

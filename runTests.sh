@@ -8,7 +8,7 @@ hash sbt 2>/dev/null || { echo >&2 "Please install sbt first.  Aborting."; exit 
 hash pipenv 2>/dev/null || { echo >&2 "Please install pipenv first.  Aborting."; exit 1; }
 hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1; }
 
-CSW_VERSION=4.0.0-RC2
+CSW_VERSION=4.0.0
 #CSW_VERSION=87d677d5ad39b6781619f1f866c90ee6ec448c5b
 
 logfile=test.log

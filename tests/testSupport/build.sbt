@@ -1,6 +1,5 @@
 lazy val aggregatedProjects: Seq[ProjectReference] = Seq(
   `test-assembly`,
-  `test-hcd`,
   `test-deploy`
 )
 
@@ -13,15 +12,9 @@ lazy val `test-assembly` = project
     libraryDependencies ++= Dependencies.TestAssembly
   )
 
-lazy val `test-hcd` = project
-  .settings(
-    libraryDependencies ++= Dependencies.TestHcd
-  )
-
 lazy val `test-deploy` = project
   .dependsOn(
-    `test-assembly`,
-    `test-hcd`
+    `test-assembly`
   )
   .enablePlugins(JavaAppPackaging, CswBuildInfo)
   .settings(
