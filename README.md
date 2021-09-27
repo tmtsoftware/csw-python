@@ -1,4 +1,4 @@
-# tmtpycsw - Python3 CSW APIs
+# Python CSW APIs
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
 
@@ -11,6 +11,21 @@ The latest release has been published to https://pypi.org/project/tmtpycsw/ and 
 See [here](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 for how to set up a local Python environment with the necessary dependencies for testing
 this project.
+
+## Version compatibility
+
+| pycsw | csw |
+|--------|------|
+| v4.0.0rc1 | v4.0.0-RC1 |
+| v3.0.6 | v3.0.1 |
+| v3.0.5 | v3.0.0 |
+| v3.0.4 | v3.0.0-RC1 |
+| v3.0.3 | v3.0.0-M1 |
+| v3.0.2 | v3.0.0-M1 |
+| v2.0.1 | v2.0.1 |
+| v2.0.0 | v2.0.0 |
+
+
 
 ## API Documentation
 
