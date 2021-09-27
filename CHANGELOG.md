@@ -1,14 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [tmtpycsw v4.0.0rc2] - 2021-09-
+## [tmtpycsw v4.0.0] - 2021-09-27
 
 ### Changed
 
+- Renamed GitHub repo from pycsw to csw-python
 - Changed type of "prefix" arguments from str to Prefix, matching CSW API
-- Changed type of event name args to EventName, same as CSW API
+- Changed type of event name arguments to EventName and command name to ComandName, in line with the CSW API
 - Updated Location Service Registration classes to more closely match CSW APIs
 - Updated code to handle different time value formats in JSON and CBOR encodings of parameter values
+- Added tests
+- Updated for CSW-4.0.0
 
 ### Added
 
