@@ -13,8 +13,19 @@ def test_location_service():
 
     # List all registered connections
     log.debug("\nAll Locations:")
-    for i in locationService.list():
+    allLocations = locationService.list()
+    for i in allLocations:
         log.debug("    " + str(i))
+    # Check that the standard CSW services were found
+    assert [x for x in allLocations if x.connection.prefix == 'CSW.AAS' and x.connection.componentType == 'Service']
+    assert [x for x in allLocations if
+            x.connection.prefix == 'CSW.AlarmServer' and x.connection.componentType == 'Service']
+    assert [x for x in allLocations if
+            x.connection.prefix == 'CSW.DatabaseServer' and x.connection.componentType == 'Service']
+    assert [x for x in allLocations if
+            x.connection.prefix == 'CSW.EventServer' and x.connection.componentType == 'Service']
+    assert [x for x in allLocations if
+            x.connection.prefix == 'CSW.ConfigServer' and x.connection.componentType == 'Service']
 
     # List the registered HCDs
     log.debug("\nHCDs:")
@@ -28,8 +39,18 @@ def test_location_service():
 
     # List the registered http connections
     log.debug("\nHTTP connections:")
-    for i in locationService.list(ConnectionType.HttpType):
+    httpServices = locationService.list(ConnectionType.HttpType)
+    for i in httpServices:
         log.debug("    " + str(i))
+    assert [x for x in httpServices if x.connection.prefix == 'CSW.AAS' and x.connection.componentType == 'Service']
+    assert not [x for x in httpServices if
+                x.connection.prefix == 'CSW.AlarmServer' and x.connection.componentType == 'Service']
+    assert not [x for x in httpServices if
+                x.connection.prefix == 'CSW.DatabaseServer' and x.connection.componentType == 'Service']
+    assert not [x for x in httpServices if
+                x.connection.prefix == 'CSW.EventServer' and x.connection.componentType == 'Service']
+    assert [x for x in httpServices if
+            x.connection.prefix == 'CSW.ConfigServer' and x.connection.componentType == 'Service']
 
     # Register a connection
     prefix = Prefix(Subsystems.CSW, "myComp")
@@ -37,15 +58,24 @@ def test_location_service():
     reg = HttpRegistration(connection, 8080, path="myservice/test")
     regResult = locationService.register(reg)
     log.debug("\nRegistration result: " + str(regResult))
+    assert regResult.componentType == ComponentType.Service.value
+    assert regResult.prefix == 'CSW.myComp'
+    assert regResult.connectionType == ConnectionType.HttpType.value
 
     # Find a connection
     location1 = locationService.find(connection)
     log.debug("location1 = " + str(location1))
+    assert location1.connection.componentType == ComponentType.Service.value
+    assert location1.connection.prefix == 'CSW.myComp'
+    assert location1.connection.connectionType == ConnectionType.HttpType.value
 
     # Resolve a connection (waiting if needed)
     location2 = locationService.resolve(connection)
     log.debug("location2 = " + str(location2))
+    assert location1 == location2
 
     # Unregister
     unregResult = locationService.unregister(connection)
     log.debug("\nUnregister result: " + str(unregResult))
+
+    assert not locationService.find(connection)
