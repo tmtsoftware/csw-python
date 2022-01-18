@@ -8,8 +8,9 @@ hash sbt 2>/dev/null || { echo >&2 "Please install sbt first.  Aborting."; exit 
 hash pipenv 2>/dev/null || { echo >&2 "Please install pipenv first.  Aborting."; exit 1; }
 hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1; }
 
-CSW_VERSION=4.0.0
-#CSW_VERSION=87d677d5ad39b6781619f1f866c90ee6ec448c5b
+# Note: Make sure version matches ones used in csw/LocationService.py and tests/testSupport/project/Libs.scala
+#CSW_VERSION=4.0.0
+CSW_VERSION=a9073713d8b5de90a817e08b31629a7176e1b4fe
 
 logfile=test.log
 set -x

@@ -13,6 +13,9 @@ from csw.Prefix import Prefix
 # noinspection SpellCheckingInspection
 __pdoc__ = {}
 
+# Note: Update this before each release!
+def csw_version():
+    return {"csw-version": "a9073713d8b5de90a817e08b31629a7176e1b4fe"}
 
 # noinspection SpellCheckingInspection
 def _pdocIgnoreGenerated(className: str):
@@ -174,7 +177,7 @@ class HttpRegistration(Registration):
     port: int
     path: str = ""
     networkType: NetworkType = NetworkType("Inside")
-    metadata: dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=csw_version)
     _type: str = "HttpRegistration"
 
 

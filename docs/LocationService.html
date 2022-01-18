@@ -41,6 +41,9 @@ from csw.Prefix import Prefix
 # noinspection SpellCheckingInspection
 __pdoc__ = {}
 
+# Note: Update this before each release!
+def csw_version():
+    return {&#34;csw-version&#34;: &#34;a9073713d8b5de90a817e08b31629a7176e1b4fe&#34;}
 
 # noinspection SpellCheckingInspection
 def _pdocIgnoreGenerated(className: str):
@@ -202,7 +205,7 @@ class HttpRegistration(Registration):
     port: int
     path: str = &#34;&#34;
     networkType: NetworkType = NetworkType(&#34;Inside&#34;)
-    metadata: dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=csw_version)
     _type: str = &#34;HttpRegistration&#34;
 
 
@@ -386,6 +389,22 @@ class LocationService:
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="csw.LocationService.csw_version"><code class="name flex">
+<span>def <span class="ident">csw_version</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def csw_version():
+    return {&#34;csw-version&#34;: &#34;a9073713d8b5de90a817e08b31629a7176e1b4fe&#34;}</code></pre>
+</details>
+</dd>
+</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
@@ -843,7 +862,7 @@ class HttpRegistration(Registration):
     port: int
     path: str = &#34;&#34;
     networkType: NetworkType = NetworkType(&#34;Inside&#34;)
-    metadata: dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=csw_version)
     _type: str = &#34;HttpRegistration&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -1434,6 +1453,11 @@ class TcpRegistration(Registration):
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="csw" href="index.html">csw</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="csw.LocationService.csw_version" href="#csw.LocationService.csw_version">csw_version</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
