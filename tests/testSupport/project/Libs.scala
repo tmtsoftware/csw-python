@@ -12,9 +12,9 @@ object AkkaHttp {
 }
 
 object CSW {
-//  val Version = "4.0.0"
+  val Version = "4.0.1"
 //  val Version = "0.1.0-SNAPSHOT"
-val Version = "a9073713d8b5de90a817e08b31629a7176e1b4fe"
+//val Version = "a9073713d8b5de90a817e08b31629a7176e1b4fe"
 
   val `csw-framework` = "com.github.tmtsoftware.csw" %% "csw-framework" % Version
   val `csw-testkit`   = "com.github.tmtsoftware.csw" %% "csw-testkit" % Version

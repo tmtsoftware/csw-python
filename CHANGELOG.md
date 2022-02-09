@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v4.0.0] - 2022-02-09
+
+### Changed
+
+- Updated for csw-4.0.1
+
 ## [tmtpycsw v4.0.0] - 2021-09-27
 
 ### Changed

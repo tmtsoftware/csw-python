@@ -2,7 +2,7 @@
 
 * Check/update the tmtpycsw version in setup.py
 
-* Check/update the CSW version in test/testSupport/project/Libs.scala and tests/runTest.sh.
+* Check/update the CSW version in test/testSupport/project/Libs.scala, tests/runTest.sh, csw/LocationService.py.
 
 * Run "make test" in top level dir
   (This starts a scala based backend and compares results with the python version).

@@ -15,7 +15,7 @@ __pdoc__ = {}
 
 # Note: Update this before each release!
 def csw_version():
-    return {"csw-version": "a9073713d8b5de90a817e08b31629a7176e1b4fe"}
+    return {"csw-version": "4.0.1"}
 
 # noinspection SpellCheckingInspection
 def _pdocIgnoreGenerated(className: str):
