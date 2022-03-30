@@ -5,8 +5,6 @@ import csw.prefix.models.Subsystem
 
 object TestHostConfigApp extends App {
 
-  HostConfig.start("test-host-config-app",
-                   Subsystem.withNameInsensitive("CSW"),
-                   args)
+  HostConfig.start("test-host-config-app", Subsystem.withNameInsensitive("CSW"), args)
 
 }

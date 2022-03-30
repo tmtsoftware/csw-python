@@ -6,14 +6,7 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import csw.command.client.messages.TopLevelActorMessage
 import csw.framework.models.CswContext
 import csw.framework.scaladsl.ComponentHandlers
-import csw.location.api.models.{
-  ComponentId,
-  ComponentType,
-  Location,
-  LocationRemoved,
-  LocationUpdated,
-  TrackingEvent
-}
+import csw.location.api.models.{ComponentId, ComponentType, Location, LocationRemoved, LocationUpdated, TrackingEvent}
 import csw.logging.api.scaladsl.Logger
 import csw.params.commands.CommandResponse._
 import csw.params.commands.{CommandName, ControlCommand, Setup}
@@ -54,8 +47,7 @@ object TestAssemblyHandlers {
   private val eventTestFile = new File("/tmp/PyTestAssemblyEventHandlers.out")
 
   // Generate a test file with the JSON for the received command responses, as an easy way to compare with the expected values
-  private val commandTestFile = new File(
-    "/tmp/PyTestAssemblyCommandResponses.out")
+  private val commandTestFile = new File("/tmp/PyTestAssemblyCommandResponses.out")
 
   // Actor to receive events
   private def eventHandler(log: Logger): Behavior[Event] = {
@@ -64,16 +56,14 @@ object TestAssemblyHandlers {
       if (event.eventName.name.startsWith("testEvent")) {
         // Check that event time is recent
         // Create the file when the first event is received from the test, close it on the last
-        val append = event.eventName.name != "testEvent1"
-        val testFd = new FileOutputStream(eventTestFile, append)
+        val append    = event.eventName.name != "testEvent1"
+        val testFd    = new FileOutputStream(eventTestFile, append)
         val ev: Event = event
-        val json = Json.encode(ev).toUtf8String + "\n"
+        val json      = Json.encode(ev).toUtf8String + "\n"
         // SystemEvent constructor is private, but we need to change two fields in order to compare results
         val jsonStr1 =
           json.replaceAll("\"eventId\":\"[^\"]*\"", "\"eventId\":\"test\"")
-        val jsonStr2 = jsonStr1.replaceAll(
-          "\"eventTime\":\"[^\"]*\"",
-          "\"eventTime\":\"1970-01-01T00:00:00Z\"")
+        val jsonStr2 = jsonStr1.replaceAll("\"eventTime\":\"[^\"]*\"", "\"eventTime\":\"1970-01-01T00:00:00Z\"")
         testFd.write(jsonStr2.getBytes)
         log.debug(s"XXX Writing to $eventTestFile")
         testFd.close()
@@ -86,7 +76,8 @@ object TestAssemblyHandlers {
           log.info(s"received event: $event")
           try {
             handleEvent(event)
-          } catch {
+          }
+          catch {
             case ex: Exception =>
               log.error(s"Test failed for event $event", ex = ex)
           }
@@ -100,16 +91,14 @@ object TestAssemblyHandlers {
 }
 
 /**
-  * Domain specific logic should be written in below handlers.
-  * This handlers gets invoked when component receives messages/commands from other component/entity.
-  * For example, if one component sends Submit(Setup(args)) command to TestHcd,
-  * This will be first validated in the supervisor and then forwarded to Component TLA which first invokes validateCommand hook
-  * and if validation is successful, then onSubmit hook gets invoked.
-  * You can find more information on this here : https://tmtsoftware.github.io/csw/commons/framework.html
-  */
-class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
-                           cswCtx: CswContext)
-    extends ComponentHandlers(ctx, cswCtx) {
+ * Domain specific logic should be written in below handlers.
+ * This handlers gets invoked when component receives messages/commands from other component/entity.
+ * For example, if one component sends Submit(Setup(args)) command to TestHcd,
+ * This will be first validated in the supervisor and then forwarded to Component TLA which first invokes validateCommand hook
+ * and if validation is successful, then onSubmit hook gets invoked.
+ * You can find more information on this here : https://tmtsoftware.github.io/csw/commons/framework.html
+ */
+class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage], cswCtx: CswContext) extends ComponentHandlers(ctx, cswCtx) {
 
   import cswCtx._
 
@@ -121,8 +110,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
   private val log = loggerFactory.getLogger
 
   // See tests/test_commands_with_assembly.py
-  private val pythonConnection = HttpConnection(
-    ComponentId(Prefix(CSW, "pycswTest"), ComponentType.Service))
+  private val pythonConnection = HttpConnection(ComponentId(Prefix(CSW, "pycswTest"), ComponentType.Service))
 
   log.info("Initializing test assembly...")
   startSubscribingToEvents()
@@ -137,8 +125,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
 
   override def onLocationTrackingEvent(trackingEvent: TrackingEvent): Unit = {
     trackingEvent match {
-      case LocationUpdated(location)
-          if location.connection == pythonConnection =>
+      case LocationUpdated(location) if location.connection == pythonConnection =>
         sendCommandsToPython(location)
       case LocationRemoved(connection) if connection == pythonConnection =>
         log.info(s"XXX python based service was removed from Location Service")
@@ -146,12 +133,9 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     }
   }
 
-  override def validateCommand(
-      runId: Id,
-      controlCommand: ControlCommand): ValidateCommandResponse = Accepted(runId)
+  override def validateCommand(runId: Id, controlCommand: ControlCommand): ValidateCommandResponse = Accepted(runId)
 
-  override def onSubmit(runId: Id,
-                        controlCommand: ControlCommand): SubmitResponse =
+  override def onSubmit(runId: Id, controlCommand: ControlCommand): SubmitResponse =
     Completed(runId)
 
   override def onOneway(runId: Id, controlCommand: ControlCommand): Unit = {}
@@ -172,7 +156,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     import Coords._
 
     val basePosKey = CoordKey.make("BasePosition")
-    val cmdKey = KeyType.FloatKey.make("cmdValue")
+    val cmdKey     = KeyType.FloatKey.make("cmdValue")
     val utcTimeKey = UTCTimeKey.make("utcTimeValue")
     val taiTimeKey = TAITimeKey.make("taiTimeValue")
 
@@ -217,10 +201,8 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     Setup(componentInfo.prefix, CommandName(commandName), None)
       .add(posParam)
       .add(cmdKey.set(1.0f, 2.0f, 3.0f))
-      .add(utcTimeKey.set(
-        UTCTime(Instant.parse("2021-09-17T09:17:08.608242344Z"))))
-      .add(taiTimeKey.set(
-        TAITime(Instant.parse("2021-09-17T09:17:45.610701219Z"))))
+      .add(utcTimeKey.set(UTCTime(Instant.parse("2021-09-17T09:17:08.608242344Z"))))
+      .add(taiTimeKey.set(TAITime(Instant.parse("2021-09-17T09:17:45.610701219Z"))))
   }
 
   // Send some test commands to the python based command service
@@ -245,24 +227,22 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       val longRunningCommand = makeTestCommand("LongRunningCommand")
       val validateResponse =
         Await.result(pythonService.validate(longRunningCommand), 5.seconds)
-      testLog(
-        s"Response from validate command to ${pythonConnection.componentId.fullName}: $validateResponse")
+      testLog(s"Response from validate command to ${pythonConnection.componentId.fullName}: $validateResponse")
 
       val firstCommandResponse =
         Await.result(pythonService.submit(longRunningCommand), 5.seconds)
       testLog(
-        s"Initial response from submit of long running command to ${pythonConnection.componentId.fullName}: $firstCommandResponse")
-      val finalCommandResponse = Await.result(
-        pythonService.queryFinal(firstCommandResponse.runId),
-        20.seconds)
+        s"Initial response from submit of long running command to ${pythonConnection.componentId.fullName}: $firstCommandResponse"
+      )
+      val finalCommandResponse = Await.result(pythonService.queryFinal(firstCommandResponse.runId), 20.seconds)
       testLog(
-        s"Final response from submit of long running command to ${pythonConnection.componentId.fullName}: $finalCommandResponse")
+        s"Final response from submit of long running command to ${pythonConnection.componentId.fullName}: $finalCommandResponse"
+      )
 
       val simpleCommand = makeTestCommand("SimpleCommand")
       val simpleCommandResponse =
         Await.result(pythonService.submit(simpleCommand), 5.seconds)
-      testLog(
-        s"Response from simple submit to ${pythonConnection.componentId.fullName}: $simpleCommandResponse")
+      testLog(s"Response from simple submit to ${pythonConnection.componentId.fullName}: $simpleCommandResponse")
 
       // Test cancel of current state subscription
       currentStateSubscription.cancel()
@@ -270,21 +250,19 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       val resultCommand = makeTestCommand("ResultCommand")
       val resultCommandResponse =
         Await.result(pythonService.submit(resultCommand), 5.seconds)
-      testLog(
-        s"Response with result from submit to ${pythonConnection.componentId.fullName}: $resultCommandResponse")
+      testLog(s"Response with result from submit to ${pythonConnection.componentId.fullName}: $resultCommandResponse")
 
       val errorCommand = makeTestCommand("ErrorCommand")
       val errorCommandResponse =
         Await.result(pythonService.submit(errorCommand), 5.seconds)
-      testLog(
-        s"Response from error command submit to ${pythonConnection.componentId.fullName}: $errorCommandResponse")
+      testLog(s"Response from error command submit to ${pythonConnection.componentId.fullName}: $errorCommandResponse")
 
       val invalidCommand = makeTestCommand("InvalidCommand")
       val invalidCommandResponse =
         Await.result(pythonService.submit(invalidCommand), 5.seconds)
-      testLog(
-        s"Response from invalid command submit to ${pythonConnection.componentId.fullName}: $invalidCommandResponse")
-    } catch {
+      testLog(s"Response from invalid command submit to ${pythonConnection.componentId.fullName}: $invalidCommandResponse")
+    }
+    catch {
       case e: Exception =>
         log.error("Error sending command to python test", ex = e)
     }
@@ -293,10 +271,9 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     try {
       val onewayCommand = makeTestCommand("OneWay")
       Await.ready(pythonService.oneway(onewayCommand), 5.seconds)
-    } catch {
-      case e: RuntimeException
-          if e.getMessage.startsWith(
-            "The http server closed the connection unexpectedly") =>
+    }
+    catch {
+      case e: RuntimeException if e.getMessage.startsWith("The http server closed the connection unexpectedly") =>
       case e: Exception =>
         log.error("Error sending OneWay command to python test", ex = e)
     }

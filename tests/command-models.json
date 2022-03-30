@@ -1,15 +1,27 @@
 {
-  "Units" : [ "angstrom", "arcmin", "arcsec", "day", "degree", "elvolt", "gram", "hour", "hertz", "joule", "kelvin", "kilogram", "kilometer", "liter", "meter", "marcsec", "millimeter", "millisecond", "micron", "micrometer", "minute", "newton", "pascal", "radian", "second", "sday", "steradian", "microarcsec", "volt", "watt", "week", "year", "coulomb", "centimeter", "erg", "au", "jansky", "lightyear", "mag", "cal", "foot", "inch", "pound", "mile", "ounce", "yard", "NoUnits", "encoder", "count", "pix", "tai", "utc" ],
+  "Units" : [ "angstrom", "arcmin", "arcsec", "day", "degree", "elvolt", "gram", "hour", "hertz", "joule", "kelvin", "kilogram", "kilometer", "liter", "meter", "marcsec", "millimeter", "millisecond", "micron", "micrometer", "minute", "nanometer", "newton", "pascal", "radian", "second", "sday", "steradian", "microarcsec", "volt", "watt", "week", "year", "coulomb", "centimeter", "erg", "au", "jansky", "lightyear", "mag", "cal", "foot", "inch", "pound", "mile", "ounce", "yard", "NoUnits", "encoder", "count", "pix", "tai", "utc" ],
   "CommandName" : [ "move" ],
-  "UTCTime" : [ "2021-09-17T09:17:08.608242344Z" ],
+  "UTCTime" : [ "2022-03-30T09:45:44.765444984Z" ],
   "CurrentState" : [ {
     "prefix" : "CSW.ncc.trombone",
     "stateName" : "idle",
     "paramSet" : [ {
+      "StringKey" : {
+        "keyName" : "StringKey",
+        "values" : [ "Str1", "Str2" ],
+        "units" : "NoUnits"
+      }
+    }, {
       "IntKey" : {
         "keyName" : "IntKey",
         "values" : [ 70, 80 ],
         "units" : "NoUnits"
+      }
+    }, {
+      "UTCTimeKey" : {
+        "keyName" : "UTCTimeKey",
+        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
+        "units" : "utc"
       }
     }, {
       "FloatKey" : {
@@ -30,12 +42,6 @@
         "units" : "NoUnits"
       }
     }, {
-      "IntArrayKey" : {
-        "keyName" : "IntArrayKey",
-        "values" : [ [ 7, 8 ] ],
-        "units" : "NoUnits"
-      }
-    }, {
       "LongKey" : {
         "keyName" : "LongKey",
         "values" : [ 50, 60 ],
@@ -44,7 +50,7 @@
     }, {
       "TAITimeKey" : {
         "keyName" : "TAITimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:45.610701219Z" ],
+        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
         "units" : "tai"
       }
     }, {
@@ -72,15 +78,60 @@
         "units" : "NoUnits"
       }
     }, {
-      "UTCTimeKey" : {
-        "keyName" : "UTCTimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:08.608242344Z" ],
-        "units" : "utc"
+      "FloatArrayKey" : {
+        "keyName" : "FloatArrayKey",
+        "values" : [ [ 9, 10 ] ],
+        "units" : "NoUnits"
       }
     }, {
-      "StringKey" : {
-        "keyName" : "StringKey",
-        "values" : [ "Str1", "Str2" ],
+      "IntArrayKey" : {
+        "keyName" : "IntArrayKey",
+        "values" : [ [ 7, 8 ] ],
+        "units" : "NoUnits"
+      }
+    }, {
+      "CoordKey" : {
+        "keyName" : "CoordKey",
+        "values" : [ {
+          "_type" : "EqCoord",
+          "tag" : "BASE",
+          "ra" : 659912250000,
+          "dec" : -109892300000,
+          "frame" : "FK5",
+          "catalogName" : "none",
+          "pm" : {
+            "pmx" : 0.5,
+            "pmy" : 2.33
+          }
+        }, {
+          "_type" : "SolarSystemCoord",
+          "tag" : "BASE",
+          "body" : "Venus"
+        }, {
+          "_type" : "MinorPlanetCoord",
+          "tag" : "GUIDER1",
+          "epoch" : 2000,
+          "inclination" : 324000000000,
+          "longAscendingNode" : 7200000000,
+          "argOfPerihelion" : 360000000000,
+          "meanDistance" : 1.4,
+          "eccentricity" : 0.234,
+          "meanAnomaly" : 792000000000
+        }, {
+          "_type" : "CometCoord",
+          "tag" : "BASE",
+          "epochOfPerihelion" : 2000,
+          "inclination" : 324000000000,
+          "longAscendingNode" : 7200000000,
+          "argOfPerihelion" : 360000000000,
+          "perihelionDistance" : 1.4,
+          "eccentricity" : 0.234
+        }, {
+          "_type" : "AltAzCoord",
+          "tag" : "BASE",
+          "alt" : 1083600000000,
+          "az" : 153000000000
+        } ],
         "units" : "NoUnits"
       }
     }, {
@@ -141,57 +192,6 @@
       "ShortArrayKey" : {
         "keyName" : "ShortArrayKey",
         "values" : [ [ 3, 4 ] ],
-        "units" : "NoUnits"
-      }
-    }, {
-      "CoordKey" : {
-        "keyName" : "CoordKey",
-        "values" : [ {
-          "_type" : "EqCoord",
-          "tag" : "BASE",
-          "ra" : 659912250000,
-          "dec" : -109892300000,
-          "frame" : "ICRS",
-          "catalogName" : "none",
-          "pm" : {
-            "pmx" : 0.5,
-            "pmy" : 2.33
-          }
-        }, {
-          "_type" : "SolarSystemCoord",
-          "tag" : "BASE",
-          "body" : "Venus"
-        }, {
-          "_type" : "MinorPlanetCoord",
-          "tag" : "GUIDER1",
-          "epoch" : 2000,
-          "inclination" : 324000000000,
-          "longAscendingNode" : 7200000000,
-          "argOfPerihelion" : 360000000000,
-          "meanDistance" : 1.4,
-          "eccentricity" : 0.234,
-          "meanAnomaly" : 792000000000
-        }, {
-          "_type" : "CometCoord",
-          "tag" : "BASE",
-          "epochOfPerihelion" : 2000,
-          "inclination" : 324000000000,
-          "longAscendingNode" : 7200000000,
-          "argOfPerihelion" : 360000000000,
-          "perihelionDistance" : 1.4,
-          "eccentricity" : 0.234
-        }, {
-          "_type" : "AltAzCoord",
-          "tag" : "BASE",
-          "alt" : 1083600000000,
-          "az" : 153000000000
-        } ],
-        "units" : "NoUnits"
-      }
-    }, {
-      "FloatArrayKey" : {
-        "keyName" : "FloatArrayKey",
-        "values" : [ [ 9, 10 ] ],
         "units" : "NoUnits"
       }
     } ]
@@ -256,16 +256,28 @@
   } ],
   "SubmitResponse" : [ {
     "_type" : "Cancelled",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   }, {
     "_type" : "Completed",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5",
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
     "result" : {
       "paramSet" : [ {
+        "StringKey" : {
+          "keyName" : "StringKey",
+          "values" : [ "Str1", "Str2" ],
+          "units" : "NoUnits"
+        }
+      }, {
         "IntKey" : {
           "keyName" : "IntKey",
           "values" : [ 70, 80 ],
           "units" : "NoUnits"
+        }
+      }, {
+        "UTCTimeKey" : {
+          "keyName" : "UTCTimeKey",
+          "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
+          "units" : "utc"
         }
       }, {
         "FloatKey" : {
@@ -286,12 +298,6 @@
           "units" : "NoUnits"
         }
       }, {
-        "IntArrayKey" : {
-          "keyName" : "IntArrayKey",
-          "values" : [ [ 7, 8 ] ],
-          "units" : "NoUnits"
-        }
-      }, {
         "LongKey" : {
           "keyName" : "LongKey",
           "values" : [ 50, 60 ],
@@ -300,7 +306,7 @@
       }, {
         "TAITimeKey" : {
           "keyName" : "TAITimeKey",
-          "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:45.610701219Z" ],
+          "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
           "units" : "tai"
         }
       }, {
@@ -328,15 +334,60 @@
           "units" : "NoUnits"
         }
       }, {
-        "UTCTimeKey" : {
-          "keyName" : "UTCTimeKey",
-          "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:08.608242344Z" ],
-          "units" : "utc"
+        "FloatArrayKey" : {
+          "keyName" : "FloatArrayKey",
+          "values" : [ [ 9, 10 ] ],
+          "units" : "NoUnits"
         }
       }, {
-        "StringKey" : {
-          "keyName" : "StringKey",
-          "values" : [ "Str1", "Str2" ],
+        "IntArrayKey" : {
+          "keyName" : "IntArrayKey",
+          "values" : [ [ 7, 8 ] ],
+          "units" : "NoUnits"
+        }
+      }, {
+        "CoordKey" : {
+          "keyName" : "CoordKey",
+          "values" : [ {
+            "_type" : "EqCoord",
+            "tag" : "BASE",
+            "ra" : 659912250000,
+            "dec" : -109892300000,
+            "frame" : "FK5",
+            "catalogName" : "none",
+            "pm" : {
+              "pmx" : 0.5,
+              "pmy" : 2.33
+            }
+          }, {
+            "_type" : "SolarSystemCoord",
+            "tag" : "BASE",
+            "body" : "Venus"
+          }, {
+            "_type" : "MinorPlanetCoord",
+            "tag" : "GUIDER1",
+            "epoch" : 2000,
+            "inclination" : 324000000000,
+            "longAscendingNode" : 7200000000,
+            "argOfPerihelion" : 360000000000,
+            "meanDistance" : 1.4,
+            "eccentricity" : 0.234,
+            "meanAnomaly" : 792000000000
+          }, {
+            "_type" : "CometCoord",
+            "tag" : "BASE",
+            "epochOfPerihelion" : 2000,
+            "inclination" : 324000000000,
+            "longAscendingNode" : 7200000000,
+            "argOfPerihelion" : 360000000000,
+            "perihelionDistance" : 1.4,
+            "eccentricity" : 0.234
+          }, {
+            "_type" : "AltAzCoord",
+            "tag" : "BASE",
+            "alt" : 1083600000000,
+            "az" : 153000000000
+          } ],
           "units" : "NoUnits"
         }
       }, {
@@ -399,105 +450,54 @@
           "values" : [ [ 3, 4 ] ],
           "units" : "NoUnits"
         }
-      }, {
-        "CoordKey" : {
-          "keyName" : "CoordKey",
-          "values" : [ {
-            "_type" : "EqCoord",
-            "tag" : "BASE",
-            "ra" : 659912250000,
-            "dec" : -109892300000,
-            "frame" : "ICRS",
-            "catalogName" : "none",
-            "pm" : {
-              "pmx" : 0.5,
-              "pmy" : 2.33
-            }
-          }, {
-            "_type" : "SolarSystemCoord",
-            "tag" : "BASE",
-            "body" : "Venus"
-          }, {
-            "_type" : "MinorPlanetCoord",
-            "tag" : "GUIDER1",
-            "epoch" : 2000,
-            "inclination" : 324000000000,
-            "longAscendingNode" : 7200000000,
-            "argOfPerihelion" : 360000000000,
-            "meanDistance" : 1.4,
-            "eccentricity" : 0.234,
-            "meanAnomaly" : 792000000000
-          }, {
-            "_type" : "CometCoord",
-            "tag" : "BASE",
-            "epochOfPerihelion" : 2000,
-            "inclination" : 324000000000,
-            "longAscendingNode" : 7200000000,
-            "argOfPerihelion" : 360000000000,
-            "perihelionDistance" : 1.4,
-            "eccentricity" : 0.234
-          }, {
-            "_type" : "AltAzCoord",
-            "tag" : "BASE",
-            "alt" : 1083600000000,
-            "az" : 153000000000
-          } ],
-          "units" : "NoUnits"
-        }
-      }, {
-        "FloatArrayKey" : {
-          "keyName" : "FloatArrayKey",
-          "values" : [ [ 9, 10 ] ],
-          "units" : "NoUnits"
-        }
       } ]
     }
   }, {
     "_type" : "Error",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5",
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
     "message" : "issue"
   }, {
     "_type" : "Invalid",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5",
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
     "issue" : {
       "_type" : "OtherIssue",
       "reason" : "issue"
     }
   }, {
     "_type" : "Locked",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   }, {
     "_type" : "Started",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   } ],
   "OnewayResponse" : [ {
     "_type" : "Accepted",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   }, {
     "_type" : "Invalid",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5",
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
     "issue" : {
       "_type" : "OtherIssue",
       "reason" : "issue"
     }
   }, {
     "_type" : "Locked",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   } ],
-  "TAITime" : [ "2021-09-17T09:17:45.610701219Z" ],
+  "TAITime" : [ "2022-03-30T09:46:21.771675061Z" ],
   "ValidateResponse" : [ {
     "_type" : "Accepted",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   }, {
     "_type" : "Invalid",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5",
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
     "issue" : {
       "_type" : "OtherIssue",
       "reason" : "issue"
     }
   }, {
     "_type" : "Locked",
-    "runId" : "853b750d-cc7f-4da9-8ee7-a69bb5f240d5"
+    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
   } ],
   "ControlCommand" : [ {
     "_type" : "Observe",
@@ -524,10 +524,22 @@
   } ],
   "Result" : [ {
     "paramSet" : [ {
+      "StringKey" : {
+        "keyName" : "StringKey",
+        "values" : [ "Str1", "Str2" ],
+        "units" : "NoUnits"
+      }
+    }, {
       "IntKey" : {
         "keyName" : "IntKey",
         "values" : [ 70, 80 ],
         "units" : "NoUnits"
+      }
+    }, {
+      "UTCTimeKey" : {
+        "keyName" : "UTCTimeKey",
+        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
+        "units" : "utc"
       }
     }, {
       "FloatKey" : {
@@ -548,12 +560,6 @@
         "units" : "NoUnits"
       }
     }, {
-      "IntArrayKey" : {
-        "keyName" : "IntArrayKey",
-        "values" : [ [ 7, 8 ] ],
-        "units" : "NoUnits"
-      }
-    }, {
       "LongKey" : {
         "keyName" : "LongKey",
         "values" : [ 50, 60 ],
@@ -562,7 +568,7 @@
     }, {
       "TAITimeKey" : {
         "keyName" : "TAITimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:45.610701219Z" ],
+        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
         "units" : "tai"
       }
     }, {
@@ -590,15 +596,60 @@
         "units" : "NoUnits"
       }
     }, {
-      "UTCTimeKey" : {
-        "keyName" : "UTCTimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:08.608242344Z" ],
-        "units" : "utc"
+      "FloatArrayKey" : {
+        "keyName" : "FloatArrayKey",
+        "values" : [ [ 9, 10 ] ],
+        "units" : "NoUnits"
       }
     }, {
-      "StringKey" : {
-        "keyName" : "StringKey",
-        "values" : [ "Str1", "Str2" ],
+      "IntArrayKey" : {
+        "keyName" : "IntArrayKey",
+        "values" : [ [ 7, 8 ] ],
+        "units" : "NoUnits"
+      }
+    }, {
+      "CoordKey" : {
+        "keyName" : "CoordKey",
+        "values" : [ {
+          "_type" : "EqCoord",
+          "tag" : "BASE",
+          "ra" : 659912250000,
+          "dec" : -109892300000,
+          "frame" : "FK5",
+          "catalogName" : "none",
+          "pm" : {
+            "pmx" : 0.5,
+            "pmy" : 2.33
+          }
+        }, {
+          "_type" : "SolarSystemCoord",
+          "tag" : "BASE",
+          "body" : "Venus"
+        }, {
+          "_type" : "MinorPlanetCoord",
+          "tag" : "GUIDER1",
+          "epoch" : 2000,
+          "inclination" : 324000000000,
+          "longAscendingNode" : 7200000000,
+          "argOfPerihelion" : 360000000000,
+          "meanDistance" : 1.4,
+          "eccentricity" : 0.234,
+          "meanAnomaly" : 792000000000
+        }, {
+          "_type" : "CometCoord",
+          "tag" : "BASE",
+          "epochOfPerihelion" : 2000,
+          "inclination" : 324000000000,
+          "longAscendingNode" : 7200000000,
+          "argOfPerihelion" : 360000000000,
+          "perihelionDistance" : 1.4,
+          "eccentricity" : 0.234
+        }, {
+          "_type" : "AltAzCoord",
+          "tag" : "BASE",
+          "alt" : 1083600000000,
+          "az" : 153000000000
+        } ],
         "units" : "NoUnits"
       }
     }, {
@@ -661,60 +712,10 @@
         "values" : [ [ 3, 4 ] ],
         "units" : "NoUnits"
       }
-    }, {
-      "CoordKey" : {
-        "keyName" : "CoordKey",
-        "values" : [ {
-          "_type" : "EqCoord",
-          "tag" : "BASE",
-          "ra" : 659912250000,
-          "dec" : -109892300000,
-          "frame" : "ICRS",
-          "catalogName" : "none",
-          "pm" : {
-            "pmx" : 0.5,
-            "pmy" : 2.33
-          }
-        }, {
-          "_type" : "SolarSystemCoord",
-          "tag" : "BASE",
-          "body" : "Venus"
-        }, {
-          "_type" : "MinorPlanetCoord",
-          "tag" : "GUIDER1",
-          "epoch" : 2000,
-          "inclination" : 324000000000,
-          "longAscendingNode" : 7200000000,
-          "argOfPerihelion" : 360000000000,
-          "meanDistance" : 1.4,
-          "eccentricity" : 0.234,
-          "meanAnomaly" : 792000000000
-        }, {
-          "_type" : "CometCoord",
-          "tag" : "BASE",
-          "epochOfPerihelion" : 2000,
-          "inclination" : 324000000000,
-          "longAscendingNode" : 7200000000,
-          "argOfPerihelion" : 360000000000,
-          "perihelionDistance" : 1.4,
-          "eccentricity" : 0.234
-        }, {
-          "_type" : "AltAzCoord",
-          "tag" : "BASE",
-          "alt" : 1083600000000,
-          "az" : 153000000000
-        } ],
-        "units" : "NoUnits"
-      }
-    }, {
-      "FloatArrayKey" : {
-        "keyName" : "FloatArrayKey",
-        "values" : [ [ 9, 10 ] ],
-        "units" : "NoUnits"
-      }
     } ]
   } ],
   "KeyType" : [ "ChoiceKey", "StringKey", "UTCTimeKey", "TAITimeKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey", "AltAzCoordKey", "CoordKey", "BooleanKey", "CharKey", "ByteKey", "ShortKey", "LongKey", "IntKey", "FloatKey", "DoubleKey", "ByteArrayKey", "ShortArrayKey", "LongArrayKey", "IntArrayKey", "FloatArrayKey", "DoubleArrayKey", "ByteMatrixKey", "ShortMatrixKey", "LongMatrixKey", "IntMatrixKey", "FloatMatrixKey", "DoubleMatrixKey" ],
+  "OperationalState" : [ "READY", "NOT_READY", "ERROR", "BUSY" ],
   "UnitsMap" : [ {
     "data" : {
       "mag" : "mag",
@@ -742,6 +743,7 @@
       "year" : "yr",
       "foot" : "ft",
       "arcsec" : "arcsec",
+      "nanometer" : "nm",
       "millimeter" : "mm",
       "hour" : "h",
       "cal" : "cal",
@@ -772,10 +774,22 @@
     }
   } ],
   "Parameter" : [ {
+    "StringKey" : {
+      "keyName" : "StringKey",
+      "values" : [ "Str1", "Str2" ],
+      "units" : "NoUnits"
+    }
+  }, {
     "IntKey" : {
       "keyName" : "IntKey",
       "values" : [ 70, 80 ],
       "units" : "NoUnits"
+    }
+  }, {
+    "UTCTimeKey" : {
+      "keyName" : "UTCTimeKey",
+      "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
+      "units" : "utc"
     }
   }, {
     "FloatKey" : {
@@ -796,12 +810,6 @@
       "units" : "NoUnits"
     }
   }, {
-    "IntArrayKey" : {
-      "keyName" : "IntArrayKey",
-      "values" : [ [ 7, 8 ] ],
-      "units" : "NoUnits"
-    }
-  }, {
     "LongKey" : {
       "keyName" : "LongKey",
       "values" : [ 50, 60 ],
@@ -810,7 +818,7 @@
   }, {
     "TAITimeKey" : {
       "keyName" : "TAITimeKey",
-      "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:45.610701219Z" ],
+      "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
       "units" : "tai"
     }
   }, {
@@ -838,15 +846,60 @@
       "units" : "NoUnits"
     }
   }, {
-    "UTCTimeKey" : {
-      "keyName" : "UTCTimeKey",
-      "values" : [ "1970-01-01T00:00:00Z", "2021-09-17T09:17:08.608242344Z" ],
-      "units" : "utc"
+    "FloatArrayKey" : {
+      "keyName" : "FloatArrayKey",
+      "values" : [ [ 9, 10 ] ],
+      "units" : "NoUnits"
     }
   }, {
-    "StringKey" : {
-      "keyName" : "StringKey",
-      "values" : [ "Str1", "Str2" ],
+    "IntArrayKey" : {
+      "keyName" : "IntArrayKey",
+      "values" : [ [ 7, 8 ] ],
+      "units" : "NoUnits"
+    }
+  }, {
+    "CoordKey" : {
+      "keyName" : "CoordKey",
+      "values" : [ {
+        "_type" : "EqCoord",
+        "tag" : "BASE",
+        "ra" : 659912250000,
+        "dec" : -109892300000,
+        "frame" : "FK5",
+        "catalogName" : "none",
+        "pm" : {
+          "pmx" : 0.5,
+          "pmy" : 2.33
+        }
+      }, {
+        "_type" : "SolarSystemCoord",
+        "tag" : "BASE",
+        "body" : "Venus"
+      }, {
+        "_type" : "MinorPlanetCoord",
+        "tag" : "GUIDER1",
+        "epoch" : 2000,
+        "inclination" : 324000000000,
+        "longAscendingNode" : 7200000000,
+        "argOfPerihelion" : 360000000000,
+        "meanDistance" : 1.4,
+        "eccentricity" : 0.234,
+        "meanAnomaly" : 792000000000
+      }, {
+        "_type" : "CometCoord",
+        "tag" : "BASE",
+        "epochOfPerihelion" : 2000,
+        "inclination" : 324000000000,
+        "longAscendingNode" : 7200000000,
+        "argOfPerihelion" : 360000000000,
+        "perihelionDistance" : 1.4,
+        "eccentricity" : 0.234
+      }, {
+        "_type" : "AltAzCoord",
+        "tag" : "BASE",
+        "alt" : 1083600000000,
+        "az" : 153000000000
+      } ],
       "units" : "NoUnits"
     }
   }, {
@@ -907,57 +960,6 @@
     "ShortArrayKey" : {
       "keyName" : "ShortArrayKey",
       "values" : [ [ 3, 4 ] ],
-      "units" : "NoUnits"
-    }
-  }, {
-    "CoordKey" : {
-      "keyName" : "CoordKey",
-      "values" : [ {
-        "_type" : "EqCoord",
-        "tag" : "BASE",
-        "ra" : 659912250000,
-        "dec" : -109892300000,
-        "frame" : "ICRS",
-        "catalogName" : "none",
-        "pm" : {
-          "pmx" : 0.5,
-          "pmy" : 2.33
-        }
-      }, {
-        "_type" : "SolarSystemCoord",
-        "tag" : "BASE",
-        "body" : "Venus"
-      }, {
-        "_type" : "MinorPlanetCoord",
-        "tag" : "GUIDER1",
-        "epoch" : 2000,
-        "inclination" : 324000000000,
-        "longAscendingNode" : 7200000000,
-        "argOfPerihelion" : 360000000000,
-        "meanDistance" : 1.4,
-        "eccentricity" : 0.234,
-        "meanAnomaly" : 792000000000
-      }, {
-        "_type" : "CometCoord",
-        "tag" : "BASE",
-        "epochOfPerihelion" : 2000,
-        "inclination" : 324000000000,
-        "longAscendingNode" : 7200000000,
-        "argOfPerihelion" : 360000000000,
-        "perihelionDistance" : 1.4,
-        "eccentricity" : 0.234
-      }, {
-        "_type" : "AltAzCoord",
-        "tag" : "BASE",
-        "alt" : 1083600000000,
-        "az" : 153000000000
-      } ],
-      "units" : "NoUnits"
-    }
-  }, {
-    "FloatArrayKey" : {
-      "keyName" : "FloatArrayKey",
-      "values" : [ [ 9, 10 ] ],
       "units" : "NoUnits"
     }
   } ]
