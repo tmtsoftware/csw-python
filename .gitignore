@@ -9,6 +9,7 @@ scalapb/*.py
 
 # virtual environment
 venv
+.venv
 
 # Prerequisites
 *.d
@@ -85,3 +86,4 @@ target/
 /dist/tmtpycsw-2.0.1.tar.gz
 /dist/tmtpycsw-2.0.1-py3-none-any.whl
 /test.log
+/tests/testSupport/.bsp/sbt.json
