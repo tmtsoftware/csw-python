@@ -3,8 +3,8 @@ all: doc
 # Generate the documentation (under build/csw)
 doc:
 	test -d .venv || $(MAKE) venv
-	pipenv run pdoc --force --html --output-dir build csw
-	rm docs/*.html
+	pipenv run pdoc3 --force --html --output-dir build csw
+	rm -f docs/*.html
 	cp build/csw/*.html docs/
 
 # Run tests against an included, Scala based assembly
@@ -15,7 +15,7 @@ test: all
 # Remove generated files
 clean:
 	(cd tests/testSupport; sbt clean)
-	rm -rf build dist target
+	rm -rf build dist target .venv
 
 # Upload release (requires username, password)
 release: doc
@@ -32,5 +32,6 @@ release: doc
 venv:
 	rm -rf .venv
 	mkdir .venv
-	pip install --user --upgrade pipenv
+	python3 -m venv .venv
+	pipenv run pip install pdoc3
 	pipenv install

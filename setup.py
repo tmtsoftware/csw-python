@@ -12,7 +12,7 @@ setuptools.setup(
     description="A python API for TMT CSW services",
     long_description="This package provides some Python APIs for TMT Common Software (CSW) services.",
     long_description_content_type="text/markdown",
-    url="https://github.com/tmtsoftware/pycsw",
+    url="https://github.com/tmtsoftware/csw-python",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
