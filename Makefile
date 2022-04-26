@@ -15,7 +15,7 @@ test: all
 # Remove generated files
 clean:
 	(cd tests/testSupport; sbt clean)
-	rm -rf build dist target
+	rm -rf build dist target .venv
 
 # Upload release (requires username, password)
 release: doc
@@ -32,7 +32,6 @@ release: doc
 venv:
 	rm -rf .venv
 	mkdir .venv
-	python3 -m venv
-#	pip3 install --user --upgrade pipenv
+	python3 -m venv .venv
 	pipenv run pip install pdoc3
 	pipenv install
