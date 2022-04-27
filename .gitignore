@@ -9,6 +9,7 @@ scalapb/*.py
 
 # virtual environment
 venv
+.venv
 
 # Prerequisites
 *.d

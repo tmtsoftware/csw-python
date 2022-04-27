@@ -1,7 +1,7 @@
 {
-  "Units" : [ "angstrom", "arcmin", "arcsec", "day", "degree", "elvolt", "gram", "hour", "hertz", "joule", "kelvin", "kilogram", "kilometer", "liter", "meter", "marcsec", "millimeter", "millisecond", "micron", "micrometer", "minute", "nanometer", "newton", "pascal", "radian", "second", "sday", "steradian", "microarcsec", "volt", "watt", "week", "year", "coulomb", "centimeter", "erg", "au", "jansky", "lightyear", "mag", "cal", "foot", "inch", "pound", "mile", "ounce", "yard", "NoUnits", "encoder", "count", "pix", "tai", "utc" ],
+  "Units" : [ "angstrom", "alpha", "ampere", "arcmin", "arcsec", "bar", "candela", "day", "degree", "degC", "degF", "elvolt", "gauss", "gram", "hertz", "henry", "hour", "joule", "kelvin", "kilogram", "kilometer", "liter", "lm", "lsun", "lx", "mas", "me", "meter", "microarcsec", "millimeter", "millisecond", "micron", "micrometer", "minute", "MJD", "mol", "month", "mmyy", "mu0", "muB", "nanometer", "newton", "ohm", "pascal", "pi", "pc", "ppm", "radian", "second", "sday", "steradian", "volt", "watt", "Wb", "week", "year", "coulomb", "centimeter", "D", "dyn", "erg", "au", "a0", "c", "cKayser", "crab", "damas", "e", "earth", "F", "G", "geoMass", "hm", "hms", "hhmmss", "jansky", "jd", "jovmass", "lightyear", "mag", "mjup", "mp", "minsec", "msun", "photon", "rgeo", "rjup", "rsun", "rydberg", "seimens", "tesla", "u", "barn", "cal", "foot", "inch", "pound", "mile", "ounce", "yard", "NoUnits", "bit", "encoder", "count", "mmhg", "percent", "pix", "tai", "utc", "date", "datetime" ],
   "CommandName" : [ "move" ],
-  "UTCTime" : [ "2022-03-30T09:45:44.765444984Z" ],
+  "UTCTime" : [ "2022-04-27T11:15:19.425630861Z" ],
   "CurrentState" : [ {
     "prefix" : "CSW.ncc.trombone",
     "stateName" : "idle",
@@ -16,12 +16,6 @@
         "keyName" : "IntKey",
         "values" : [ 70, 80 ],
         "units" : "NoUnits"
-      }
-    }, {
-      "UTCTimeKey" : {
-        "keyName" : "UTCTimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
-        "units" : "utc"
       }
     }, {
       "FloatKey" : {
@@ -48,12 +42,6 @@
         "units" : "NoUnits"
       }
     }, {
-      "TAITimeKey" : {
-        "keyName" : "TAITimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
-        "units" : "tai"
-      }
-    }, {
       "FloatMatrixKey" : {
         "keyName" : "FloatMatrix",
         "values" : [ [ [ 16, 17 ], [ 18, 19 ] ] ],
@@ -66,6 +54,12 @@
         "units" : "NoUnits"
       }
     }, {
+      "TAITimeKey" : {
+        "keyName" : "TAITimeKey",
+        "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:56.430042784Z" ],
+        "units" : "tai"
+      }
+    }, {
       "ShortKey" : {
         "keyName" : "ShortKey",
         "values" : [ 30, 40 ],
@@ -75,12 +69,6 @@
       "DoubleArrayKey" : {
         "keyName" : "DoubleArrayKey",
         "values" : [ [ 11, 12 ] ],
-        "units" : "NoUnits"
-      }
-    }, {
-      "FloatArrayKey" : {
-        "keyName" : "FloatArrayKey",
-        "values" : [ [ 9, 10 ] ],
         "units" : "NoUnits"
       }
     }, {
@@ -194,6 +182,18 @@
         "values" : [ [ 3, 4 ] ],
         "units" : "NoUnits"
       }
+    }, {
+      "UTCTimeKey" : {
+        "keyName" : "UTCTimeKey",
+        "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:19.425630861Z" ],
+        "units" : "utc"
+      }
+    }, {
+      "FloatArrayKey" : {
+        "keyName" : "FloatArrayKey",
+        "values" : [ [ 9, 10 ] ],
+        "units" : "NoUnits"
+      }
     } ]
   } ],
   "CommandIssue" : [ {
@@ -256,10 +256,10 @@
   } ],
   "SubmitResponse" : [ {
     "_type" : "Cancelled",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   }, {
     "_type" : "Completed",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822",
     "result" : {
       "paramSet" : [ {
         "StringKey" : {
@@ -272,12 +272,6 @@
           "keyName" : "IntKey",
           "values" : [ 70, 80 ],
           "units" : "NoUnits"
-        }
-      }, {
-        "UTCTimeKey" : {
-          "keyName" : "UTCTimeKey",
-          "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
-          "units" : "utc"
         }
       }, {
         "FloatKey" : {
@@ -304,12 +298,6 @@
           "units" : "NoUnits"
         }
       }, {
-        "TAITimeKey" : {
-          "keyName" : "TAITimeKey",
-          "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
-          "units" : "tai"
-        }
-      }, {
         "FloatMatrixKey" : {
           "keyName" : "FloatMatrix",
           "values" : [ [ [ 16, 17 ], [ 18, 19 ] ] ],
@@ -322,6 +310,12 @@
           "units" : "NoUnits"
         }
       }, {
+        "TAITimeKey" : {
+          "keyName" : "TAITimeKey",
+          "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:56.430042784Z" ],
+          "units" : "tai"
+        }
+      }, {
         "ShortKey" : {
           "keyName" : "ShortKey",
           "values" : [ 30, 40 ],
@@ -331,12 +325,6 @@
         "DoubleArrayKey" : {
           "keyName" : "DoubleArrayKey",
           "values" : [ [ 11, 12 ] ],
-          "units" : "NoUnits"
-        }
-      }, {
-        "FloatArrayKey" : {
-          "keyName" : "FloatArrayKey",
-          "values" : [ [ 9, 10 ] ],
           "units" : "NoUnits"
         }
       }, {
@@ -450,54 +438,66 @@
           "values" : [ [ 3, 4 ] ],
           "units" : "NoUnits"
         }
+      }, {
+        "UTCTimeKey" : {
+          "keyName" : "UTCTimeKey",
+          "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:19.425630861Z" ],
+          "units" : "utc"
+        }
+      }, {
+        "FloatArrayKey" : {
+          "keyName" : "FloatArrayKey",
+          "values" : [ [ 9, 10 ] ],
+          "units" : "NoUnits"
+        }
       } ]
     }
   }, {
     "_type" : "Error",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822",
     "message" : "issue"
   }, {
     "_type" : "Invalid",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822",
     "issue" : {
       "_type" : "OtherIssue",
       "reason" : "issue"
     }
   }, {
     "_type" : "Locked",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   }, {
     "_type" : "Started",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   } ],
   "OnewayResponse" : [ {
     "_type" : "Accepted",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   }, {
     "_type" : "Invalid",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822",
     "issue" : {
       "_type" : "OtherIssue",
       "reason" : "issue"
     }
   }, {
     "_type" : "Locked",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   } ],
-  "TAITime" : [ "2022-03-30T09:46:21.771675061Z" ],
+  "TAITime" : [ "2022-04-27T11:15:56.430042784Z" ],
   "ValidateResponse" : [ {
     "_type" : "Accepted",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   }, {
     "_type" : "Invalid",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa",
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822",
     "issue" : {
       "_type" : "OtherIssue",
       "reason" : "issue"
     }
   }, {
     "_type" : "Locked",
-    "runId" : "a633d317-e3a8-4f6f-aea9-901b041be8aa"
+    "runId" : "3882915f-e6ba-4a21-84d5-ddd89259c822"
   } ],
   "ControlCommand" : [ {
     "_type" : "Observe",
@@ -536,12 +536,6 @@
         "units" : "NoUnits"
       }
     }, {
-      "UTCTimeKey" : {
-        "keyName" : "UTCTimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
-        "units" : "utc"
-      }
-    }, {
       "FloatKey" : {
         "keyName" : "FloatKey",
         "values" : [ 90, 100 ],
@@ -566,12 +560,6 @@
         "units" : "NoUnits"
       }
     }, {
-      "TAITimeKey" : {
-        "keyName" : "TAITimeKey",
-        "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
-        "units" : "tai"
-      }
-    }, {
       "FloatMatrixKey" : {
         "keyName" : "FloatMatrix",
         "values" : [ [ [ 16, 17 ], [ 18, 19 ] ] ],
@@ -584,6 +572,12 @@
         "units" : "NoUnits"
       }
     }, {
+      "TAITimeKey" : {
+        "keyName" : "TAITimeKey",
+        "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:56.430042784Z" ],
+        "units" : "tai"
+      }
+    }, {
       "ShortKey" : {
         "keyName" : "ShortKey",
         "values" : [ 30, 40 ],
@@ -593,12 +587,6 @@
       "DoubleArrayKey" : {
         "keyName" : "DoubleArrayKey",
         "values" : [ [ 11, 12 ] ],
-        "units" : "NoUnits"
-      }
-    }, {
-      "FloatArrayKey" : {
-        "keyName" : "FloatArrayKey",
-        "values" : [ [ 9, 10 ] ],
         "units" : "NoUnits"
       }
     }, {
@@ -712,65 +700,135 @@
         "values" : [ [ 3, 4 ] ],
         "units" : "NoUnits"
       }
+    }, {
+      "UTCTimeKey" : {
+        "keyName" : "UTCTimeKey",
+        "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:19.425630861Z" ],
+        "units" : "utc"
+      }
+    }, {
+      "FloatArrayKey" : {
+        "keyName" : "FloatArrayKey",
+        "values" : [ [ 9, 10 ] ],
+        "units" : "NoUnits"
+      }
     } ]
   } ],
   "KeyType" : [ "ChoiceKey", "StringKey", "UTCTimeKey", "TAITimeKey", "EqCoordKey", "SolarSystemCoordKey", "MinorPlanetCoordKey", "CometCoordKey", "AltAzCoordKey", "CoordKey", "BooleanKey", "CharKey", "ByteKey", "ShortKey", "LongKey", "IntKey", "FloatKey", "DoubleKey", "ByteArrayKey", "ShortArrayKey", "LongArrayKey", "IntArrayKey", "FloatArrayKey", "DoubleArrayKey", "ByteMatrixKey", "ShortMatrixKey", "LongMatrixKey", "IntMatrixKey", "FloatMatrixKey", "DoubleMatrixKey" ],
   "OperationalState" : [ "READY", "NOT_READY", "ERROR", "BUSY" ],
   "UnitsMap" : [ {
     "data" : {
-      "mag" : "mag",
-      "gram" : "g",
-      "volt" : "V",
-      "meter" : "m",
-      "microarcsec" : "µas",
-      "arcmin" : "arcmin",
-      "au" : "AU",
+      "msun" : "Msun",
       "jansky" : "Jy",
-      "pix" : "pix",
+      "D" : "Debye",
+      "alpha" : "alpha",
+      "e" : "e",
+      "rgeo" : "Rgeo",
+      "mag" : "mag",
+      "rjup" : "Rjup",
+      "ohm" : "ohm",
+      "degF" : "degF",
+      "gram" : "g",
       "centimeter" : "cm",
       "count" : "ct",
       "micrometer" : "µm",
+      "henry" : "henry",
+      "pi" : "pi",
+      "degC" : "degC",
+      "volt" : "V",
+      "bit" : "bit",
       "kilogram" : "kg",
       "ounce" : "oz",
       "elvolt" : "eV",
       "degree" : "deg",
+      "meter" : "m",
+      "crab" : "crab",
+      "candela" : "candela ",
       "erg" : "erg",
       "minute" : "min",
+      "lsun" : "lsun",
+      "u" : "u",
+      "mol" : "mol",
       "sday" : "sday",
+      "datetime" : "datetime",
       "liter" : "l",
+      "F" : "F",
+      "rydberg" : "Rydberg",
+      "microarcsec" : "µas",
+      "mmyy" : "mmyy",
+      "seimens" : "seimens",
+      "mmhg" : "mmHg",
       "inch" : "inch",
       "pascal" : "Pa",
+      "jd" : "jd",
       "year" : "yr",
+      "photon" : "photon",
+      "rsun" : "Rsun",
+      "hm" : "hm",
       "foot" : "ft",
       "arcsec" : "arcsec",
       "nanometer" : "nm",
+      "mas" : "mas",
       "millimeter" : "mm",
       "hour" : "h",
-      "cal" : "cal",
+      "mp" : "mp",
       "utc" : "UTC",
+      "ampere" : "A",
+      "hhmmss" : "HH:MM:SS",
+      "cal" : "cal",
+      "minsec" : "m:s",
       "angstrom" : "Angstrom",
       "newton" : "N",
       "week" : "wk",
+      "G" : "G",
       "millisecond" : "ms",
       "mile" : "mi",
       "second" : "s",
       "tai" : "TAI",
       "steradian" : "sr",
-      "encoder" : "enc",
+      "lx" : "lx",
       "joule" : "J",
+      "MJD" : "MJD",
+      "encoder" : "enc",
+      "dyn" : "dyne",
+      "date" : "date",
+      "a0" : "a0",
+      "mu0" : "mu0",
+      "me" : "me",
       "hertz" : "Hz",
       "kelvin" : "K",
       "coulomb" : "C",
+      "arcmin" : "arcmin",
+      "muB" : "muB",
+      "pc" : "pc",
+      "bar" : "bar",
       "watt" : "W",
+      "mjup" : "Mjup",
       "yard" : "yd",
+      "geoMass" : "geoMass",
       "NoUnits" : "none",
       "micron" : "µm",
+      "au" : "AU",
+      "hms" : "hms",
+      "percent" : "percent",
+      "barn" : "barn",
+      "lm" : "lm",
+      "c" : "c",
       "kilometer" : "km",
+      "ppm" : "ppm",
+      "tesla" : "tesla",
       "radian" : "rad",
+      "damas" : "d:m:s",
       "lightyear" : "lyr",
+      "cKayser" : "cKayser",
       "pound" : "lb",
+      "Wb" : "Wb",
+      "jovmass" : "jovMass",
       "day" : "d",
-      "marcsec" : "mas"
+      "gauss" : "gauss",
+      "earth" : "earth",
+      "pix" : "pix",
+      "month" : "month"
     }
   } ],
   "Parameter" : [ {
@@ -784,12 +842,6 @@
       "keyName" : "IntKey",
       "values" : [ 70, 80 ],
       "units" : "NoUnits"
-    }
-  }, {
-    "UTCTimeKey" : {
-      "keyName" : "UTCTimeKey",
-      "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:45:44.765444984Z" ],
-      "units" : "utc"
     }
   }, {
     "FloatKey" : {
@@ -816,12 +868,6 @@
       "units" : "NoUnits"
     }
   }, {
-    "TAITimeKey" : {
-      "keyName" : "TAITimeKey",
-      "values" : [ "1970-01-01T00:00:00Z", "2022-03-30T09:46:21.771675061Z" ],
-      "units" : "tai"
-    }
-  }, {
     "FloatMatrixKey" : {
       "keyName" : "FloatMatrix",
       "values" : [ [ [ 16, 17 ], [ 18, 19 ] ] ],
@@ -834,6 +880,12 @@
       "units" : "NoUnits"
     }
   }, {
+    "TAITimeKey" : {
+      "keyName" : "TAITimeKey",
+      "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:56.430042784Z" ],
+      "units" : "tai"
+    }
+  }, {
     "ShortKey" : {
       "keyName" : "ShortKey",
       "values" : [ 30, 40 ],
@@ -843,12 +895,6 @@
     "DoubleArrayKey" : {
       "keyName" : "DoubleArrayKey",
       "values" : [ [ 11, 12 ] ],
-      "units" : "NoUnits"
-    }
-  }, {
-    "FloatArrayKey" : {
-      "keyName" : "FloatArrayKey",
-      "values" : [ [ 9, 10 ] ],
       "units" : "NoUnits"
     }
   }, {
@@ -960,6 +1006,18 @@
     "ShortArrayKey" : {
       "keyName" : "ShortArrayKey",
       "values" : [ [ 3, 4 ] ],
+      "units" : "NoUnits"
+    }
+  }, {
+    "UTCTimeKey" : {
+      "keyName" : "UTCTimeKey",
+      "values" : [ "1970-01-01T00:00:00Z", "2022-04-27T11:15:19.425630861Z" ],
+      "units" : "utc"
+    }
+  }, {
+    "FloatArrayKey" : {
+      "keyName" : "FloatArrayKey",
+      "values" : [ [ 9, 10 ] ],
       "units" : "NoUnits"
     }
   } ]
