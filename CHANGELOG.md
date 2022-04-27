@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v4.0.3] - 2022-04-27
+
+### Changed
+
+- Minor changes to Makefile
+- Changed to use pdoc3 instead of pdoc
+- Removed outdated dependency on pathlib
+- Checked in test data file that was missing
+
 ## [tmtpycsw v4.0.2] - 2022-02-14
 
 ### Changed
