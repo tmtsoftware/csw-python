@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Changed to use pdoc3 instead of pdoc
 - Removed outdated dependency on pathlib
 - Checked in test data file that was missing
+- Updated Pipfile.lock
+- Changed Makefile to define PYTHON as python3.9 (override with make PYTHON=python3.x if needed)
 
 ## [tmtpycsw v4.0.2] - 2022-02-14
 

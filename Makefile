@@ -36,6 +36,4 @@ venv:
 	mkdir .venv
 	$(PYTHON) -m venv .venv
 	pipenv run pip install pdoc3
-#	pipenv run pip install astropy
-#	pipenv run pip install typing_extensions
 	pipenv install
