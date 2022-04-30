@@ -1,0 +1,75 @@
+pipeline {
+    agent {
+        label 'master'
+    }
+
+    options {
+        timeout(time: 2, unit: 'HOURS')
+        timestamps()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                sh "git checkout $VERSION"
+                sh "git pull origin $VERSION"
+            }
+        }
+
+        stage('Install') {
+            steps {
+                withEnv(['PATH+LOCALBIN=/usr/local/bin:/var/lib/jenkins/.local/bin']) {
+                    sh "cs channel --add https://raw.githubusercontent.com/tmtsoftware/osw-apps/master/apps.json"
+                    sh "rm -rf .venv"
+                    sh "python3.9 -m pip install --upgrade pip"
+                    sh "python3.9 -m pip install pipenv"
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                withEnv(['PATH+LOCALBIN=/usr/local/bin:/var/lib/jenkins/.local/bin']) {
+                    sh "AAS_INTERFACE_NAME=lo INTERFACE_NAME=lo make test"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            sh "make clean"
+
+            script {
+                sendNotification(currentBuild.result)
+            }
+        }
+    }
+}
+
+def sendNotification(String buildStatus = 'STARTED') {
+    buildStatus = buildStatus ?: 'SUCCESS'
+
+    def colorCode = '#FF0000'
+    def subject = "${buildStatus}: Job '${env.JOB_NAME}' [${VERSION}] [${env.BUILD_NUMBER}]"
+    def summary = "${subject} (${env.BUILD_URL})"
+    def details = '${JELLY_SCRIPT,template="html"}'
+
+    // Override default values based on build status
+    if (buildStatus == 'STARTED') {
+        color = 'YELLOW'
+        colorCode = '#FFFF00'
+    } else if (buildStatus == 'SUCCESS') {
+        color = 'GREEN'
+        colorCode = '#00FF00'
+    } else {
+        color = 'RED'
+        colorCode = '#FF0000'
+        emailext(
+                subject: subject,
+                body: details,
+                to: "jweiss@tmt.org"
+        )
+    }
+
+    slackSend(channel: "#${SLACK_CH}", color: colorCode, message: summary)
+}
