@@ -23,7 +23,7 @@ from csw.Coords import ProperMotion, EqCoord
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix

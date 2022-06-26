@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>csw.CommandServer API documentation</title>
+<title>csw.SequencerServer API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>csw.CommandServer</code></h1>
+<h1 class="title">Module <code>csw.SequencerServer</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -29,7 +29,6 @@
 <pre><code class="python">import json
 
 import aiohttp
-import structlog
 from aiohttp import web, WSMessage
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
@@ -39,16 +38,20 @@ import uuid
 from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponseManager import CommandResponseManager
-from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState
+from csw.CommandServer import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
-from csw.ParameterSetType import ControlCommand
+from csw.ControlCommand import ControlCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+import structlog
+
+# Ignore generated functions in API docs
+__pdoc__ = {}
 
 log = structlog.get_logger()
 
 
-class CommandServer:
+class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
 
@@ -56,23 +59,71 @@ class CommandServer:
         obj = await request.json()
         # log.debug(f&#34;received post: {str(obj)}&#34;)
         method = obj[&#39;_type&#39;]
-        if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
-            command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
-            runId = str(uuid.uuid4())
-            if method == &#39;Submit&#39;:
-                commandResponse, task = self.handler.onSubmit(runId, command)
-                if task is not None:
-                    # noinspection PyTypeChecker
-                    self._crm.addTask(runId, task)
-                    log.debug(&#34;Long running task in progress...&#34;)
-            elif method == &#39;Oneway&#39;:
-                commandResponse = self.handler.onOneway(runId, command)
-            else:
-                commandResponse = self.handler.validateCommand(runId, command)
-            responseDict = commandResponse._asDict()
-            return web.json_response(responseDict)
-        else:
-            raise Exception(&#34;Invalid command type: &#34; + method)
+        match method:
+            case &#39;LoadSequence&#39;:
+                pass
+            case &#39;StartSequence&#39;:
+                pass
+            case &#39;GetSequence&#39;:
+                pass
+            case &#39;Add&#39;:
+                pass
+            case &#39;Prepend&#39;:
+                pass
+            case &#39;Replace&#39;:
+                pass
+            case &#39;InsertAfter&#39;:
+                pass
+            case &#39;Delete&#39;:
+                pass
+            case &#39;Pause&#39;:
+                pass
+            case &#39;Resume&#39;:
+                pass
+            case &#39;AddBreakpoint&#39;:
+                pass
+            case &#39;RemoveBreakpoint&#39;:
+                pass
+            case &#39;Reset&#39;:
+                pass
+            case &#39;AbortSequence&#39;:
+                pass
+            case &#39;Stop&#39;:
+                pass
+            case &#39;Submit&#39;:
+                pass
+            case &#39;Query&#39;:
+                pass
+            case &#39;GoOnline&#39;:
+                pass
+            case &#39;GoOffline&#39;:
+                pass
+            case &#39;DiagnosticMode&#39;:
+                pass
+            case &#39;OperationsMode&#39;:
+                pass
+            case &#39;GetSequenceComponent&#39;:
+                pass
+            case &#39;GetSequencerState&#39;:
+                pass
+
+        # if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
+        #     command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+        #     runId = str(uuid.uuid4())
+        #     if method == &#39;Submit&#39;:
+        #         commandResponse, task = self.handler.onSubmit(runId, command)
+        #         if task is not None:
+        #             # noinspection PyTypeChecker
+        #             self._crm.addTask(runId, task)
+        #             log.debug(&#34;Long running task in progress...&#34;)
+        #     elif method == &#39;Oneway&#39;:
+        #         commandResponse = self.handler.onOneway(runId, command)
+        #     else:
+        #         commandResponse = self.handler.validateCommand(runId, command)
+        #     responseDict = commandResponse._asDict()
+        #     return web.json_response(responseDict)
+        # else:
+        #     raise Exception(&#34;Invalid command type: &#34; + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
         commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
@@ -153,8 +204,8 @@ class CommandServer:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="csw.CommandServer.CommandServer"><code class="flex name class">
-<span>class <span class="ident">CommandServer</span></span>
+<dt id="csw.SequencerServer.SequencerServer"><code class="flex name class">
+<span>class <span class="ident">SequencerServer</span></span>
 <span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 8082)</span>
 </code></dt>
 <dd>
@@ -174,7 +225,7 @@ subsystem names and name is the name of the command server</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class CommandServer:
+<pre><code class="python">class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
 
@@ -182,23 +233,71 @@ subsystem names and name is the name of the command server</dd>
         obj = await request.json()
         # log.debug(f&#34;received post: {str(obj)}&#34;)
         method = obj[&#39;_type&#39;]
-        if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
-            command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
-            runId = str(uuid.uuid4())
-            if method == &#39;Submit&#39;:
-                commandResponse, task = self.handler.onSubmit(runId, command)
-                if task is not None:
-                    # noinspection PyTypeChecker
-                    self._crm.addTask(runId, task)
-                    log.debug(&#34;Long running task in progress...&#34;)
-            elif method == &#39;Oneway&#39;:
-                commandResponse = self.handler.onOneway(runId, command)
-            else:
-                commandResponse = self.handler.validateCommand(runId, command)
-            responseDict = commandResponse._asDict()
-            return web.json_response(responseDict)
-        else:
-            raise Exception(&#34;Invalid command type: &#34; + method)
+        match method:
+            case &#39;LoadSequence&#39;:
+                pass
+            case &#39;StartSequence&#39;:
+                pass
+            case &#39;GetSequence&#39;:
+                pass
+            case &#39;Add&#39;:
+                pass
+            case &#39;Prepend&#39;:
+                pass
+            case &#39;Replace&#39;:
+                pass
+            case &#39;InsertAfter&#39;:
+                pass
+            case &#39;Delete&#39;:
+                pass
+            case &#39;Pause&#39;:
+                pass
+            case &#39;Resume&#39;:
+                pass
+            case &#39;AddBreakpoint&#39;:
+                pass
+            case &#39;RemoveBreakpoint&#39;:
+                pass
+            case &#39;Reset&#39;:
+                pass
+            case &#39;AbortSequence&#39;:
+                pass
+            case &#39;Stop&#39;:
+                pass
+            case &#39;Submit&#39;:
+                pass
+            case &#39;Query&#39;:
+                pass
+            case &#39;GoOnline&#39;:
+                pass
+            case &#39;GoOffline&#39;:
+                pass
+            case &#39;DiagnosticMode&#39;:
+                pass
+            case &#39;OperationsMode&#39;:
+                pass
+            case &#39;GetSequenceComponent&#39;:
+                pass
+            case &#39;GetSequencerState&#39;:
+                pass
+
+        # if method in {&#39;Submit&#39;, &#39;Oneway&#39;, &#39;Validate&#39;}:
+        #     command = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+        #     runId = str(uuid.uuid4())
+        #     if method == &#39;Submit&#39;:
+        #         commandResponse, task = self.handler.onSubmit(runId, command)
+        #         if task is not None:
+        #             # noinspection PyTypeChecker
+        #             self._crm.addTask(runId, task)
+        #             log.debug(&#34;Long running task in progress...&#34;)
+        #     elif method == &#39;Oneway&#39;:
+        #         commandResponse = self.handler.onOneway(runId, command)
+        #     else:
+        #         commandResponse = self.handler.validateCommand(runId, command)
+        #     responseDict = commandResponse._asDict()
+        #     return web.json_response(responseDict)
+        # else:
+        #     raise Exception(&#34;Invalid command type: &#34; + method)
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
         commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
@@ -271,7 +370,7 @@ subsystem names and name is the name of the command server</dd>
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="csw.CommandServer.CommandServer.start"><code class="name flex">
+<dt id="csw.SequencerServer.SequencerServer.start"><code class="name flex">
 <span>def <span class="ident">start</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -306,9 +405,9 @@ subsystem names and name is the name of the command server</dd>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="csw.CommandServer.CommandServer" href="#csw.CommandServer.CommandServer">CommandServer</a></code></h4>
+<h4><code><a title="csw.SequencerServer.SequencerServer" href="#csw.SequencerServer.SequencerServer">SequencerServer</a></code></h4>
 <ul class="">
-<li><code><a title="csw.CommandServer.CommandServer.start" href="#csw.CommandServer.CommandServer.start">start</a></code></li>
+<li><code><a title="csw.SequencerServer.SequencerServer.start" href="#csw.SequencerServer.SequencerServer.start">start</a></code></li>
 </ul>
 </li>
 </ul>

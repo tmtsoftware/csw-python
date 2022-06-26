@@ -242,7 +242,7 @@ Event obtained from Event Service, decoded into a Event</p></div>
 </details>
 </dd>
 <dt id="csw.EventSubscriber.EventSubscriber.subscribe"><code class="name flex">
-<span>def <span class="ident">subscribe</span></span>(<span>self, eventKeyList: list, callback)</span>
+<span>def <span class="ident">subscribe</span></span>(<span>self, eventKeyList: list[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>], callback)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Start a subscription to system events in event service, specifying a callback
@@ -277,7 +277,7 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
 </details>
 </dd>
 <dt id="csw.EventSubscriber.EventSubscriber.unsubscribe"><code class="name flex">
-<span>def <span class="ident">unsubscribe</span></span>(<span>self, eventKeyList: list)</span>
+<span>def <span class="ident">unsubscribe</span></span>(<span>self, eventKeyList: list[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)</p>

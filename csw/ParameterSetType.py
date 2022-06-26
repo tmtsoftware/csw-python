@@ -13,7 +13,7 @@ class CommandName:
 
 
 @dataclass
-class ParameterSetType:
+class SequenceCommand:
     """
     Represents a CSW command.
     """
@@ -33,11 +33,16 @@ class ParameterSetType:
         commandName = CommandName(obj['commandName'])
         maybeObsId = obj['maybeObsId'] if 'maybeObsId' in obj else ""
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
-        assert (typ in {"Setup", "Observe"})
-        if typ == 'Setup':
-            return Setup(source, commandName, maybeObsId, paramSet)
-        else:
-            return Observe(source, commandName, maybeObsId, paramSet)
+        assert (typ in {"Setup", "Observe", "Wait"})
+        match typ:
+            case 'Setup':
+                return Setup(source, commandName, maybeObsId, paramSet)
+            case 'Observe':
+                return Observe(source, commandName, maybeObsId, paramSet)
+            case 'Wait':
+                return Wait(source, commandName, maybeObsId, paramSet)
+            case _:
+                raise TypeError
 
     # noinspection PyProtectedMember
     def _asDict(self):
@@ -87,7 +92,7 @@ class ParameterSetType:
 
 
 @dataclass
-class ControlCommand(ParameterSetType):
+class ControlCommand(SequenceCommand):
     pass
 
 
@@ -103,5 +108,13 @@ class Setup(ControlCommand):
 class Observe(ControlCommand):
     """
     An Observe is a special command that can be sent to an HCD or Assembly.
+    """
+    pass
+
+
+@dataclass
+class Wait(SequenceCommand):
+    """
+    A Wait command can only be sent to a sequencer
     """
     pass

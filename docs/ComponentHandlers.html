@@ -33,7 +33,7 @@ import structlog
 from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import CommandResponse, Accepted, Error
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from asyncio import Task
 
 from csw.CurrentState import CurrentState
@@ -286,7 +286,7 @@ component.</p></div>
 </details>
 </dd>
 <dt id="csw.ComponentHandlers.ComponentHandlers.onOneway"><code class="name flex">
-<span>def <span class="ident">onOneway</span></span>(<span>self, runId: str, command: <a title="csw.ControlCommand.ControlCommand" href="ControlCommand.html#csw.ControlCommand.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.CommandResponse" href="CommandResponse.html#csw.CommandResponse.CommandResponse">CommandResponse</a></span>
+<span>def <span class="ident">onOneway</span></span>(<span>self, runId: str, command: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.CommandResponse" href="CommandResponse.html#csw.CommandResponse.CommandResponse">CommandResponse</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Handles the given setup command and returns an immediate CommandResponse</p>
@@ -318,7 +318,7 @@ a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)</p>
 </details>
 </dd>
 <dt id="csw.ComponentHandlers.ComponentHandlers.onSubmit"><code class="name flex">
-<span>def <span class="ident">onSubmit</span></span>(<span>self, runId: str, command: <a title="csw.ControlCommand.ControlCommand" href="ControlCommand.html#csw.ControlCommand.ControlCommand">ControlCommand</a>) ‑> (<class '<a title="csw.CommandResponse.CommandResponse" href="CommandResponse.html#csw.CommandResponse.CommandResponse">CommandResponse</a>'>, <class '_asyncio.Task'>)</span>
+<span>def <span class="ident">onSubmit</span></span>(<span>self, runId: str, command: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> (<class '<a title="csw.CommandResponse.CommandResponse" href="CommandResponse.html#csw.CommandResponse.CommandResponse">CommandResponse</a>'>, <class '_asyncio.Task'>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Handles the given setup command and returns a CommandResponse subclass</p>
@@ -377,7 +377,7 @@ For long running commands, you can respond with Started(runId, "&hellip;") and a
 </details>
 </dd>
 <dt id="csw.ComponentHandlers.ComponentHandlers.validateCommand"><code class="name flex">
-<span>def <span class="ident">validateCommand</span></span>(<span>self, runId: str, command: <a title="csw.ControlCommand.ControlCommand" href="ControlCommand.html#csw.ControlCommand.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.CommandResponse" href="CommandResponse.html#csw.CommandResponse.CommandResponse">CommandResponse</a></span>
+<span>def <span class="ident">validateCommand</span></span>(<span>self, runId: str, command: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.CommandResponse" href="CommandResponse.html#csw.CommandResponse.CommandResponse">CommandResponse</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Validates the given command</p>

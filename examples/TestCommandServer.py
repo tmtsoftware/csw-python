@@ -5,7 +5,7 @@ from typing import List
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import Parameter
 from csw.KeyType import KeyType

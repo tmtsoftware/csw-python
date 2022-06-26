@@ -5,7 +5,7 @@ import structlog
 from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import CommandResponse, Accepted, Error
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from asyncio import Task
 
 from csw.CurrentState import CurrentState

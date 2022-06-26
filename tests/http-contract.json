@@ -1,0 +1,229 @@
+{
+  "endpoints" : [ {
+    "requestType" : "LoadSequence",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "StartSequence",
+    "responseType" : "SubmitResponse"
+  }, {
+    "requestType" : "GetSequence",
+    "responseType" : "[StepList]"
+  }, {
+    "requestType" : "Add",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "Prepend",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "Replace",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "InsertAfter",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "Delete",
+    "responseType" : "GenericResponse"
+  }, {
+    "requestType" : "Pause",
+    "responseType" : "PauseResponse"
+  }, {
+    "requestType" : "Resume",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "AddBreakpoint",
+    "responseType" : "GenericResponse"
+  }, {
+    "requestType" : "RemoveBreakpoint",
+    "responseType" : "RemoveBreakpointResponse"
+  }, {
+    "requestType" : "Reset",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "AbortSequence",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "Stop",
+    "responseType" : "OkOrUnhandledResponse"
+  }, {
+    "requestType" : "Submit",
+    "responseType" : "SubmitResponse"
+  }, {
+    "requestType" : "Query",
+    "responseType" : "SubmitResponse"
+  }, {
+    "requestType" : "GoOnline",
+    "responseType" : "GoOnlineResponse"
+  }, {
+    "requestType" : "GoOffline",
+    "responseType" : "GoOfflineResponse"
+  }, {
+    "requestType" : "DiagnosticMode",
+    "responseType" : "DiagnosticModeResponse"
+  }, {
+    "requestType" : "OperationsMode",
+    "responseType" : "OperationsModeResponse"
+  }, {
+    "requestType" : "GetSequenceComponent",
+    "responseType" : "AkkaLocation"
+  }, {
+    "requestType" : "GetSequencerState",
+    "responseType" : "SequencerState"
+  } ],
+  "requests" : {
+    "GetSequenceComponent" : [ {
+      "_type" : "GetSequenceComponent"
+    } ],
+    "Prepend" : [ {
+      "_type" : "Prepend",
+      "commands" : [ {
+        "_type" : "Wait",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      } ]
+    } ],
+    "Replace" : [ {
+      "_type" : "Replace",
+      "id" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0",
+      "commands" : [ {
+        "_type" : "Setup",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Observe",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      } ]
+    } ],
+    "Add" : [ {
+      "_type" : "Add",
+      "commands" : [ {
+        "_type" : "Setup",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Wait",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Observe",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      } ]
+    } ],
+    "Submit" : [ {
+      "_type" : "Submit",
+      "sequence" : [ {
+        "_type" : "Setup",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Observe",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Wait",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      } ]
+    } ],
+    "Query" : [ {
+      "_type" : "Query",
+      "runId" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0"
+    } ],
+    "Delete" : [ {
+      "_type" : "Delete",
+      "id" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0"
+    } ],
+    "InsertAfter" : [ {
+      "_type" : "InsertAfter",
+      "id" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0",
+      "commands" : [ {
+        "_type" : "Setup",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      } ]
+    } ],
+    "GetSequencerState" : [ {
+      "_type" : "GetSequencerState"
+    } ],
+    "DiagnosticMode" : [ {
+      "_type" : "DiagnosticMode",
+      "startTime" : "1970-01-01T00:00:01Z",
+      "hint" : "hint"
+    } ],
+    "OperationsMode" : [ {
+      "_type" : "OperationsMode"
+    } ],
+    "AddBreakpoint" : [ {
+      "_type" : "AddBreakpoint",
+      "id" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0"
+    } ],
+    "AbortSequence" : [ {
+      "_type" : "AbortSequence"
+    } ],
+    "LoadSequence" : [ {
+      "_type" : "LoadSequence",
+      "sequence" : [ {
+        "_type" : "Setup",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Observe",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      }, {
+        "_type" : "Wait",
+        "source" : "CSW.ncc.trombone",
+        "commandName" : "move",
+        "maybeObsId" : "2020A-001-123",
+        "paramSet" : [ ]
+      } ]
+    } ],
+    "RemoveBreakpoint" : [ {
+      "_type" : "RemoveBreakpoint",
+      "id" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0"
+    } ],
+    "GoOnline" : [ {
+      "_type" : "GoOnline"
+    } ],
+    "Reset" : [ {
+      "_type" : "Reset"
+    } ],
+    "Resume" : [ {
+      "_type" : "Resume"
+    } ],
+    "Stop" : [ {
+      "_type" : "Stop"
+    } ],
+    "GoOffline" : [ {
+      "_type" : "GoOffline"
+    } ],
+    "Pause" : [ {
+      "_type" : "Pause"
+    } ]
+  }
+}

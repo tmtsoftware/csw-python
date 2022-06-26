@@ -10,13 +10,20 @@ import uuid
 from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponseManager import CommandResponseManager
+from csw.CommandServer import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+import structlog
+
+# Ignore generated functions in API docs
+__pdoc__ = {}
+
+log = structlog.get_logger()
 
 
-class Sequencer:
+class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
 
