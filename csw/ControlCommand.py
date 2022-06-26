@@ -3,6 +3,7 @@ from typing import List
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
+
 @dataclass
 class CommandName:
     """
@@ -10,8 +11,9 @@ class CommandName:
     """
     name: str
 
+
 @dataclass
-class ControlCommand:
+class ParameterSetType:
     """
     Represents a CSW command.
     """
@@ -82,6 +84,11 @@ class ControlCommand:
             if p.keyName == keyName:
                 return True
         return False
+
+
+@dataclass
+class ControlCommand(ParameterSetType):
+    pass
 
 
 @dataclass

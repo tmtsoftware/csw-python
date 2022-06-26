@@ -2,7 +2,7 @@
 
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
 
-Note: Python version 3.9 was used for testing.
+Note: Python version 3.10 was used for testing.
 
 The latest release has been published to https://pypi.org/project/tmtpycsw/ and can be installed with:
 
