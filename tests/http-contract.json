@@ -203,6 +203,9 @@
         "paramSet" : [ ]
       } ]
     } ],
+    "StartSequence" : [ {
+      "_type" : "StartSequence"
+    } ],
     "RemoveBreakpoint" : [ {
       "_type" : "RemoveBreakpoint",
       "id" : "e1eaea0d-0781-40f2-b6eb-f52fd05e04b0"

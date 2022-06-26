@@ -5,17 +5,18 @@ from aiohttp import web, WSMessage
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 import atexit
-import uuid
 
 from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponseManager import CommandResponseManager
 from csw.CommandServer import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
-from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 import structlog
+from esw.SequencerRequest import LoadSequence, StartSequence
+from esw.SequencerRequest import SequencerRequest
+
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
@@ -30,54 +31,54 @@ class SequencerServer:
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
         # log.debug(f"received post: {str(obj)}")
-        method = obj['_type']
-        match method:
-            case 'LoadSequence':
+
+        match SequencerRequest._fromDict(obj):
+            case LoadSequence(sequence):
                 pass
-            case 'StartSequence':
+            case StartSequence():
                 pass
-            case 'GetSequence':
-                pass
-            case 'Add':
-                pass
-            case 'Prepend':
-                pass
-            case 'Replace':
-                pass
-            case 'InsertAfter':
-                pass
-            case 'Delete':
-                pass
-            case 'Pause':
-                pass
-            case 'Resume':
-                pass
-            case 'AddBreakpoint':
-                pass
-            case 'RemoveBreakpoint':
-                pass
-            case 'Reset':
-                pass
-            case 'AbortSequence':
-                pass
-            case 'Stop':
-                pass
-            case 'Submit':
-                pass
-            case 'Query':
-                pass
-            case 'GoOnline':
-                pass
-            case 'GoOffline':
-                pass
-            case 'DiagnosticMode':
-                pass
-            case 'OperationsMode':
-                pass
-            case 'GetSequenceComponent':
-                pass
-            case 'GetSequencerState':
-                pass
+            # case 'GetSequence':
+            #     pass
+            # case 'Add':
+            #     pass
+            # case 'Prepend':
+            #     pass
+            # case 'Replace':
+            #     pass
+            # case 'InsertAfter':
+            #     pass
+            # case 'Delete':
+            #     pass
+            # case 'Pause':
+            #     pass
+            # case 'Resume':
+            #     pass
+            # case 'AddBreakpoint':
+            #     pass
+            # case 'RemoveBreakpoint':
+            #     pass
+            # case 'Reset':
+            #     pass
+            # case 'AbortSequence':
+            #     pass
+            # case 'Stop':
+            #     pass
+            # case 'Submit':
+            #     pass
+            # case 'Query':
+            #     pass
+            # case 'GoOnline':
+            #     pass
+            # case 'GoOffline':
+            #     pass
+            # case 'DiagnosticMode':
+            #     pass
+            # case 'OperationsMode':
+            #     pass
+            # case 'GetSequenceComponent':
+            #     pass
+            # case 'GetSequencerState':
+            #     pass
 
         # if method in {'Submit', 'Oneway', 'Validate'}:
         #     command = ControlCommand._fromDict(obj['controlCommand'])
