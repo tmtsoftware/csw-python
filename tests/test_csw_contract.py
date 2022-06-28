@@ -64,6 +64,7 @@ class TestCswContract:
                 elif locType == "TcpLocation":
                     loc = TcpLocation.from_dict(p)
                 self.log.debug(f"Location: {loc}")
+                print(f"XXX loc == {loc}, dict = {loc.to_dict()}")
                 assert (loc.to_dict() == p)
 
     # Validate against Command Service model contract file produced by csw

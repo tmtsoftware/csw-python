@@ -13,9 +13,11 @@ from csw.Prefix import Prefix
 # noinspection SpellCheckingInspection
 __pdoc__ = {}
 
+
 # Note: Update this before each release!
 def csw_version():
     return {"csw-version": "4.0.1"}
+
 
 # noinspection SpellCheckingInspection
 def _pdocIgnoreGenerated(className: str):
@@ -102,16 +104,15 @@ class Location:
 
     @staticmethod
     def _makeLocation(obj: dict):
-        typ = obj["_type"]
-        s = json.dumps(obj)
-        if typ == "HttpLocation":
-            return HttpLocation.schema().loads(s)
-        elif typ == "TcpLocation":
-            return TcpLocation.schema().loads(s)
-        elif typ == "AkkaLocation":
-            return AkkaLocation.schema().loads(s)
-        else:
-            raise Exception("Invalid location type: " + typ)
+        match obj['_type']:
+            case "HttpLocation":
+                return HttpLocation.from_dict(obj)
+            case "TcpLocation":
+                return TcpLocation.from_dict(obj)
+            case "AkkaLocation":
+                return AkkaLocation.from_dict(obj)
+            case _:
+                raise Exception(f"Invalid location type: {obj['_type']}")
 
 
 _pdocIgnoreGenerated("AkkaLocation")

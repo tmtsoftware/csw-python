@@ -20,6 +20,7 @@ class TestEswContract:
             data = json.load(json_file)
             requests = data['requests']
             #
+            dict = requests['LoadSequence'][0]
             loadSequence: LoadSequence = SequencerRequest._fromDict(requests['LoadSequence'][0])
             assert loadSequence.sequence.__len__() == 3
             setup = loadSequence.sequence[0]
