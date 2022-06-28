@@ -14,7 +14,7 @@ from csw.ComponentHandlers import ComponentHandlers
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 import structlog
-from esw.SequencerRequest import LoadSequence, StartSequence
+from esw.SequencerRequest import *
 from esw.SequencerRequest import SequencerRequest
 
 
@@ -37,48 +37,48 @@ class SequencerServer:
                 pass
             case StartSequence():
                 pass
-            # case 'GetSequence':
-            #     pass
-            # case 'Add':
-            #     pass
-            # case 'Prepend':
-            #     pass
-            # case 'Replace':
-            #     pass
-            # case 'InsertAfter':
-            #     pass
-            # case 'Delete':
-            #     pass
-            # case 'Pause':
-            #     pass
-            # case 'Resume':
-            #     pass
-            # case 'AddBreakpoint':
-            #     pass
-            # case 'RemoveBreakpoint':
-            #     pass
-            # case 'Reset':
-            #     pass
-            # case 'AbortSequence':
-            #     pass
-            # case 'Stop':
-            #     pass
-            # case 'Submit':
-            #     pass
-            # case 'Query':
-            #     pass
-            # case 'GoOnline':
-            #     pass
-            # case 'GoOffline':
-            #     pass
-            # case 'DiagnosticMode':
-            #     pass
-            # case 'OperationsMode':
-            #     pass
-            # case 'GetSequenceComponent':
-            #     pass
-            # case 'GetSequencerState':
-            #     pass
+            case GetSequence():
+                pass
+            case Add(commands):
+                pass
+            case Prepend(commands):
+                pass
+            case Replace(id_, commands):
+                pass
+            case InsertAfter(id_, commands):
+                pass
+            case Delete(id_):
+                pass
+            case Pause():
+                pass
+            case Resume():
+                pass
+            case AddBreakpoint(id_):
+                pass
+            case RemoveBreakpoint(id_):
+                pass
+            case Reset():
+                pass
+            case AbortSequence():
+                pass
+            case Stop():
+                pass
+            case Submit(sequence):
+                pass
+            case Query(runId):
+                pass
+            case GoOnline():
+                pass
+            case GoOffline():
+                pass
+            case DiagnosticMode(startTime, hint):
+                pass
+            case OperationsMode():
+                pass
+            case GetSequenceComponent():
+                pass
+            case GetSequencerState():
+                pass
 
         # if method in {'Submit', 'Oneway', 'Validate'}:
         #     command = ControlCommand._fromDict(obj['controlCommand'])

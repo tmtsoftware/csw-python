@@ -4,6 +4,7 @@ from typing import List
 from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import SequenceCommand
+from csw.UTCTime import UTCTime
 
 
 class SequencerRequest:
@@ -20,47 +21,47 @@ class SequencerRequest:
             case 'StartSequence':
                 return StartSequence()
             case 'GetSequence':
-                pass
+                return GetSequence()
             case 'Add':
-                pass
+                return Add._fromDict(obj)
             case 'Prepend':
-                pass
+                return Prepend._fromDict(obj)
             case 'Replace':
-                pass
+                return Replace._fromDict(obj)
             case 'InsertAfter':
-                pass
+                return InsertAfter._fromDict(obj)
             case 'Delete':
-                pass
-            case 'Pause':
-                pass
-            case 'Resume':
-                pass
-            case 'AddBreakpoint':
-                pass
-            case 'RemoveBreakpoint':
-                pass
+                return Delete.from_dict(obj)
             case 'Reset':
-                pass
+                return Reset()
+            case 'Pause':
+                return Pause()
+            case 'Resume':
+                return Resume()
+            case 'AddBreakpoint':
+                return AddBreakpoint.from_dict(obj)
+            case 'RemoveBreakpoint':
+                return RemoveBreakpoint.from_dict(obj)
             case 'AbortSequence':
-                pass
+                return AbortSequence()
             case 'Stop':
-                pass
+                return Stop()
             case 'Submit':
-                pass
+                return Submit._fromDict(obj)
             case 'Query':
-                pass
+                return Query.from_dict(obj)
             case 'GoOnline':
-                pass
+                return GoOnline()
             case 'GoOffline':
-                pass
+                return GoOffline()
             case 'DiagnosticMode':
-                pass
+                return DiagnosticMode._fromDict(obj)
             case 'OperationsMode':
-                pass
+                return OperationsMode()
             case 'GetSequenceComponent':
-                pass
+                return GetSequenceComponent()
             case 'GetSequencerState':
-                pass
+                return GetSequencerState()
 
 
 @dataclass
@@ -84,29 +85,164 @@ class StartSequence(SequencerRequest):
 class GetSequence(SequencerRequest):
     pass
 
-# case class Add(commands: List[SequenceCommand])                 extends SequencerRequest
-# case class Prepend(commands: List[SequenceCommand])             extends SequencerRequest
-# case class Replace(id: Id, commands: List[SequenceCommand])     extends SequencerRequest
-# case class InsertAfter(id: Id, commands: List[SequenceCommand]) extends SequencerRequest
-# case class Delete(id: Id)                                       extends SequencerRequest
-# case class AddBreakpoint(id: Id)                                extends SequencerRequest
-# case class RemoveBreakpoint(id: Id)                             extends SequencerRequest
-# case object Reset                                               extends SequencerRequest
-# case object Pause                                               extends SequencerRequest
-# case object Resume                                              extends SequencerRequest
-# case object GetSequenceComponent                                extends SequencerRequest
-# case object GetSequencerState                                   extends SequencerRequest
-#
-# case object IsAvailable   extends SequencerRequest
-# case object IsOnline      extends SequencerRequest
-# case object GoOnline      extends SequencerRequest
-# case object GoOffline     extends SequencerRequest
-# case object AbortSequence extends SequencerRequest
-# case object Stop          extends SequencerRequest
-#
-# case class DiagnosticMode(startTime: UTCTime, hint: String) extends SequencerRequest
-# case object OperationsMode                                  extends SequencerRequest
-#
-# // Sequencer Command Protocol
-# case class Submit(sequence: Sequence) extends SequencerRequest
-# case class Query(runId: Id)           extends SequencerRequest
+
+@dataclass
+class Add(SequencerRequest):
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
+        return Add(commands)
+
+
+@dataclass
+class Prepend(SequencerRequest):
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
+        return Prepend(commands)
+
+
+@dataclass
+class Replace(SequencerRequest):
+    id_: str
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        id_ = obj['id']
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
+        return Replace(id_, commands)
+
+
+@dataclass
+class InsertAfter(SequencerRequest):
+    id_: str
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        id_ = obj['id']
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
+        return InsertAfter(id_, commands)
+
+
+@dataclass_json
+@dataclass
+class Delete(SequencerRequest):
+    id: str
+
+
+class Reset(SequencerRequest):
+    pass
+
+
+class Pause(SequencerRequest):
+    pass
+
+
+class Resume(SequencerRequest):
+    pass
+
+
+@dataclass_json
+@dataclass
+class AddBreakpoint(SequencerRequest):
+    id: str
+
+
+@dataclass_json
+@dataclass
+class RemoveBreakpoint(SequencerRequest):
+    id: str
+
+
+class GetSequenceComponent(SequencerRequest):
+    pass
+
+
+class GetSequencerState(SequencerRequest):
+    pass
+
+
+class IsAvailable(SequencerRequest):
+    pass
+
+
+class IsOnline(SequencerRequest):
+    pass
+
+
+class GoOnline(SequencerRequest):
+    pass
+
+
+class GoOffline(SequencerRequest):
+    pass
+
+
+class AbortSequence(SequencerRequest):
+    pass
+
+
+class Stop(SequencerRequest):
+    pass
+
+
+@dataclass
+class DiagnosticMode(SequencerRequest):
+    startTime: UTCTime
+    hint: str
+
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns a LoadSequence object for the given dict.
+        """
+        startTime = UTCTime.from_str(obj['startTime'])
+        hint = obj['hint']
+        return DiagnosticMode(startTime, hint)
+
+
+class OperationsMode(SequencerRequest):
+    pass
+
+
+# Sequencer Command Protocol
+
+class Submit(SequencerRequest):
+    sequence: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns a LoadSequence object for the given dict.
+        """
+        sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj['sequence']))
+        return LoadSequence(sequence)
+
+
+@dataclass_json
+@dataclass
+class Query(SequencerRequest):
+    runId: str
