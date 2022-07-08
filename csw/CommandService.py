@@ -3,7 +3,7 @@ import uuid
 import requests
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse
-from csw.CommandServiceRequest import Submit
+from csw.CommandServiceRequest import Submit, Validate, Oneway
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
@@ -24,12 +24,17 @@ class CommandService:
         location.__class__ = HttpLocation
         return location.uri
 
-    def submit(self, controlCommand: ControlCommand) -> SubmitResponse:
+    def _postCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
         baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
-        # wsUri = f"{baseUri}websocket-endpoint"
         headers = {'Content-type': 'application/json'}
-        data = Submit(controlCommand)._asDict()
+        match command:
+            case 'Submit':
+                data = Submit(controlCommand)._asDict()
+            case 'Validate':
+                data = Validate(controlCommand)._asDict()
+            case _:
+                data = Oneway(controlCommand)._asDict()
         jsonStr = json.loads(json.dumps(data))
         response = requests.post(postUri, headers=headers, json=jsonStr)
         if not response.ok:
@@ -37,3 +42,12 @@ class CommandService:
             return Error(runId, response.text)
         resp = CommandResponse._fromDict(response.json())
         return resp
+
+    def submit(self, controlCommand: ControlCommand) -> SubmitResponse:
+        return self._postCommand("Submit", controlCommand)
+
+    def validate(self, controlCommand: ControlCommand) -> SubmitResponse:
+        return self._postCommand("Validate", controlCommand)
+
+    def oneway(self, controlCommand: ControlCommand) -> SubmitResponse:
+        return self._postCommand("Oneway", controlCommand)
