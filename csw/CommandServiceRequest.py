@@ -9,6 +9,7 @@ from csw.ParameterSetType import ControlCommand
 # Ignore generated functions in API docs
 __pdoc__ = {}
 
+
 def _pdocIgnoreGenerated(className: str):
     __pdoc__[f"{className}.from_dict"] = False
     __pdoc__[f"{className}.from_json"] = False
@@ -18,26 +19,15 @@ def _pdocIgnoreGenerated(className: str):
 
 
 _pdocIgnoreGenerated("Validate")
-
-
-@dataclass_json
-@dataclass
-class Validate:
-    """
-    A message sent to validate a command. The response should be one of: Accepted, Invalid or Locked.
-
-    Args:
-        controlCommand (ControlCommand): The command to send
-    """
-    controlCommand: ControlCommand
-
-
 _pdocIgnoreGenerated("Submit")
+_pdocIgnoreGenerated("Oneway")
+_pdocIgnoreGenerated("QueryFinal")
+_pdocIgnoreGenerated("SubscribeCurrentState")
 
 
 @dataclass_json
 @dataclass
-class Submit:
+class CommandServiceRequest:
     """
     Represents a command that requires a response (of type CommandResponse).
 
@@ -46,23 +36,32 @@ class Submit:
     """
     controlCommand: ControlCommand
 
-
-_pdocIgnoreGenerated("Oneway")
+    def _asDict(self):
+        """
+        Returns: a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            'controlCommand': self.controlCommand._asDict(),
+        }
 
 
 @dataclass_json
 @dataclass
-class Oneway:
-    """
-    Represents a command that does not require or expect a response
-
-    Args:
-        controlCommand (ControlCommand): The command to send
-    """
-    controlCommand: ControlCommand
+class Validate(CommandServiceRequest):
+    pass
 
 
-_pdocIgnoreGenerated("QueryFinal")
+@dataclass_json
+@dataclass
+class Submit(CommandServiceRequest):
+    pass
+
+
+@dataclass_json
+@dataclass
+class Oneway(CommandServiceRequest):
+    pass
 
 
 @dataclass_json
@@ -90,9 +89,6 @@ class QueryFinal:
             return QueryFinal(runId, timeoutInSeconds)
         except:
             traceback.print_exc()
-
-
-_pdocIgnoreGenerated("SubscribeCurrentState")
 
 
 @dataclass_json

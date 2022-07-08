@@ -7,6 +7,7 @@ from csw.ParameterSetType import SequenceCommand
 from csw.UTCTime import UTCTime
 
 
+@dataclass
 class SequencerRequest:
     # noinspection PyProtectedMember
     @staticmethod
@@ -216,7 +217,7 @@ class DiagnosticMode(SequencerRequest):
     @staticmethod
     def _fromDict(obj):
         """
-        Returns a LoadSequence object for the given dict.
+        Returns a DiagnosticMode object for the given dict.
         """
         startTime = UTCTime.from_str(obj['startTime'])
         hint = obj['hint']
@@ -229,6 +230,7 @@ class OperationsMode(SequencerRequest):
 
 # Sequencer Command Protocol
 
+@dataclass
 class Submit(SequencerRequest):
     sequence: List[SequenceCommand]
 
@@ -236,7 +238,7 @@ class Submit(SequencerRequest):
     @staticmethod
     def _fromDict(obj):
         """
-        Returns a LoadSequence object for the given dict.
+        Returns a Submit object for the given dict.
         """
         sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj['sequence']))
         return LoadSequence(sequence)

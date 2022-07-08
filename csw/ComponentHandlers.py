@@ -80,8 +80,7 @@ class ComponentHandlers:
             s1 = self._currentStateSubscribers.get("") or set()
             s2 = self._currentStateSubscribers.get(currentState.stateName) or set()
             subscribers = s1 | s2
-            dict = currentState._asDict()
-            cs = json.dumps(dict)
+            cs = json.dumps(currentState._asDict())
             for ws in subscribers:
                 self.log.debug(f"Publishing current state: {cs}")
                 await ws.send_str(cs)

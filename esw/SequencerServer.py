@@ -1,4 +1,5 @@
 import json
+import uuid
 
 import aiohttp
 from aiohttp import web, WSMessage
@@ -8,6 +9,7 @@ import atexit
 
 from aiohttp.web_ws import WebSocketResponse
 
+from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
 from csw.CommandServer import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
@@ -16,7 +18,6 @@ from csw.LocationService import LocationService, ConnectionInfo, ComponentType, 
 import structlog
 from esw.SequencerRequest import *
 from esw.SequencerRequest import SequencerRequest
-
 
 # Ignore generated functions in API docs
 __pdoc__ = {}
@@ -80,23 +81,10 @@ class SequencerServer:
             case GetSequencerState():
                 pass
 
-        # if method in {'Submit', 'Oneway', 'Validate'}:
-        #     command = ControlCommand._fromDict(obj['controlCommand'])
-        #     runId = str(uuid.uuid4())
-        #     if method == 'Submit':
-        #         commandResponse, task = self.handler.onSubmit(runId, command)
-        #         if task is not None:
-        #             # noinspection PyTypeChecker
-        #             self._crm.addTask(runId, task)
-        #             log.debug("Long running task in progress...")
-        #     elif method == 'Oneway':
-        #         commandResponse = self.handler.onOneway(runId, command)
-        #     else:
-        #         commandResponse = self.handler.validateCommand(runId, command)
-        #     responseDict = commandResponse._asDict()
-        #     return web.json_response(responseDict)
-        # else:
-        #     raise Exception("Invalid command type: " + method)
+        # XXX FIXME
+        runId = str(uuid.uuid4())
+        commandResponse = Error(runId, "XXX Not impl")
+        return web.json_response(commandResponse._asDict())
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
         commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
@@ -121,10 +109,9 @@ class SequencerServer:
                         resp = await self._handleQueryFinal(queryFinal)
                         await ws.send_str(resp.text)
                         await ws.close()
-                    elif method == "SubscribeCurrentState":
-                        stateNames = SubscribeCurrentState._fromDict(obj).stateNames
-                        log.debug(f"Received SubscribeCurrentState: stateNames = {stateNames}")
-                        self.handler._subscribeCurrentState(stateNames, ws)
+                    elif method == "SubscribeSequencerState":
+                        log.debug(f"Received SubscribeSequencerState")
+                        self.handler._subscribeSequencerState(ws)
                     else:
                         log.debug(f"Warning: Received unknown ws message: {str(msg.data)}")
             elif msg.type == aiohttp.WSMsgType.ERROR:
@@ -137,18 +124,18 @@ class SequencerServer:
     def _registerWithLocationService(prefix: Prefix, port: int):
         log.debug("Registering with location service using port " + str(port))
         locationService = LocationService()
-        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+        connection = ConnectionInfo.make(prefix, ComponentType.SequenceComponent, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        # locationService.unregister(connection)
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
 
+    # XXXXXXXXXXXX ? handler?
     def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
         """
-        Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given prefix,
-        so that CSW components can locate it and send commands to it.
+        Creates an HTTP server that can receive sequencer commands and registers it with the Location Service using the
+        given prefix, so that CSW components can locate it and send commands to it.
 
         Args:
-            prefix (str): a CSW Prefix in the format $subsystem.name, where subsystem is one of the upper case TMT
+            prefix (str): a CSW Prefix in the format subsystem.name, where subsystem is one of the upper case TMT
                           subsystem names and name is the name of the command server
             handler (ComponentHandlers): command handler notified when commands are received
             port (int): optional port for HTTP server

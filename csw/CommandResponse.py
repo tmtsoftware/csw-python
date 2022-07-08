@@ -4,6 +4,7 @@ from typing import List
 from csw.Parameter import Parameter
 
 
+# noinspection PyProtectedMember
 @dataclass
 class CommandResponse:
     """
@@ -14,28 +15,58 @@ class CommandResponse:
 
     def _asDict(self):
         """
-        Returns: XXX: a dictionary corresponding to this object
+        Returns: a dictionary corresponding to this object
         """
         return {
             "_type": self.__class__.__name__,
             'runId': self.runId,
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        switcher = {
+            "Cancelled": Cancelled,
+            "Error": Error,
+            "Locked": Locked,
+            "Started": Started,
+            "Completed": Completed,
+            "Accepted": Accepted,
+            "Invalid": Invalid,
+        }
+        typ = obj["_type"]
+        return switcher[typ]._fromDict(obj)
+
 
 @dataclass
-class Cancelled(CommandResponse):
-    """Represents a negative response that describes the cancellation of command"""
+class SubmitResponse(CommandResponse):
+    """Returned by Submit message which calls the onSubmit handler"""
     pass
+
+
+@dataclass
+class Cancelled(SubmitResponse):
+    """Represents a negative response that describes the cancellation of command"""
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Cancelled(
+            runId=obj['runId']
+        )
 
 
 @dataclass
 class Accepted(CommandResponse):
     """Represents a final response stating acceptance of a command received"""
-    pass
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Accepted(
+            runId=obj['runId']
+        )
 
 
 @dataclass
-class Error(CommandResponse):
+class Error(SubmitResponse):
     """Represents a negative response that describes an error in executing the command"""
     message: str
 
@@ -50,9 +81,16 @@ class Error(CommandResponse):
             'message': self.message
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Error(
+            runId=obj['runId'],
+            message=obj['message']
+        )
+
 
 @dataclass
-class Locked(CommandResponse):
+class Locked(SubmitResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
     message: str
 
@@ -67,9 +105,16 @@ class Locked(CommandResponse):
             'message': self.message
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Locked(
+            runId=obj['runId'],
+            message=obj['message']
+        )
+
 
 @dataclass
-class Started(CommandResponse):
+class Started(SubmitResponse):
     """Represents an intermediate response stating a long running command has been started"""
     message: str
 
@@ -83,6 +128,13 @@ class Started(CommandResponse):
             'runId': self.runId,
             'message': self.message
         }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Started(
+            runId=obj['runId'],
+            message=obj['message']
+        )
 
 
 @dataclass
@@ -100,9 +152,18 @@ class Result:
             'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
         }
 
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns a Result for the given dict.
+        """
+        paramSet = list(map(lambda p: Parameter._fromDict(p), obj['paramSet']))
+        return Result(paramSet)
+
 
 @dataclass
-class Completed(CommandResponse):
+class Completed(SubmitResponse):
     """Represents a positive response stating completion of command"""
     result: Result = Result([])
 
@@ -118,12 +179,23 @@ class Completed(CommandResponse):
             'result': self.result._asDict()
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Completed(
+            runId=obj['runId'],
+            result=Result._fromDict(obj['result']),
+        )
+
 
 # --- Invalid ---
 @dataclass
 class CommandIssue:
     """Describes a command issue with appropriate reason for validation failure"""
     reason: str
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return globals()[obj['_type']](obj['reason'])
 
 
 class IdNotAvailableIssue(CommandIssue):
@@ -219,3 +291,10 @@ class Invalid(CommandResponse):
                 "reason": self.issue.reason
             }
         }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Invalid(
+            runId=obj['runId'],
+            issue=CommandIssue._fromDict(obj['issue']),
+        )
