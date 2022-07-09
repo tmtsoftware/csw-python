@@ -11,7 +11,7 @@ from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
-from csw.CommandServer import QueryFinal, SubscribeCurrentState
+from csw.CommandServer import QueryFinal, SubscribeSequencerState
 from csw.ComponentHandlers import ComponentHandlers
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
@@ -102,7 +102,7 @@ class SequencerServer:
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
-                    # log.debug(f"received message: {str(obj)}")
+                    log.debug(f"XXX received sequencer ws message: {str(obj)}")
                     method = obj['_type']
                     if method == "QueryFinal":
                         queryFinal = QueryFinal._fromDict(obj)
@@ -117,8 +117,36 @@ class SequencerServer:
             elif msg.type == aiohttp.WSMsgType.ERROR:
                 log.debug('Error: ws connection closed with exception %s' % ws.exception())
         log.debug('websocket connection closed')
-        self.handler._unsubscribeCurrentState(ws)
+        self.handler._unsubscribeSequencerState(ws)
         return ws
+
+    # # List of sequencer state  websocket subscribers
+    # _sequencerStateSubscribers = []
+    #
+    # async def publishSequencerStates(self):
+    #     """
+    #     Publish the sequencer state
+    #     """
+    #     ss = json.dumps(sequencerState._asDict())
+    #     for ws in self._sequencerStateSubscribers:
+    #         self.log.debug(f"Publishing sequencer state: {ss}")
+    #         await ws.send_str(ss)
+    #
+    # def _addSequencerStateSubscriber(self, ws: WebSocketResponse):
+    #     self._sequencerStateSubscribers.add(ws)
+    #
+    # def _subscribeSequencerState(self, stateNames: List[str], ws: WebSocketResponse):
+    #     """
+    #     Internal method used to subscribe to sequencer state of this component.
+    #     """
+    #     self._addSequencerStateSubscriber(ws)
+    #
+    # def _unsubscribeSequencerState(self, ws: WebSocketResponse):
+    #     """
+    #     Internal method used to unsubscribe a websocket from sequencer state events
+    #     """
+    #     if ws in self._sequencerStateSubscribers:
+    #         self._sequencerStateSubscribers.remove(ws)
 
     @staticmethod
     def _registerWithLocationService(prefix: Prefix, port: int):

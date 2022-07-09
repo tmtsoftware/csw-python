@@ -1,5 +1,4 @@
 import filecmp
-import sys
 import os
 import asyncio
 import traceback
@@ -13,7 +12,7 @@ from aiohttp.web_runner import GracefulExit
 from astropy.coordinates import Angle
 from termcolor import colored
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from csw.TAITime import TAITime
 from csw.UTCTime import UTCTime
@@ -34,7 +33,6 @@ from csw.Subsystem import Subsystems
 class MyComponentHandlers(ComponentHandlers):
     log = structlog.get_logger()
     prefix = Prefix(Subsystems.CSW, "pycswTest")
-    commandServer: CommandServer = None
     dir = pathlib.Path(__file__).parent.absolute()
     outFileName = "PyTestAssemblyCommandResponses.out"
     tmpOutFile = f"/tmp/{outFileName}"
@@ -45,6 +43,7 @@ class MyComponentHandlers(ComponentHandlers):
         if os.path.exists(self.tmpOutFile):
             os.remove(self.tmpOutFile)
 
+    # noinspection PyUnusedLocal
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(1)
         # TODO: Do this in a timer task
@@ -70,7 +69,7 @@ class MyComponentHandlers(ComponentHandlers):
             assert (eqCoord.ra == Angle("12:13:14.15 hours"))
             assert (eqCoord.dec == Angle("-30:31:32.3 deg"))
 
-        except:
+        except AssertionError:
             self.log.debug(f"_checkCommand: {colored('TEST FAILED', 'red')}")
             traceback.print_exc()
 
@@ -83,7 +82,8 @@ class MyComponentHandlers(ComponentHandlers):
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
         """
         Overrides the base class onSubmit method to handle commands from a CSW component.
-        See ./testSupport/test-assembly/src/main/scala/org/tmt/csw/testassembly/TestAssemblyHandlers.scala#makeTestCommand
+        See
+        ./testSupport/test-assembly/src/main/scala/org/tmt/csw/testassembly/TestAssemblyHandlers.scala#makeTestCommand
         for the contents of the command's parameters.
 
         Args:
@@ -92,7 +92,8 @@ class MyComponentHandlers(ComponentHandlers):
 
         Returns: (CommandResponse, Task)
             a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-            For long running commands, you can respond with Started(runId, "...") and a task that completes the work in the background.
+            For long-running commands, you can respond with Started(runId, "...") and a task that completes the
+            work in the background.
         """
         self._checkCommand(command)
         n = len(command.paramSet)
@@ -145,6 +146,7 @@ class MyComponentHandlers(ComponentHandlers):
         return Accepted(runId)
 
     # Returns the current state
+    # noinspection DuplicatedCode
     def currentStates(self) -> List[CurrentState]:
         intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
         intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
@@ -152,8 +154,10 @@ class MyComponentHandlers(ComponentHandlers):
                                     Units.marcsec)
         intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-        utcTimeParam = Parameter("UTCTimeValue", KeyType.UTCTimeKey, [UTCTime.from_str("2021-09-17T09:17:08.608242344Z")])
-        taiTimeParam = Parameter("TAITimeValue", KeyType.TAITimeKey, [TAITime.from_str("2021-09-17T09:17:45.610701219Z")])
+        utcTimeParam = Parameter("UTCTimeValue", KeyType.UTCTimeKey,
+                                 [UTCTime.from_str("2021-09-17T09:17:08.608242344Z")])
+        taiTimeParam = Parameter("TAITimeValue", KeyType.TAITimeKey,
+                                 [TAITime.from_str("2021-09-17T09:17:45.610701219Z")])
         params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
         return [CurrentState(self.prefix, "PyCswState", params)]
 
@@ -161,7 +165,6 @@ class MyComponentHandlers(ComponentHandlers):
 def test_command_server():
     handlers = MyComponentHandlers()
     commandServer = CommandServer(handlers.prefix, handlers)
-    handlers.commandServer = commandServer
     print(f"Starting test command server on port {commandServer.port}")
     try:
         commandServer.start()

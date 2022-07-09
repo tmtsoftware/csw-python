@@ -108,6 +108,5 @@ class MyComponentHandlers(ComponentHandlers):
 # noinspection PyTypeChecker
 handlers = MyComponentHandlers()
 commandServer = CommandServer(handlers.prefix, handlers)
-handlers.commandServer = commandServer
 print(f"Starting test command server on port {commandServer.port}")
 commandServer.start()
