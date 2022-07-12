@@ -7,7 +7,6 @@ from typing import List
 
 import pathlib
 
-import structlog
 from aiohttp.web_runner import GracefulExit
 from astropy.coordinates import Angle
 from termcolor import colored
@@ -31,7 +30,6 @@ from csw.Subsystem import Subsystems
 
 # noinspection PyTypeChecker,PyBroadException
 class MyComponentHandlers(ComponentHandlers):
-    log = structlog.get_logger()
     prefix = Prefix(Subsystems.CSW, "pycswTest")
     dir = pathlib.Path(__file__).parent.absolute()
     outFileName = "PyTestAssemblyCommandResponses.out"

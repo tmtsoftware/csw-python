@@ -11,7 +11,7 @@ from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
-from csw.CommandServer import QueryFinal, SubscribeSequencerState
+from csw.CommandServer import QueryFinal
 from csw.ComponentHandlers import ComponentHandlers
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
@@ -22,16 +22,16 @@ from esw.SequencerRequest import SequencerRequest
 # Ignore generated functions in API docs
 __pdoc__ = {}
 
-log = structlog.get_logger()
-
 
 class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
 
+    log = structlog.get_logger()
+
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
-        # log.debug(f"received post: {str(obj)}")
+        self.log.debug(f"received post: {str(obj)}")
 
         match SequencerRequest._fromDict(obj):
             case LoadSequence(sequence):
@@ -98,11 +98,11 @@ class SequencerServer:
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 if msg.data == 'close':
-                    log.debug("Received ws close message")
+                    self.log.debug("Received ws close message")
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
-                    log.debug(f"XXX received sequencer ws message: {str(obj)}")
+                    self.log.debug(f"XXX received sequencer ws message: {str(obj)}")
                     method = obj['_type']
                     if method == "QueryFinal":
                         queryFinal = QueryFinal._fromDict(obj)
@@ -110,19 +110,19 @@ class SequencerServer:
                         await ws.send_str(resp.text)
                         await ws.close()
                     elif method == "SubscribeSequencerState":
-                        log.debug(f"Received SubscribeSequencerState")
-                        self.handler._subscribeSequencerState(ws)
+                        self.log.debug(f"Received SubscribeSequencerState")
+                        self._subscribeSequencerState(ws)
                     else:
-                        log.debug(f"Warning: Received unknown ws message: {str(msg.data)}")
+                        self.log.debug(f"Warning: Received unknown ws message: {str(msg.data)}")
             elif msg.type == aiohttp.WSMsgType.ERROR:
-                log.debug('Error: ws connection closed with exception %s' % ws.exception())
-        log.debug('websocket connection closed')
-        self.handler._unsubscribeSequencerState(ws)
+                self.log.debug('Error: ws connection closed with exception %s' % ws.exception())
+        self.log.debug('websocket connection closed')
+        self._unsubscribeSequencerState(ws)
         return ws
 
-    # # List of sequencer state  websocket subscribers
-    # _sequencerStateSubscribers = []
-    #
+    # List of sequencer state  websocket subscribers
+    _sequencerStateSubscribers = set()
+
     # async def publishSequencerStates(self):
     #     """
     #     Publish the sequencer state
@@ -131,44 +131,38 @@ class SequencerServer:
     #     for ws in self._sequencerStateSubscribers:
     #         self.log.debug(f"Publishing sequencer state: {ss}")
     #         await ws.send_str(ss)
-    #
-    # def _addSequencerStateSubscriber(self, ws: WebSocketResponse):
-    #     self._sequencerStateSubscribers.add(ws)
-    #
-    # def _subscribeSequencerState(self, stateNames: List[str], ws: WebSocketResponse):
-    #     """
-    #     Internal method used to subscribe to sequencer state of this component.
-    #     """
-    #     self._addSequencerStateSubscriber(ws)
-    #
-    # def _unsubscribeSequencerState(self, ws: WebSocketResponse):
-    #     """
-    #     Internal method used to unsubscribe a websocket from sequencer state events
-    #     """
-    #     if ws in self._sequencerStateSubscribers:
-    #         self._sequencerStateSubscribers.remove(ws)
 
-    @staticmethod
-    def _registerWithLocationService(prefix: Prefix, port: int):
-        log.debug("Registering with location service using port " + str(port))
+    def _subscribeSequencerState(self, ws: WebSocketResponse):
+        """
+        Internal method used to subscribe to sequencer state of this component.
+        """
+        self._sequencerStateSubscribers.add(ws)
+
+    def _unsubscribeSequencerState(self, ws: WebSocketResponse):
+        """
+        Internal method used to unsubscribe a websocket from sequencer state events
+        """
+        if ws in self._sequencerStateSubscribers:
+            self._sequencerStateSubscribers.remove(ws)
+
+    def _registerWithLocationService(self, prefix: Prefix, port: int):
+        self.log.debug("Registering with location service using port " + str(port))
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.SequenceComponent, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
         locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
 
-    # XXXXXXXXXXXX ? handler?
-    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
+    # XXXXXXXXXXXX ? handler? port? args?
+    def __init__(self, prefix: Prefix, port: int = 8082):
         """
         Creates an HTTP server that can receive sequencer commands and registers it with the Location Service using the
         given prefix, so that CSW components can locate it and send commands to it.
 
         Args:
             prefix (str): a CSW Prefix in the format subsystem.name, where subsystem is one of the upper case TMT
-                          subsystem names and name is the name of the command server
-            handler (ComponentHandlers): command handler notified when commands are received
+                          subsystem names and name is the name of the sequencer
             port (int): optional port for HTTP server
         """
-        self.handler = handler
         self.port = port
         self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),

@@ -12,19 +12,18 @@ from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
-from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState, Submit, Oneway, Validate
+from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
-
-log = structlog.get_logger()
 
 
 # noinspection PyProtectedMember
 class CommandServer:
     _app = web.Application()
     _crm = CommandResponseManager()
+    log = structlog.get_logger()
 
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
@@ -36,14 +35,14 @@ class CommandServer:
             commandResponse = Error(runId, "Invalid command")
             return web.json_response(commandResponse._asDict())
 
-        log.info(f"Received command {command}")
+        self.log.info(f"Received command {command}")
         match method:
             case 'Submit':
                 commandResponse, task = self.handler.onSubmit(runId, command)
                 if task is not None:
                     # noinspection PyTypeChecker
                     self._crm.addTask(runId, task)
-                    log.debug("Long running task in progress...")
+                    self.log.debug("Long running task in progress...")
             case 'Oneway':
                 commandResponse = self.handler.onOneway(runId, command)
             case 'Validate':
@@ -59,7 +58,7 @@ class CommandServer:
 
     async def _handleWsTextMessage(self, ws: WebSocketResponse, msg: WSMessage):
         if msg.data == 'close':
-            log.debug("Received ws close message")
+            self.log.debug("Received ws close message")
             await ws.close()
         else:
             obj = json.loads(msg.data)
@@ -71,10 +70,10 @@ class CommandServer:
                     await ws.close()
                 case "SubscribeCurrentState":
                     stateNames = SubscribeCurrentState._fromDict(obj).stateNames
-                    log.debug(f"Received SubscribeCurrentState: stateNames = {stateNames}")
+                    self.log.debug(f"Received SubscribeCurrentState: stateNames = {stateNames}")
                     self.handler._subscribeCurrentState(stateNames, ws)
                 case _:
-                    log.debug(f"Warning: Received unknown ws message: {str(msg.data)}")
+                    self.log.debug(f"Warning: Received unknown ws message: {str(msg.data)}")
 
     async def _handleWs(self, request: Request) -> WebSocketResponse:
         ws = web.WebSocketResponse()
@@ -85,14 +84,13 @@ class CommandServer:
                 case aiohttp.WSMsgType.TEXT:
                     await self._handleWsTextMessage(ws, msg)
                 case aiohttp.WSMsgType.ERROR:
-                    log.debug('Error: ws connection closed with exception %s' % ws.exception())
-        log.debug('websocket connection closed')
+                    self.log.debug('Error: ws connection closed with exception %s' % ws.exception())
+        self.log.debug('websocket connection closed')
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    @staticmethod
-    def _registerWithLocationService(prefix: Prefix, port: int):
-        log.debug("Registering with location service using port " + str(port))
+    def _registerWithLocationService(self, prefix: Prefix, port: int):
+        self.log.debug("Registering with location service using port " + str(port))
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
