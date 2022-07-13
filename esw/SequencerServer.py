@@ -11,8 +11,7 @@ from aiohttp.web_ws import WebSocketResponse
 
 from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
-from csw.CommandServer import QueryFinal
-from csw.ComponentHandlers import ComponentHandlers
+from csw.CommandServiceRequest import QueryFinal
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 import structlog
@@ -23,6 +22,7 @@ from esw.SequencerRequest import SequencerRequest
 __pdoc__ = {}
 
 
+# noinspection PyProtectedMember
 class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
