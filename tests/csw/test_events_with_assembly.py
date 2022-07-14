@@ -1,19 +1,15 @@
 import filecmp
-import sys
 import os
 import time
 
 import structlog
 from _pytest import pathlib
 
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
-from csw.KeyType import KeyType
-from csw.Units import Units
 from csw.EventSubscriber import EventSubscriber
 from csw.EventTime import EventTime
+from csw.Parameter import *
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
     CometCoord, AltAzCoord
@@ -48,8 +44,8 @@ class TestEventsWithAssembly:
     #     self.cleanup()
 
     def teardown_method(self):
-        # pass
-        self.cleanup()
+        pass
+        # self.cleanup()
 
     def cleanup(self):
         if os.path.exists(self.tmpInFile):
@@ -83,68 +79,54 @@ class TestEventsWithAssembly:
             thread.stop()
 
     def publishEvent1(self):
-        keyName = "assemblyEventValue"
-        keyType = KeyType.DoubleKey
-        values = [42.0]
-        param = Parameter(keyName, keyType, values)
+        param = DoubleKey.make("assemblyEventValue").set(42.0)
         paramSet = [param]
         event = SystemEvent(self.prefix, EventName("testEvent1"), paramSet)
         self.log.debug(f"Publishing event {event}")
         self.pub.publish(event)
 
     def publishEvent2(self):
-        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
-        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                    Units.marcsec)
-        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
+        intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+        intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+        floatArrayParam = FloatArrayKey.make("FloatArrayValue", Units.mas).set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+        intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                              [[-1, -2, -3, -4], [-5, -6, -7, -8]])
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
         event = SystemEvent(self.prefix, EventName("testEvent2"), paramSet)
         self.pub.publish(event)
 
     def publishEvent3(self):
-        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
-        floatParam = Parameter("floatValue", KeyType.FloatKey, [float(42.1)], Units.arcsec)
-        longParam = Parameter("longValue", KeyType.LongKey, [42], Units.arcsec)
-        shortParam = Parameter("shortValue", KeyType.ShortKey, [42], Units.arcsec)
-        byteParam = Parameter("byteValue", KeyType.ByteKey, b'\xDE\xAD\xBE\xEF')
-        booleanParam = Parameter("booleanValue", KeyType.BooleanKey, [True, False], Units.arcsec)
+        intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+        floatParam = FloatKey.make("floatValue", Units.arcsec).set(42.1)
+        longParam = LongKey.make("longValue", Units.arcsec).set(42)
+        shortParam = ShortKey.make("shortValue", Units.arcsec).set(42)
+        byteParam = ByteKey.make("byteValue").set(0xDE, 0xAD, 0xBE, 0xEF)
+        # byteParam = Parameter("byteValue", KeyType.ByteKey, b'\xDE\xAD\xBE\xEF')
+        booleanParam = BooleanKey.make("booleanValue").set(True, False)
 
-        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                    Units.arcsec)
-        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                     Units.arcsec)
-
-        byteArrayParam = Parameter("ByteArrayValue", KeyType.ByteArrayKey, [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
-
-        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
+        intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+        floatArrayParam = FloatArrayKey.make("FloatArrayValue", Units.arcsec).set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+        doubleArrayParam = DoubleArrayKey.make("DoubleArrayValue", Units.arcsec).setAll(
+            [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]])
+        byteArrayParam = ByteArrayKey.make("ByteArrayValue").set(b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4]))
+        intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                              [[-1, -2, -3, -4], [-5, -6, -7, -8]])
 
         eqCoord = EqCoord.make(ra="12:13:14.15 hours", dec="-30:31:32.3 deg", frame=EqFrame.FK5, pm=(0.5, 2.33))
         solarSystemCoord = SolarSystemCoord.make("BASE", SolarSystemObject.Venus)
-        minorPlanetCoord = MinorPlanetCoord.make("GUIDER1", 2000, "90 deg", "2 deg", "100 deg", 1.4, 0.234,
-                                                 "220 deg")
+        minorPlanetCoord = MinorPlanetCoord.make("GUIDER1", 2000, "90 deg", "2 deg", "100 deg", 1.4, 0.234, "220 deg")
         cometCoord = CometCoord.make("BASE", 2000.0, "90 deg", "2 deg", "100 deg", 1.4, 0.234)
         altAzCoord = AltAzCoord.make("301 deg", "42.5 deg")
-        coordsParam = Parameter("CoordParam", KeyType.CoordKey,
-                                [eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord, altAzCoord])
-
+        coordsParam = CoordKey.make("CoordParam").set(eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord,
+                                                      altAzCoord)
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
         event = SystemEvent(self.prefix, EventName("testEvent3"), paramSet)
         self.pub.publish(event)
 
     def publishEvent4(self):
-        keyName = "assemblyEventValue"
-        keyType = KeyType.UTCTimeKey
-        values = [UTCTime.from_str("2021-09-20T20:43:35.419053077Z")]
-        param = Parameter(keyName, keyType, values)
-        keyName2 = "assemblyEventValue2"
-        keyType2 = KeyType.TAITimeKey
-        values2 = [TAITime.from_str("2021-09-20T18:44:12.419084072Z")]
-        param2 = Parameter(keyName2, keyType2, values2)
+        param = UTCTimeKey.make("assemblyEventValue").set(UTCTime.from_str("2021-09-20T20:43:35.419053077Z"))
+        param2 = TAITimeKey.make("assemblyEventValue2").set(TAITime.from_str("2021-09-20T18:44:12.419084072Z"))
         paramSet = [param, param2]
         event = SystemEvent(self.prefix, EventName("testEvent4"), paramSet)
         self.log.debug(f"Publishing event {event}")

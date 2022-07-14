@@ -15,7 +15,7 @@ class TestPublisher2:
         intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
         intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
         floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                    Units.marcsec)
+                                    Units.mas)
         intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
                                    [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]

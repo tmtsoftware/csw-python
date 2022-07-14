@@ -1,5 +1,5 @@
 {
-  "Units" : [ "angstrom", "arcmin", "arcsec", "day", "degree", "elvolt", "gram", "hour", "hertz", "joule", "kelvin", "kilogram", "kilometer", "liter", "meter", "marcsec", "millimeter", "millisecond", "micron", "micrometer", "minute", "newton", "pascal", "radian", "second", "sday", "steradian", "microarcsec", "volt", "watt", "week", "year", "coulomb", "centimeter", "erg", "au", "jansky", "lightyear", "mag", "cal", "foot", "inch", "pound", "mile", "ounce", "yard", "NoUnits", "encoder", "count", "pix", "tai", "utc" ],
+  "Units" : [ "angstrom", "arcmin", "arcsec", "day", "degree", "elvolt", "gram", "hour", "hertz", "joule", "kelvin", "kilogram", "kilometer", "liter", "meter", "mas", "millimeter", "millisecond", "micron", "micrometer", "minute", "newton", "pascal", "radian", "second", "sday", "steradian", "microarcsec", "volt", "watt", "week", "year", "coulomb", "centimeter", "erg", "au", "jansky", "lightyear", "mag", "cal", "foot", "inch", "pound", "mile", "ounce", "yard", "NoUnits", "encoder", "count", "pix", "tai", "utc" ],
   "CommandName" : [ "move" ],
   "UTCTime" : [ "2021-09-17T09:17:08.608242344Z" ],
   "CurrentState" : [ {
@@ -768,7 +768,7 @@
       "lightyear" : "lyr",
       "pound" : "lb",
       "day" : "d",
-      "marcsec" : "mas"
+      "mas" : "mas"
     }
   } ],
   "Parameter" : [ {

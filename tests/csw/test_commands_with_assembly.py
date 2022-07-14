@@ -3,27 +3,17 @@ import os
 import asyncio
 import traceback
 from asyncio import Task
-from typing import List
 
 import pathlib
 
 from aiohttp.web_runner import GracefulExit
-from astropy.coordinates import Angle
 from termcolor import colored
-
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
-from csw.KeyType import KeyType
-from csw.Units import Units
-from csw.Coords import ProperMotion, EqCoord
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter
+from csw.Parameter import *
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
 
@@ -106,7 +96,7 @@ class MyComponentHandlers(ComponentHandlers):
         elif command.commandName.name == "SimpleCommand":
             return Completed(runId), None
         elif command.commandName.name == "ResultCommand":
-            result = Result([Parameter("myValue", KeyType.DoubleKey, [42.0])])
+            result = Result([DoubleKey.make("myValue").set(42.0)])
             return Completed(runId, result), None
         elif command.commandName.name == "ErrorCommand":
             return Error(runId, "Error command received"), None
@@ -146,16 +136,13 @@ class MyComponentHandlers(ComponentHandlers):
     # Returns the current state
     # noinspection DuplicatedCode
     def currentStates(self) -> List[CurrentState]:
-        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
-        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                    Units.marcsec)
-        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-        utcTimeParam = Parameter("UTCTimeValue", KeyType.UTCTimeKey,
-                                 [UTCTime.from_str("2021-09-17T09:17:08.608242344Z")])
-        taiTimeParam = Parameter("TAITimeValue", KeyType.TAITimeKey,
-                                 [TAITime.from_str("2021-09-17T09:17:45.610701219Z")])
+        intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+        intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+        floatArrayParam = FloatArrayKey.make("FloatArrayValue").set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+        intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                              [[-1, -2, -3, -4], [-5, -6, -7, -8]])
+        utcTimeParam = UTCTimeKey.make("UTCTimeValue").set(UTCTime.from_str("2021-09-17T09:17:08.608242344Z"))
+        taiTimeParam = TAITimeKey.make("TAITimeValue").set(TAITime.from_str("2021-09-17T09:17:45.610701219Z"))
         params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
         return [CurrentState(self.prefix, "PyCswState", params)]
 

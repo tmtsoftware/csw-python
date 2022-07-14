@@ -20,7 +20,6 @@ import csw.params.commands.{CommandName, ControlCommand, Setup}
 import csw.time.core.models.{TAITime, UTCTime}
 import csw.params.core.models.{Angle, Coords, Id, ProperMotion}
 import csw.params.events.{Event, EventKey, EventName, SystemEvent}
-import csw.params.core.formats.ParamCodecs._
 
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import TestAssemblyHandlers._
@@ -33,7 +32,6 @@ import csw.params.core.models.Coords.EqFrame.FK5
 import csw.params.core.models.Coords.SolarSystemObject.Venus
 import csw.prefix.models.Prefix
 import csw.prefix.models.Subsystem.CSW
-import io.bullet.borer.Json
 
 import java.time.Instant
 import scala.concurrent.duration._
@@ -61,20 +59,17 @@ object TestAssemblyHandlers {
   private def eventHandler(log: Logger): Behavior[Event] = {
     def handleEvent(event: SystemEvent): Unit = {
       log.info(s"Received event: $event")
-      if (event.eventName.name.startsWith("testEvent")) {
-        // Check that event time is recent
+      // Check that event time is recent
+      val isRecent =
+        event.eventTime.value.isAfter(UTCTime.now().value.minusSeconds(3))
+      if (isRecent && event.eventName.name.startsWith("testEvent")) {
+        // sort params for comparison
+        val params = event.paramSet.toList.sortBy(_.keyName).mkString(", ")
+        val s = s"SystemEvent(${event.eventName.name}, $params)\n"
         // Create the file when the first event is received from the test, close it on the last
         val append = event.eventName.name != "testEvent1"
         val testFd = new FileOutputStream(eventTestFile, append)
-        val ev: Event = event
-        val json = Json.encode(ev).toUtf8String + "\n"
-        // SystemEvent constructor is private, but we need to change two fields in order to compare results
-        val jsonStr1 =
-          json.replaceAll("\"eventId\":\"[^\"]*\"", "\"eventId\":\"test\"")
-        val jsonStr2 = jsonStr1.replaceAll(
-          "\"eventTime\":\"[^\"]*\"",
-          "\"eventTime\":\"1970-01-01T00:00:00Z\"")
-        testFd.write(jsonStr2.getBytes)
+        testFd.write(s.getBytes)
         log.debug(s"XXX Writing to $eventTestFile")
         testFd.close()
       }
@@ -238,7 +233,10 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
     }
 
     val currentStateSubscription = pythonService.subscribeCurrentState { cs =>
-      testLog(s"Received current state from python service: $cs")
+      // make test reproducible
+      val sortedParams = cs.paramSet.toList.sortBy(_.keyName)
+      testLog("Received current state from python service: " +
+        s"prefix=${cs.prefix}, stateName=${cs.stateName}, paramSet=$sortedParams")
     }
 
     try {

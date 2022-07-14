@@ -2,7 +2,7 @@ from csw.CommandResponse import Completed, Accepted
 from csw.CommandService import CommandService
 from csw.KeyType import KeyType
 from csw.LocationService import ComponentType
-from csw.Parameter import Parameter
+from csw.Parameter import Parameter, IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
@@ -14,7 +14,7 @@ def test_command_service_client():
     prefix = Prefix(Subsystems.CSW, "TestClient")
     commandName = CommandName("Test")
     maybeObsId = []
-    param = Parameter("testValue", KeyType.IntKey, [42])
+    param = IntKey.make("testValue").set(42)
     paramSet = [param]
     setup = Setup(prefix, commandName, maybeObsId, paramSet)
     resp = cs.submit(setup)
