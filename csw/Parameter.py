@@ -80,7 +80,7 @@ class Parameter(Generic[T]):
             return obj
 
     # noinspection PyTypeChecker
-    # forEvent flag is needed since time values are encoded differently in CBOR and JSON
+    # forEvent flag is needed since time and byte values are encoded differently in CBOR and JSON
     def _asDict(self, forEvent: bool = False):
         # Note that bytes are stored in a byte string (b'...') instead of a list or array.
         if forEvent and self.keyType == KeyType.ByteKey:
