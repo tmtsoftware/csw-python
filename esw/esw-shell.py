@@ -5,7 +5,7 @@ from csw.LocationService import *
 from esw.SequencerRequest import *
 from csw.CommandService import *
 from csw.KeyTypes import KeyTypes
-from csw.Parameter import Parameter
+from csw.Parameter import *
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
 from csw.Event import SystemEvent, EventName

@@ -365,3 +365,24 @@ The following example gets the first value of the "BasePosition", which is expec
     assert (eqCoord.ra == Angle("12:13:14.15 hours"))
     assert (eqCoord.dec == Angle("-30:31:32.3 deg"))
 ```
+
+## ESW Shell
+
+The [esw-shell](esw/esw-shell.py) command provides an interactive shell with predefined imports
+where you can type in CSW and ESW commands:
+
+```bash
+> python -i esw/esw-shell.py
+Wellcome to ESW Shell
+>>> source = Prefix(Subsystems.CSW, "testassembly")
+>>> eventName = EventName("myAssemblyEvent")
+>>> param = DoubleKey.make("assemblyEventValue").set(42.0)
+>>> paramSet = [param]
+>>> event = SystemEvent(source, eventName, paramSet)
+>>> pub = EventPublisher()
+>>> pub.publish(event)
+>>> 
+```
+
+This is just an interactive Python session with the commonly used imports provided.
+You can add your own imports, etc.
