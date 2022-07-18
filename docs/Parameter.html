@@ -27,43 +27,48 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from dataclasses import dataclass
+from typing import TypeVar, Generic, List
 
 from csw.TAITime import TAITime
 from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.KeyType import KeyType
-from csw.Coords import Coord
+from csw.Coords import *
 
 coordTypes = {KeyType.CoordKey, KeyType.EqCoordKey, KeyType.SolarSystemCoordKey, KeyType.MinorPlanetCoordKey,
               KeyType.CometCoordKey}
 timeKeyTypes = {KeyType.TAITimeKey, KeyType.UTCTimeKey}
 
+T = TypeVar(&#39;T&#39;)
 
+
+# noinspection PyProtectedMember
 @dataclass
-class Parameter:
+class Parameter(Generic[T]):
+    # noinspection PyUnresolvedReferences
     &#34;&#34;&#34;
-    Creates a Parameter (keys with values, units).
+        Creates a Parameter (keys with values, units).
 
-    Args:
+        Args:
 
-        keyName (str): name of the key
-        keyType (KeyType): type of the key
-        values (object): an array of values, or a nested array for array and matrix types.
-        units (Units): units of the values.
-    &#34;&#34;&#34;
+            keyName (str): name of the key
+            keyType (KeyType): type of the key
+            values (List[T]): an array of values, or a nested array for array and matrix types.
+            units (Units): units of the values.
+        &#34;&#34;&#34;
     keyName: str
     keyType: KeyType
-    values: object
+    values: List[T]
     units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: KeyType, param, forEvent: bool):
+    def _paramValueOrDict(keyType: KeyType, param: T, forEvent: bool):
         &#34;&#34;&#34;
         Internal method that also handles coord and time types
 
         Args:
             keyType (KeyType): parameter&#39;s key type
-            param: parameter value
+            param (T): parameter value
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
         Returns:
@@ -79,14 +84,14 @@ class Parameter:
         return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: KeyType, obj, forEvent: bool):
+    def _paramValueFromDict(keyType: KeyType, obj: T, forEvent: bool) -&gt; T:
         &#34;&#34;&#34;
         Internal recursive method that also handles Coord types
 
         Args:
 
             keyType (KeyType): parameter&#39;s key type
-            obj: parameter value
+            obj: T
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
         Returns: object
@@ -103,11 +108,11 @@ class Parameter:
             return obj
 
     # noinspection PyTypeChecker
-    # forEvent flag is needed since time values are encoded differently in CBOR and JSON
+    # forEvent flag is needed since time and byte values are encoded differently in CBOR and JSON
     def _asDict(self, forEvent: bool = False):
         # Note that bytes are stored in a byte string (b&#39;...&#39;) instead of a list or array.
-        if self.keyType == KeyType.ByteKey:
-            values = self.values
+        if forEvent and self.keyType == KeyType.ByteKey:
+            values = bytes(self.values)
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p, forEvent), self.values))
 
@@ -129,11 +134,207 @@ class Parameter:
         keyType = KeyType[k]
         obj = obj[k]
 
-        if keyType == KeyType.ByteKey:
-            values = obj[&#39;values&#39;]
+        if forEvent and keyType == KeyType.ByteKey:
+            values = list(obj[&#39;values&#39;])
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p, forEvent), obj[&#39;values&#39;]))
-        return Parameter(obj[&#39;keyName&#39;], keyType, values, Units[obj[&#39;units&#39;]])</code></pre>
+        return Parameter(obj[&#39;keyName&#39;], keyType, values, Units[obj[&#39;units&#39;]])
+
+
+@dataclass
+class Key(Generic[T]):
+    keyName: str
+    keyType: KeyType
+    units: Units
+
+    def set(self, *values: T) -&gt; Parameter[T]:
+        return Parameter(self.keyName, self.keyType, [*values], self.units)
+
+    def setAll(self, values: List[T]) -&gt; Parameter[T]:
+        return Parameter(self.keyName, self.keyType, values, self.units)
+
+
+# noinspection DuplicatedCode
+class ChoiceKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+        return Key(name, KeyType.ChoiceKey, units)
+
+
+class StringKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+        return Key(name, KeyType.StringKey, units)
+
+
+class UTCTimeKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
+        return Key(name, KeyType.UTCTimeKey, units)
+
+
+class TAITimeKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
+        return Key(name, KeyType.TAITimeKey, units)
+
+
+class EqCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
+        return Key(name, KeyType.EqCoordKey, units)
+
+
+class CometCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
+        return Key(name, KeyType.CometCoordKey, units)
+
+
+class SolarSystemCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
+        return Key(name, KeyType.SolarSystemCoordKey, units)
+
+
+class MinorPlanetCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
+        return Key(name, KeyType.MinorPlanetCoordKey, units)
+
+
+class AltAzCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
+        return Key(name, KeyType.AltAzCoordKey, units)
+
+
+class CoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
+        return Key(name, KeyType.CoordKey, units)
+
+
+# noinspection DuplicatedCode
+class BooleanKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
+        return Key(name, KeyType.BooleanKey, units)
+
+
+class CharKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+        return Key(name, KeyType.CharKey, units)
+
+
+class ByteKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.ByteKey, units)
+
+
+class ShortKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.ShortKey, units)
+
+
+class LongKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.LongKey, units)
+
+
+class IntKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.IntKey, units)
+
+
+class FloatKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
+        return Key(name, KeyType.FloatKey, units)
+
+
+class DoubleKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
+        return Key(name, KeyType.DoubleKey, units)
+
+
+class ByteArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
+        return Key(name, KeyType.ByteArrayKey, units)
+
+
+class ShortArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.ShortArrayKey, units)
+
+
+class LongArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.LongArrayKey, units)
+
+
+class IntArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+        return Key(name, KeyType.IntArrayKey, units)
+
+
+class FloatArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
+        return Key(name, KeyType.FloatArrayKey, units)
+
+
+class DoubleArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
+        return Key(name, KeyType.DoubleArrayKey, units)
+
+
+# noinspection DuplicatedCode
+class ByteMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.ByteMatrixKey, units)
+
+
+class ShortMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.ShortMatrixKey, units)
+
+
+class LongMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.LongMatrixKey, units)
+
+
+class IntMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.IntMatrixKey, units)
+
+
+class FloatMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
+        return Key(name, KeyType.FloatMatrixKey, units)
+
+
+class DoubleMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.DoubleMatrixKey, units)</code></pre>
 </details>
 </section>
 <section>
@@ -145,9 +346,816 @@ class Parameter:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="csw.Parameter.AltAzCoordKey"><code class="flex name class">
+<span>class <span class="ident">AltAzCoordKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AltAzCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
+        return Key(name, KeyType.AltAzCoordKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.AltAzCoordKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.Coords.AltAzCoord" href="Coords.html#csw.Coords.AltAzCoord">AltAzCoord</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
+    return Key(name, KeyType.AltAzCoordKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.BooleanKey"><code class="flex name class">
+<span>class <span class="ident">BooleanKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BooleanKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
+        return Key(name, KeyType.BooleanKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.BooleanKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[bool]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
+    return Key(name, KeyType.BooleanKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ByteArrayKey"><code class="flex name class">
+<span>class <span class="ident">ByteArrayKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ByteArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
+        return Key(name, KeyType.ByteArrayKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ByteArrayKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[bytes]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
+    return Key(name, KeyType.ByteArrayKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ByteKey"><code class="flex name class">
+<span>class <span class="ident">ByteKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ByteKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.ByteKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ByteKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+    return Key(name, KeyType.ByteKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ByteMatrixKey"><code class="flex name class">
+<span>class <span class="ident">ByteMatrixKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ByteMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.ByteMatrixKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ByteMatrixKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[int]]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+    return Key(name, KeyType.ByteMatrixKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.CharKey"><code class="flex name class">
+<span>class <span class="ident">CharKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CharKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+        return Key(name, KeyType.CharKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.CharKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[str]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+    return Key(name, KeyType.CharKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ChoiceKey"><code class="flex name class">
+<span>class <span class="ident">ChoiceKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChoiceKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+        return Key(name, KeyType.ChoiceKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ChoiceKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[str]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+    return Key(name, KeyType.ChoiceKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.CometCoordKey"><code class="flex name class">
+<span>class <span class="ident">CometCoordKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CometCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
+        return Key(name, KeyType.CometCoordKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.CometCoordKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.Coords.CometCoord" href="Coords.html#csw.Coords.CometCoord">CometCoord</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
+    return Key(name, KeyType.CometCoordKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.CoordKey"><code class="flex name class">
+<span>class <span class="ident">CoordKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
+        return Key(name, KeyType.CoordKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.CoordKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.Coords.Coord" href="Coords.html#csw.Coords.Coord">Coord</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
+    return Key(name, KeyType.CoordKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.DoubleArrayKey"><code class="flex name class">
+<span>class <span class="ident">DoubleArrayKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DoubleArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
+        return Key(name, KeyType.DoubleArrayKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.DoubleArrayKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[float]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
+    return Key(name, KeyType.DoubleArrayKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.DoubleKey"><code class="flex name class">
+<span>class <span class="ident">DoubleKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DoubleKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
+        return Key(name, KeyType.DoubleKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.DoubleKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
+    return Key(name, KeyType.DoubleKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.DoubleMatrixKey"><code class="flex name class">
+<span>class <span class="ident">DoubleMatrixKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DoubleMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.DoubleMatrixKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.DoubleMatrixKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[int]]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+    return Key(name, KeyType.DoubleMatrixKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.EqCoordKey"><code class="flex name class">
+<span>class <span class="ident">EqCoordKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EqCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
+        return Key(name, KeyType.EqCoordKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.EqCoordKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.Coords.EqCoord" href="Coords.html#csw.Coords.EqCoord">EqCoord</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
+    return Key(name, KeyType.EqCoordKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.FloatArrayKey"><code class="flex name class">
+<span>class <span class="ident">FloatArrayKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FloatArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
+        return Key(name, KeyType.FloatArrayKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.FloatArrayKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[float]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
+    return Key(name, KeyType.FloatArrayKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.FloatKey"><code class="flex name class">
+<span>class <span class="ident">FloatKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FloatKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
+        return Key(name, KeyType.FloatKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.FloatKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
+    return Key(name, KeyType.FloatKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.FloatMatrixKey"><code class="flex name class">
+<span>class <span class="ident">FloatMatrixKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FloatMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
+        return Key(name, KeyType.FloatMatrixKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.FloatMatrixKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[float]]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
+    return Key(name, KeyType.FloatMatrixKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.IntArrayKey"><code class="flex name class">
+<span>class <span class="ident">IntArrayKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IntArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+        return Key(name, KeyType.IntArrayKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.IntArrayKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[int]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+    return Key(name, KeyType.IntArrayKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.IntKey"><code class="flex name class">
+<span>class <span class="ident">IntKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IntKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.IntKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.IntKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+    return Key(name, KeyType.IntKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.IntMatrixKey"><code class="flex name class">
+<span>class <span class="ident">IntMatrixKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IntMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.IntMatrixKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.IntMatrixKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[int]]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+    return Key(name, KeyType.IntMatrixKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.Key"><code class="flex name class">
+<span>class <span class="ident">Key</span></span>
+<span>(</span><span>keyName: str, keyType: <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a>, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Key(keyName: str, keyType: csw.KeyType.KeyType, units: csw.Units.Units)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Key(Generic[T]):
+    keyName: str
+    keyType: KeyType
+    units: Units
+
+    def set(self, *values: T) -&gt; Parameter[T]:
+        return Parameter(self.keyName, self.keyType, [*values], self.units)
+
+    def setAll(self, values: List[T]) -&gt; Parameter[T]:
+        return Parameter(self.keyName, self.keyType, values, self.units)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>typing.Generic</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.Parameter.Key.keyName"><code class="name">var <span class="ident">keyName</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Parameter.Key.keyType"><code class="name">var <span class="ident">keyType</span> : <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Parameter.Key.units"><code class="name">var <span class="ident">units</span> : <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.Parameter.Key.set"><code class="name flex">
+<span>def <span class="ident">set</span></span>(<span>self, *values: ~T) ‑> <a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a>[~T]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set(self, *values: T) -&gt; Parameter[T]:
+    return Parameter(self.keyName, self.keyType, [*values], self.units)</code></pre>
+</details>
+</dd>
+<dt id="csw.Parameter.Key.setAll"><code class="name flex">
+<span>def <span class="ident">setAll</span></span>(<span>self, values: List[~T]) ‑> <a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a>[~T]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setAll(self, values: List[T]) -&gt; Parameter[T]:
+    return Parameter(self.keyName, self.keyType, values, self.units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.LongArrayKey"><code class="flex name class">
+<span>class <span class="ident">LongArrayKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LongArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.LongArrayKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.LongArrayKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+    return Key(name, KeyType.LongArrayKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.LongKey"><code class="flex name class">
+<span>class <span class="ident">LongKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LongKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.LongKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.LongKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+    return Key(name, KeyType.LongKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.LongMatrixKey"><code class="flex name class">
+<span>class <span class="ident">LongMatrixKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LongMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.LongMatrixKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.LongMatrixKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[int]]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+    return Key(name, KeyType.LongMatrixKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.MinorPlanetCoordKey"><code class="flex name class">
+<span>class <span class="ident">MinorPlanetCoordKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MinorPlanetCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
+        return Key(name, KeyType.MinorPlanetCoordKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.MinorPlanetCoordKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.Coords.MinorPlanetCoord" href="Coords.html#csw.Coords.MinorPlanetCoord">MinorPlanetCoord</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
+    return Key(name, KeyType.MinorPlanetCoordKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="csw.Parameter.Parameter"><code class="flex name class">
 <span>class <span class="ident">Parameter</span></span>
-<span>(</span><span>keyName: str, keyType: <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a>, values: object, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits)</span>
+<span>(</span><span>keyName: str, keyType: <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a>, values: List[~T], units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Parameter (keys with values, units).</p>
@@ -157,7 +1165,7 @@ class Parameter:
 <dd>name of the key</dd>
 <dt><strong><code>keyType</code></strong> :&ensp;<code>KeyType</code></dt>
 <dd>type of the key</dd>
-<dt><strong><code>values</code></strong> :&ensp;<code>object</code></dt>
+<dt><strong><code>values</code></strong> :&ensp;<code>List[T]</code></dt>
 <dd>an array of values, or a nested array for array and matrix types.</dd>
 <dt><strong><code>units</code></strong> :&ensp;<code>Units</code></dt>
 <dd>units of the values.</dd>
@@ -167,30 +1175,31 @@ class Parameter:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Parameter:
+class Parameter(Generic[T]):
+    # noinspection PyUnresolvedReferences
     &#34;&#34;&#34;
-    Creates a Parameter (keys with values, units).
+        Creates a Parameter (keys with values, units).
 
-    Args:
+        Args:
 
-        keyName (str): name of the key
-        keyType (KeyType): type of the key
-        values (object): an array of values, or a nested array for array and matrix types.
-        units (Units): units of the values.
-    &#34;&#34;&#34;
+            keyName (str): name of the key
+            keyType (KeyType): type of the key
+            values (List[T]): an array of values, or a nested array for array and matrix types.
+            units (Units): units of the values.
+        &#34;&#34;&#34;
     keyName: str
     keyType: KeyType
-    values: object
+    values: List[T]
     units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: KeyType, param, forEvent: bool):
+    def _paramValueOrDict(keyType: KeyType, param: T, forEvent: bool):
         &#34;&#34;&#34;
         Internal method that also handles coord and time types
 
         Args:
             keyType (KeyType): parameter&#39;s key type
-            param: parameter value
+            param (T): parameter value
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
         Returns:
@@ -206,14 +1215,14 @@ class Parameter:
         return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: KeyType, obj, forEvent: bool):
+    def _paramValueFromDict(keyType: KeyType, obj: T, forEvent: bool) -&gt; T:
         &#34;&#34;&#34;
         Internal recursive method that also handles Coord types
 
         Args:
 
             keyType (KeyType): parameter&#39;s key type
-            obj: parameter value
+            obj: T
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
         Returns: object
@@ -230,11 +1239,11 @@ class Parameter:
             return obj
 
     # noinspection PyTypeChecker
-    # forEvent flag is needed since time values are encoded differently in CBOR and JSON
+    # forEvent flag is needed since time and byte values are encoded differently in CBOR and JSON
     def _asDict(self, forEvent: bool = False):
         # Note that bytes are stored in a byte string (b&#39;...&#39;) instead of a list or array.
-        if self.keyType == KeyType.ByteKey:
-            values = self.values
+        if forEvent and self.keyType == KeyType.ByteKey:
+            values = bytes(self.values)
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p, forEvent), self.values))
 
@@ -256,12 +1265,16 @@ class Parameter:
         keyType = KeyType[k]
         obj = obj[k]
 
-        if keyType == KeyType.ByteKey:
-            values = obj[&#39;values&#39;]
+        if forEvent and keyType == KeyType.ByteKey:
+            values = list(obj[&#39;values&#39;])
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p, forEvent), obj[&#39;values&#39;]))
         return Parameter(obj[&#39;keyName&#39;], keyType, values, Units[obj[&#39;units&#39;]])</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>typing.Generic</li>
+</ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="csw.Parameter.Parameter.keyName"><code class="name">var <span class="ident">keyName</span> : str</code></dt>
@@ -276,9 +1289,233 @@ class Parameter:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Parameter.Parameter.values"><code class="name">var <span class="ident">values</span> : object</code></dt>
+<dt id="csw.Parameter.Parameter.values"><code class="name">var <span class="ident">values</span> : List[~T]</code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ShortArrayKey"><code class="flex name class">
+<span>class <span class="ident">ShortArrayKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ShortArrayKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.ShortArrayKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ShortArrayKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+    return Key(name, KeyType.ShortArrayKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ShortKey"><code class="flex name class">
+<span>class <span class="ident">ShortKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ShortKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+        return Key(name, KeyType.ShortKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ShortKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
+    return Key(name, KeyType.ShortKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.ShortMatrixKey"><code class="flex name class">
+<span>class <span class="ident">ShortMatrixKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ShortMatrixKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+        return Key(name, KeyType.ShortMatrixKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.ShortMatrixKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[int]]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
+    return Key(name, KeyType.ShortMatrixKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.SolarSystemCoordKey"><code class="flex name class">
+<span>class <span class="ident">SolarSystemCoordKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SolarSystemCoordKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
+        return Key(name, KeyType.SolarSystemCoordKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.SolarSystemCoordKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.Coords.SolarSystemCoord" href="Coords.html#csw.Coords.SolarSystemCoord">SolarSystemCoord</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
+    return Key(name, KeyType.SolarSystemCoordKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.StringKey"><code class="flex name class">
+<span>class <span class="ident">StringKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StringKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+        return Key(name, KeyType.StringKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.StringKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[str]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
+    return Key(name, KeyType.StringKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.TAITimeKey"><code class="flex name class">
+<span>class <span class="ident">TAITimeKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TAITimeKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
+        return Key(name, KeyType.TAITimeKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.TAITimeKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.TAITime.TAITime" href="TAITime.html#csw.TAITime.TAITime">TAITime</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
+    return Key(name, KeyType.TAITimeKey, units)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Parameter.UTCTimeKey"><code class="flex name class">
+<span>class <span class="ident">UTCTimeKey</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UTCTimeKey:
+    @staticmethod
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
+        return Key(name, KeyType.UTCTimeKey, units)</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.Parameter.UTCTimeKey.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[<a title="csw.UTCTime.UTCTime" href="UTCTime.html#csw.UTCTime.UTCTime">UTCTime</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
+    return Key(name, KeyType.UTCTimeKey, units)</code></pre>
+</details>
 </dd>
 </dl>
 </dd>
@@ -299,12 +1536,202 @@ class Parameter:
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
+<h4><code><a title="csw.Parameter.AltAzCoordKey" href="#csw.Parameter.AltAzCoordKey">AltAzCoordKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.AltAzCoordKey.make" href="#csw.Parameter.AltAzCoordKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.BooleanKey" href="#csw.Parameter.BooleanKey">BooleanKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.BooleanKey.make" href="#csw.Parameter.BooleanKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ByteArrayKey" href="#csw.Parameter.ByteArrayKey">ByteArrayKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ByteArrayKey.make" href="#csw.Parameter.ByteArrayKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ByteKey" href="#csw.Parameter.ByteKey">ByteKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ByteKey.make" href="#csw.Parameter.ByteKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ByteMatrixKey" href="#csw.Parameter.ByteMatrixKey">ByteMatrixKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ByteMatrixKey.make" href="#csw.Parameter.ByteMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.CharKey" href="#csw.Parameter.CharKey">CharKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.CharKey.make" href="#csw.Parameter.CharKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ChoiceKey" href="#csw.Parameter.ChoiceKey">ChoiceKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ChoiceKey.make" href="#csw.Parameter.ChoiceKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.CometCoordKey" href="#csw.Parameter.CometCoordKey">CometCoordKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.CometCoordKey.make" href="#csw.Parameter.CometCoordKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.CoordKey" href="#csw.Parameter.CoordKey">CoordKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.CoordKey.make" href="#csw.Parameter.CoordKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.DoubleArrayKey" href="#csw.Parameter.DoubleArrayKey">DoubleArrayKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.DoubleArrayKey.make" href="#csw.Parameter.DoubleArrayKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.DoubleKey" href="#csw.Parameter.DoubleKey">DoubleKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.DoubleKey.make" href="#csw.Parameter.DoubleKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.DoubleMatrixKey" href="#csw.Parameter.DoubleMatrixKey">DoubleMatrixKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.DoubleMatrixKey.make" href="#csw.Parameter.DoubleMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.EqCoordKey" href="#csw.Parameter.EqCoordKey">EqCoordKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.EqCoordKey.make" href="#csw.Parameter.EqCoordKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.FloatArrayKey" href="#csw.Parameter.FloatArrayKey">FloatArrayKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.FloatArrayKey.make" href="#csw.Parameter.FloatArrayKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.FloatKey" href="#csw.Parameter.FloatKey">FloatKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.FloatKey.make" href="#csw.Parameter.FloatKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.FloatMatrixKey" href="#csw.Parameter.FloatMatrixKey">FloatMatrixKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.FloatMatrixKey.make" href="#csw.Parameter.FloatMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.IntArrayKey" href="#csw.Parameter.IntArrayKey">IntArrayKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.IntArrayKey.make" href="#csw.Parameter.IntArrayKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.IntKey" href="#csw.Parameter.IntKey">IntKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.IntKey.make" href="#csw.Parameter.IntKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.IntMatrixKey" href="#csw.Parameter.IntMatrixKey">IntMatrixKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.IntMatrixKey.make" href="#csw.Parameter.IntMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.Key.keyName" href="#csw.Parameter.Key.keyName">keyName</a></code></li>
+<li><code><a title="csw.Parameter.Key.keyType" href="#csw.Parameter.Key.keyType">keyType</a></code></li>
+<li><code><a title="csw.Parameter.Key.set" href="#csw.Parameter.Key.set">set</a></code></li>
+<li><code><a title="csw.Parameter.Key.setAll" href="#csw.Parameter.Key.setAll">setAll</a></code></li>
+<li><code><a title="csw.Parameter.Key.units" href="#csw.Parameter.Key.units">units</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.LongArrayKey" href="#csw.Parameter.LongArrayKey">LongArrayKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.LongArrayKey.make" href="#csw.Parameter.LongArrayKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.LongKey" href="#csw.Parameter.LongKey">LongKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.LongKey.make" href="#csw.Parameter.LongKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.LongMatrixKey" href="#csw.Parameter.LongMatrixKey">LongMatrixKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.LongMatrixKey.make" href="#csw.Parameter.LongMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.MinorPlanetCoordKey" href="#csw.Parameter.MinorPlanetCoordKey">MinorPlanetCoordKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.MinorPlanetCoordKey.make" href="#csw.Parameter.MinorPlanetCoordKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a></code></h4>
 <ul class="">
 <li><code><a title="csw.Parameter.Parameter.keyName" href="#csw.Parameter.Parameter.keyName">keyName</a></code></li>
 <li><code><a title="csw.Parameter.Parameter.keyType" href="#csw.Parameter.Parameter.keyType">keyType</a></code></li>
 <li><code><a title="csw.Parameter.Parameter.units" href="#csw.Parameter.Parameter.units">units</a></code></li>
 <li><code><a title="csw.Parameter.Parameter.values" href="#csw.Parameter.Parameter.values">values</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ShortArrayKey" href="#csw.Parameter.ShortArrayKey">ShortArrayKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ShortArrayKey.make" href="#csw.Parameter.ShortArrayKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ShortKey" href="#csw.Parameter.ShortKey">ShortKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ShortKey.make" href="#csw.Parameter.ShortKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.ShortMatrixKey" href="#csw.Parameter.ShortMatrixKey">ShortMatrixKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.ShortMatrixKey.make" href="#csw.Parameter.ShortMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.SolarSystemCoordKey" href="#csw.Parameter.SolarSystemCoordKey">SolarSystemCoordKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.SolarSystemCoordKey.make" href="#csw.Parameter.SolarSystemCoordKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.StringKey" href="#csw.Parameter.StringKey">StringKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.StringKey.make" href="#csw.Parameter.StringKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.TAITimeKey" href="#csw.Parameter.TAITimeKey">TAITimeKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.TAITimeKey.make" href="#csw.Parameter.TAITimeKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.UTCTimeKey" href="#csw.Parameter.UTCTimeKey">UTCTimeKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.UTCTimeKey.make" href="#csw.Parameter.UTCTimeKey.make">make</a></code></li>
 </ul>
 </li>
 </ul>

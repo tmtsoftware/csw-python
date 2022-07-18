@@ -1,6 +1,6 @@
 from typing import List
 from dataclasses import dataclass, field
-
+from socket import socket
 import structlog
 from dataclasses_json import dataclass_json
 from enum import Enum
@@ -213,6 +213,15 @@ class LocationService:
     baseUri = "http://127.0.0.1:7654/"
     postUri = f"{baseUri}post-endpoint"
     wsUri = f"{baseUri}websocket-endpoint"
+
+    # If port is 0, return a random free port, otherwise the given port
+    @staticmethod
+    def getFreePort(port: int = 0) -> int:
+        if port != 0:
+            return port
+        with socket() as s:
+            s.bind(('', 0))
+            return s.getsockname()[1]
 
     def register(self, registration: Registration) -> ConnectionInfo:
         """

@@ -32,6 +32,7 @@ from typing import List
 from csw.Parameter import Parameter
 
 
+# noinspection PyProtectedMember
 @dataclass
 class CommandResponse:
     &#34;&#34;&#34;
@@ -42,28 +43,58 @@ class CommandResponse:
 
     def _asDict(self):
         &#34;&#34;&#34;
-        Returns: XXX: a dictionary corresponding to this object
+        Returns: a dictionary corresponding to this object
         &#34;&#34;&#34;
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        switcher = {
+            &#34;Cancelled&#34;: Cancelled,
+            &#34;Error&#34;: Error,
+            &#34;Locked&#34;: Locked,
+            &#34;Started&#34;: Started,
+            &#34;Completed&#34;: Completed,
+            &#34;Accepted&#34;: Accepted,
+            &#34;Invalid&#34;: Invalid,
+        }
+        typ = obj[&#34;_type&#34;]
+        return switcher[typ]._fromDict(obj)
+
 
 @dataclass
-class Cancelled(CommandResponse):
-    &#34;&#34;&#34;Represents a negative response that describes the cancellation of command&#34;&#34;&#34;
+class SubmitResponse(CommandResponse):
+    &#34;&#34;&#34;Returned by Submit message which calls the onSubmit handler&#34;&#34;&#34;
     pass
+
+
+@dataclass
+class Cancelled(SubmitResponse):
+    &#34;&#34;&#34;Represents a negative response that describes the cancellation of command&#34;&#34;&#34;
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Cancelled(
+            runId=obj[&#39;runId&#39;]
+        )
 
 
 @dataclass
 class Accepted(CommandResponse):
     &#34;&#34;&#34;Represents a final response stating acceptance of a command received&#34;&#34;&#34;
-    pass
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Accepted(
+            runId=obj[&#39;runId&#39;]
+        )
 
 
 @dataclass
-class Error(CommandResponse):
+class Error(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response that describes an error in executing the command&#34;&#34;&#34;
     message: str
 
@@ -78,9 +109,16 @@ class Error(CommandResponse):
             &#39;message&#39;: self.message
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Error(
+            runId=obj[&#39;runId&#39;],
+            message=obj[&#39;message&#39;]
+        )
+
 
 @dataclass
-class Locked(CommandResponse):
+class Locked(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response stating that a component is Locked and command was not validated or executed&#34;&#34;&#34;
     message: str
 
@@ -95,9 +133,16 @@ class Locked(CommandResponse):
             &#39;message&#39;: self.message
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Locked(
+            runId=obj[&#39;runId&#39;],
+            message=obj[&#39;message&#39;]
+        )
+
 
 @dataclass
-class Started(CommandResponse):
+class Started(SubmitResponse):
     &#34;&#34;&#34;Represents an intermediate response stating a long running command has been started&#34;&#34;&#34;
     message: str
 
@@ -111,6 +156,13 @@ class Started(CommandResponse):
             &#39;runId&#39;: self.runId,
             &#39;message&#39;: self.message
         }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Started(
+            runId=obj[&#39;runId&#39;],
+            message=obj[&#39;message&#39;]
+        )
 
 
 @dataclass
@@ -128,9 +180,18 @@ class Result:
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
         }
 
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a Result for the given dict.
+        &#34;&#34;&#34;
+        paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
+        return Result(paramSet)
+
 
 @dataclass
-class Completed(CommandResponse):
+class Completed(SubmitResponse):
     &#34;&#34;&#34;Represents a positive response stating completion of command&#34;&#34;&#34;
     result: Result = Result([])
 
@@ -146,12 +207,23 @@ class Completed(CommandResponse):
             &#39;result&#39;: self.result._asDict()
         }
 
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Completed(
+            runId=obj[&#39;runId&#39;],
+            result=Result._fromDict(obj[&#39;result&#39;]),
+        )
+
 
 # --- Invalid ---
 @dataclass
 class CommandIssue:
     &#34;&#34;&#34;Describes a command issue with appropriate reason for validation failure&#34;&#34;&#34;
     reason: str
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return globals()[obj[&#39;_type&#39;]](obj[&#39;reason&#39;])
 
 
 class IdNotAvailableIssue(CommandIssue):
@@ -246,7 +318,14 @@ class Invalid(CommandResponse):
                 &#34;_type&#34;: self.issue.__class__.__name__,
                 &#34;reason&#34;: self.issue.reason
             }
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Invalid(
+            runId=obj[&#39;runId&#39;],
+            issue=CommandIssue._fromDict(obj[&#39;issue&#39;]),
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -271,7 +350,12 @@ class Invalid(CommandResponse):
 <pre><code class="python">@dataclass
 class Accepted(CommandResponse):
     &#34;&#34;&#34;Represents a final response stating acceptance of a command received&#34;&#34;&#34;
-    pass</code></pre>
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Accepted(
+            runId=obj[&#39;runId&#39;]
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -307,12 +391,18 @@ class Accepted(CommandResponse):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Cancelled(CommandResponse):
+class Cancelled(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response that describes the cancellation of command&#34;&#34;&#34;
-    pass</code></pre>
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Cancelled(
+            runId=obj[&#39;runId&#39;]
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
 </dd>
@@ -329,7 +419,11 @@ class Cancelled(CommandResponse):
 <pre><code class="python">@dataclass
 class CommandIssue:
     &#34;&#34;&#34;Describes a command issue with appropriate reason for validation failure&#34;&#34;&#34;
-    reason: str</code></pre>
+    reason: str
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return globals()[obj[&#39;_type&#39;]](obj[&#39;reason&#39;])</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -382,22 +476,32 @@ class CommandResponse:
 
     def _asDict(self):
         &#34;&#34;&#34;
-        Returns: XXX: a dictionary corresponding to this object
+        Returns: a dictionary corresponding to this object
         &#34;&#34;&#34;
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        switcher = {
+            &#34;Cancelled&#34;: Cancelled,
+            &#34;Error&#34;: Error,
+            &#34;Locked&#34;: Locked,
+            &#34;Started&#34;: Started,
+            &#34;Completed&#34;: Completed,
+            &#34;Accepted&#34;: Accepted,
+            &#34;Invalid&#34;: Invalid,
+        }
+        typ = obj[&#34;_type&#34;]
+        return switcher[typ]._fromDict(obj)</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.Accepted" href="#csw.CommandResponse.Accepted">Accepted</a></li>
-<li><a title="csw.CommandResponse.Cancelled" href="#csw.CommandResponse.Cancelled">Cancelled</a></li>
-<li><a title="csw.CommandResponse.Completed" href="#csw.CommandResponse.Completed">Completed</a></li>
-<li><a title="csw.CommandResponse.Error" href="#csw.CommandResponse.Error">Error</a></li>
 <li><a title="csw.CommandResponse.Invalid" href="#csw.CommandResponse.Invalid">Invalid</a></li>
-<li><a title="csw.CommandResponse.Locked" href="#csw.CommandResponse.Locked">Locked</a></li>
-<li><a title="csw.CommandResponse.Started" href="#csw.CommandResponse.Started">Started</a></li>
+<li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -418,7 +522,7 @@ class CommandResponse:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Completed(CommandResponse):
+class Completed(SubmitResponse):
     &#34;&#34;&#34;Represents a positive response stating completion of command&#34;&#34;&#34;
     result: Result = Result([])
 
@@ -432,10 +536,18 @@ class Completed(CommandResponse):
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
             &#39;result&#39;: self.result._asDict()
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Completed(
+            runId=obj[&#39;runId&#39;],
+            result=Result._fromDict(obj[&#39;result&#39;]),
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
 <h3>Class variables</h3>
@@ -457,7 +569,7 @@ class Completed(CommandResponse):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Error(CommandResponse):
+class Error(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response that describes an error in executing the command&#34;&#34;&#34;
     message: str
 
@@ -470,10 +582,18 @@ class Error(CommandResponse):
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
             &#39;message&#39;: self.message
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Error(
+            runId=obj[&#39;runId&#39;],
+            message=obj[&#39;message&#39;]
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
 <h3>Class variables</h3>
@@ -546,7 +666,14 @@ class Invalid(CommandResponse):
                 &#34;_type&#34;: self.issue.__class__.__name__,
                 &#34;reason&#34;: self.issue.reason
             }
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Invalid(
+            runId=obj[&#39;runId&#39;],
+            issue=CommandIssue._fromDict(obj[&#39;issue&#39;]),
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -571,7 +698,7 @@ class Invalid(CommandResponse):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Locked(CommandResponse):
+class Locked(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response stating that a component is Locked and command was not validated or executed&#34;&#34;&#34;
     message: str
 
@@ -584,10 +711,18 @@ class Locked(CommandResponse):
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
             &#39;message&#39;: self.message
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Locked(
+            runId=obj[&#39;runId&#39;],
+            message=obj[&#39;message&#39;]
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
 <h3>Class variables</h3>
@@ -747,7 +882,16 @@ class Result:
         &#34;&#34;&#34;
         return {
             &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
-        }</code></pre>
+        }
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a Result for the given dict.
+        &#34;&#34;&#34;
+        paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
+        return Result(paramSet)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -768,7 +912,7 @@ class Result:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Started(CommandResponse):
+class Started(SubmitResponse):
     &#34;&#34;&#34;Represents an intermediate response stating a long running command has been started&#34;&#34;&#34;
     message: str
 
@@ -781,10 +925,18 @@ class Started(CommandResponse):
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
             &#39;message&#39;: self.message
-        }</code></pre>
+        }
+
+    @staticmethod
+    def _fromDict(obj: dict):
+        return Started(
+            runId=obj[&#39;runId&#39;],
+            message=obj[&#39;message&#39;]
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
 <h3>Class variables</h3>
@@ -794,6 +946,34 @@ class Started(CommandResponse):
 <div class="desc"></div>
 </dd>
 </dl>
+</dd>
+<dt id="csw.CommandResponse.SubmitResponse"><code class="flex name class">
+<span>class <span class="ident">SubmitResponse</span></span>
+<span>(</span><span>runId: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returned by Submit message which calls the onSubmit handler</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SubmitResponse(CommandResponse):
+    &#34;&#34;&#34;Returned by Submit message which calls the onSubmit handler&#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="csw.CommandResponse.Cancelled" href="#csw.CommandResponse.Cancelled">Cancelled</a></li>
+<li><a title="csw.CommandResponse.Completed" href="#csw.CommandResponse.Completed">Completed</a></li>
+<li><a title="csw.CommandResponse.Error" href="#csw.CommandResponse.Error">Error</a></li>
+<li><a title="csw.CommandResponse.Locked" href="#csw.CommandResponse.Locked">Locked</a></li>
+<li><a title="csw.CommandResponse.Started" href="#csw.CommandResponse.Started">Started</a></li>
+</ul>
 </dd>
 <dt id="csw.CommandResponse.UnresolvedLocationsIssue"><code class="flex name class">
 <span>class <span class="ident">UnresolvedLocationsIssue</span></span>
@@ -1056,6 +1236,9 @@ class Started(CommandResponse):
 <ul class="">
 <li><code><a title="csw.CommandResponse.Started.message" href="#csw.CommandResponse.Started.message">message</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></code></h4>
 </li>
 <li>
 <h4><code><a title="csw.CommandResponse.UnresolvedLocationsIssue" href="#csw.CommandResponse.UnresolvedLocationsIssue">UnresolvedLocationsIssue</a></code></h4>

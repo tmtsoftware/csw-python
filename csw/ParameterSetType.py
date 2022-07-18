@@ -45,7 +45,7 @@ class SequenceCommand:
                 raise TypeError
 
     # noinspection PyProtectedMember
-    def _asDict(self):
+    def _asDict(self) -> dict:
         """
         Returns: dict
             a dictionary corresponding to this object
@@ -61,7 +61,7 @@ class SequenceCommand:
 
         return d
 
-    def get(self, keyName: str):
+    def get(self, keyName: str) -> Parameter|None:
         """
         Gets the parameter with the given name, or else returns None.
 
@@ -75,7 +75,7 @@ class SequenceCommand:
             if p.keyName == keyName:
                 return p
 
-    def exists(self, keyName: str):
+    def exists(self, keyName: str) -> bool:
         """
         Returns true if the parameter with the given name is present
 

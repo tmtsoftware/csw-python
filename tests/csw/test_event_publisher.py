@@ -1,10 +1,6 @@
-import sys
-import os
 import time
 
 import structlog
-
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from csw.KeyType import KeyType
 from csw.EventSubscriber import EventSubscriber

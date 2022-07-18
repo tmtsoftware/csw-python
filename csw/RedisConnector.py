@@ -20,7 +20,9 @@ class RedisConnector:
         conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
         loc = LocationService().find(conn)
         uri = urlparse(loc.uri)
-        sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
+        # XXX TODO Check why only localhost works!
+        # sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
+        sentinel = Sentinel([("localhost", uri.port)], socket_timeout=0.1)
         self.__redis = sentinel.master_for('eventServer', socket_timeout=0.1)
         self.__redis_pubsub = self.__redis.pubsub()
 

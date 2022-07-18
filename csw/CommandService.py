@@ -21,8 +21,10 @@ class CommandService:
         locationService = LocationService()
         connection = ConnectionInfo.make(self.prefix, self.componentType, ConnectionType.HttpType)
         location = locationService.resolve(connection)
-        location.__class__ = HttpLocation
-        return location.uri
+        if location is not None:
+            location.__class__ = HttpLocation
+            return location.uri
+        raise RuntimeError
 
     def _postCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
         baseUri = self._getBaseUri()

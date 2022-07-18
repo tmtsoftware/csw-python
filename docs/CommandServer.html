@@ -38,39 +38,45 @@ import uuid
 
 from aiohttp.web_ws import WebSocketResponse
 
+from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
-from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState, Submit, Oneway, Validate
+from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
-
-log = structlog.get_logger()
 
 
 # noinspection PyProtectedMember
 class CommandServer:
     _app = web.Application()
     _crm = CommandResponseManager()
+    log = structlog.get_logger()
 
     async def _handlePost(self, request: Request) -&gt; Response:
         obj = await request.json()
-        # TODO: catch exception and return error
-        command: ControlCommand = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+        method = obj[&#39;_type&#39;]
         runId = str(uuid.uuid4())
-        match command:
-            case Submit():
+        try:
+            command: ControlCommand = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+        except TypeError:
+            commandResponse = Error(runId, &#34;Invalid command&#34;)
+            return web.json_response(commandResponse._asDict())
+
+        self.log.info(f&#34;Received command {command}&#34;)
+        match method:
+            case &#39;Submit&#39;:
                 commandResponse, task = self.handler.onSubmit(runId, command)
                 if task is not None:
                     # noinspection PyTypeChecker
                     self._crm.addTask(runId, task)
-                    log.debug(&#34;Long running task in progress...&#34;)
-            case Oneway():
+                    self.log.debug(&#34;Long running task in progress...&#34;)
+            case &#39;Oneway&#39;:
                 commandResponse = self.handler.onOneway(runId, command)
-            case Validate():
+            case &#39;Validate&#39;:
                 commandResponse = self.handler.validateCommand(runId, command)
-            case x:  # should not happen
-                raise Exception(f&#34;Invalid command type: {x}&#34;)
+            case x:  # should not happe
+                commandResponse = Error(runId, &#34;Invalid command&#34;)
         return web.json_response(commandResponse._asDict())
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
@@ -78,9 +84,9 @@ class CommandServer:
         responseDict = commandResponse._asDict()
         return web.json_response(responseDict)
 
-    async def _handleWsTextMessage(self, ws: WebSocketResponse, msg: WSMessage) -&gt; WebSocketResponse:
+    async def _handleWsTextMessage(self, ws: WebSocketResponse, msg: WSMessage):
         if msg.data == &#39;close&#39;:
-            log.debug(&#34;Received ws close message&#34;)
+            self.log.debug(&#34;Received ws close message&#34;)
             await ws.close()
         else:
             obj = json.loads(msg.data)
@@ -92,10 +98,10 @@ class CommandServer:
                     await ws.close()
                 case &#34;SubscribeCurrentState&#34;:
                     stateNames = SubscribeCurrentState._fromDict(obj).stateNames
-                    log.debug(f&#34;Received SubscribeCurrentState: stateNames = {stateNames}&#34;)
+                    self.log.debug(f&#34;Received SubscribeCurrentState: stateNames = {stateNames}&#34;)
                     self.handler._subscribeCurrentState(stateNames, ws)
                 case _:
-                    log.debug(f&#34;Warning: Received unknown ws message: {str(msg.data)}&#34;)
+                    self.log.debug(f&#34;Warning: Received unknown ws message: {str(msg.data)}&#34;)
 
     async def _handleWs(self, request: Request) -&gt; WebSocketResponse:
         ws = web.WebSocketResponse()
@@ -106,21 +112,18 @@ class CommandServer:
                 case aiohttp.WSMsgType.TEXT:
                     await self._handleWsTextMessage(ws, msg)
                 case aiohttp.WSMsgType.ERROR:
-                    log.debug(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
-        log.debug(&#39;websocket connection closed&#39;)
+                    self.log.debug(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
+        self.log.debug(&#39;websocket connection closed&#39;)
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    @staticmethod
-    def _registerWithLocationService(prefix: Prefix, port: int):
-        log.debug(&#34;Registering with location service using port &#34; + str(port))
+    def _registerWithLocationService(self, prefix: Prefix, port: int):
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        # locationService.unregister(connection)
-        locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
+        locationService.register(HttpRegistration(connection, port))
 
-    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 0):
         &#34;&#34;&#34;
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given
         prefix, so that CSW components can locate it and send commands to it.
@@ -132,12 +135,12 @@ class CommandServer:
             port (int): optional port for HTTP server
         &#34;&#34;&#34;
         self.handler = handler
-        self.port = port
+        self.port = LocationService.getFreePort(port)
         self._app.add_routes([
             web.post(&#39;/post-endpoint&#39;, self._handlePost),
             web.get(&#34;/websocket-endpoint&#34;, self._handleWs)
         ])
-        self._registerWithLocationService(prefix, port)
+        self._registerWithLocationService(prefix, self.port)
 
     def start(self):
         &#34;&#34;&#34;
@@ -157,7 +160,7 @@ class CommandServer:
 <dl>
 <dt id="csw.CommandServer.CommandServer"><code class="flex name class">
 <span>class <span class="ident">CommandServer</span></span>
-<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 8082)</span>
+<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, handler: <a title="csw.ComponentHandlers.ComponentHandlers" href="ComponentHandlers.html#csw.ComponentHandlers.ComponentHandlers">ComponentHandlers</a>, port: int = 0)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given
@@ -179,25 +182,32 @@ subsystem names and name is the name of the command server</dd>
 <pre><code class="python">class CommandServer:
     _app = web.Application()
     _crm = CommandResponseManager()
+    log = structlog.get_logger()
 
     async def _handlePost(self, request: Request) -&gt; Response:
         obj = await request.json()
-        # TODO: catch exception and return error
-        command: ControlCommand = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+        method = obj[&#39;_type&#39;]
         runId = str(uuid.uuid4())
-        match command:
-            case Submit():
+        try:
+            command: ControlCommand = ControlCommand._fromDict(obj[&#39;controlCommand&#39;])
+        except TypeError:
+            commandResponse = Error(runId, &#34;Invalid command&#34;)
+            return web.json_response(commandResponse._asDict())
+
+        self.log.info(f&#34;Received command {command}&#34;)
+        match method:
+            case &#39;Submit&#39;:
                 commandResponse, task = self.handler.onSubmit(runId, command)
                 if task is not None:
                     # noinspection PyTypeChecker
                     self._crm.addTask(runId, task)
-                    log.debug(&#34;Long running task in progress...&#34;)
-            case Oneway():
+                    self.log.debug(&#34;Long running task in progress...&#34;)
+            case &#39;Oneway&#39;:
                 commandResponse = self.handler.onOneway(runId, command)
-            case Validate():
+            case &#39;Validate&#39;:
                 commandResponse = self.handler.validateCommand(runId, command)
-            case x:  # should not happen
-                raise Exception(f&#34;Invalid command type: {x}&#34;)
+            case x:  # should not happe
+                commandResponse = Error(runId, &#34;Invalid command&#34;)
         return web.json_response(commandResponse._asDict())
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -&gt; Response:
@@ -205,9 +215,9 @@ subsystem names and name is the name of the command server</dd>
         responseDict = commandResponse._asDict()
         return web.json_response(responseDict)
 
-    async def _handleWsTextMessage(self, ws: WebSocketResponse, msg: WSMessage) -&gt; WebSocketResponse:
+    async def _handleWsTextMessage(self, ws: WebSocketResponse, msg: WSMessage):
         if msg.data == &#39;close&#39;:
-            log.debug(&#34;Received ws close message&#34;)
+            self.log.debug(&#34;Received ws close message&#34;)
             await ws.close()
         else:
             obj = json.loads(msg.data)
@@ -219,10 +229,10 @@ subsystem names and name is the name of the command server</dd>
                     await ws.close()
                 case &#34;SubscribeCurrentState&#34;:
                     stateNames = SubscribeCurrentState._fromDict(obj).stateNames
-                    log.debug(f&#34;Received SubscribeCurrentState: stateNames = {stateNames}&#34;)
+                    self.log.debug(f&#34;Received SubscribeCurrentState: stateNames = {stateNames}&#34;)
                     self.handler._subscribeCurrentState(stateNames, ws)
                 case _:
-                    log.debug(f&#34;Warning: Received unknown ws message: {str(msg.data)}&#34;)
+                    self.log.debug(f&#34;Warning: Received unknown ws message: {str(msg.data)}&#34;)
 
     async def _handleWs(self, request: Request) -&gt; WebSocketResponse:
         ws = web.WebSocketResponse()
@@ -233,21 +243,18 @@ subsystem names and name is the name of the command server</dd>
                 case aiohttp.WSMsgType.TEXT:
                     await self._handleWsTextMessage(ws, msg)
                 case aiohttp.WSMsgType.ERROR:
-                    log.debug(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
-        log.debug(&#39;websocket connection closed&#39;)
+                    self.log.debug(&#39;Error: ws connection closed with exception %s&#39; % ws.exception())
+        self.log.debug(&#39;websocket connection closed&#39;)
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    @staticmethod
-    def _registerWithLocationService(prefix: Prefix, port: int):
-        log.debug(&#34;Registering with location service using port &#34; + str(port))
+    def _registerWithLocationService(self, prefix: Prefix, port: int):
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        # locationService.unregister(connection)
-        locationService.register(HttpRegistration(connection, port, &#34;/post-endpoint&#34;))
+        locationService.register(HttpRegistration(connection, port))
 
-    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 0):
         &#34;&#34;&#34;
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given
         prefix, so that CSW components can locate it and send commands to it.
@@ -259,12 +266,12 @@ subsystem names and name is the name of the command server</dd>
             port (int): optional port for HTTP server
         &#34;&#34;&#34;
         self.handler = handler
-        self.port = port
+        self.port = LocationService.getFreePort(port)
         self._app.add_routes([
             web.post(&#39;/post-endpoint&#39;, self._handlePost),
             web.get(&#34;/websocket-endpoint&#34;, self._handleWs)
         ])
-        self._registerWithLocationService(prefix, port)
+        self._registerWithLocationService(prefix, self.port)
 
     def start(self):
         &#34;&#34;&#34;
@@ -272,6 +279,13 @@ subsystem names and name is the name of the command server</dd>
         &#34;&#34;&#34;
         web.run_app(self._app, port=self.port)</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.CommandServer.CommandServer.log"><code class="name">var <span class="ident">log</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="csw.CommandServer.CommandServer.start"><code class="name flex">
@@ -311,6 +325,7 @@ subsystem names and name is the name of the command server</dd>
 <li>
 <h4><code><a title="csw.CommandServer.CommandServer" href="#csw.CommandServer.CommandServer">CommandServer</a></code></h4>
 <ul class="">
+<li><code><a title="csw.CommandServer.CommandServer.log" href="#csw.CommandServer.CommandServer.log">log</a></code></li>
 <li><code><a title="csw.CommandServer.CommandServer.start" href="#csw.CommandServer.CommandServer.start">start</a></code></li>
 </ul>
 </li>

@@ -55,7 +55,7 @@ def test_location_service():
     # Register a connection
     prefix = Prefix(Subsystems.CSW, "myComp")
     connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-    reg = HttpRegistration(connection, 8080, path="myservice/test")
+    reg = HttpRegistration(connection, LocationService.getFreePort(), path="myservice/test")
     regResult = locationService.register(reg)
     log.debug("\nRegistration result: " + str(regResult))
     assert regResult.componentType == ComponentType.Service.value

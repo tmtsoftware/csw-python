@@ -1,5 +1,3 @@
-import sys
-import os
 import json
 
 import structlog
@@ -14,8 +12,6 @@ from csw.Subsystem import Subsystems
 from csw.Prefix import Prefix
 from csw.LocationService import ComponentType, ConnectionInfo, HttpRegistration, TcpRegistration, \
     AkkaRegistration, ComponentId, ConnectionType, AkkaLocation, HttpLocation, TcpLocation
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 class TestCswContract:

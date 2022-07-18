@@ -150,7 +150,7 @@ class SequencerServer:
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.SequenceComponent, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
+        locationService.register(HttpRegistration(connection, port))
 
     # XXXXXXXXXXXX ? handler? port? args?
     def __init__(self, prefix: Prefix, port: int = 8082):
@@ -163,12 +163,12 @@ class SequencerServer:
                           subsystem names and name is the name of the sequencer
             port (int): optional port for HTTP server
         """
-        self.port = port
+        self.port = LocationService.getFreePort(port)
         self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
-        self._registerWithLocationService(prefix, port)
+        self._registerWithLocationService(prefix, self.port)
 
     def start(self):
         """

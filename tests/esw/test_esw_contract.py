@@ -1,13 +1,9 @@
-import sys
-import os
 import json
 
 import structlog
 from _pytest import pathlib
 
 from esw.SequencerRequest import LoadSequence, SequencerRequest, StartSequence
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 class TestEswContract:

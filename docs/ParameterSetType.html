@@ -73,7 +73,7 @@ class SequenceCommand:
                 raise TypeError
 
     # noinspection PyProtectedMember
-    def _asDict(self):
+    def _asDict(self) -&gt; dict:
         &#34;&#34;&#34;
         Returns: dict
             a dictionary corresponding to this object
@@ -89,7 +89,7 @@ class SequenceCommand:
 
         return d
 
-    def get(self, keyName: str):
+    def get(self, keyName: str) -&gt; Parameter|None:
         &#34;&#34;&#34;
         Gets the parameter with the given name, or else returns None.
 
@@ -103,7 +103,7 @@ class SequenceCommand:
             if p.keyName == keyName:
                 return p
 
-    def exists(self, keyName: str):
+    def exists(self, keyName: str) -&gt; bool:
         &#34;&#34;&#34;
         Returns true if the parameter with the given name is present
 
@@ -290,7 +290,7 @@ class SequenceCommand:
                 raise TypeError
 
     # noinspection PyProtectedMember
-    def _asDict(self):
+    def _asDict(self) -&gt; dict:
         &#34;&#34;&#34;
         Returns: dict
             a dictionary corresponding to this object
@@ -306,7 +306,7 @@ class SequenceCommand:
 
         return d
 
-    def get(self, keyName: str):
+    def get(self, keyName: str) -&gt; Parameter|None:
         &#34;&#34;&#34;
         Gets the parameter with the given name, or else returns None.
 
@@ -320,7 +320,7 @@ class SequenceCommand:
             if p.keyName == keyName:
                 return p
 
-    def exists(self, keyName: str):
+    def exists(self, keyName: str) -&gt; bool:
         &#34;&#34;&#34;
         Returns true if the parameter with the given name is present
 
@@ -362,7 +362,7 @@ class SequenceCommand:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.ParameterSetType.SequenceCommand.exists"><code class="name flex">
-<span>def <span class="ident">exists</span></span>(<span>self, keyName: str)</span>
+<span>def <span class="ident">exists</span></span>(<span>self, keyName: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns true if the parameter with the given name is present</p>
@@ -377,7 +377,7 @@ true if the parameter is found</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def exists(self, keyName: str):
+<pre><code class="python">def exists(self, keyName: str) -&gt; bool:
     &#34;&#34;&#34;
     Returns true if the parameter with the given name is present
 
@@ -394,7 +394,7 @@ true if the parameter is found</p></div>
 </details>
 </dd>
 <dt id="csw.ParameterSetType.SequenceCommand.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, keyName: str)</span>
+<span>def <span class="ident">get</span></span>(<span>self, keyName: str) ‑> <a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a> | None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the parameter with the given name, or else returns None.</p>
@@ -409,7 +409,7 @@ the parameter, if found</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, keyName: str):
+<pre><code class="python">def get(self, keyName: str) -&gt; Parameter|None:
     &#34;&#34;&#34;
     Gets the parameter with the given name, or else returns None.
 

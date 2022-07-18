@@ -9,11 +9,8 @@ from csw.EventSubscriber import EventSubscriber
 from csw.EventTime import EventTime
 from csw.Parameter import *
 
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
     CometCoord, AltAzCoord
-from csw.Parameter import Parameter
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Prefix import Prefix
@@ -44,8 +41,8 @@ class TestEventsWithAssembly:
     #     self.cleanup()
 
     def teardown_method(self):
-        pass
-        # self.cleanup()
+        # pass
+        self.cleanup()
 
     def cleanup(self):
         if os.path.exists(self.tmpInFile):

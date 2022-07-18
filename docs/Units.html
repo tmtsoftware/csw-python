@@ -41,63 +41,128 @@ class Unit:
 
 class Units(Enum):
     # SI units
-    angstrom = Unit(&#34;Angstrom&#34;, &#34;10 -1 nm&#34;)
+    angstrom = Unit(&#34;Angstrom&#34;, &#34;angstrom&#34;)
+    alpha = Unit(&#34;alpha&#34;, &#34;alpha: fine structure constant&#34;)
+    ampere = Unit(&#34;A&#34;, &#34;ampere: unit of electric current&#34;)
     arcmin = Unit(&#34;arcmin&#34;, &#34;arc minute; angular measurement&#34;)
     arcsec = Unit(&#34;arcsec&#34;, &#34;arc second: angular measurement&#34;)
-    day = Unit(&#34;d&#34;, &#34;day - 24 hours&#34;)
-    degree = Unit(&#34;deg&#34;, &#34;degree: agular measurement 1/360 of full rotation&#34;)
-    elvolt = Unit(&#34;eV&#34;, &#34;electron volt 1.6022x10-19 J&#34;)
-    gram = Unit(&#34;g&#34;, &#34;gram 10-3 kg&#34;)
-    hour = Unit(&#34;h&#34;, &#34;hour 3.6x10+3 s&#34;)
+    bar = Unit(&#34;bar&#34;, &#34;bar: metric ton of pressure&#34;)
+    candela = Unit(&#34;candela&#34;, &#34;candela(lumen/sr)&#34;)
+    day = Unit(&#34;d&#34;, &#34;day&#34;)
+    degree = Unit(&#34;deg&#34;, &#34;degree: angular measurement 1/360 of full rotation&#34;)
+    degC = Unit(&#34;degC&#34;, &#34;Degree Celsius K&#34;)
+    degF = Unit(&#34;degF&#34;, &#34;Fahrenheit&#34;)
+    elvolt = Unit(&#34;eV&#34;, &#34;electron volt&#34;)
+    gauss = Unit(&#34;gauss&#34;, &#34;gauss&#34;)
+    gram = Unit(&#34;g&#34;, &#34;gram&#34;)
     hertz = Unit(&#34;Hz&#34;, &#34;frequency&#34;)
-    joule = Unit(&#34;J&#34;, &#34;Joule: energy N m&#34;)
+    henry = Unit(&#34;henry&#34;, &#34;Henry&#34;)
+    hour = Unit(&#34;h&#34;, &#34;hour&#34;)
+    joule = Unit(&#34;J&#34;, &#34;Joule: energy&#34;)
     kelvin = Unit(&#34;K&#34;, &#34;Kelvin: temperature with a null point at absolute zero&#34;)
     kilogram = Unit(&#34;kg&#34;, &#34;kilogram, base unit of mass in SI&#34;)
-    kilometer = Unit(&#34;km&#34;, &#34;kilometers - 10+3 m&#34;)
-    liter = Unit(&#34;l&#34;, &#34;liter, metric unit of volume 10+3 cm+3&#34;)
+    kilometer = Unit(&#34;km&#34;, &#34;kilometers&#34;)
+    liter = Unit(&#34;l&#34;, &#34;liter, metric unit of volume&#34;)
+    lm = Unit(&#34;lm&#34;, &#34;lumen&#34;)
+    lsun = Unit(&#34;lsun&#34;, &#34;solar luminosity&#34;)
+    lx = Unit(&#34;lx&#34;, &#34;lux(lm/m2)&#34;)
+    mas = Unit(&#34;mas&#34;, &#34;milli arc second&#34;)
+    me = Unit(&#34;me&#34;, &#34;me(electron_mass)&#34;)
     meter = Unit(&#34;m&#34;, &#34;meter: base unit of length in SI&#34;)
-    mas = Unit(&#34;mas&#34;, &#34;milli arc second: angular measurement 10-3 arcsec&#34;)
-    millimeter = Unit(&#34;mm&#34;, &#34;millimeters - 10-3 m&#34;)
-    millisecond = Unit(&#34;ms&#34;, &#34;milliseconds - 10-3 s&#34;)
+    microarcsec = Unit(&#34;µas&#34;, &#34;micro arcsec: angular measurement&#34;)
+    millimeter = Unit(&#34;mm&#34;, &#34;millimeters&#34;)
+    millisecond = Unit(&#34;ms&#34;, &#34;milliseconds&#34;)
     micron = Unit(&#34;µm&#34;, &#34;micron: alias for micrometer&#34;)
-    micrometer = Unit(&#34;µm&#34;, &#34;micron: 10-6 m&#34;)
-    minute = Unit(&#34;min&#34;, &#34;minute 6x10+1 s&#34;)
+    micrometer = Unit(&#34;µm&#34;, &#34;micron&#34;)
+    minute = Unit(&#34;min&#34;, &#34;minute&#34;)
+    MJD = Unit(&#34;MJD&#34;, &#34;Mod. Julian Date&#34;)
+    mol = Unit(&#34;mol&#34;, &#34;mole- unit of substance&#34;)
+    month = Unit(&#34;month&#34;, &#34;Month name or number&#34;)
+    mmyy = Unit(&#34;mmyy&#34;, &#34;mmyy: Month/Year&#34;)
+    mu0 = Unit(&#34;mu0&#34;, &#34;mu0: magnetic constant&#34;)
+    muB = Unit(&#34;muB&#34;, &#34;Bohr magneton&#34;)
+    nanometer = Unit(&#34;nm&#34;, &#34;nanometers&#34;)
     newton = Unit(&#34;N&#34;, &#34;Newton: force&#34;)
+    ohm = Unit(&#34;ohm&#34;, &#34;Ohm&#34;)
     pascal = Unit(&#34;Pa&#34;, &#34;Pascal: pressure&#34;)
+    pi = Unit(&#34;pi&#34;, &#34;pi&#34;)
+    pc = Unit(&#34;pc&#34;, &#34;parsec&#34;)
+    ppm = Unit(&#34;ppm&#34;, &#34;part per million&#34;)
     radian = Unit(&#34;rad&#34;, &#34;radian: angular measurement of the ratio between the length of an arc and its radius&#34;)
     second = Unit(&#34;s&#34;, &#34;second: base unit of time in SI&#34;)
-    sday = Unit(&#34;sday&#34;, &#34;sidereal day is the time of one rotation of the Earth: 8.6164x10+4 s&#34;)
-    steradian = Unit(&#34;sr&#34;, &#34;steradian: unit of solid angle in SI - rad+2&#34;)
-    microarcsec = Unit(&#34;µas&#34;, &#34;micro arcsec: angular measurement&#34;)
+    sday = Unit(&#34;sday&#34;, &#34;sidereal day is the time of one rotation of the Earth&#34;)
+    steradian = Unit(&#34;sr&#34;, &#34;steradian: unit of solid angle in SI&#34;)
     volt = Unit(&#34;V&#34;, &#34;Volt: electric potential or electromotive force&#34;)
     watt = Unit(&#34;W&#34;, &#34;Watt: power&#34;)
-    week = Unit(&#34;wk&#34;, &#34;week - 7 d&#34;)
-    year = Unit(&#34;yr&#34;, &#34;year - 3.6525x10+2 d&#34;)
+    Wb = Unit(&#34;Wb&#34;, &#34;Weber&#34;)
+    week = Unit(&#34;wk&#34;, &#34;week&#34;)
+    year = Unit(&#34;yr&#34;, &#34;year&#34;)
+
     # CGS units
     coulomb = Unit(&#34;C&#34;, &#34;coulomb: electric charge&#34;)
     centimeter = Unit(&#34;cm&#34;, &#34;centimeter&#34;)
+    D = Unit(&#34;Debye&#34;, &#34;Debye(dipole) A electric dipole moment &#34;)
+    dyn = Unit(&#34;dyne&#34;, &#34;dyne: Unit of force &#34;)
     erg = Unit(&#34;erg&#34;, &#34;erg: CGS unit of energy&#34;)
+
     # Astropyhsics units
     au = Unit(&#34;AU&#34;, &#34;astronomical unit: approximately the mean Earth-Sun distance&#34;)
-    jansky = Unit(&#34;Jy&#34;, &#34;Jansky: spectral flux density - 10-26 W/Hz m+2&#34;)
-    lightyear = Unit(&#34;lyr&#34;, &#34;light year - 9.4607x10+15 m&#34;)
+    a0 = Unit(&#34;a0&#34;,
+              &#34;bohr radius: probable distance between the nucleus and the electron in a hydrogen atom in its ground state&#34;)
+    c = Unit(&#34;c&#34;, &#34;c: speed of light&#34;)
+    cKayser = Unit(&#34;cKayser&#34;, &#34;cKayser&#34;)
+    crab = Unit(&#34;crab&#34;, &#34;Crab: astrophotometrical unit for measurement of the intensity of Astrophysical X-ray sources&#34;)
+    damas = Unit(&#34;d:m:s&#34;, &#34;damas: degree arcminute arcsecond (sexagesimal angle from degree)&#34;)
+    e = Unit(&#34;e&#34;, &#34;electron charge&#34;)
+    earth = Unit(&#34;earth&#34;, &#34;earth (geo) unit&#34;)
+    F = Unit(&#34;F&#34;, &#34;Farad: F&#34;)
+    G = Unit(&#34;G&#34;, &#34;gravitation constant&#34;)
+    geoMass = Unit(&#34;geoMass&#34;, &#34;Earth Mass&#34;)
+    hm = Unit(&#34;hm&#34;, &#34;hour minutes (sexagesimal time from hours)&#34;)
+    hms = Unit(&#34;hms&#34;, &#34;hour minutes seconds (sexagesimal time from hours)&#34;)
+    hhmmss = Unit(&#34;HH:MM:SS&#34;, &#34;hour minutes seconds (sexagesimal time)&#34;)
+    jansky = Unit(&#34;Jy&#34;, &#34;Jansky: spectral flux density&#34;)
+    jd = Unit(&#34;jd&#34;, &#34;Julian Day&#34;)
+    jovmass = Unit(&#34;jovMass&#34;, &#34;Jupiter mass&#34;)
+    lightyear = Unit(&#34;lyr&#34;, &#34;light year&#34;)
     mag = Unit(&#34;mag&#34;, &#34;stellar magnitude&#34;)
+    mjup = Unit(&#34;Mjup&#34;, &#34;Jupiter mass&#34;)
+    mp = Unit(&#34;mp&#34;, &#34;proton_mass&#34;)
+    minsec = Unit(&#34;m:s&#34;, &#34;minutes seconds (sexagesimal time from minutes)&#34;)
+    msun = Unit(&#34;Msun&#34;, &#34;solar mass&#34;)
+    photon = Unit(&#34;photon&#34;, &#34;photon&#34;)
+    rgeo = Unit(&#34;Rgeo&#34;, &#34;Earth radius (eq)&#34;)
+    rjup = Unit(&#34;Rjup&#34;, &#34;Jupiter Radius(eq)&#34;)
+    rsun = Unit(&#34;Rsun&#34;, &#34;solar radius&#34;)
+    rydberg = Unit(&#34;Rydberg&#34;, &#34;energy of the photon whose wavenumber is the Rydberg constant&#34;)
+    seimens = Unit(&#34;seimens&#34;, &#34;Seimens&#34;)
+    tesla = Unit(&#34;tesla&#34;, &#34;Tesla&#34;)
+    u = Unit(&#34;u&#34;, &#34;atomic mass unit&#34;)
+
     # Imperial units
+    barn = Unit(&#34;barn&#34;, &#34;barn: metric unit of area&#34;)
     cal = Unit(&#34;cal&#34;, &#34;thermochemical calorie: pre-SI metric unit of energy&#34;)
-    foot = Unit(&#34;ft&#34;, &#34;international foot - 1.2x10+1 inch&#34;)
-    inch = Unit(&#34;inch&#34;, &#34;international inch - 2.54 cm&#34;)
-    pound = Unit(&#34;lb&#34;, &#34;international avoirdupois pound - 1.6x10+1 oz&#34;)
-    mile = Unit(&#34;mi&#34;, &#34;international mile - 5.28x10+3 ft&#34;)
+    foot = Unit(&#34;ft&#34;, &#34;international foot&#34;)
+    inch = Unit(&#34;inch&#34;, &#34;international inch&#34;)
+    pound = Unit(&#34;lb&#34;, &#34;international avoirdupois pound&#34;)
+    mile = Unit(&#34;mi&#34;, &#34;international mile&#34;)
     ounce = Unit(&#34;oz&#34;, &#34;international avoirdupois ounce&#34;)
-    yard = Unit(&#34;yd&#34;, &#34;international yard - 3 ft&#34;)
+    yard = Unit(&#34;yd&#34;, &#34;international yard&#34;)
+
     # Others - engineering
     NoUnits = Unit(&#34;none&#34;, &#34;scalar - no units specified&#34;)
+    bit = Unit(&#34;bit&#34;, &#34;bit: binary value of 0 or 1&#34;)
     encoder = Unit(&#34;enc&#34;, &#34;encoder counts&#34;)
     count = Unit(&#34;ct&#34;, &#34;counts as for an encoder or detector&#34;)
+    mmhg = Unit(&#34;mmHg&#34;, &#34;millimetre of mercury is a manometric unit of pressure&#34;)
+    percent = Unit(&#34;percent&#34;, &#34;percentage&#34;)
     pix = Unit(&#34;pix&#34;, &#34;pixel&#34;)
+
     # Datetime units
     tai = Unit(&#34;TAI&#34;, &#34;TAI time unit&#34;)
-    utc = Unit(&#34;UTC&#34;, &#34;UTC time unit&#34;)</code></pre>
+    utc = Unit(&#34;UTC&#34;, &#34;UTC time unit&#34;)
+    date = Unit(&#34;date&#34;, &#34;date&#34;)
+    datetime = Unit(&#34;datetime&#34;, &#34;date/time&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -151,63 +216,128 @@ class Unit:
 </summary>
 <pre><code class="python">class Units(Enum):
     # SI units
-    angstrom = Unit(&#34;Angstrom&#34;, &#34;10 -1 nm&#34;)
+    angstrom = Unit(&#34;Angstrom&#34;, &#34;angstrom&#34;)
+    alpha = Unit(&#34;alpha&#34;, &#34;alpha: fine structure constant&#34;)
+    ampere = Unit(&#34;A&#34;, &#34;ampere: unit of electric current&#34;)
     arcmin = Unit(&#34;arcmin&#34;, &#34;arc minute; angular measurement&#34;)
     arcsec = Unit(&#34;arcsec&#34;, &#34;arc second: angular measurement&#34;)
-    day = Unit(&#34;d&#34;, &#34;day - 24 hours&#34;)
-    degree = Unit(&#34;deg&#34;, &#34;degree: agular measurement 1/360 of full rotation&#34;)
-    elvolt = Unit(&#34;eV&#34;, &#34;electron volt 1.6022x10-19 J&#34;)
-    gram = Unit(&#34;g&#34;, &#34;gram 10-3 kg&#34;)
-    hour = Unit(&#34;h&#34;, &#34;hour 3.6x10+3 s&#34;)
+    bar = Unit(&#34;bar&#34;, &#34;bar: metric ton of pressure&#34;)
+    candela = Unit(&#34;candela&#34;, &#34;candela(lumen/sr)&#34;)
+    day = Unit(&#34;d&#34;, &#34;day&#34;)
+    degree = Unit(&#34;deg&#34;, &#34;degree: angular measurement 1/360 of full rotation&#34;)
+    degC = Unit(&#34;degC&#34;, &#34;Degree Celsius K&#34;)
+    degF = Unit(&#34;degF&#34;, &#34;Fahrenheit&#34;)
+    elvolt = Unit(&#34;eV&#34;, &#34;electron volt&#34;)
+    gauss = Unit(&#34;gauss&#34;, &#34;gauss&#34;)
+    gram = Unit(&#34;g&#34;, &#34;gram&#34;)
     hertz = Unit(&#34;Hz&#34;, &#34;frequency&#34;)
-    joule = Unit(&#34;J&#34;, &#34;Joule: energy N m&#34;)
+    henry = Unit(&#34;henry&#34;, &#34;Henry&#34;)
+    hour = Unit(&#34;h&#34;, &#34;hour&#34;)
+    joule = Unit(&#34;J&#34;, &#34;Joule: energy&#34;)
     kelvin = Unit(&#34;K&#34;, &#34;Kelvin: temperature with a null point at absolute zero&#34;)
     kilogram = Unit(&#34;kg&#34;, &#34;kilogram, base unit of mass in SI&#34;)
-    kilometer = Unit(&#34;km&#34;, &#34;kilometers - 10+3 m&#34;)
-    liter = Unit(&#34;l&#34;, &#34;liter, metric unit of volume 10+3 cm+3&#34;)
+    kilometer = Unit(&#34;km&#34;, &#34;kilometers&#34;)
+    liter = Unit(&#34;l&#34;, &#34;liter, metric unit of volume&#34;)
+    lm = Unit(&#34;lm&#34;, &#34;lumen&#34;)
+    lsun = Unit(&#34;lsun&#34;, &#34;solar luminosity&#34;)
+    lx = Unit(&#34;lx&#34;, &#34;lux(lm/m2)&#34;)
+    mas = Unit(&#34;mas&#34;, &#34;milli arc second&#34;)
+    me = Unit(&#34;me&#34;, &#34;me(electron_mass)&#34;)
     meter = Unit(&#34;m&#34;, &#34;meter: base unit of length in SI&#34;)
-    mas = Unit(&#34;mas&#34;, &#34;milli arc second: angular measurement 10-3 arcsec&#34;)
-    millimeter = Unit(&#34;mm&#34;, &#34;millimeters - 10-3 m&#34;)
-    millisecond = Unit(&#34;ms&#34;, &#34;milliseconds - 10-3 s&#34;)
+    microarcsec = Unit(&#34;µas&#34;, &#34;micro arcsec: angular measurement&#34;)
+    millimeter = Unit(&#34;mm&#34;, &#34;millimeters&#34;)
+    millisecond = Unit(&#34;ms&#34;, &#34;milliseconds&#34;)
     micron = Unit(&#34;µm&#34;, &#34;micron: alias for micrometer&#34;)
-    micrometer = Unit(&#34;µm&#34;, &#34;micron: 10-6 m&#34;)
-    minute = Unit(&#34;min&#34;, &#34;minute 6x10+1 s&#34;)
+    micrometer = Unit(&#34;µm&#34;, &#34;micron&#34;)
+    minute = Unit(&#34;min&#34;, &#34;minute&#34;)
+    MJD = Unit(&#34;MJD&#34;, &#34;Mod. Julian Date&#34;)
+    mol = Unit(&#34;mol&#34;, &#34;mole- unit of substance&#34;)
+    month = Unit(&#34;month&#34;, &#34;Month name or number&#34;)
+    mmyy = Unit(&#34;mmyy&#34;, &#34;mmyy: Month/Year&#34;)
+    mu0 = Unit(&#34;mu0&#34;, &#34;mu0: magnetic constant&#34;)
+    muB = Unit(&#34;muB&#34;, &#34;Bohr magneton&#34;)
+    nanometer = Unit(&#34;nm&#34;, &#34;nanometers&#34;)
     newton = Unit(&#34;N&#34;, &#34;Newton: force&#34;)
+    ohm = Unit(&#34;ohm&#34;, &#34;Ohm&#34;)
     pascal = Unit(&#34;Pa&#34;, &#34;Pascal: pressure&#34;)
+    pi = Unit(&#34;pi&#34;, &#34;pi&#34;)
+    pc = Unit(&#34;pc&#34;, &#34;parsec&#34;)
+    ppm = Unit(&#34;ppm&#34;, &#34;part per million&#34;)
     radian = Unit(&#34;rad&#34;, &#34;radian: angular measurement of the ratio between the length of an arc and its radius&#34;)
     second = Unit(&#34;s&#34;, &#34;second: base unit of time in SI&#34;)
-    sday = Unit(&#34;sday&#34;, &#34;sidereal day is the time of one rotation of the Earth: 8.6164x10+4 s&#34;)
-    steradian = Unit(&#34;sr&#34;, &#34;steradian: unit of solid angle in SI - rad+2&#34;)
-    microarcsec = Unit(&#34;µas&#34;, &#34;micro arcsec: angular measurement&#34;)
+    sday = Unit(&#34;sday&#34;, &#34;sidereal day is the time of one rotation of the Earth&#34;)
+    steradian = Unit(&#34;sr&#34;, &#34;steradian: unit of solid angle in SI&#34;)
     volt = Unit(&#34;V&#34;, &#34;Volt: electric potential or electromotive force&#34;)
     watt = Unit(&#34;W&#34;, &#34;Watt: power&#34;)
-    week = Unit(&#34;wk&#34;, &#34;week - 7 d&#34;)
-    year = Unit(&#34;yr&#34;, &#34;year - 3.6525x10+2 d&#34;)
+    Wb = Unit(&#34;Wb&#34;, &#34;Weber&#34;)
+    week = Unit(&#34;wk&#34;, &#34;week&#34;)
+    year = Unit(&#34;yr&#34;, &#34;year&#34;)
+
     # CGS units
     coulomb = Unit(&#34;C&#34;, &#34;coulomb: electric charge&#34;)
     centimeter = Unit(&#34;cm&#34;, &#34;centimeter&#34;)
+    D = Unit(&#34;Debye&#34;, &#34;Debye(dipole) A electric dipole moment &#34;)
+    dyn = Unit(&#34;dyne&#34;, &#34;dyne: Unit of force &#34;)
     erg = Unit(&#34;erg&#34;, &#34;erg: CGS unit of energy&#34;)
+
     # Astropyhsics units
     au = Unit(&#34;AU&#34;, &#34;astronomical unit: approximately the mean Earth-Sun distance&#34;)
-    jansky = Unit(&#34;Jy&#34;, &#34;Jansky: spectral flux density - 10-26 W/Hz m+2&#34;)
-    lightyear = Unit(&#34;lyr&#34;, &#34;light year - 9.4607x10+15 m&#34;)
+    a0 = Unit(&#34;a0&#34;,
+              &#34;bohr radius: probable distance between the nucleus and the electron in a hydrogen atom in its ground state&#34;)
+    c = Unit(&#34;c&#34;, &#34;c: speed of light&#34;)
+    cKayser = Unit(&#34;cKayser&#34;, &#34;cKayser&#34;)
+    crab = Unit(&#34;crab&#34;, &#34;Crab: astrophotometrical unit for measurement of the intensity of Astrophysical X-ray sources&#34;)
+    damas = Unit(&#34;d:m:s&#34;, &#34;damas: degree arcminute arcsecond (sexagesimal angle from degree)&#34;)
+    e = Unit(&#34;e&#34;, &#34;electron charge&#34;)
+    earth = Unit(&#34;earth&#34;, &#34;earth (geo) unit&#34;)
+    F = Unit(&#34;F&#34;, &#34;Farad: F&#34;)
+    G = Unit(&#34;G&#34;, &#34;gravitation constant&#34;)
+    geoMass = Unit(&#34;geoMass&#34;, &#34;Earth Mass&#34;)
+    hm = Unit(&#34;hm&#34;, &#34;hour minutes (sexagesimal time from hours)&#34;)
+    hms = Unit(&#34;hms&#34;, &#34;hour minutes seconds (sexagesimal time from hours)&#34;)
+    hhmmss = Unit(&#34;HH:MM:SS&#34;, &#34;hour minutes seconds (sexagesimal time)&#34;)
+    jansky = Unit(&#34;Jy&#34;, &#34;Jansky: spectral flux density&#34;)
+    jd = Unit(&#34;jd&#34;, &#34;Julian Day&#34;)
+    jovmass = Unit(&#34;jovMass&#34;, &#34;Jupiter mass&#34;)
+    lightyear = Unit(&#34;lyr&#34;, &#34;light year&#34;)
     mag = Unit(&#34;mag&#34;, &#34;stellar magnitude&#34;)
+    mjup = Unit(&#34;Mjup&#34;, &#34;Jupiter mass&#34;)
+    mp = Unit(&#34;mp&#34;, &#34;proton_mass&#34;)
+    minsec = Unit(&#34;m:s&#34;, &#34;minutes seconds (sexagesimal time from minutes)&#34;)
+    msun = Unit(&#34;Msun&#34;, &#34;solar mass&#34;)
+    photon = Unit(&#34;photon&#34;, &#34;photon&#34;)
+    rgeo = Unit(&#34;Rgeo&#34;, &#34;Earth radius (eq)&#34;)
+    rjup = Unit(&#34;Rjup&#34;, &#34;Jupiter Radius(eq)&#34;)
+    rsun = Unit(&#34;Rsun&#34;, &#34;solar radius&#34;)
+    rydberg = Unit(&#34;Rydberg&#34;, &#34;energy of the photon whose wavenumber is the Rydberg constant&#34;)
+    seimens = Unit(&#34;seimens&#34;, &#34;Seimens&#34;)
+    tesla = Unit(&#34;tesla&#34;, &#34;Tesla&#34;)
+    u = Unit(&#34;u&#34;, &#34;atomic mass unit&#34;)
+
     # Imperial units
+    barn = Unit(&#34;barn&#34;, &#34;barn: metric unit of area&#34;)
     cal = Unit(&#34;cal&#34;, &#34;thermochemical calorie: pre-SI metric unit of energy&#34;)
-    foot = Unit(&#34;ft&#34;, &#34;international foot - 1.2x10+1 inch&#34;)
-    inch = Unit(&#34;inch&#34;, &#34;international inch - 2.54 cm&#34;)
-    pound = Unit(&#34;lb&#34;, &#34;international avoirdupois pound - 1.6x10+1 oz&#34;)
-    mile = Unit(&#34;mi&#34;, &#34;international mile - 5.28x10+3 ft&#34;)
+    foot = Unit(&#34;ft&#34;, &#34;international foot&#34;)
+    inch = Unit(&#34;inch&#34;, &#34;international inch&#34;)
+    pound = Unit(&#34;lb&#34;, &#34;international avoirdupois pound&#34;)
+    mile = Unit(&#34;mi&#34;, &#34;international mile&#34;)
     ounce = Unit(&#34;oz&#34;, &#34;international avoirdupois ounce&#34;)
-    yard = Unit(&#34;yd&#34;, &#34;international yard - 3 ft&#34;)
+    yard = Unit(&#34;yd&#34;, &#34;international yard&#34;)
+
     # Others - engineering
     NoUnits = Unit(&#34;none&#34;, &#34;scalar - no units specified&#34;)
+    bit = Unit(&#34;bit&#34;, &#34;bit: binary value of 0 or 1&#34;)
     encoder = Unit(&#34;enc&#34;, &#34;encoder counts&#34;)
     count = Unit(&#34;ct&#34;, &#34;counts as for an encoder or detector&#34;)
+    mmhg = Unit(&#34;mmHg&#34;, &#34;millimetre of mercury is a manometric unit of pressure&#34;)
+    percent = Unit(&#34;percent&#34;, &#34;percentage&#34;)
     pix = Unit(&#34;pix&#34;, &#34;pixel&#34;)
+
     # Datetime units
     tai = Unit(&#34;TAI&#34;, &#34;TAI time unit&#34;)
-    utc = Unit(&#34;UTC&#34;, &#34;UTC time unit&#34;)</code></pre>
+    utc = Unit(&#34;UTC&#34;, &#34;UTC time unit&#34;)
+    date = Unit(&#34;date&#34;, &#34;date&#34;)
+    datetime = Unit(&#34;datetime&#34;, &#34;date/time&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -215,7 +345,39 @@ class Unit:
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="csw.Units.Units.D"><code class="name">var <span class="ident">D</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.F"><code class="name">var <span class="ident">F</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.G"><code class="name">var <span class="ident">G</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.MJD"><code class="name">var <span class="ident">MJD</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.NoUnits"><code class="name">var <span class="ident">NoUnits</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.Wb"><code class="name">var <span class="ident">Wb</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.a0"><code class="name">var <span class="ident">a0</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.alpha"><code class="name">var <span class="ident">alpha</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.ampere"><code class="name">var <span class="ident">ampere</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -235,7 +397,31 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.bar"><code class="name">var <span class="ident">bar</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.barn"><code class="name">var <span class="ident">barn</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.bit"><code class="name">var <span class="ident">bit</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.c"><code class="name">var <span class="ident">c</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.cKayser"><code class="name">var <span class="ident">cKayser</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.cal"><code class="name">var <span class="ident">cal</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.candela"><code class="name">var <span class="ident">candela</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -251,11 +437,47 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.crab"><code class="name">var <span class="ident">crab</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.damas"><code class="name">var <span class="ident">damas</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.date"><code class="name">var <span class="ident">date</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.datetime"><code class="name">var <span class="ident">datetime</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.day"><code class="name">var <span class="ident">day</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.degC"><code class="name">var <span class="ident">degC</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.degF"><code class="name">var <span class="ident">degF</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.degree"><code class="name">var <span class="ident">degree</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.dyn"><code class="name">var <span class="ident">dyn</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.e"><code class="name">var <span class="ident">e</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.earth"><code class="name">var <span class="ident">earth</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -275,11 +497,35 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.gauss"><code class="name">var <span class="ident">gauss</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.geoMass"><code class="name">var <span class="ident">geoMass</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.gram"><code class="name">var <span class="ident">gram</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.henry"><code class="name">var <span class="ident">henry</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.hertz"><code class="name">var <span class="ident">hertz</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.hhmmss"><code class="name">var <span class="ident">hhmmss</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.hm"><code class="name">var <span class="ident">hm</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.hms"><code class="name">var <span class="ident">hms</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -295,7 +541,15 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.jd"><code class="name">var <span class="ident">jd</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.joule"><code class="name">var <span class="ident">joule</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.jovmass"><code class="name">var <span class="ident">jovmass</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -319,11 +573,27 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.lm"><code class="name">var <span class="ident">lm</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.lsun"><code class="name">var <span class="ident">lsun</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.lx"><code class="name">var <span class="ident">lx</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.mag"><code class="name">var <span class="ident">mag</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.Units.Units.mas"><code class="name">var <span class="ident">mas</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.me"><code class="name">var <span class="ident">me</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -355,11 +625,59 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.minsec"><code class="name">var <span class="ident">minsec</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.minute"><code class="name">var <span class="ident">minute</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.mjup"><code class="name">var <span class="ident">mjup</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.mmhg"><code class="name">var <span class="ident">mmhg</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.mmyy"><code class="name">var <span class="ident">mmyy</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.mol"><code class="name">var <span class="ident">mol</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.month"><code class="name">var <span class="ident">month</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.mp"><code class="name">var <span class="ident">mp</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.msun"><code class="name">var <span class="ident">msun</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.mu0"><code class="name">var <span class="ident">mu0</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.muB"><code class="name">var <span class="ident">muB</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.nanometer"><code class="name">var <span class="ident">nanometer</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.newton"><code class="name">var <span class="ident">newton</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.ohm"><code class="name">var <span class="ident">ohm</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -371,6 +689,22 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.pc"><code class="name">var <span class="ident">pc</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.percent"><code class="name">var <span class="ident">percent</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.photon"><code class="name">var <span class="ident">photon</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.pi"><code class="name">var <span class="ident">pi</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.pix"><code class="name">var <span class="ident">pix</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -379,7 +713,27 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.ppm"><code class="name">var <span class="ident">ppm</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.radian"><code class="name">var <span class="ident">radian</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.rgeo"><code class="name">var <span class="ident">rgeo</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.rjup"><code class="name">var <span class="ident">rjup</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.rsun"><code class="name">var <span class="ident">rsun</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.rydberg"><code class="name">var <span class="ident">rydberg</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -391,11 +745,23 @@ class Unit:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="csw.Units.Units.seimens"><code class="name">var <span class="ident">seimens</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="csw.Units.Units.steradian"><code class="name">var <span class="ident">steradian</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.Units.Units.tai"><code class="name">var <span class="ident">tai</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.tesla"><code class="name">var <span class="ident">tesla</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Units.Units.u"><code class="name">var <span class="ident">u</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -451,34 +817,69 @@ class Unit:
 <li>
 <h4><code><a title="csw.Units.Units" href="#csw.Units.Units">Units</a></code></h4>
 <ul class="two-column">
+<li><code><a title="csw.Units.Units.D" href="#csw.Units.Units.D">D</a></code></li>
+<li><code><a title="csw.Units.Units.F" href="#csw.Units.Units.F">F</a></code></li>
+<li><code><a title="csw.Units.Units.G" href="#csw.Units.Units.G">G</a></code></li>
+<li><code><a title="csw.Units.Units.MJD" href="#csw.Units.Units.MJD">MJD</a></code></li>
 <li><code><a title="csw.Units.Units.NoUnits" href="#csw.Units.Units.NoUnits">NoUnits</a></code></li>
+<li><code><a title="csw.Units.Units.Wb" href="#csw.Units.Units.Wb">Wb</a></code></li>
+<li><code><a title="csw.Units.Units.a0" href="#csw.Units.Units.a0">a0</a></code></li>
+<li><code><a title="csw.Units.Units.alpha" href="#csw.Units.Units.alpha">alpha</a></code></li>
+<li><code><a title="csw.Units.Units.ampere" href="#csw.Units.Units.ampere">ampere</a></code></li>
 <li><code><a title="csw.Units.Units.angstrom" href="#csw.Units.Units.angstrom">angstrom</a></code></li>
 <li><code><a title="csw.Units.Units.arcmin" href="#csw.Units.Units.arcmin">arcmin</a></code></li>
 <li><code><a title="csw.Units.Units.arcsec" href="#csw.Units.Units.arcsec">arcsec</a></code></li>
 <li><code><a title="csw.Units.Units.au" href="#csw.Units.Units.au">au</a></code></li>
+<li><code><a title="csw.Units.Units.bar" href="#csw.Units.Units.bar">bar</a></code></li>
+<li><code><a title="csw.Units.Units.barn" href="#csw.Units.Units.barn">barn</a></code></li>
+<li><code><a title="csw.Units.Units.bit" href="#csw.Units.Units.bit">bit</a></code></li>
+<li><code><a title="csw.Units.Units.c" href="#csw.Units.Units.c">c</a></code></li>
+<li><code><a title="csw.Units.Units.cKayser" href="#csw.Units.Units.cKayser">cKayser</a></code></li>
 <li><code><a title="csw.Units.Units.cal" href="#csw.Units.Units.cal">cal</a></code></li>
+<li><code><a title="csw.Units.Units.candela" href="#csw.Units.Units.candela">candela</a></code></li>
 <li><code><a title="csw.Units.Units.centimeter" href="#csw.Units.Units.centimeter">centimeter</a></code></li>
 <li><code><a title="csw.Units.Units.coulomb" href="#csw.Units.Units.coulomb">coulomb</a></code></li>
 <li><code><a title="csw.Units.Units.count" href="#csw.Units.Units.count">count</a></code></li>
+<li><code><a title="csw.Units.Units.crab" href="#csw.Units.Units.crab">crab</a></code></li>
+<li><code><a title="csw.Units.Units.damas" href="#csw.Units.Units.damas">damas</a></code></li>
+<li><code><a title="csw.Units.Units.date" href="#csw.Units.Units.date">date</a></code></li>
+<li><code><a title="csw.Units.Units.datetime" href="#csw.Units.Units.datetime">datetime</a></code></li>
 <li><code><a title="csw.Units.Units.day" href="#csw.Units.Units.day">day</a></code></li>
+<li><code><a title="csw.Units.Units.degC" href="#csw.Units.Units.degC">degC</a></code></li>
+<li><code><a title="csw.Units.Units.degF" href="#csw.Units.Units.degF">degF</a></code></li>
 <li><code><a title="csw.Units.Units.degree" href="#csw.Units.Units.degree">degree</a></code></li>
+<li><code><a title="csw.Units.Units.dyn" href="#csw.Units.Units.dyn">dyn</a></code></li>
+<li><code><a title="csw.Units.Units.e" href="#csw.Units.Units.e">e</a></code></li>
+<li><code><a title="csw.Units.Units.earth" href="#csw.Units.Units.earth">earth</a></code></li>
 <li><code><a title="csw.Units.Units.elvolt" href="#csw.Units.Units.elvolt">elvolt</a></code></li>
 <li><code><a title="csw.Units.Units.encoder" href="#csw.Units.Units.encoder">encoder</a></code></li>
 <li><code><a title="csw.Units.Units.erg" href="#csw.Units.Units.erg">erg</a></code></li>
 <li><code><a title="csw.Units.Units.foot" href="#csw.Units.Units.foot">foot</a></code></li>
+<li><code><a title="csw.Units.Units.gauss" href="#csw.Units.Units.gauss">gauss</a></code></li>
+<li><code><a title="csw.Units.Units.geoMass" href="#csw.Units.Units.geoMass">geoMass</a></code></li>
 <li><code><a title="csw.Units.Units.gram" href="#csw.Units.Units.gram">gram</a></code></li>
+<li><code><a title="csw.Units.Units.henry" href="#csw.Units.Units.henry">henry</a></code></li>
 <li><code><a title="csw.Units.Units.hertz" href="#csw.Units.Units.hertz">hertz</a></code></li>
+<li><code><a title="csw.Units.Units.hhmmss" href="#csw.Units.Units.hhmmss">hhmmss</a></code></li>
+<li><code><a title="csw.Units.Units.hm" href="#csw.Units.Units.hm">hm</a></code></li>
+<li><code><a title="csw.Units.Units.hms" href="#csw.Units.Units.hms">hms</a></code></li>
 <li><code><a title="csw.Units.Units.hour" href="#csw.Units.Units.hour">hour</a></code></li>
 <li><code><a title="csw.Units.Units.inch" href="#csw.Units.Units.inch">inch</a></code></li>
 <li><code><a title="csw.Units.Units.jansky" href="#csw.Units.Units.jansky">jansky</a></code></li>
+<li><code><a title="csw.Units.Units.jd" href="#csw.Units.Units.jd">jd</a></code></li>
 <li><code><a title="csw.Units.Units.joule" href="#csw.Units.Units.joule">joule</a></code></li>
+<li><code><a title="csw.Units.Units.jovmass" href="#csw.Units.Units.jovmass">jovmass</a></code></li>
 <li><code><a title="csw.Units.Units.kelvin" href="#csw.Units.Units.kelvin">kelvin</a></code></li>
 <li><code><a title="csw.Units.Units.kilogram" href="#csw.Units.Units.kilogram">kilogram</a></code></li>
 <li><code><a title="csw.Units.Units.kilometer" href="#csw.Units.Units.kilometer">kilometer</a></code></li>
 <li><code><a title="csw.Units.Units.lightyear" href="#csw.Units.Units.lightyear">lightyear</a></code></li>
 <li><code><a title="csw.Units.Units.liter" href="#csw.Units.Units.liter">liter</a></code></li>
+<li><code><a title="csw.Units.Units.lm" href="#csw.Units.Units.lm">lm</a></code></li>
+<li><code><a title="csw.Units.Units.lsun" href="#csw.Units.Units.lsun">lsun</a></code></li>
+<li><code><a title="csw.Units.Units.lx" href="#csw.Units.Units.lx">lx</a></code></li>
 <li><code><a title="csw.Units.Units.mag" href="#csw.Units.Units.mag">mag</a></code></li>
 <li><code><a title="csw.Units.Units.mas" href="#csw.Units.Units.mas">mas</a></code></li>
+<li><code><a title="csw.Units.Units.me" href="#csw.Units.Units.me">me</a></code></li>
 <li><code><a title="csw.Units.Units.meter" href="#csw.Units.Units.meter">meter</a></code></li>
 <li><code><a title="csw.Units.Units.microarcsec" href="#csw.Units.Units.microarcsec">microarcsec</a></code></li>
 <li><code><a title="csw.Units.Units.micrometer" href="#csw.Units.Units.micrometer">micrometer</a></code></li>
@@ -486,17 +887,41 @@ class Unit:
 <li><code><a title="csw.Units.Units.mile" href="#csw.Units.Units.mile">mile</a></code></li>
 <li><code><a title="csw.Units.Units.millimeter" href="#csw.Units.Units.millimeter">millimeter</a></code></li>
 <li><code><a title="csw.Units.Units.millisecond" href="#csw.Units.Units.millisecond">millisecond</a></code></li>
+<li><code><a title="csw.Units.Units.minsec" href="#csw.Units.Units.minsec">minsec</a></code></li>
 <li><code><a title="csw.Units.Units.minute" href="#csw.Units.Units.minute">minute</a></code></li>
+<li><code><a title="csw.Units.Units.mjup" href="#csw.Units.Units.mjup">mjup</a></code></li>
+<li><code><a title="csw.Units.Units.mmhg" href="#csw.Units.Units.mmhg">mmhg</a></code></li>
+<li><code><a title="csw.Units.Units.mmyy" href="#csw.Units.Units.mmyy">mmyy</a></code></li>
+<li><code><a title="csw.Units.Units.mol" href="#csw.Units.Units.mol">mol</a></code></li>
+<li><code><a title="csw.Units.Units.month" href="#csw.Units.Units.month">month</a></code></li>
+<li><code><a title="csw.Units.Units.mp" href="#csw.Units.Units.mp">mp</a></code></li>
+<li><code><a title="csw.Units.Units.msun" href="#csw.Units.Units.msun">msun</a></code></li>
+<li><code><a title="csw.Units.Units.mu0" href="#csw.Units.Units.mu0">mu0</a></code></li>
+<li><code><a title="csw.Units.Units.muB" href="#csw.Units.Units.muB">muB</a></code></li>
+<li><code><a title="csw.Units.Units.nanometer" href="#csw.Units.Units.nanometer">nanometer</a></code></li>
 <li><code><a title="csw.Units.Units.newton" href="#csw.Units.Units.newton">newton</a></code></li>
+<li><code><a title="csw.Units.Units.ohm" href="#csw.Units.Units.ohm">ohm</a></code></li>
 <li><code><a title="csw.Units.Units.ounce" href="#csw.Units.Units.ounce">ounce</a></code></li>
 <li><code><a title="csw.Units.Units.pascal" href="#csw.Units.Units.pascal">pascal</a></code></li>
+<li><code><a title="csw.Units.Units.pc" href="#csw.Units.Units.pc">pc</a></code></li>
+<li><code><a title="csw.Units.Units.percent" href="#csw.Units.Units.percent">percent</a></code></li>
+<li><code><a title="csw.Units.Units.photon" href="#csw.Units.Units.photon">photon</a></code></li>
+<li><code><a title="csw.Units.Units.pi" href="#csw.Units.Units.pi">pi</a></code></li>
 <li><code><a title="csw.Units.Units.pix" href="#csw.Units.Units.pix">pix</a></code></li>
 <li><code><a title="csw.Units.Units.pound" href="#csw.Units.Units.pound">pound</a></code></li>
+<li><code><a title="csw.Units.Units.ppm" href="#csw.Units.Units.ppm">ppm</a></code></li>
 <li><code><a title="csw.Units.Units.radian" href="#csw.Units.Units.radian">radian</a></code></li>
+<li><code><a title="csw.Units.Units.rgeo" href="#csw.Units.Units.rgeo">rgeo</a></code></li>
+<li><code><a title="csw.Units.Units.rjup" href="#csw.Units.Units.rjup">rjup</a></code></li>
+<li><code><a title="csw.Units.Units.rsun" href="#csw.Units.Units.rsun">rsun</a></code></li>
+<li><code><a title="csw.Units.Units.rydberg" href="#csw.Units.Units.rydberg">rydberg</a></code></li>
 <li><code><a title="csw.Units.Units.sday" href="#csw.Units.Units.sday">sday</a></code></li>
 <li><code><a title="csw.Units.Units.second" href="#csw.Units.Units.second">second</a></code></li>
+<li><code><a title="csw.Units.Units.seimens" href="#csw.Units.Units.seimens">seimens</a></code></li>
 <li><code><a title="csw.Units.Units.steradian" href="#csw.Units.Units.steradian">steradian</a></code></li>
 <li><code><a title="csw.Units.Units.tai" href="#csw.Units.Units.tai">tai</a></code></li>
+<li><code><a title="csw.Units.Units.tesla" href="#csw.Units.Units.tesla">tesla</a></code></li>
+<li><code><a title="csw.Units.Units.u" href="#csw.Units.Units.u">u</a></code></li>
 <li><code><a title="csw.Units.Units.utc" href="#csw.Units.Units.utc">utc</a></code></li>
 <li><code><a title="csw.Units.Units.volt" href="#csw.Units.Units.volt">volt</a></code></li>
 <li><code><a title="csw.Units.Units.watt" href="#csw.Units.Units.watt">watt</a></code></li>

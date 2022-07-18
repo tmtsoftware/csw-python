@@ -90,14 +90,12 @@ class CommandServer:
         return ws
 
     def _registerWithLocationService(self, prefix: Prefix, port: int):
-        self.log.debug("Registering with location service using port " + str(port))
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        # locationService.unregister(connection)
-        locationService.register(HttpRegistration(connection, port, "/post-endpoint"))
+        locationService.register(HttpRegistration(connection, port))
 
-    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 8082):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 0):
         """
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given
         prefix, so that CSW components can locate it and send commands to it.
@@ -109,12 +107,12 @@ class CommandServer:
             port (int): optional port for HTTP server
         """
         self.handler = handler
-        self.port = port
+        self.port = LocationService.getFreePort(port)
         self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
-        self._registerWithLocationService(prefix, port)
+        self._registerWithLocationService(prefix, self.port)
 
     def start(self):
         """
