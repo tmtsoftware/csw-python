@@ -1,6 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v4.0.4] - 
+
+### Changed
+
+- Changed the way parameters are accessed to be more like the Java/Scala CSW APIs
+- Added use of Python Generics for keys and parameters, to provide type hints for IDEs
+- Added some ESW class definitions and an esw-shell application, similar to the Scala CSW one
+- Added command service client features
+- Renamed KeyType enum to KeyTypes and added KeyType class hierarchy, similar to CSW APIs
+- Refactored code to use new python 3.10 features
+- Added code to find a unique port when registering with the Location Service with port=0
+- Updated Units to match CSW version
+- Fixed issue with Redis sentinal (need to use localhost)
+
 ## [tmtpycsw v4.0.3] - 2022-04-27
 
 ### Changed
