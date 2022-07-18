@@ -1,8 +1,7 @@
 from csw.CommandResponse import Completed, Accepted
 from csw.CommandService import CommandService
-from csw.KeyType import KeyType
 from csw.LocationService import ComponentType
-from csw.Parameter import Parameter, IntKey
+from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems

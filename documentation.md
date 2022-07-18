@@ -10,7 +10,7 @@ See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentati
 
 You can find the [tmtpycsw sources](https://github.com/tmtsoftware/csw-python) on GitHub.
 
-Note that all APIs here assume that the CSW services (version 4.0.0) are running 
+Note that all APIs here assume that the latest version of CSW services are running 
 For example, during development, run: `csw-services start`.
 
 The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
@@ -18,8 +18,7 @@ with the difference that in some cases the Python types are simpler, due to less
 
 ## Requirements
 
-* Python version 3.9.5 or newer
-* pip (pip3 on Linux)
+* Python version 3.10 or newer
 * pdoc3 (`pip3 install pdoc3`)
 * pipenv (latest)
 
@@ -34,7 +33,7 @@ make venv
 
 This uses pip and pipenv to create a .venv directory containing the dependencies and python interpreter.
 
-Dependecies:
+Dependecies (See [Pipfile](Pipfile)):
 
 * astropy
 * cbor2
@@ -67,51 +66,67 @@ The following code demonstrates the Python API for the Location Service:
 import structlog
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 # Demonstrate usage of the Python Location Service API
 
 def test_location_service():
- log = structlog.get_logger()
- locationService = LocationService()
+    log = structlog.get_logger()
+    locationService = LocationService()
 
- # List all registered connections
- log.debug("\nAll Locations:")
- for i in locationService.list():
-  log.debug("    " + str(i))
+    # List all registered connections
+    log.debug("\nAll Locations:")
+    allLocations = locationService.list()
+    for i in allLocations:
+        log.debug("    " + str(i))
 
- # List the registered HCDs
- log.debug("\nHCDs:")
- for i in locationService.list(ComponentType.HCD):
-  log.debug("    " + str(i))
+    # List the registered HCDs
+    log.debug("\nHCDs:")
+    for i in locationService.list(ComponentType.HCD):
+        log.debug("    " + str(i))
 
- # List the registered http connections
- log.debug("\nConnections on 192.168.178.78")
- for i in locationService.list("192.168.178.78"):
-  log.debug("    " + str(i))
+    # List the registered http connections
+    log.debug("\nConnections on 192.168.178.78")
+    for i in locationService.list("192.168.178.78"):
+        log.debug("    " + str(i))
 
- # List the registered http connections
- log.debug("\nHTTP connections:")
- for i in locationService.list(ConnectionType.HttpType):
-  log.debug("    " + str(i))
+    # List the registered http connections
+    log.debug("\nHTTP connections:")
+    httpServices = locationService.list(ConnectionType.HttpType)
+    for i in httpServices:
+        log.debug("    " + str(i))
+    assert not [x for x in httpServices if
+                x.connection.prefix == 'CSW.EventServer' and x.connection.componentType == 'Service']
 
- # Register a connection
- connection = ConnectionInfo("csw.myComp", ComponentType.Service.value, ConnectionType.HttpType.value)
- reg = HttpRegistration(connection, 8080, path="myservice/test")
- regResult = locationService.register(reg)
- log.debug("\nRegistration result: " + str(regResult))
+    # Register a connection
+    prefix = Prefix(Subsystems.CSW, "myComp")
+    connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+    reg = HttpRegistration(connection, LocationService.getFreePort(), path="myservice/test")
+    regResult = locationService.register(reg)
+    log.debug("\nRegistration result: " + str(regResult))
+    assert regResult.componentType == ComponentType.Service.value
+    assert regResult.prefix == 'CSW.myComp'
+    assert regResult.connectionType == ConnectionType.HttpType.value
 
- # Find a connection
- location1 = locationService.find(connection)
- log.debug("location1 = " + str(location1))
+    # Find a connection
+    location1 = locationService.find(connection)
+    log.debug("location1 = " + str(location1))
+    assert location1.connection.componentType == ComponentType.Service.value
+    assert location1.connection.prefix == 'CSW.myComp'
+    assert location1.connection.connectionType == ConnectionType.HttpType.value
 
- # Resolve a connection (waiting if needed)
- location2 = locationService.resolve(connection)
- log.debug("location2 = " + str(location2))
+    # Resolve a connection (waiting if needed)
+    location2 = locationService.resolve(connection)
+    log.debug("location2 = " + str(location2))
+    assert location1 == location2
 
- # Unregister
- unregResult = locationService.unregister(connection)
- log.debug("\nUnregister result: " + str(unregResult))
+    # Unregister
+    unregResult = locationService.unregister(connection)
+    log.debug("\nUnregister result: " + str(unregResult))
+
+    assert not locationService.find(connection)
 ```
 
 The type of the return value from methods that return a location is a subclass of
@@ -133,26 +148,30 @@ you can call `EventSubscriber().subscribe`:
 
 ```python
 from csw.EventSubscriber import EventSubscriber
+from csw.Subsystem import Subsystems
+from csw.Prefix import Prefix
+from csw.Event import EventName
+from csw.EventKey import EventKey
 
 
 # Test subscribing to events
 class TestSubscriber3:
 
- def __init__(self):
-  eventKey = "CSW.testassembly.myAssemblyEvent"
-  EventSubscriber().subscribe([eventKey], self.callback)
+    def __init__(self):
+        self.eventKey = EventKey(Prefix(Subsystems.CSW, "testassembly"), EventName("myAssemblyEvent"))
+        EventSubscriber().subscribe([self.eventKey], self.callback)
 
- @staticmethod
- def callback(systemEvent):
-  print(f"Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'")
-  for i in systemEvent.paramSet:
-   print(f"    with values: {i.keyName}({i.keyType.name}): {i.values}")
-  if systemEvent.isInvalid():
-   print("    Invalid")
-  if systemEvent.exists("assemblyEventValue"):
-   p = systemEvent.get("assemblyEventValue")
-   if p is not None:
-    print(f"Found: {p.keyName}")
+    @staticmethod
+    def callback(systemEvent):
+        print(f"Received system event '{systemEvent.eventName.name}' with event time: '{systemEvent.eventTime}'")
+        for i in systemEvent.paramSet:
+            print(f"    with values: {i.keyName}({i.keyType.name}): {i.values}")
+        if systemEvent.isInvalid():
+            print("    Invalid")
+        if systemEvent.exists("assemblyEventValue"):
+            p = systemEvent.get("assemblyEventValue")
+            if p is not None:
+                print(f"Found: {p.keyName}")
 ```
 
 See [here](Event.html) for the structure of an event. There are two types of events:
@@ -165,9 +184,36 @@ In the above example, the callback expects SystemEvents.
 
 ## Command Service API
 
-In the current version there is no support for command service clients. 
-For now it assumed that Python code will be used to implement or help implement an HCD, for example, 
-but not send commands to other components. This may be added in a future version.
+The [CommandService](CommandService.html) class provides a client API for sending commands to an 
+assembly or HCD.
+
+```python
+from csw.CommandResponse import Completed, Accepted
+from csw.CommandService import CommandService
+from csw.LocationService import ComponentType
+from csw.Parameter import IntKey
+from csw.ParameterSetType import Setup, CommandName
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
+
+
+# Assumes csw-services and test assembly are running!
+def test_command_service_client():
+    cs = CommandService(Prefix(Subsystems.CSW, "TestPublisher"), ComponentType.Assembly)
+    prefix = Prefix(Subsystems.CSW, "TestClient")
+    commandName = CommandName("Test")
+    maybeObsId = []
+    param = IntKey.make("testValue").set(42)
+    paramSet = [param]
+    setup = Setup(prefix, commandName, maybeObsId, paramSet)
+    resp = cs.submit(setup)
+    assert isinstance(resp, Completed)
+    resp2 = cs.validate(setup)
+    assert isinstance(resp2, Accepted)
+    resp3 = cs.oneway(setup)
+    assert isinstance(resp3, Accepted)
+
+```
 
 The [CommandServer](CommandServer.html) class lets you start an HTTP server that will accept 
 CSW Setup commands to implement an assembly or HCD in Python.
@@ -188,17 +234,20 @@ import asyncio
 from asyncio import Task
 from typing import List
 
-from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, Error, Accepted, Started, UnsupportedCommandIssue
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter
-from csw.KeyType import KeyType
+from csw.Parameter import IntKey, UTCTimeKey, TAITimeKey, IntArrayKey, FloatArrayKey, IntMatrixKey, DoubleKey
+from csw.TAITime import TAITime
+from csw.UTCTime import UTCTime
 from csw.Units import Units
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 class MyComponentHandlers(ComponentHandlers):
- prefix = "CSW.pycswTest"
+ prefix = Prefix(Subsystems.CSW, "pycswTest")
 
  async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
   await asyncio.sleep(3)
@@ -221,16 +270,17 @@ class MyComponentHandlers(ComponentHandlers):
   n = len(command.paramSet)
   print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
 
-  if command.commandName == "LongRunningCommand":
+  if command.commandName.name == "LongRunningCommand":
    task = asyncio.create_task(self.longRunningCommand(runId, command))
    return Started(runId, "Long running task in progress..."), task
-  elif command.commandName == "SimpleCommand":
+  elif command.commandName.name == "SimpleCommand":
    return Completed(runId), None
-  elif command.commandName == "ResultCommand":
-   result = Result([Parameter("myValue", KeyType.DoubleKey, [42.0])])
+  elif command.commandName.name == "ResultCommand":
+   param = DoubleKey.make("myValue").set(42.0)
+   result = Result([param])
    return Completed(runId, result), None
   else:
-   return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName}")), None
+   return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName.name}")), None
 
  def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
   """
@@ -262,21 +312,23 @@ class MyComponentHandlers(ComponentHandlers):
 
  # Returns the current state
  def currentStates(self) -> List[CurrentState]:
-  intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
-  intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-  floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                              Units.mas)
-  intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
-                             [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-  return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+  intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+  intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+  floatArrayParam = FloatArrayKey.make("FloatArrayValue").set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+  intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                        [[-1, -2, -3, -4], [-5, -6, -7, -8]])
+  utcTimeParam = UTCTimeKey.make("UTCTimeValue").set(UTCTime.from_str("2021-09-17T09:17:08.608242344Z"))
+  taiTimeParam = TAITimeKey.make("TAITimeValue").set(TAITime.from_str("2021-09-17T09:17:45.610701219Z"))
+  params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
+  return [CurrentState(self.prefix, "PyCswState", params)]
 
 
 # noinspection PyTypeChecker
 handlers = MyComponentHandlers()
 commandServer = CommandServer(handlers.prefix, handlers)
-handlers.commandServer = commandServer
 print(f"Starting test command server on port {commandServer.port}")
 commandServer.start()
+
 ```
 
 ## Working with Parameters
