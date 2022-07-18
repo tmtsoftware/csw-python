@@ -341,9 +341,16 @@ For example, assuming you know that a received command contains a key named "cmd
 you can access the values like this (Parameters may always contain multiple values):
 
 ```python
-            assert(command.get("cmdValue").values == [1.0, 2.0, 3.0])
-            assert(list(command.get("cmdValue").values)[0] == 1.0)
+    # Access cmdValue using __call__ syntax
+    cmdValueKey = FloatKey.make("cmdValue")
+    assert (command(cmdValueKey).values == [1.0, 2.0, 3.0])
+    
+    # Alternative ways to access the parameter values
+    assert (command.get("cmdValue", FloatKey).values == [1.0, 2.0, 3.0])
+    assert (command.gets("cmdValue").values == [1.0, 2.0, 3.0])
 ```
+Note that the first two versions use python generics that provide type hints for IDEs,
+while the last version (gets()) does not.
 
 CSW also defines a number of 
 [coordinate types](https://tmtsoftware.github.io/csw/params/keys-parameters.html#coordinate-types) for parameters.
@@ -352,10 +359,9 @@ The following example gets the first value of the "BasePosition", which is expec
 [Astropy Angles](https://docs.astropy.org/en/stable/api/astropy.coordinates.Angle.html).
 
 ```python
-
-            # Access a coordinate value
-            eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
-            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
-            assert(eqCoord.ra == Angle("12:13:14.15 hours"))
-            assert(eqCoord.dec == Angle("-30:31:32.3 deg"))
+    # Access a coordinate value
+    eqCoord = command.get("BasePosition", EqCoordKey).values[0]
+    assert (eqCoord.pm == ProperMotion(0.5, 2.33))
+    assert (eqCoord.ra == Angle("12:13:14.15 hours"))
+    assert (eqCoord.dec == Angle("-30:31:32.3 deg"))
 ```

@@ -48,11 +48,16 @@ class MyComponentHandlers(ComponentHandlers):
     # noinspection PyUnresolvedReferences
     def _checkCommand(self, command: ControlCommand):
         try:
-            assert (command.get("cmdValue").values == [1.0, 2.0, 3.0])
-            assert (list(command.get("cmdValue").values)[0] == 1.0)
+            # Access cmdValue using __call__ syntax
+            cmdValueKey = FloatKey.make("cmdValue")
+            assert (command(cmdValueKey).values == [1.0, 2.0, 3.0])
+            # Alternative ways to access the parameter values
+            assert (command.get("cmdValue", FloatKey).values == [1.0, 2.0, 3.0])
+            assert (command.gets("cmdValue").values == [1.0, 2.0, 3.0])
+            assert (command(cmdValueKey).values[0] == 1.0)
 
-            # Access a coordinate value
-            eqCoord: EqCoord = list(command.get("BasePosition").values)[0]
+            # Access a coordinate value (using alternate get() method with key name and key type)
+            eqCoord = command.get("BasePosition", EqCoordKey).values[0]
             assert (eqCoord.pm == ProperMotion(0.5, 2.33))
             assert (eqCoord.ra == Angle("12:13:14.15 hours"))
             assert (eqCoord.dec == Angle("-30:31:32.3 deg"))

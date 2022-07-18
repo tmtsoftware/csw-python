@@ -1,7 +1,6 @@
-from csw.Parameter import Parameter, IntKey, IntArrayKey, FloatArrayKey, IntMatrixKey
+from csw.Parameter import IntKey, IntArrayKey, FloatArrayKey, IntMatrixKey
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
-from csw.KeyType import KeyType
 from csw.Units import Units
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems

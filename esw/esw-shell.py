@@ -4,7 +4,7 @@ from csw.Prefix import Prefix
 from csw.LocationService import *
 from esw.SequencerRequest import *
 from csw.CommandService import *
-from csw.KeyType import KeyType
+from csw.KeyTypes import KeyTypes
 from csw.Parameter import Parameter
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher

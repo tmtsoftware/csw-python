@@ -2,10 +2,9 @@ import time
 
 import structlog
 
-from csw.KeyType import KeyType
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
-from csw.Parameter import Parameter, IntKey
+from csw.Parameter import IntKey
 from csw.Event import SystemEvent, EventName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems

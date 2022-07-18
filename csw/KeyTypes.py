@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class KeyType(Enum):
+class KeyTypes(Enum):
     ChoiceKey = 1
     StringKey = 2
     UTCTimeKey = 3

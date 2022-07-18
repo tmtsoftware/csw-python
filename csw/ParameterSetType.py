@@ -1,7 +1,10 @@
 from dataclasses import dataclass
-from typing import List
-from csw.Parameter import Parameter
+from typing import List, TypeVar
+
+from csw.Parameter import Parameter, KeyType, Key
 from csw.Prefix import Prefix
+
+T = TypeVar('T')
 
 
 @dataclass
@@ -61,18 +64,48 @@ class SequenceCommand:
 
         return d
 
-    def get(self, keyName: str) -> Parameter|None:
+    # noinspection PyUnusedLocal
+    def get(self, keyName: str, keyType: KeyType[T]) -> Parameter[T] | None:
+        """
+        Gets the parameter with the given name, or else returns None.
+
+        Args:
+            keyName (str): parameter name
+            keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        """
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def gets(self, keyName: str) -> Parameter | None:
         """
         Gets the parameter with the given name, or else returns None.
 
         Args:
             keyName (str): parameter name
 
-        Returns: Parameter|None
+        Returns: Parameter | None
             the parameter, if found
         """
         for p in self.paramSet:
             if p.keyName == keyName:
+                return p
+
+    def __call__(self, key: Key[T]) -> Parameter[T] | None:
+        """
+        This is similar to Scala's apply() method and gets the parameter for the given key, or else returns None.
+
+        Args:
+            key (Key[T]): parameter key
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        """
+        for p in self.paramSet:
+            if p.keyName == key.keyName:
                 return p
 
     def exists(self, keyName: str) -> bool:
