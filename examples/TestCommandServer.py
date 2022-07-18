@@ -2,13 +2,14 @@ import asyncio
 from asyncio import Task
 from typing import List
 
-from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
-    Error, Accepted, Started, UnsupportedCommandIssue
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, \
+    Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter
-from csw.KeyType import KeyType
+from csw.Parameter import IntKey, UTCTimeKey, TAITimeKey, IntArrayKey, FloatArrayKey, IntMatrixKey, DoubleKey
+from csw.TAITime import TAITime
+from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
@@ -37,20 +38,6 @@ class MyComponentHandlers(ComponentHandlers):
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
-        # filt = command.get("filter").values[0]
-        # encoder = command.get("encoder").values[0]
-        # print(f"filter = {filt}, encoder = {encoder}")
-
-        # --- Example return values ---
-
-        # return Completed(runId), None
-
-        # return Error(runId, "There is a problem ..."), None
-
-        # return Invalid(runId, MissingKeyIssue("Missing required key XXX")), None
-
-        # result = Result("tcs.filter", [Parameter("myValue", 'DoubleKey', [42.0])])
-        # return Completed(runId, result), None
 
         if command.commandName.name == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
@@ -58,7 +45,8 @@ class MyComponentHandlers(ComponentHandlers):
         elif command.commandName.name == "SimpleCommand":
             return Completed(runId), None
         elif command.commandName.name == "ResultCommand":
-            result = Result([Parameter("myValue", KeyType.DoubleKey, [42.0])])
+            param = DoubleKey.make("myValue").set(42.0)
+            result = Result([param])
             return Completed(runId, result), None
         else:
             return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName.name}")), None
@@ -76,9 +64,6 @@ class MyComponentHandlers(ComponentHandlers):
         """
         n = len(command.paramSet)
         print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
-        # filt = command.get("filter").values[0]
-        # encoder = command.get("encoder").values[0]
-        # print(f"filter = {filt}, encoder = {encoder}")
         return Accepted(runId)
 
     def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
@@ -96,13 +81,15 @@ class MyComponentHandlers(ComponentHandlers):
 
     # Returns the current state
     def currentStates(self) -> List[CurrentState]:
-        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
-        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                    Units.mas)
-        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-        return [CurrentState(self.prefix, "PyCswState", [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+        intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+        intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+        floatArrayParam = FloatArrayKey.make("FloatArrayValue").set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+        intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                              [[-1, -2, -3, -4], [-5, -6, -7, -8]])
+        utcTimeParam = UTCTimeKey.make("UTCTimeValue").set(UTCTime.from_str("2021-09-17T09:17:08.608242344Z"))
+        taiTimeParam = TAITimeKey.make("TAITimeValue").set(TAITime.from_str("2021-09-17T09:17:45.610701219Z"))
+        params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
+        return [CurrentState(self.prefix, "PyCswState", params)]
 
 
 # noinspection PyTypeChecker

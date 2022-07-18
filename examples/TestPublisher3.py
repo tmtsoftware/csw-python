@@ -1,12 +1,9 @@
-from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
-    CometCoord, AltAzCoord
-from csw.Parameter import Parameter
+from csw.Parameter import *
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
-from csw.KeyType import KeyType
-from csw.Units import Units
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
+from csw.Units import Units
 
 
 # Test publishing events
@@ -14,37 +11,33 @@ class TestPublisher3:
     pub = EventPublisher()
 
     def __init__(self):
-        intParam = Parameter("IntValue", KeyType.IntKey, [42], Units.arcsec)
-        floatParam = Parameter("floatValue", KeyType.FloatKey, [float(42.1)], Units.arcsec)
-        longParam = Parameter("longValue", KeyType.LongKey, [42], Units.arcsec)
-        shortParam = Parameter("shortValue", KeyType.ShortKey, [42], Units.arcsec)
-        byteParam = Parameter("byteValue", KeyType.ByteKey, b'\xDE\xAD\xBE\xEF')
-        booleanParam = Parameter("booleanValue", KeyType.BooleanKey, [True, False], Units.arcsec)
+        intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+        floatParam = FloatKey.make("floatValue", Units.arcsec).set(42.1)
+        longParam = LongKey.make("longValue", Units.arcsec).set(42)
+        shortParam = ShortKey.make("shortValue", Units.arcsec).set(42)
+        byteParam = ByteKey.make("byteValue").set(0xDE, 0xAD, 0xBE, 0xEF)
+        booleanParam = BooleanKey.make("booleanValue").set(True, False)
 
-        intArrayParam = Parameter("IntArrayValue", KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-        floatArrayParam = Parameter("FloatArrayValue", KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                    Units.arcsec)
-        doubleArrayParam = Parameter("DoubleArrayValue", KeyType.DoubleArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                                     Units.arcsec)
-
-        byteArrayParam = Parameter("ByteArrayValue", KeyType.ByteArrayKey, [b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4])])
-
-        intMatrixParam = Parameter("IntMatrixValue", KeyType.IntMatrixKey,
-                                   [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
+        intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+        floatArrayParam = FloatArrayKey.make("FloatArrayValue", Units.arcsec).set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+        doubleArrayParam = DoubleArrayKey.make("DoubleArrayValue", Units.arcsec).setAll(
+            [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]])
+        byteArrayParam = ByteArrayKey.make("ByteArrayValue").set(b'\xDE\xAD\xBE\xEF', bytes([1, 2, 3, 4]))
+        intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                              [[-1, -2, -3, -4], [-5, -6, -7, -8]])
 
         eqCoord = EqCoord.make(ra="12:13:14.15 hours", dec="-30:31:32.3 deg", frame=EqFrame.FK5, pm=(0.5, 2.33))
         solarSystemCoord = SolarSystemCoord.make("BASE", SolarSystemObject.Venus)
-        minorPlanetCoord = MinorPlanetCoord.make("GUIDER1", 2000, "90 deg", "2 deg", "100 deg", 1.4, 0.234,
-                                                 "220 deg")
+        minorPlanetCoord = MinorPlanetCoord.make("GUIDER1", 2000, "90 deg", "2 deg", "100 deg", 1.4, 0.234, "220 deg")
         cometCoord = CometCoord.make("BASE", 2000.0, "90 deg", "2 deg", "100 deg", 1.4, 0.234)
         altAzCoord = AltAzCoord.make("301 deg", "42.5 deg")
-        coordsParam = Parameter("CoordParam", KeyType.CoordKey,
-                                [eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord, altAzCoord])
+        coordsParam = CoordKey.make("CoordParam").set(eqCoord, solarSystemCoord, minorPlanetCoord, cometCoord,
+                                                      altAzCoord)
+        paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
+                    intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
 
         prefix = Prefix(Subsystems.CSW, "testassembly")
         eventName = EventName("myAssemblyEvent")
-        paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
-                    intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
         event = SystemEvent(prefix, eventName, paramSet)
         self.pub.publish(event)
 

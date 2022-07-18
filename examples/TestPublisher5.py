@@ -1,7 +1,6 @@
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
-from csw.Parameter import Parameter
-from csw.KeyType import KeyType
+from csw.Parameter import TAITimeKey
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
 
@@ -11,9 +10,7 @@ from csw.TAITime import TAITime
 prefix = Prefix(Subsystems.CSW, "testassembly")
 eventName = EventName("myAssemblyEvent")
 
-keyName = "assemblyEventValue"
-keyType = KeyType.TAITimeKey
-param = Parameter(keyName, keyType, [TAITime.fromSystem()])
+param = TAITimeKey.make("assemblyEventValue").set(TAITime.fromSystem())
 paramSet = [param]
 
 event = SystemEvent(prefix, eventName, paramSet)

@@ -98,7 +98,6 @@ class TestEventsWithAssembly:
         longParam = LongKey.make("longValue", Units.arcsec).set(42)
         shortParam = ShortKey.make("shortValue", Units.arcsec).set(42)
         byteParam = ByteKey.make("byteValue").set(0xDE, 0xAD, 0xBE, 0xEF)
-        # byteParam = Parameter("byteValue", KeyType.ByteKey, b'\xDE\xAD\xBE\xEF')
         booleanParam = BooleanKey.make("booleanValue").set(True, False)
 
         intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])

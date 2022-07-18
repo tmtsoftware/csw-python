@@ -5,7 +5,7 @@ import structlog
 from csw.KeyType import KeyType
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
-from csw.Parameter import Parameter
+from csw.Parameter import Parameter, IntKey
 from csw.Event import SystemEvent, EventName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
@@ -25,10 +25,7 @@ class TestEventPublisher:
         prefix = Prefix(Subsystems.CSW, "assembly")
         eventName = EventName("test_event")
         eventKey = EventKey(prefix, eventName)
-        keyName = "testEventValue"
-        keyType = KeyType.IntKey
-        values = [42]
-        param = Parameter(keyName, keyType, values)
+        param = IntKey.make("testEventValue").set(42)
         paramSet = [param]
         event = SystemEvent(prefix, eventName, paramSet)
 
