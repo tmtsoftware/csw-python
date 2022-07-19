@@ -6,9 +6,20 @@ from dataclasses_json import dataclass_json
 from csw.ParameterSetType import SequenceCommand
 from csw.UTCTime import UTCTime
 
+# noinspection PyProtectedMember
 
 @dataclass
 class SequencerRequest:
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+        }
+
     # noinspection PyProtectedMember
     @staticmethod
     def _fromDict(obj):
@@ -32,7 +43,7 @@ class SequencerRequest:
             case 'InsertAfter':
                 return InsertAfter._fromDict(obj)
             case 'Delete':
-                return Delete.from_dict(obj)
+                return Delete._fromDict(obj)
             case 'Reset':
                 return Reset()
             case 'Pause':
@@ -65,11 +76,11 @@ class SequencerRequest:
                 return GetSequencerState()
 
 
+# noinspection DuplicatedCode,PyProtectedMember
 @dataclass
 class LoadSequence(SequencerRequest):
     sequence: List[SequenceCommand]
 
-    # noinspection PyProtectedMember
     @staticmethod
     def _fromDict(obj):
         """
@@ -77,6 +88,16 @@ class LoadSequence(SequencerRequest):
         """
         sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj['sequence']))
         return LoadSequence(sequence)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "sequence": list(map(lambda p: p._asDict(), self.sequence))
+        }
 
 
 class StartSequence(SequencerRequest):
@@ -100,6 +121,16 @@ class Add(SequencerRequest):
         commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
         return Add(commands)
 
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "commands": list(map(lambda p: p._asDict(), self.commands))
+        }
+
 
 @dataclass
 class Prepend(SequencerRequest):
@@ -114,10 +145,20 @@ class Prepend(SequencerRequest):
         commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
         return Prepend(commands)
 
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "commands": list(map(lambda p: p._asDict(), self.commands))
+        }
+
 
 @dataclass
 class Replace(SequencerRequest):
-    id_: str
+    id: str
     commands: List[SequenceCommand]
 
     # noinspection PyProtectedMember
@@ -126,14 +167,25 @@ class Replace(SequencerRequest):
         """
         Returns an Add object for the given dict.
         """
-        id_ = obj['id']
+        id = obj['id']
         commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
-        return Replace(id_, commands)
+        return Replace(id, commands)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "id": self.id,
+            "commands": list(map(lambda p: p._asDict(), self.commands))
+        }
 
 
 @dataclass
 class InsertAfter(SequencerRequest):
-    id_: str
+    id: str
     commands: List[SequenceCommand]
 
     # noinspection PyProtectedMember
@@ -142,15 +194,44 @@ class InsertAfter(SequencerRequest):
         """
         Returns an Add object for the given dict.
         """
-        id_ = obj['id']
+        id = obj['id']
         commands = list(map(lambda p: SequenceCommand._fromDict(p), obj['commands']))
-        return InsertAfter(id_, commands)
+        return InsertAfter(id, commands)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "id": self.id,
+            "commands": list(map(lambda p: p._asDict(), self.commands))
+        }
 
 
-@dataclass_json
 @dataclass
 class Delete(SequencerRequest):
     id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        id = obj['id']
+        return Delete(id)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "id": self.id
+        }
 
 
 class Reset(SequencerRequest):
@@ -170,11 +251,49 @@ class Resume(SequencerRequest):
 class AddBreakpoint(SequencerRequest):
     id: str
 
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        id = obj['id']
+        return AddBreakpoint(id)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "id": self.id
+        }
+
 
 @dataclass_json
 @dataclass
 class RemoveBreakpoint(SequencerRequest):
     id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        id = obj['id']
+        return RemoveBreakpoint(id)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "id": self.id
+        }
 
 
 class GetSequenceComponent(SequencerRequest):
@@ -223,6 +342,17 @@ class DiagnosticMode(SequencerRequest):
         hint = obj['hint']
         return DiagnosticMode(startTime, hint)
 
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "startTime": self.startTime._asDict(),
+            "hint": self.hint,
+        }
+
 
 class OperationsMode(SequencerRequest):
     pass
@@ -242,6 +372,16 @@ class Submit(SequencerRequest):
         """
         sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj['sequence']))
         return LoadSequence(sequence)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "sequence": list(map(lambda p: p._asDict(), self.sequence))
+        }
 
 
 @dataclass_json

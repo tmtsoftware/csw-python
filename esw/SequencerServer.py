@@ -21,6 +21,7 @@ from esw.SequencerRequest import SequencerRequest
 # Ignore generated functions in API docs
 __pdoc__ = {}
 
+# XXX This class is in progress, not implemented yet
 
 # noinspection PyProtectedMember
 class SequencerServer:
