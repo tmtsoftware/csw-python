@@ -1,6 +1,7 @@
 import uuid
 import requests
 import websockets
+from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started
 from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
@@ -90,10 +91,12 @@ class CommandService:
       """
         return self._postCommand("Oneway", controlCommand)
 
-    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+    async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
         """
-       If the command for runId returned Started (long running command), this will
-       return the final result.
+        If the command for runId returned Started (long running command), this will
+        return the final result.
+        This version returns a future response (async).
+        See queryFinal() for a blocking version.
 
        Args:
            runId (str): runId for the command
@@ -111,7 +114,48 @@ class CommandService:
             jsonResp = await websocket.recv()
             return CommandResponse._fromDict(json.loads(jsonResp))
 
-    async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+        """
+        Submits a command to the command service and waits for the final response.
+        This version returns a future response (async).
+        See submitAndWait() for a blocking version.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+            timeoutInSeconds (int): seconds to wait before returning an error
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       """
+        resp = self.submit(controlCommand)
+        match resp:
+            case Started(runId):
+                return await self.queryFinalAsync(runId, timeoutInSeconds)
+            case _:
+                return resp
+
+    def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+        """
+        If the command for runId returned Started (long-running command), this will
+        return the final result.
+
+       Args:
+           runId (str): runId for the command
+           timeoutInSeconds (int): seconds to wait before returning an error
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse
+      """
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
+
+    def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
         """
         Submits a command to the command service and waits for the final response.
 
@@ -125,6 +169,6 @@ class CommandService:
         resp = self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return await self.queryFinal(runId, timeoutInSeconds)
+                return self.queryFinal(runId, timeoutInSeconds)
             case _:
                 return resp

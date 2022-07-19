@@ -1,3 +1,4 @@
+import asyncio
 from csw.ParameterSetType import *
 from csw.CommandResponse import *
 from csw.Prefix import Prefix
@@ -17,15 +18,20 @@ from csw.Units import Units
 from csw.Coords import *
 from csw.CurrentState import CurrentState
 
+
 def hcdCommandService(prefix: str) -> CommandService:
     return CommandService(Prefix.from_str(prefix), ComponentType.HCD)
+
 
 def assemblyCommandService(prefix: str) -> CommandService:
     return CommandService(Prefix.from_str(prefix), ComponentType.Assembly)
 
+
 def sequencerCommandService(prefix: str) -> CommandService:
     return CommandService(Prefix.from_str(prefix), ComponentType.Sequencer)
+
 
 locationService = LocationService()
 
 print("Wellcome to ESW Shell")
+asyncio.get_event_loop()

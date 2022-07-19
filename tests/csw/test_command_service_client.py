@@ -25,10 +25,19 @@ async def test_command_service_client():
     resp3 = cs.oneway(setup)
     assert isinstance(resp3, Accepted)
     setup2 = Setup(prefix, CommandName("longRunningCommand"), maybeObsId, paramSet)
+
+    # block calls
     resp4 = cs.submit(setup2)
     assert isinstance(resp4, Started)
-    resp5 = await cs.queryFinal(resp4.runId, 5)
+    resp5 = cs.queryFinal(resp4.runId, 5)
     assert isinstance(resp5, Completed)
-    resp6 = await cs.submitAndWait(setup2, 5)
+    resp6 = cs.submitAndWait(setup2, 5)
     assert isinstance(resp6, Completed)
 
+    # async calls
+    resp4a = cs.submit(setup2)
+    assert isinstance(resp4a, Started)
+    resp5a = await cs.queryFinalAsync(resp4a.runId, 5)
+    assert isinstance(resp5a, Completed)
+    resp6a = await cs.submitAndWaitAsync(setup2, 5)
+    assert isinstance(resp6a, Completed)
