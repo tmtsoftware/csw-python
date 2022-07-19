@@ -34,4 +34,3 @@ def sequencerCommandService(prefix: str) -> CommandService:
 locationService = LocationService()
 
 print("Wellcome to ESW Shell")
-asyncio.get_event_loop()
