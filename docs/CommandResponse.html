@@ -120,7 +120,6 @@ class Error(SubmitResponse):
 @dataclass
 class Locked(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response stating that a component is Locked and command was not validated or executed&#34;&#34;&#34;
-    message: str
 
     def _asDict(self):
         &#34;&#34;&#34;
@@ -130,21 +129,18 @@ class Locked(SubmitResponse):
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
-            &#39;message&#39;: self.message
         }
 
     @staticmethod
     def _fromDict(obj: dict):
         return Locked(
             runId=obj[&#39;runId&#39;],
-            message=obj[&#39;message&#39;]
         )
 
 
 @dataclass
 class Started(SubmitResponse):
     &#34;&#34;&#34;Represents an intermediate response stating a long running command has been started&#34;&#34;&#34;
-    message: str
 
     def _asDict(self):
         &#34;&#34;&#34;
@@ -154,14 +150,12 @@ class Started(SubmitResponse):
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
-            &#39;message&#39;: self.message
         }
 
     @staticmethod
     def _fromDict(obj: dict):
         return Started(
             runId=obj[&#39;runId&#39;],
-            message=obj[&#39;message&#39;]
         )
 
 
@@ -689,7 +683,7 @@ class Invalid(CommandResponse):
 </dd>
 <dt id="csw.CommandResponse.Locked"><code class="flex name class">
 <span>class <span class="ident">Locked</span></span>
-<span>(</span><span>runId: str, message: str)</span>
+<span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a negative response stating that a component is Locked and command was not validated or executed</p></div>
@@ -700,7 +694,6 @@ class Invalid(CommandResponse):
 <pre><code class="python">@dataclass
 class Locked(SubmitResponse):
     &#34;&#34;&#34;Represents a negative response stating that a component is Locked and command was not validated or executed&#34;&#34;&#34;
-    message: str
 
     def _asDict(self):
         &#34;&#34;&#34;
@@ -710,14 +703,12 @@ class Locked(SubmitResponse):
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
-            &#39;message&#39;: self.message
         }
 
     @staticmethod
     def _fromDict(obj: dict):
         return Locked(
             runId=obj[&#39;runId&#39;],
-            message=obj[&#39;message&#39;]
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -725,13 +716,6 @@ class Locked(SubmitResponse):
 <li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="csw.CommandResponse.Locked.message"><code class="name">var <span class="ident">message</span> : str</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 </dd>
 <dt id="csw.CommandResponse.MissingKeyIssue"><code class="flex name class">
 <span>class <span class="ident">MissingKeyIssue</span></span>
@@ -903,7 +887,7 @@ class Result:
 </dd>
 <dt id="csw.CommandResponse.Started"><code class="flex name class">
 <span>class <span class="ident">Started</span></span>
-<span>(</span><span>runId: str, message: str)</span>
+<span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents an intermediate response stating a long running command has been started</p></div>
@@ -914,7 +898,6 @@ class Result:
 <pre><code class="python">@dataclass
 class Started(SubmitResponse):
     &#34;&#34;&#34;Represents an intermediate response stating a long running command has been started&#34;&#34;&#34;
-    message: str
 
     def _asDict(self):
         &#34;&#34;&#34;
@@ -924,14 +907,12 @@ class Started(SubmitResponse):
         return {
             &#34;_type&#34;: self.__class__.__name__,
             &#39;runId&#39;: self.runId,
-            &#39;message&#39;: self.message
         }
 
     @staticmethod
     def _fromDict(obj: dict):
         return Started(
             runId=obj[&#39;runId&#39;],
-            message=obj[&#39;message&#39;]
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -939,13 +920,6 @@ class Started(SubmitResponse):
 <li><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></li>
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="csw.CommandResponse.Started.message"><code class="name">var <span class="ident">message</span> : str</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 </dd>
 <dt id="csw.CommandResponse.SubmitResponse"><code class="flex name class">
 <span>class <span class="ident">SubmitResponse</span></span>
@@ -1200,9 +1174,6 @@ class SubmitResponse(CommandResponse):
 </li>
 <li>
 <h4><code><a title="csw.CommandResponse.Locked" href="#csw.CommandResponse.Locked">Locked</a></code></h4>
-<ul class="">
-<li><code><a title="csw.CommandResponse.Locked.message" href="#csw.CommandResponse.Locked.message">message</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="csw.CommandResponse.MissingKeyIssue" href="#csw.CommandResponse.MissingKeyIssue">MissingKeyIssue</a></code></h4>
@@ -1233,9 +1204,6 @@ class SubmitResponse(CommandResponse):
 </li>
 <li>
 <h4><code><a title="csw.CommandResponse.Started" href="#csw.CommandResponse.Started">Started</a></code></h4>
-<ul class="">
-<li><code><a title="csw.CommandResponse.Started.message" href="#csw.CommandResponse.Started.message">message</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="csw.CommandResponse.SubmitResponse" href="#csw.CommandResponse.SubmitResponse">SubmitResponse</a></code></h4>

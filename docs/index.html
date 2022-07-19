@@ -30,14 +30,13 @@ including the
 <a href="https://tmtsoftware.github.io/csw/commons/command.html">Command Service</a> (receiving end only at this point).</p>
 <p>See <a href="https://tmtsoftware.github.io/csw/index.html">here</a> for the CSW documentation.</p>
 <p>You can find the <a href="https://github.com/tmtsoftware/csw-python">tmtpycsw sources</a> on GitHub.</p>
-<p>Note that all APIs here assume that the CSW services (version 4.0.0) are running
+<p>Note that all APIs here assume that the latest version of CSW services are running
 For example, during development, run: <code>csw-services start</code>.</p>
 <p>The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
 with the difference that in some cases the Python types are simpler, due to less strict typing.</p>
 <h2 id="requirements">Requirements</h2>
 <ul>
-<li>Python version 3.9.5 or newer</li>
-<li>pip (pip3 on Linux)</li>
+<li>Python version 3.10 or newer</li>
 <li>pdoc3 (<code>pip3 install pdoc3</code>)</li>
 <li>pipenv (latest)</li>
 </ul>
@@ -47,7 +46,7 @@ by typing:</p>
 <pre><code>make venv
 </code></pre>
 <p>This uses pip and pipenv to create a .venv directory containing the dependencies and python interpreter.</p>
-<p>Dependecies:</p>
+<p>Dependecies (See <a href="Pipfile">Pipfile</a>):</p>
 <ul>
 <li>astropy</li>
 <li>cbor2</li>
@@ -74,51 +73,67 @@ which are based on akka actors.</p>
 <pre><code class="language-python">import structlog
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 # Demonstrate usage of the Python Location Service API
 
 def test_location_service():
- log = structlog.get_logger()
- locationService = LocationService()
+    log = structlog.get_logger()
+    locationService = LocationService()
 
- # List all registered connections
- log.debug(&quot;\nAll Locations:&quot;)
- for i in locationService.list():
-  log.debug(&quot;    &quot; + str(i))
+    # List all registered connections
+    log.debug(&quot;\nAll Locations:&quot;)
+    allLocations = locationService.list()
+    for i in allLocations:
+        log.debug(&quot;    &quot; + str(i))
 
- # List the registered HCDs
- log.debug(&quot;\nHCDs:&quot;)
- for i in locationService.list(ComponentType.HCD):
-  log.debug(&quot;    &quot; + str(i))
+    # List the registered HCDs
+    log.debug(&quot;\nHCDs:&quot;)
+    for i in locationService.list(ComponentType.HCD):
+        log.debug(&quot;    &quot; + str(i))
 
- # List the registered http connections
- log.debug(&quot;\nConnections on 192.168.178.78&quot;)
- for i in locationService.list(&quot;192.168.178.78&quot;):
-  log.debug(&quot;    &quot; + str(i))
+    # List the registered http connections
+    log.debug(&quot;\nConnections on 192.168.178.78&quot;)
+    for i in locationService.list(&quot;192.168.178.78&quot;):
+        log.debug(&quot;    &quot; + str(i))
 
- # List the registered http connections
- log.debug(&quot;\nHTTP connections:&quot;)
- for i in locationService.list(ConnectionType.HttpType):
-  log.debug(&quot;    &quot; + str(i))
+    # List the registered http connections
+    log.debug(&quot;\nHTTP connections:&quot;)
+    httpServices = locationService.list(ConnectionType.HttpType)
+    for i in httpServices:
+        log.debug(&quot;    &quot; + str(i))
+    assert not [x for x in httpServices if
+                x.connection.prefix == 'CSW.EventServer' and x.connection.componentType == 'Service']
 
- # Register a connection
- connection = ConnectionInfo(&quot;csw.myComp&quot;, ComponentType.Service.value, ConnectionType.HttpType.value)
- reg = HttpRegistration(connection, 8080, path=&quot;myservice/test&quot;)
- regResult = locationService.register(reg)
- log.debug(&quot;\nRegistration result: &quot; + str(regResult))
+    # Register a connection
+    prefix = Prefix(Subsystems.CSW, &quot;myComp&quot;)
+    connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+    reg = HttpRegistration(connection, LocationService.getFreePort(), path=&quot;myservice/test&quot;)
+    regResult = locationService.register(reg)
+    log.debug(&quot;\nRegistration result: &quot; + str(regResult))
+    assert regResult.componentType == ComponentType.Service.value
+    assert regResult.prefix == 'CSW.myComp'
+    assert regResult.connectionType == ConnectionType.HttpType.value
 
- # Find a connection
- location1 = locationService.find(connection)
- log.debug(&quot;location1 = &quot; + str(location1))
+    # Find a connection
+    location1 = locationService.find(connection)
+    log.debug(&quot;location1 = &quot; + str(location1))
+    assert location1.connection.componentType == ComponentType.Service.value
+    assert location1.connection.prefix == 'CSW.myComp'
+    assert location1.connection.connectionType == ConnectionType.HttpType.value
 
- # Resolve a connection (waiting if needed)
- location2 = locationService.resolve(connection)
- log.debug(&quot;location2 = &quot; + str(location2))
+    # Resolve a connection (waiting if needed)
+    location2 = locationService.resolve(connection)
+    log.debug(&quot;location2 = &quot; + str(location2))
+    assert location1 == location2
 
- # Unregister
- unregResult = locationService.unregister(connection)
- log.debug(&quot;\nUnregister result: &quot; + str(unregResult))
+    # Unregister
+    unregResult = locationService.unregister(connection)
+    log.debug(&quot;\nUnregister result: &quot; + str(unregResult))
+
+    assert not locationService.find(connection)
 </code></pre>
 <p>The type of the return value from methods that return a location is a subclass of
 <a href="LocationService.html#csw.LocationService.Location">Location</a>.</p>
@@ -133,26 +148,30 @@ You can <a href="EventPublisher.html">publish</a> events as well as <a href="Eve
 <p>For example, to subscribe to an event named <code>myAssemblyEvent</code> from <code>testassembly</code> in the CSW subsystem,
 you can call <code><a title="csw.EventSubscriber" href="EventSubscriber.html">csw.EventSubscriber</a>.subscribe</code>:</p>
 <pre><code class="language-python">from csw.EventSubscriber import EventSubscriber
+from csw.Subsystem import Subsystems
+from csw.Prefix import Prefix
+from csw.Event import EventName
+from csw.EventKey import EventKey
 
 
 # Test subscribing to events
 class TestSubscriber3:
 
- def __init__(self):
-  eventKey = &quot;CSW.testassembly.myAssemblyEvent&quot;
-  EventSubscriber().subscribe([eventKey], self.callback)
+    def __init__(self):
+        self.eventKey = EventKey(Prefix(Subsystems.CSW, &quot;testassembly&quot;), EventName(&quot;myAssemblyEvent&quot;))
+        EventSubscriber().subscribe([self.eventKey], self.callback)
 
- @staticmethod
- def callback(systemEvent):
-  print(f&quot;Received system event '{systemEvent.eventName}' with event time: '{systemEvent.eventTime}'&quot;)
-  for i in systemEvent.paramSet:
-   print(f&quot;    with values: {i.keyName}({i.keyType.name}): {i.values}&quot;)
-  if systemEvent.isInvalid():
-   print(&quot;    Invalid&quot;)
-  if systemEvent.exists(&quot;assemblyEventValue&quot;):
-   p = systemEvent.get(&quot;assemblyEventValue&quot;)
-   if p is not None:
-    print(f&quot;Found: {p.keyName}&quot;)
+    @staticmethod
+    def callback(systemEvent):
+        print(f&quot;Received system event '{systemEvent.eventName.name}' with event time: '{systemEvent.eventTime}'&quot;)
+        for i in systemEvent.paramSet:
+            print(f&quot;    with values: {i.keyName}({i.keyType.name}): {i.values}&quot;)
+        if systemEvent.isInvalid():
+            print(&quot;    Invalid&quot;)
+        if systemEvent.exists(&quot;assemblyEventValue&quot;):
+            p = systemEvent.get(&quot;assemblyEventValue&quot;)
+            if p is not None:
+                print(f&quot;Found: {p.keyName}&quot;)
 </code></pre>
 <p>See <a href="Event.html">here</a> for the structure of an event. There are two types of events:</p>
 <ul>
@@ -165,9 +184,34 @@ class TestSubscriber3:
 </ul>
 <p>In the above example, the callback expects SystemEvents. </p>
 <h2 id="command-service-api">Command Service API</h2>
-<p>In the current version there is no support for command service clients.
-For now it assumed that Python code will be used to implement or help implement an HCD, for example,
-but not send commands to other components. This may be added in a future version.</p>
+<p>The <a href="CommandService.html">CommandService</a> class provides a client API for sending commands to an
+assembly or HCD.</p>
+<pre><code class="language-python">from csw.CommandResponse import Completed, Accepted
+from csw.CommandService import CommandService
+from csw.LocationService import ComponentType
+from csw.Parameter import IntKey
+from csw.ParameterSetType import Setup, CommandName
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
+
+
+# Assumes csw-services and test assembly are running!
+def test_command_service_client():
+    cs = CommandService(Prefix(Subsystems.CSW, &quot;TestPublisher&quot;), ComponentType.Assembly)
+    prefix = Prefix(Subsystems.CSW, &quot;TestClient&quot;)
+    commandName = CommandName(&quot;Test&quot;)
+    maybeObsId = []
+    param = IntKey.make(&quot;testValue&quot;).set(42)
+    paramSet = [param]
+    setup = Setup(prefix, commandName, maybeObsId, paramSet)
+    resp = cs.submit(setup)
+    assert isinstance(resp, Completed)
+    resp2 = cs.validate(setup)
+    assert isinstance(resp2, Accepted)
+    resp3 = cs.oneway(setup)
+    assert isinstance(resp3, Accepted)
+
+</code></pre>
 <p>The <a href="CommandServer.html">CommandServer</a> class lets you start an HTTP server that will accept
 CSW Setup commands to implement an assembly or HCD in Python.
 By overriding the <code>onSetup</code> and <code>onOneway</code> methods of the <a href="ComponentHandlers.html">ComponentHandlers</a>
@@ -184,17 +228,20 @@ If the command is invalid , the server should return <a href="CommandResponse.ht
 from asyncio import Task
 from typing import List
 
-from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, Error, Accepted, Started, UnsupportedCommandIssue
+from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, Accepted, Started, UnsupportedCommandIssue
 from csw.CommandServer import CommandServer, ComponentHandlers
-from csw.ControlCommand import ControlCommand
+from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
-from csw.Parameter import Parameter
-from csw.KeyType import KeyType
+from csw.Parameter import IntKey, UTCTimeKey, TAITimeKey, IntArrayKey, FloatArrayKey, IntMatrixKey, DoubleKey
+from csw.TAITime import TAITime
+from csw.UTCTime import UTCTime
 from csw.Units import Units
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
 
 
 class MyComponentHandlers(ComponentHandlers):
- prefix = &quot;CSW.pycswTest&quot;
+ prefix = Prefix(Subsystems.CSW, &quot;pycswTest&quot;)
 
  async def longRunningCommand(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
   await asyncio.sleep(3)
@@ -217,16 +264,17 @@ class MyComponentHandlers(ComponentHandlers):
   n = len(command.paramSet)
   print(f&quot;MyComponentHandlers Received setup {str(command)} with {n} params&quot;)
 
-  if command.commandName == &quot;LongRunningCommand&quot;:
+  if command.commandName.name == &quot;LongRunningCommand&quot;:
    task = asyncio.create_task(self.longRunningCommand(runId, command))
    return Started(runId, &quot;Long running task in progress...&quot;), task
-  elif command.commandName == &quot;SimpleCommand&quot;:
+  elif command.commandName.name == &quot;SimpleCommand&quot;:
    return Completed(runId), None
-  elif command.commandName == &quot;ResultCommand&quot;:
-   result = Result([Parameter(&quot;myValue&quot;, KeyType.DoubleKey, [42.0])])
+  elif command.commandName.name == &quot;ResultCommand&quot;:
+   param = DoubleKey.make(&quot;myValue&quot;).set(42.0)
+   result = Result([param])
    return Completed(runId, result), None
   else:
-   return Invalid(runId, UnsupportedCommandIssue(f&quot;Unknown command: {command.commandName}&quot;)), None
+   return Invalid(runId, UnsupportedCommandIssue(f&quot;Unknown command: {command.commandName.name}&quot;)), None
 
  def onOneway(self, runId: str, command: ControlCommand) -&gt; CommandResponse:
   &quot;&quot;&quot;
@@ -258,21 +306,23 @@ class MyComponentHandlers(ComponentHandlers):
 
  # Returns the current state
  def currentStates(self) -&gt; List[CurrentState]:
-  intParam = Parameter(&quot;IntValue&quot;, KeyType.IntKey, [42], Units.arcsec)
-  intArrayParam = Parameter(&quot;IntArrayValue&quot;, KeyType.IntArrayKey, [[1, 2, 3, 4], [5, 6, 7, 8]])
-  floatArrayParam = Parameter(&quot;FloatArrayValue&quot;, KeyType.FloatArrayKey, [[1.2, 2.3, 3.4], [5.6, 7.8, 9.1]],
-                              Units.mas)
-  intMatrixParam = Parameter(&quot;IntMatrixValue&quot;, KeyType.IntMatrixKey,
-                             [[[1, 2, 3, 4], [5, 6, 7, 8]], [[-1, -2, -3, -4], [-5, -6, -7, -8]]], Units.meter)
-  return [CurrentState(self.prefix, &quot;PyCswState&quot;, [intParam, intArrayParam, floatArrayParam, intMatrixParam])]
+  intParam = IntKey.make(&quot;IntValue&quot;, Units.arcsec).set(42)
+  intArrayParam = IntArrayKey.make(&quot;IntArrayValue&quot;).set([1, 2, 3, 4], [5, 6, 7, 8])
+  floatArrayParam = FloatArrayKey.make(&quot;FloatArrayValue&quot;).set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+  intMatrixParam = IntMatrixKey.make(&quot;IntMatrixValue&quot;, Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                        [[-1, -2, -3, -4], [-5, -6, -7, -8]])
+  utcTimeParam = UTCTimeKey.make(&quot;UTCTimeValue&quot;).set(UTCTime.from_str(&quot;2021-09-17T09:17:08.608242344Z&quot;))
+  taiTimeParam = TAITimeKey.make(&quot;TAITimeValue&quot;).set(TAITime.from_str(&quot;2021-09-17T09:17:45.610701219Z&quot;))
+  params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
+  return [CurrentState(self.prefix, &quot;PyCswState&quot;, params)]
 
 
 # noinspection PyTypeChecker
 handlers = MyComponentHandlers()
 commandServer = CommandServer(handlers.prefix, handlers)
-handlers.commandServer = commandServer
 print(f&quot;Starting test command server on port {commandServer.port}&quot;)
 commandServer.start()
+
 </code></pre>
 <h2 id="working-with-parameters">Working with Parameters</h2>
 <p>When receiving events or handling commands, you need to be able to unpack the <a href="Parameter.html">parameter</a> list.
@@ -280,20 +330,62 @@ This package provides wrappers for all of the CSW parameter classes.</p>
 <p>Normally you should know what parameters to expect, based on the ICD or by looking at the sender's code.
 For example, assuming you know that a received command contains a key named "cmdValue" with the key type <code>FloatKey</code>,
 you can access the values like this (Parameters may always contain multiple values):</p>
-<pre><code class="language-python">            assert(command.get(&quot;cmdValue&quot;).values == [1.0, 2.0, 3.0])
-            assert(list(command.get(&quot;cmdValue&quot;).values)[0] == 1.0)
+<pre><code class="language-python">    # Access cmdValue using __call__ syntax
+    cmdValueKey = FloatKey.make(&quot;cmdValue&quot;)
+    assert (command(cmdValueKey).values == [1.0, 2.0, 3.0])
+
+    # Alternative ways to access the parameter values
+    assert (command.get(&quot;cmdValue&quot;, FloatKey).values == [1.0, 2.0, 3.0])
+    assert (command.gets(&quot;cmdValue&quot;).values == [1.0, 2.0, 3.0])
 </code></pre>
+<p>Note that the first two versions use python generics that provide type hints for IDEs,
+while the last version (gets()) does not.</p>
 <p>CSW also defines a number of
 <a href="https://tmtsoftware.github.io/csw/params/keys-parameters.html#coordinate-types">coordinate types</a> for parameters.
 The following example gets the first value of the "BasePosition", which is expected to be an
 <a href="Coords.html#csw.Coords.EqCoord">EqCoord</a>. The ra and dec fields are represented in Python as
 <a href="https://docs.astropy.org/en/stable/api/astropy.coordinates.Angle.html">Astropy Angles</a>.</p>
-<pre><code class="language-python">
-            # Access a coordinate value
-            eqCoord: EqCoord = list(command.get(&quot;BasePosition&quot;).values)[0]
-            assert(eqCoord.pm == ProperMotion(0.5, 2.33))
-            assert(eqCoord.ra == Angle(&quot;12:13:14.15 hours&quot;))
-            assert(eqCoord.dec == Angle(&quot;-30:31:32.3 deg&quot;))
+<pre><code class="language-python">    # Access a coordinate value
+    eqCoord = command.get(&quot;BasePosition&quot;, EqCoordKey).values[0]
+    assert (eqCoord.pm == ProperMotion(0.5, 2.33))
+    assert (eqCoord.ra == Angle(&quot;12:13:14.15 hours&quot;))
+    assert (eqCoord.dec == Angle(&quot;-30:31:32.3 deg&quot;))
+</code></pre>
+<h2 id="esw-shell">ESW Shell</h2>
+<p>The <a href="esw/esw-shell.py">esw-shell</a> command provides an interactive shell with predefined imports
+where you can type in CSW and ESW commands. The following example publishes an event:</p>
+<pre><code class="language-bash">&gt; esw-shell.sh
+Wellcome to ESW Shell
+&gt;&gt;&gt; source = Prefix(Subsystems.CSW, &quot;testassembly&quot;)
+&gt;&gt;&gt; eventName = EventName(&quot;myAssemblyEvent&quot;)
+&gt;&gt;&gt; param = DoubleKey.make(&quot;assemblyEventValue&quot;).set(42.0)
+&gt;&gt;&gt; paramSet = [param]
+&gt;&gt;&gt; event = SystemEvent(source, eventName, paramSet)
+&gt;&gt;&gt; pub = EventPublisher()
+&gt;&gt;&gt; pub.publish(event)
+&gt;&gt;&gt; 
+</code></pre>
+<p>This is just an interactive Python session with the commonly used imports provided.
+You can add your own imports, etc. The following example submits commands to an assembly:</p>
+<pre><code class="language-bash">&gt; esw-shell.sh
+Wellcome to ESW Shell
+&gt;&gt;&gt; prefix = Prefix(Subsystems.CSW, &quot;TestClient&quot;)
+&gt;&gt;&gt; maybeObsId = []
+&gt;&gt;&gt; param = IntKey.make(&quot;testValue&quot;).set(42)
+&gt;&gt;&gt; paramSet = [param]
+&gt;&gt;&gt; cs = CommandService(Prefix(Subsystems.CSW, &quot;TestPublisher&quot;), ComponentType.Assembly)
+&gt;&gt;&gt; setup = Setup(prefix, CommandName(&quot;longRunningCommand&quot;), maybeObsId, paramSet)
+&gt;&gt;&gt; resp = cs.submitAndWait(setup, 5)
+&gt;&gt;&gt; resp
+Completed(runId='6c476544-4e84-4f8f-b10a-8172576ef68d', result=Result(paramSet=[]))
+</code></pre>
+<p>The <code>submitAndWait()</code> method submits a command and waits, if needed for the final response.
+You can use plain <code>submit()</code> if the command returns a direct response.
+There are also asynchronous versions of some methods: <code>queryFinalAsync()</code> and <code>submitAndWaitAsync()</code>,
+that can be used in scripts using the <code>async</code> and <code>await</code> keywords.</p>
+<pre><code class="language-python">async def foo:
+    resp1 = await cs.queryFinalAsync(runId, 5)
+    resp2 = await cs.submitAndWaitAsync(setup, 5)
 </code></pre>
 <details class="source">
 <summary>
@@ -359,7 +451,7 @@ The following example gets the first value of the "BasePosition", which is expec
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="csw.KeyType" href="KeyType.html">csw.KeyType</a></code></dt>
+<dt><code class="name"><a title="csw.KeyTypes" href="KeyTypes.html">csw.KeyTypes</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -429,6 +521,7 @@ The following example gets the first value of the "BasePosition", which is expec
 <li><a href="#csw-event-service">CSW Event Service</a></li>
 <li><a href="#command-service-api">Command Service API</a></li>
 <li><a href="#working-with-parameters">Working with Parameters</a></li>
+<li><a href="#esw-shell">ESW Shell</a></li>
 </ul>
 </div>
 <ul id="index">
@@ -447,7 +540,7 @@ The following example gets the first value of the "BasePosition", which is expec
 <li><code><a title="csw.EventPublisher" href="EventPublisher.html">csw.EventPublisher</a></code></li>
 <li><code><a title="csw.EventSubscriber" href="EventSubscriber.html">csw.EventSubscriber</a></code></li>
 <li><code><a title="csw.EventTime" href="EventTime.html">csw.EventTime</a></code></li>
-<li><code><a title="csw.KeyType" href="KeyType.html">csw.KeyType</a></code></li>
+<li><code><a title="csw.KeyTypes" href="KeyTypes.html">csw.KeyTypes</a></code></li>
 <li><code><a title="csw.LocationService" href="LocationService.html">csw.LocationService</a></code></li>
 <li><code><a title="csw.Parameter" href="Parameter.html">csw.Parameter</a></code></li>
 <li><code><a title="csw.ParameterSetType" href="ParameterSetType.html">csw.ParameterSetType</a></code></li>

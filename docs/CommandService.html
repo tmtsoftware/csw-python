@@ -27,11 +27,12 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import uuid
-
 import requests
+import websockets
+from websocket import create_connection
 
-from csw.CommandResponse import SubmitResponse, Error, CommandResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway
+from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started
+from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
@@ -40,6 +41,7 @@ from dataclasses import dataclass
 
 
 # A CSW command service client
+# noinspection PyProtectedMember
 @dataclass
 class CommandService:
     prefix: Prefix
@@ -73,14 +75,131 @@ class CommandService:
         resp = CommandResponse._fromDict(response.json())
         return resp
 
+    # def _wsCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    #     baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+    #     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+
     def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits a command to the command service
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       &#34;&#34;&#34;
         return self._postCommand(&#34;Submit&#34;, controlCommand)
 
     def validate(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Validates a command to be sent to the command service.
+        Note that in the jvm CSW API the return value is a ValidateResponse.
+        Since Python does not have traits, the return type is marked as SubmitResponse.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+       &#34;&#34;&#34;
         return self._postCommand(&#34;Validate&#34;, controlCommand)
 
     def oneway(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
-        return self._postCommand(&#34;Oneway&#34;, controlCommand)</code></pre>
+        &#34;&#34;&#34;
+       Sends a command to the command service without expecting a reply.
+       Note that in the jvm CSW API the return value is a OnewayResponse.
+       Since Python does not have traits, the return type is marked as SubmitResponse.
+
+       Args:
+           controlCommand (ControlCommand): command to submit
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+      &#34;&#34;&#34;
+        return self._postCommand(&#34;Oneway&#34;, controlCommand)
+
+    async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        If the command for runId returned Started (long running command), this will
+        return the final result.
+        This version returns a future response (async).
+        See queryFinal() for a blocking version.
+
+       Args:
+           runId (str): runId for the command
+           timeoutInSeconds (int): seconds to wait before returning an error
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse
+      &#34;&#34;&#34;
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        async with websockets.connect(wsUri) as websocket:
+            await websocket.send(jsonStr)
+            jsonResp = await websocket.recv()
+            return CommandResponse._fromDict(json.loads(jsonResp))
+
+    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits a command to the command service and waits for the final response.
+        This version returns a future response (async).
+        See submitAndWait() for a blocking version.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+            timeoutInSeconds (int): seconds to wait before returning an error
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       &#34;&#34;&#34;
+        resp = self.submit(controlCommand)
+        match resp:
+            case Started(runId):
+                return await self.queryFinalAsync(runId, timeoutInSeconds)
+            case _:
+                return resp
+
+    def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        If the command for runId returned Started (long-running command), this will
+        return the final result.
+
+       Args:
+           runId (str): runId for the command
+           timeoutInSeconds (int): seconds to wait before returning an error
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse
+      &#34;&#34;&#34;
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
+
+    def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits a command to the command service and waits for the final response.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+            timeoutInSeconds (int): seconds to wait before returning an error
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       &#34;&#34;&#34;
+        resp = self.submit(controlCommand)
+        match resp:
+            case Started(runId):
+                return self.queryFinal(runId, timeoutInSeconds)
+            case _:
+                return resp</code></pre>
 </details>
 </section>
 <section>
@@ -135,14 +254,131 @@ class CommandService:
         resp = CommandResponse._fromDict(response.json())
         return resp
 
+    # def _wsCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    #     baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+    #     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+
     def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits a command to the command service
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       &#34;&#34;&#34;
         return self._postCommand(&#34;Submit&#34;, controlCommand)
 
     def validate(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Validates a command to be sent to the command service.
+        Note that in the jvm CSW API the return value is a ValidateResponse.
+        Since Python does not have traits, the return type is marked as SubmitResponse.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+       &#34;&#34;&#34;
         return self._postCommand(&#34;Validate&#34;, controlCommand)
 
     def oneway(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
-        return self._postCommand(&#34;Oneway&#34;, controlCommand)</code></pre>
+        &#34;&#34;&#34;
+       Sends a command to the command service without expecting a reply.
+       Note that in the jvm CSW API the return value is a OnewayResponse.
+       Since Python does not have traits, the return type is marked as SubmitResponse.
+
+       Args:
+           controlCommand (ControlCommand): command to submit
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+      &#34;&#34;&#34;
+        return self._postCommand(&#34;Oneway&#34;, controlCommand)
+
+    async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        If the command for runId returned Started (long running command), this will
+        return the final result.
+        This version returns a future response (async).
+        See queryFinal() for a blocking version.
+
+       Args:
+           runId (str): runId for the command
+           timeoutInSeconds (int): seconds to wait before returning an error
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse
+      &#34;&#34;&#34;
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        async with websockets.connect(wsUri) as websocket:
+            await websocket.send(jsonStr)
+            jsonResp = await websocket.recv()
+            return CommandResponse._fromDict(json.loads(jsonResp))
+
+    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits a command to the command service and waits for the final response.
+        This version returns a future response (async).
+        See submitAndWait() for a blocking version.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+            timeoutInSeconds (int): seconds to wait before returning an error
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       &#34;&#34;&#34;
+        resp = self.submit(controlCommand)
+        match resp:
+            case Started(runId):
+                return await self.queryFinalAsync(runId, timeoutInSeconds)
+            case _:
+                return resp
+
+    def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        If the command for runId returned Started (long-running command), this will
+        return the final result.
+
+       Args:
+           runId (str): runId for the command
+           timeoutInSeconds (int): seconds to wait before returning an error
+
+       Returns: SubmitResponse
+           a subclass of SubmitResponse
+      &#34;&#34;&#34;
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
+
+    def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits a command to the command service and waits for the final response.
+
+        Args:
+            controlCommand (ControlCommand): command to submit
+            timeoutInSeconds (int): seconds to wait before returning an error
+
+        Returns: SubmitResponse
+            a subclass of SubmitResponse
+       &#34;&#34;&#34;
+        resp = self.submit(controlCommand)
+        match resp:
+            case Started(runId):
+                return self.queryFinal(runId, timeoutInSeconds)
+            case _:
+                return resp</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -161,38 +397,258 @@ class CommandService:
 <span>def <span class="ident">oneway</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Sends a command to the command service without expecting a reply.
+Note that in the jvm CSW API the return value is a OnewayResponse.
+Since Python does not have traits, the return type is marked as SubmitResponse.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def oneway(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+   Sends a command to the command service without expecting a reply.
+   Note that in the jvm CSW API the return value is a OnewayResponse.
+   Since Python does not have traits, the return type is marked as SubmitResponse.
+
+   Args:
+       controlCommand (ControlCommand): command to submit
+
+   Returns: SubmitResponse
+       a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+  &#34;&#34;&#34;
     return self._postCommand(&#34;Oneway&#34;, controlCommand)</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandService.CommandService.queryFinal"><code class="name flex">
+<span>def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>If the command for runId returned Started (long-running command), this will
+return the final result.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId for the command</dd>
+<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
+<dd>seconds to wait before returning an error</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    If the command for runId returned Started (long-running command), this will
+    return the final result.
+
+   Args:
+       runId (str): runId for the command
+       timeoutInSeconds (int): seconds to wait before returning an error
+
+   Returns: SubmitResponse
+       a subclass of SubmitResponse
+  &#34;&#34;&#34;
+    baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+    respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+    jsonStr = json.dumps(respDict)
+    ws = create_connection(wsUri)
+    ws.send(jsonStr)
+    jsonResp = ws.recv()
+    return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandService.CommandService.queryFinalAsync"><code class="name flex">
+<span>async def <span class="ident">queryFinalAsync</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>If the command for runId returned Started (long running command), this will
+return the final result.
+This version returns a future response (async).
+See queryFinal() for a blocking version.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId for the command</dd>
+<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
+<dd>seconds to wait before returning an error</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    If the command for runId returned Started (long running command), this will
+    return the final result.
+    This version returns a future response (async).
+    See queryFinal() for a blocking version.
+
+   Args:
+       runId (str): runId for the command
+       timeoutInSeconds (int): seconds to wait before returning an error
+
+   Returns: SubmitResponse
+       a subclass of SubmitResponse
+  &#34;&#34;&#34;
+    baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+    respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+    jsonStr = json.dumps(respDict)
+    async with websockets.connect(wsUri) as websocket:
+        await websocket.send(jsonStr)
+        jsonResp = await websocket.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.submit"><code class="name flex">
 <span>def <span class="ident">submit</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Submits a command to the command service</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits a command to the command service
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse
+   &#34;&#34;&#34;
     return self._postCommand(&#34;Submit&#34;, controlCommand)</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandService.CommandService.submitAndWait"><code class="name flex">
+<span>def <span class="ident">submitAndWait</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Submits a command to the command service and waits for the final response.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
+<dd>seconds to wait before returning an error</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits a command to the command service and waits for the final response.
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+        timeoutInSeconds (int): seconds to wait before returning an error
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse
+   &#34;&#34;&#34;
+    resp = self.submit(controlCommand)
+    match resp:
+        case Started(runId):
+            return self.queryFinal(runId, timeoutInSeconds)
+        case _:
+            return resp</code></pre>
+</details>
+</dd>
+<dt id="csw.CommandService.CommandService.submitAndWaitAsync"><code class="name flex">
+<span>async def <span class="ident">submitAndWaitAsync</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Submits a command to the command service and waits for the final response.
+This version returns a future response (async).
+See submitAndWait() for a blocking version.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
+<dd>seconds to wait before returning an error</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits a command to the command service and waits for the final response.
+    This version returns a future response (async).
+    See submitAndWait() for a blocking version.
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+        timeoutInSeconds (int): seconds to wait before returning an error
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse
+   &#34;&#34;&#34;
+    resp = self.submit(controlCommand)
+    match resp:
+        case Started(runId):
+            return await self.queryFinalAsync(runId, timeoutInSeconds)
+        case _:
+            return resp</code></pre>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.validate"><code class="name flex">
 <span>def <span class="ident">validate</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Validates a command to be sent to the command service.
+Note that in the jvm CSW API the return value is a ValidateResponse.
+Since Python does not have traits, the return type is marked as SubmitResponse.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def validate(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Validates a command to be sent to the command service.
+    Note that in the jvm CSW API the return value is a ValidateResponse.
+    Since Python does not have traits, the return type is marked as SubmitResponse.
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+   &#34;&#34;&#34;
     return self._postCommand(&#34;Validate&#34;, controlCommand)</code></pre>
 </details>
 </dd>
@@ -216,11 +672,15 @@ class CommandService:
 <ul>
 <li>
 <h4><code><a title="csw.CommandService.CommandService" href="#csw.CommandService.CommandService">CommandService</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="csw.CommandService.CommandService.componentType" href="#csw.CommandService.CommandService.componentType">componentType</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.oneway" href="#csw.CommandService.CommandService.oneway">oneway</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.prefix" href="#csw.CommandService.CommandService.prefix">prefix</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.queryFinal" href="#csw.CommandService.CommandService.queryFinal">queryFinal</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.queryFinalAsync" href="#csw.CommandService.CommandService.queryFinalAsync">queryFinalAsync</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.submit" href="#csw.CommandService.CommandService.submit">submit</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.submitAndWait" href="#csw.CommandService.CommandService.submitAndWait">submitAndWait</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.submitAndWaitAsync" href="#csw.CommandService.CommandService.submitAndWaitAsync">submitAndWaitAsync</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.validate" href="#csw.CommandService.CommandService.validate">validate</a></code></li>
 </ul>
 </li>

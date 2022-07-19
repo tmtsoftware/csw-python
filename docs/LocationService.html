@@ -240,7 +240,6 @@ class LocationService:
     log = structlog.get_logger()
     baseUri = &#34;http://127.0.0.1:7654/&#34;
     postUri = f&#34;{baseUri}post-endpoint&#34;
-    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
 
     # If port is 0, return a random free port, otherwise the given port
     @staticmethod
@@ -1056,7 +1055,6 @@ class Location:
     log = structlog.get_logger()
     baseUri = &#34;http://127.0.0.1:7654/&#34;
     postUri = f&#34;{baseUri}post-endpoint&#34;
-    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
 
     # If port is 0, return a random free port, otherwise the given port
     @staticmethod
@@ -1220,10 +1218,6 @@ class Location:
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.LocationService.postUri"><code class="name">var <span class="ident">postUri</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.LocationService.LocationService.wsUri"><code class="name">var <span class="ident">wsUri</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1667,7 +1661,6 @@ class TcpRegistration(Registration):
 <li><code><a title="csw.LocationService.LocationService.register" href="#csw.LocationService.LocationService.register">register</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.resolve" href="#csw.LocationService.LocationService.resolve">resolve</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.unregister" href="#csw.LocationService.LocationService.unregister">unregister</a></code></li>
-<li><code><a title="csw.LocationService.LocationService.wsUri" href="#csw.LocationService.LocationService.wsUri">wsUri</a></code></li>
 </ul>
 </li>
 <li>

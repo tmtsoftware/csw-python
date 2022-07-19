@@ -27,9 +27,12 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from dataclasses import dataclass
-from typing import List
-from csw.Parameter import Parameter
+from typing import List, TypeVar
+
+from csw.Parameter import Parameter, KeyType, Key
 from csw.Prefix import Prefix
+
+T = TypeVar(&#39;T&#39;)
 
 
 @dataclass
@@ -89,18 +92,48 @@ class SequenceCommand:
 
         return d
 
-    def get(self, keyName: str) -&gt; Parameter|None:
+    # noinspection PyUnusedLocal
+    def get(self, keyName: str, keyType: KeyType[T]) -&gt; Parameter[T] | None:
+        &#34;&#34;&#34;
+        Gets the parameter with the given name, or else returns None.
+
+        Args:
+            keyName (str): parameter name
+            keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def gets(self, keyName: str) -&gt; Parameter | None:
         &#34;&#34;&#34;
         Gets the parameter with the given name, or else returns None.
 
         Args:
             keyName (str): parameter name
 
-        Returns: Parameter|None
+        Returns: Parameter | None
             the parameter, if found
         &#34;&#34;&#34;
         for p in self.paramSet:
             if p.keyName == keyName:
+                return p
+
+    def __call__(self, key: Key[T]) -&gt; Parameter[T] | None:
+        &#34;&#34;&#34;
+        This is similar to Scala&#39;s apply() method and gets the parameter for the given key, or else returns None.
+
+        Args:
+            key (Key[T]): parameter key
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == key.keyName:
                 return p
 
     def exists(self, keyName: str) -&gt; bool:
@@ -211,6 +244,7 @@ class ControlCommand(SequenceCommand):
 <ul class="hlist">
 <li><code><a title="csw.ParameterSetType.SequenceCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +277,7 @@ class Observe(ControlCommand):
 <ul class="hlist">
 <li><code><a title="csw.ParameterSetType.ControlCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
 </ul>
 </li>
 </ul>
@@ -306,18 +341,48 @@ class SequenceCommand:
 
         return d
 
-    def get(self, keyName: str) -&gt; Parameter|None:
+    # noinspection PyUnusedLocal
+    def get(self, keyName: str, keyType: KeyType[T]) -&gt; Parameter[T] | None:
+        &#34;&#34;&#34;
+        Gets the parameter with the given name, or else returns None.
+
+        Args:
+            keyName (str): parameter name
+            keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def gets(self, keyName: str) -&gt; Parameter | None:
         &#34;&#34;&#34;
         Gets the parameter with the given name, or else returns None.
 
         Args:
             keyName (str): parameter name
 
-        Returns: Parameter|None
+        Returns: Parameter | None
             the parameter, if found
         &#34;&#34;&#34;
         for p in self.paramSet:
             if p.keyName == keyName:
+                return p
+
+    def __call__(self, key: Key[T]) -&gt; Parameter[T] | None:
+        &#34;&#34;&#34;
+        This is similar to Scala&#39;s apply() method and gets the parameter for the given key, or else returns None.
+
+        Args:
+            key (Key[T]): parameter key
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == key.keyName:
                 return p
 
     def exists(self, keyName: str) -&gt; bool:
@@ -394,7 +459,41 @@ true if the parameter is found</p></div>
 </details>
 </dd>
 <dt id="csw.ParameterSetType.SequenceCommand.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, keyName: str) ‑> <a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a> | None</span>
+<span>def <span class="ident">get</span></span>(<span>self, keyName: str, keyType: <a title="csw.Parameter.KeyType" href="Parameter.html#csw.Parameter.KeyType">KeyType</a>[~T]) ‑> Optional[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>[~T]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the parameter with the given name, or else returns None.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyName</code></strong> :&ensp;<code>str</code></dt>
+<dd>parameter name</dd>
+<dt><strong><code>keyType</code></strong> :&ensp;<code>KeyType[T]</code></dt>
+<dd>parameter key type (used only for type hint: See also gets(keyName))</dd>
+</dl>
+<p>Returns: Parameter[T] | None
+the parameter, if found</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, keyName: str, keyType: KeyType[T]) -&gt; Parameter[T] | None:
+    &#34;&#34;&#34;
+    Gets the parameter with the given name, or else returns None.
+
+    Args:
+        keyName (str): parameter name
+        keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+    Returns: Parameter[T] | None
+        the parameter, if found
+    &#34;&#34;&#34;
+    for p in self.paramSet:
+        if p.keyName == keyName:
+            return p</code></pre>
+</details>
+</dd>
+<dt id="csw.ParameterSetType.SequenceCommand.gets"><code class="name flex">
+<span>def <span class="ident">gets</span></span>(<span>self, keyName: str) ‑> <a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a> | None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the parameter with the given name, or else returns None.</p>
@@ -403,20 +502,20 @@ true if the parameter is found</p></div>
 <dt><strong><code>keyName</code></strong> :&ensp;<code>str</code></dt>
 <dd>parameter name</dd>
 </dl>
-<p>Returns: Parameter|None
+<p>Returns: Parameter | None
 the parameter, if found</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, keyName: str) -&gt; Parameter|None:
+<pre><code class="python">def gets(self, keyName: str) -&gt; Parameter | None:
     &#34;&#34;&#34;
     Gets the parameter with the given name, or else returns None.
 
     Args:
         keyName (str): parameter name
 
-    Returns: Parameter|None
+    Returns: Parameter | None
         the parameter, if found
     &#34;&#34;&#34;
     for p in self.paramSet:
@@ -454,6 +553,7 @@ class Setup(ControlCommand):
 <ul class="hlist">
 <li><code><a title="csw.ParameterSetType.ControlCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
 </ul>
 </li>
 </ul>
@@ -485,6 +585,7 @@ class Wait(SequenceCommand):
 <ul class="hlist">
 <li><code><a title="csw.ParameterSetType.SequenceCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
 </ul>
 </li>
 </ul>
@@ -523,6 +624,7 @@ class Wait(SequenceCommand):
 <li><code><a title="csw.ParameterSetType.SequenceCommand.commandName" href="#csw.ParameterSetType.SequenceCommand.commandName">commandName</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.maybeObsId" href="#csw.ParameterSetType.SequenceCommand.maybeObsId">maybeObsId</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.paramSet" href="#csw.ParameterSetType.SequenceCommand.paramSet">paramSet</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.source" href="#csw.ParameterSetType.SequenceCommand.source">source</a></code></li>

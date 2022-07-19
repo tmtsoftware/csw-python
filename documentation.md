@@ -369,10 +369,10 @@ The following example gets the first value of the "BasePosition", which is expec
 ## ESW Shell
 
 The [esw-shell](esw/esw-shell.py) command provides an interactive shell with predefined imports
-where you can type in CSW and ESW commands:
+where you can type in CSW and ESW commands. The following example publishes an event:
 
 ```bash
-> python -i esw/esw-shell.py
+> esw-shell.sh
 Wellcome to ESW Shell
 >>> source = Prefix(Subsystems.CSW, "testassembly")
 >>> eventName = EventName("myAssemblyEvent")
@@ -385,4 +385,29 @@ Wellcome to ESW Shell
 ```
 
 This is just an interactive Python session with the commonly used imports provided.
-You can add your own imports, etc.
+You can add your own imports, etc. The following example submits commands to an assembly:
+
+```bash
+> esw-shell.sh
+Wellcome to ESW Shell
+>>> prefix = Prefix(Subsystems.CSW, "TestClient")
+>>> maybeObsId = []
+>>> param = IntKey.make("testValue").set(42)
+>>> paramSet = [param]
+>>> cs = CommandService(Prefix(Subsystems.CSW, "TestPublisher"), ComponentType.Assembly)
+>>> setup = Setup(prefix, CommandName("longRunningCommand"), maybeObsId, paramSet)
+>>> resp = cs.submitAndWait(setup, 5)
+>>> resp
+Completed(runId='6c476544-4e84-4f8f-b10a-8172576ef68d', result=Result(paramSet=[]))
+```
+
+The `submitAndWait()` method submits a command and waits, if needed for the final response.
+You can use plain `submit()` if the command returns a direct response.
+There are also asynchronous versions of some methods: `queryFinalAsync()` and `submitAndWaitAsync()`,
+that can be used in scripts using the `async` and `await` keywords.
+
+```python
+async def foo:
+    resp1 = await cs.queryFinalAsync(runId, 5)
+    resp2 = await cs.submitAndWaitAsync(setup, 5)
+```

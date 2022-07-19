@@ -118,6 +118,17 @@ class QueryFinal:
         except:
             traceback.print_exc()
 
+    def _asDict(self):
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#39;runId&#39;: self.runId,
+            &#39;timeoutInSeconds&#39;: self.timeoutInSeconds
+        }
+
 
 @dataclass_json
 @dataclass
@@ -396,7 +407,18 @@ class QueryFinal:
             timeoutInSeconds = obj[&#39;timeoutInSeconds&#39;]
             return QueryFinal(runId, timeoutInSeconds)
         except:
-            traceback.print_exc()</code></pre>
+            traceback.print_exc()
+
+    def _asDict(self):
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#39;runId&#39;: self.runId,
+            &#39;timeoutInSeconds&#39;: self.timeoutInSeconds
+        }</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>

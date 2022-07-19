@@ -26,20 +26,26 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from dataclasses import dataclass
+<pre><code class="python"># noinspection PyUnresolvedReferences
+from dataclasses import dataclass
 from typing import TypeVar, Generic, List
 
+from csw.KeyTypes import KeyTypes
 from csw.TAITime import TAITime
 from csw.UTCTime import UTCTime
 from csw.Units import Units
-from csw.KeyType import KeyType
 from csw.Coords import *
 
-coordTypes = {KeyType.CoordKey, KeyType.EqCoordKey, KeyType.SolarSystemCoordKey, KeyType.MinorPlanetCoordKey,
-              KeyType.CometCoordKey}
-timeKeyTypes = {KeyType.TAITimeKey, KeyType.UTCTimeKey}
+coordTypes = {KeyTypes.CoordKey, KeyTypes.EqCoordKey, KeyTypes.SolarSystemCoordKey, KeyTypes.MinorPlanetCoordKey,
+              KeyTypes.CometCoordKey}
+timeKeyTypes = {KeyTypes.TAITimeKey, KeyTypes.UTCTimeKey}
 
 T = TypeVar(&#39;T&#39;)
+
+
+@dataclass
+class KeyType(Generic[T]):
+    pass
 
 
 # noinspection PyProtectedMember
@@ -52,22 +58,22 @@ class Parameter(Generic[T]):
         Args:
 
             keyName (str): name of the key
-            keyType (KeyType): type of the key
+            keyType (KeyTypes): type of the key
             values (List[T]): an array of values, or a nested array for array and matrix types.
             units (Units): units of the values.
         &#34;&#34;&#34;
     keyName: str
-    keyType: KeyType
+    keyType: KeyTypes
     values: List[T]
     units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: KeyType, param: T, forEvent: bool):
+    def _paramValueOrDict(keyType: KeyTypes, param: T, forEvent: bool):
         &#34;&#34;&#34;
         Internal method that also handles coord and time types
 
         Args:
-            keyType (KeyType): parameter&#39;s key type
+            keyType (KeyTypes): parameter&#39;s key type
             param (T): parameter value
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
@@ -84,13 +90,13 @@ class Parameter(Generic[T]):
         return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: KeyType, obj: T, forEvent: bool) -&gt; T:
+    def _paramValueFromDict(keyType: KeyTypes, obj: T, forEvent: bool) -&gt; T:
         &#34;&#34;&#34;
         Internal recursive method that also handles Coord types
 
         Args:
 
-            keyType (KeyType): parameter&#39;s key type
+            keyType (KeyTypes): parameter&#39;s key type
             obj: T
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
@@ -100,7 +106,7 @@ class Parameter(Generic[T]):
         if keyType in coordTypes:
             return Coord._fromDict(obj)
         elif not forEvent and keyType in timeKeyTypes:
-            if keyType == KeyType.UTCTimeKey:
+            if keyType == KeyTypes.UTCTimeKey:
                 return UTCTime.from_str(obj)
             else:
                 return TAITime.from_str(obj)
@@ -111,7 +117,7 @@ class Parameter(Generic[T]):
     # forEvent flag is needed since time and byte values are encoded differently in CBOR and JSON
     def _asDict(self, forEvent: bool = False):
         # Note that bytes are stored in a byte string (b&#39;...&#39;) instead of a list or array.
-        if forEvent and self.keyType == KeyType.ByteKey:
+        if forEvent and self.keyType == KeyTypes.ByteKey:
             values = bytes(self.values)
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p, forEvent), self.values))
@@ -131,10 +137,10 @@ class Parameter(Generic[T]):
         Returns a Parameter for the given dict.
         &#34;&#34;&#34;
         k = next(iter(obj))
-        keyType = KeyType[k]
+        keyType = KeyTypes[k]
         obj = obj[k]
 
-        if forEvent and keyType == KeyType.ByteKey:
+        if forEvent and keyType == KeyTypes.ByteKey:
             values = list(obj[&#39;values&#39;])
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p, forEvent), obj[&#39;values&#39;]))
@@ -144,7 +150,7 @@ class Parameter(Generic[T]):
 @dataclass
 class Key(Generic[T]):
     keyName: str
-    keyType: KeyType
+    keyType: KeyTypes
     units: Units
 
     def set(self, *values: T) -&gt; Parameter[T]:
@@ -155,186 +161,189 @@ class Key(Generic[T]):
 
 
 # noinspection DuplicatedCode
-class ChoiceKey:
+class ChoiceKey(KeyType[str]):
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyType.ChoiceKey, units)
+        return Key(name, KeyTypes.ChoiceKey, units)
 
 
+# noinspection DuplicatedCode
 class StringKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyType.StringKey, units)
+        return Key(name, KeyTypes.StringKey, units)
 
 
 class UTCTimeKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
-        return Key(name, KeyType.UTCTimeKey, units)
+        return Key(name, KeyTypes.UTCTimeKey, units)
 
 
 class TAITimeKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
-        return Key(name, KeyType.TAITimeKey, units)
+        return Key(name, KeyTypes.TAITimeKey, units)
 
 
 class EqCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
-        return Key(name, KeyType.EqCoordKey, units)
+        return Key(name, KeyTypes.EqCoordKey, units)
 
 
 class CometCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
-        return Key(name, KeyType.CometCoordKey, units)
+        return Key(name, KeyTypes.CometCoordKey, units)
 
 
 class SolarSystemCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
-        return Key(name, KeyType.SolarSystemCoordKey, units)
+        return Key(name, KeyTypes.SolarSystemCoordKey, units)
 
 
 class MinorPlanetCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
-        return Key(name, KeyType.MinorPlanetCoordKey, units)
+        return Key(name, KeyTypes.MinorPlanetCoordKey, units)
 
 
 class AltAzCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
-        return Key(name, KeyType.AltAzCoordKey, units)
+        return Key(name, KeyTypes.AltAzCoordKey, units)
 
 
 class CoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
-        return Key(name, KeyType.CoordKey, units)
+        return Key(name, KeyTypes.CoordKey, units)
 
 
 # noinspection DuplicatedCode
 class BooleanKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
-        return Key(name, KeyType.BooleanKey, units)
+        return Key(name, KeyTypes.BooleanKey, units)
 
 
+# noinspection DuplicatedCode
 class CharKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyType.CharKey, units)
+        return Key(name, KeyTypes.CharKey, units)
 
 
 class ByteKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.ByteKey, units)
+        return Key(name, KeyTypes.ByteKey, units)
 
 
 class ShortKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.ShortKey, units)
+        return Key(name, KeyTypes.ShortKey, units)
 
 
 class LongKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.LongKey, units)
+        return Key(name, KeyTypes.LongKey, units)
 
 
 class IntKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.IntKey, units)
+        return Key(name, KeyTypes.IntKey, units)
 
 
 class FloatKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
-        return Key(name, KeyType.FloatKey, units)
+        return Key(name, KeyTypes.FloatKey, units)
 
 
 class DoubleKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
-        return Key(name, KeyType.DoubleKey, units)
+        return Key(name, KeyTypes.DoubleKey, units)
 
 
 class ByteArrayKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
-        return Key(name, KeyType.ByteArrayKey, units)
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[bytes]]:
+        return Key(name, KeyTypes.ByteArrayKey, units)
 
 
 class ShortArrayKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.ShortArrayKey, units)
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+        return Key(name, KeyTypes.ShortArrayKey, units)
 
 
 class LongArrayKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.LongArrayKey, units)
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+        return Key(name, KeyTypes.LongArrayKey, units)
 
 
 class IntArrayKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
-        return Key(name, KeyType.IntArrayKey, units)
+        return Key(name, KeyTypes.IntArrayKey, units)
 
 
 class FloatArrayKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
-        return Key(name, KeyType.FloatArrayKey, units)
+        return Key(name, KeyTypes.FloatArrayKey, units)
 
 
 class DoubleArrayKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
-        return Key(name, KeyType.DoubleArrayKey, units)
+        return Key(name, KeyTypes.DoubleArrayKey, units)
 
 
 # noinspection DuplicatedCode
 class ByteMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.ByteMatrixKey, units)
+        return Key(name, KeyTypes.ByteMatrixKey, units)
 
 
 class ShortMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.ShortMatrixKey, units)
+        return Key(name, KeyTypes.ShortMatrixKey, units)
 
 
 class LongMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.LongMatrixKey, units)
+        return Key(name, KeyTypes.LongMatrixKey, units)
 
 
+# noinspection DuplicatedCode
 class IntMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.IntMatrixKey, units)
+        return Key(name, KeyTypes.IntMatrixKey, units)
 
 
 class FloatMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
-        return Key(name, KeyType.FloatMatrixKey, units)
+        return Key(name, KeyTypes.FloatMatrixKey, units)
 
 
 class DoubleMatrixKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.DoubleMatrixKey, units)</code></pre>
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
+        return Key(name, KeyTypes.DoubleMatrixKey, units)</code></pre>
 </details>
 </section>
 <section>
@@ -358,7 +367,7 @@ class DoubleMatrixKey:
 <pre><code class="python">class AltAzCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
-        return Key(name, KeyType.AltAzCoordKey, units)</code></pre>
+        return Key(name, KeyTypes.AltAzCoordKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -373,7 +382,7 @@ class DoubleMatrixKey:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
-    return Key(name, KeyType.AltAzCoordKey, units)</code></pre>
+    return Key(name, KeyTypes.AltAzCoordKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -390,7 +399,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
 <pre><code class="python">class BooleanKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
-        return Key(name, KeyType.BooleanKey, units)</code></pre>
+        return Key(name, KeyTypes.BooleanKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -405,7 +414,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[AltAzCoord]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
-    return Key(name, KeyType.BooleanKey, units)</code></pre>
+    return Key(name, KeyTypes.BooleanKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -421,13 +430,13 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
 </summary>
 <pre><code class="python">class ByteArrayKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
-        return Key(name, KeyType.ByteArrayKey, units)</code></pre>
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[bytes]]:
+        return Key(name, KeyTypes.ByteArrayKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.Parameter.ByteArrayKey.make"><code class="name flex">
-<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[bytes]</span>
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[bytes]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -436,8 +445,8 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bool]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
-    return Key(name, KeyType.ByteArrayKey, units)</code></pre>
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[bytes]]:
+    return Key(name, KeyTypes.ByteArrayKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -454,7 +463,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
 <pre><code class="python">class ByteKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.ByteKey, units)</code></pre>
+        return Key(name, KeyTypes.ByteKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -469,7 +478,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[bytes]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-    return Key(name, KeyType.ByteKey, units)</code></pre>
+    return Key(name, KeyTypes.ByteKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -486,7 +495,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 <pre><code class="python">class ByteMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.ByteMatrixKey, units)</code></pre>
+        return Key(name, KeyTypes.ByteMatrixKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -501,7 +510,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-    return Key(name, KeyType.ByteMatrixKey, units)</code></pre>
+    return Key(name, KeyTypes.ByteMatrixKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -518,7 +527,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 <pre><code class="python">class CharKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyType.CharKey, units)</code></pre>
+        return Key(name, KeyTypes.CharKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -533,7 +542,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-    return Key(name, KeyType.CharKey, units)</code></pre>
+    return Key(name, KeyTypes.CharKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -542,16 +551,21 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 <span>class <span class="ident">ChoiceKey</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>KeyType()</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class ChoiceKey:
+<pre><code class="python">class ChoiceKey(KeyType[str]):
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyType.ChoiceKey, units)</code></pre>
+        return Key(name, KeyTypes.ChoiceKey, units)</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.Parameter.KeyType" href="#csw.Parameter.KeyType">KeyType</a></li>
+<li>typing.Generic</li>
+</ul>
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.Parameter.ChoiceKey.make"><code class="name flex">
@@ -565,7 +579,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-    return Key(name, KeyType.ChoiceKey, units)</code></pre>
+    return Key(name, KeyTypes.ChoiceKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -582,7 +596,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 <pre><code class="python">class CometCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
-        return Key(name, KeyType.CometCoordKey, units)</code></pre>
+        return Key(name, KeyTypes.CometCoordKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -597,7 +611,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
-    return Key(name, KeyType.CometCoordKey, units)</code></pre>
+    return Key(name, KeyTypes.CometCoordKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -614,7 +628,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
 <pre><code class="python">class CoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
-        return Key(name, KeyType.CoordKey, units)</code></pre>
+        return Key(name, KeyTypes.CoordKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -629,7 +643,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[CometCoord]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
-    return Key(name, KeyType.CoordKey, units)</code></pre>
+    return Key(name, KeyTypes.CoordKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -646,7 +660,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
 <pre><code class="python">class DoubleArrayKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
-        return Key(name, KeyType.DoubleArrayKey, units)</code></pre>
+        return Key(name, KeyTypes.DoubleArrayKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -661,7 +675,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[Coord]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
-    return Key(name, KeyType.DoubleArrayKey, units)</code></pre>
+    return Key(name, KeyTypes.DoubleArrayKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -678,7 +692,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
 <pre><code class="python">class DoubleKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
-        return Key(name, KeyType.DoubleKey, units)</code></pre>
+        return Key(name, KeyTypes.DoubleKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -693,7 +707,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
-    return Key(name, KeyType.DoubleKey, units)</code></pre>
+    return Key(name, KeyTypes.DoubleKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -709,13 +723,13 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
 </summary>
 <pre><code class="python">class DoubleMatrixKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.DoubleMatrixKey, units)</code></pre>
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
+        return Key(name, KeyTypes.DoubleMatrixKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.Parameter.DoubleMatrixKey.make"><code class="name flex">
-<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[int]]]</span>
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[typing.List[float]]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -724,8 +738,8 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-    return Key(name, KeyType.DoubleMatrixKey, units)</code></pre>
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
+    return Key(name, KeyTypes.DoubleMatrixKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -742,7 +756,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 <pre><code class="python">class EqCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
-        return Key(name, KeyType.EqCoordKey, units)</code></pre>
+        return Key(name, KeyTypes.EqCoordKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -757,7 +771,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
-    return Key(name, KeyType.EqCoordKey, units)</code></pre>
+    return Key(name, KeyTypes.EqCoordKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -774,7 +788,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
 <pre><code class="python">class FloatArrayKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
-        return Key(name, KeyType.FloatArrayKey, units)</code></pre>
+        return Key(name, KeyTypes.FloatArrayKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -789,7 +803,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[EqCoord]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
-    return Key(name, KeyType.FloatArrayKey, units)</code></pre>
+    return Key(name, KeyTypes.FloatArrayKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -806,7 +820,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
 <pre><code class="python">class FloatKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
-        return Key(name, KeyType.FloatKey, units)</code></pre>
+        return Key(name, KeyTypes.FloatKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -821,7 +835,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[float]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
-    return Key(name, KeyType.FloatKey, units)</code></pre>
+    return Key(name, KeyTypes.FloatKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -838,7 +852,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
 <pre><code class="python">class FloatMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
-        return Key(name, KeyType.FloatMatrixKey, units)</code></pre>
+        return Key(name, KeyTypes.FloatMatrixKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -853,7 +867,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[float]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
-    return Key(name, KeyType.FloatMatrixKey, units)</code></pre>
+    return Key(name, KeyTypes.FloatMatrixKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -870,7 +884,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
 <pre><code class="python">class IntArrayKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
-        return Key(name, KeyType.IntArrayKey, units)</code></pre>
+        return Key(name, KeyTypes.IntArrayKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -885,7 +899,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
-    return Key(name, KeyType.IntArrayKey, units)</code></pre>
+    return Key(name, KeyTypes.IntArrayKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -902,7 +916,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
 <pre><code class="python">class IntKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.IntKey, units)</code></pre>
+        return Key(name, KeyTypes.IntKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -917,7 +931,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-    return Key(name, KeyType.IntKey, units)</code></pre>
+    return Key(name, KeyTypes.IntKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -934,7 +948,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 <pre><code class="python">class IntMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.IntMatrixKey, units)</code></pre>
+        return Key(name, KeyTypes.IntMatrixKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -949,17 +963,17 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-    return Key(name, KeyType.IntMatrixKey, units)</code></pre>
+    return Key(name, KeyTypes.IntMatrixKey, units)</code></pre>
 </details>
 </dd>
 </dl>
 </dd>
 <dt id="csw.Parameter.Key"><code class="flex name class">
 <span>class <span class="ident">Key</span></span>
-<span>(</span><span>keyName: str, keyType: <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a>, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a>)</span>
+<span>(</span><span>keyName: str, keyType: <a title="csw.KeyTypes.KeyTypes" href="KeyTypes.html#csw.KeyTypes.KeyTypes">KeyTypes</a>, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Key(keyName: str, keyType: csw.KeyType.KeyType, units: csw.Units.Units)</p></div>
+<div class="desc"><p>Key(keyName: str, keyType: csw.KeyTypes.KeyTypes, units: csw.Units.Units)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -967,7 +981,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 <pre><code class="python">@dataclass
 class Key(Generic[T]):
     keyName: str
-    keyType: KeyType
+    keyType: KeyTypes
     units: Units
 
     def set(self, *values: T) -&gt; Parameter[T]:
@@ -986,7 +1000,7 @@ class Key(Generic[T]):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Parameter.Key.keyType"><code class="name">var <span class="ident">keyType</span> : <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a></code></dt>
+<dt id="csw.Parameter.Key.keyType"><code class="name">var <span class="ident">keyType</span> : <a title="csw.KeyTypes.KeyTypes" href="KeyTypes.html#csw.KeyTypes.KeyTypes">KeyTypes</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1025,6 +1039,28 @@ class Key(Generic[T]):
 </dd>
 </dl>
 </dd>
+<dt id="csw.Parameter.KeyType"><code class="flex name class">
+<span>class <span class="ident">KeyType</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>KeyType()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class KeyType(Generic[T]):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>typing.Generic</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="csw.Parameter.ChoiceKey" href="#csw.Parameter.ChoiceKey">ChoiceKey</a></li>
+</ul>
+</dd>
 <dt id="csw.Parameter.LongArrayKey"><code class="flex name class">
 <span>class <span class="ident">LongArrayKey</span></span>
 </code></dt>
@@ -1036,13 +1072,13 @@ class Key(Generic[T]):
 </summary>
 <pre><code class="python">class LongArrayKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.LongArrayKey, units)</code></pre>
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+        return Key(name, KeyTypes.LongArrayKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.Parameter.LongArrayKey.make"><code class="name flex">
-<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[int]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1051,8 +1087,8 @@ class Key(Generic[T]):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-    return Key(name, KeyType.LongArrayKey, units)</code></pre>
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+    return Key(name, KeyTypes.LongArrayKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1069,7 +1105,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 <pre><code class="python">class LongKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.LongKey, units)</code></pre>
+        return Key(name, KeyTypes.LongKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1084,7 +1120,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-    return Key(name, KeyType.LongKey, units)</code></pre>
+    return Key(name, KeyTypes.LongKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1101,7 +1137,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 <pre><code class="python">class LongMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.LongMatrixKey, units)</code></pre>
+        return Key(name, KeyTypes.LongMatrixKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1116,7 +1152,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-    return Key(name, KeyType.LongMatrixKey, units)</code></pre>
+    return Key(name, KeyTypes.LongMatrixKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1133,7 +1169,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 <pre><code class="python">class MinorPlanetCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
-        return Key(name, KeyType.MinorPlanetCoordKey, units)</code></pre>
+        return Key(name, KeyTypes.MinorPlanetCoordKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1148,14 +1184,14 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
-    return Key(name, KeyType.MinorPlanetCoordKey, units)</code></pre>
+    return Key(name, KeyTypes.MinorPlanetCoordKey, units)</code></pre>
 </details>
 </dd>
 </dl>
 </dd>
 <dt id="csw.Parameter.Parameter"><code class="flex name class">
 <span>class <span class="ident">Parameter</span></span>
-<span>(</span><span>keyName: str, keyType: <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a>, values: List[~T], units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits)</span>
+<span>(</span><span>keyName: str, keyType: <a title="csw.KeyTypes.KeyTypes" href="KeyTypes.html#csw.KeyTypes.KeyTypes">KeyTypes</a>, values: List[~T], units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Parameter (keys with values, units).</p>
@@ -1163,7 +1199,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[MinorPlanetCoord]:
 <dl>
 <dt><strong><code>keyName</code></strong> :&ensp;<code>str</code></dt>
 <dd>name of the key</dd>
-<dt><strong><code>keyType</code></strong> :&ensp;<code>KeyType</code></dt>
+<dt><strong><code>keyType</code></strong> :&ensp;<code>KeyTypes</code></dt>
 <dd>type of the key</dd>
 <dt><strong><code>values</code></strong> :&ensp;<code>List[T]</code></dt>
 <dd>an array of values, or a nested array for array and matrix types.</dd>
@@ -1183,22 +1219,22 @@ class Parameter(Generic[T]):
         Args:
 
             keyName (str): name of the key
-            keyType (KeyType): type of the key
+            keyType (KeyTypes): type of the key
             values (List[T]): an array of values, or a nested array for array and matrix types.
             units (Units): units of the values.
         &#34;&#34;&#34;
     keyName: str
-    keyType: KeyType
+    keyType: KeyTypes
     values: List[T]
     units: Units = Units.NoUnits
 
     @staticmethod
-    def _paramValueOrDict(keyType: KeyType, param: T, forEvent: bool):
+    def _paramValueOrDict(keyType: KeyTypes, param: T, forEvent: bool):
         &#34;&#34;&#34;
         Internal method that also handles coord and time types
 
         Args:
-            keyType (KeyType): parameter&#39;s key type
+            keyType (KeyTypes): parameter&#39;s key type
             param (T): parameter value
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
@@ -1215,13 +1251,13 @@ class Parameter(Generic[T]):
         return param
 
     @staticmethod
-    def _paramValueFromDict(keyType: KeyType, obj: T, forEvent: bool) -&gt; T:
+    def _paramValueFromDict(keyType: KeyTypes, obj: T, forEvent: bool) -&gt; T:
         &#34;&#34;&#34;
         Internal recursive method that also handles Coord types
 
         Args:
 
-            keyType (KeyType): parameter&#39;s key type
+            keyType (KeyTypes): parameter&#39;s key type
             obj: T
             forEvent (bool): needed since time values are encoded differently in CBOR and JSON
 
@@ -1231,7 +1267,7 @@ class Parameter(Generic[T]):
         if keyType in coordTypes:
             return Coord._fromDict(obj)
         elif not forEvent and keyType in timeKeyTypes:
-            if keyType == KeyType.UTCTimeKey:
+            if keyType == KeyTypes.UTCTimeKey:
                 return UTCTime.from_str(obj)
             else:
                 return TAITime.from_str(obj)
@@ -1242,7 +1278,7 @@ class Parameter(Generic[T]):
     # forEvent flag is needed since time and byte values are encoded differently in CBOR and JSON
     def _asDict(self, forEvent: bool = False):
         # Note that bytes are stored in a byte string (b&#39;...&#39;) instead of a list or array.
-        if forEvent and self.keyType == KeyType.ByteKey:
+        if forEvent and self.keyType == KeyTypes.ByteKey:
             values = bytes(self.values)
         else:
             values = list(map(lambda p: Parameter._paramValueOrDict(self.keyType, p, forEvent), self.values))
@@ -1262,10 +1298,10 @@ class Parameter(Generic[T]):
         Returns a Parameter for the given dict.
         &#34;&#34;&#34;
         k = next(iter(obj))
-        keyType = KeyType[k]
+        keyType = KeyTypes[k]
         obj = obj[k]
 
-        if forEvent and keyType == KeyType.ByteKey:
+        if forEvent and keyType == KeyTypes.ByteKey:
             values = list(obj[&#39;values&#39;])
         else:
             values = list(map(lambda p: Parameter._paramValueFromDict(keyType, p, forEvent), obj[&#39;values&#39;]))
@@ -1281,7 +1317,7 @@ class Parameter(Generic[T]):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Parameter.Parameter.keyType"><code class="name">var <span class="ident">keyType</span> : <a title="csw.KeyType.KeyType" href="KeyType.html#csw.KeyType.KeyType">KeyType</a></code></dt>
+<dt id="csw.Parameter.Parameter.keyType"><code class="name">var <span class="ident">keyType</span> : <a title="csw.KeyTypes.KeyTypes" href="KeyTypes.html#csw.KeyTypes.KeyTypes">KeyTypes</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1306,13 +1342,13 @@ class Parameter(Generic[T]):
 </summary>
 <pre><code class="python">class ShortArrayKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.ShortArrayKey, units)</code></pre>
+    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+        return Key(name, KeyTypes.ShortArrayKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.Parameter.ShortArrayKey.make"><code class="name flex">
-<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[int]</span>
+<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[typing.List[int]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1321,8 +1357,8 @@ class Parameter(Generic[T]):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-    return Key(name, KeyType.ShortArrayKey, units)</code></pre>
+def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[int]]:
+    return Key(name, KeyTypes.ShortArrayKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1339,7 +1375,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 <pre><code class="python">class ShortKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-        return Key(name, KeyType.ShortKey, units)</code></pre>
+        return Key(name, KeyTypes.ShortKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1354,7 +1390,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
-    return Key(name, KeyType.ShortKey, units)</code></pre>
+    return Key(name, KeyTypes.ShortKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1371,7 +1407,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 <pre><code class="python">class ShortMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-        return Key(name, KeyType.ShortMatrixKey, units)</code></pre>
+        return Key(name, KeyTypes.ShortMatrixKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1386,7 +1422,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[int]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
-    return Key(name, KeyType.ShortMatrixKey, units)</code></pre>
+    return Key(name, KeyTypes.ShortMatrixKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1403,7 +1439,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 <pre><code class="python">class SolarSystemCoordKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
-        return Key(name, KeyType.SolarSystemCoordKey, units)</code></pre>
+        return Key(name, KeyTypes.SolarSystemCoordKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1418,7 +1454,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
-    return Key(name, KeyType.SolarSystemCoordKey, units)</code></pre>
+    return Key(name, KeyTypes.SolarSystemCoordKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1435,7 +1471,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
 <pre><code class="python">class StringKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyType.StringKey, units)</code></pre>
+        return Key(name, KeyTypes.StringKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1450,7 +1486,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[SolarSystemCoord]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-    return Key(name, KeyType.StringKey, units)</code></pre>
+    return Key(name, KeyTypes.StringKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1467,7 +1503,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 <pre><code class="python">class TAITimeKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
-        return Key(name, KeyType.TAITimeKey, units)</code></pre>
+        return Key(name, KeyTypes.TAITimeKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1482,7 +1518,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
-    return Key(name, KeyType.TAITimeKey, units)</code></pre>
+    return Key(name, KeyTypes.TAITimeKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1499,7 +1535,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
 <pre><code class="python">class UTCTimeKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
-        return Key(name, KeyType.UTCTimeKey, units)</code></pre>
+        return Key(name, KeyTypes.UTCTimeKey, units)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -1514,7 +1550,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[TAITime]:
 </summary>
 <pre><code class="python">@staticmethod
 def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
-    return Key(name, KeyType.UTCTimeKey, units)</code></pre>
+    return Key(name, KeyTypes.UTCTimeKey, units)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1658,6 +1694,9 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
 <li><code><a title="csw.Parameter.Key.setAll" href="#csw.Parameter.Key.setAll">setAll</a></code></li>
 <li><code><a title="csw.Parameter.Key.units" href="#csw.Parameter.Key.units">units</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.KeyType" href="#csw.Parameter.KeyType">KeyType</a></code></h4>
 </li>
 <li>
 <h4><code><a title="csw.Parameter.LongArrayKey" href="#csw.Parameter.LongArrayKey">LongArrayKey</a></code></h4>
