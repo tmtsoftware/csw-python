@@ -92,7 +92,6 @@ class Error(SubmitResponse):
 @dataclass
 class Locked(SubmitResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
-    message: str
 
     def _asDict(self):
         """
@@ -102,21 +101,18 @@ class Locked(SubmitResponse):
         return {
             "_type": self.__class__.__name__,
             'runId': self.runId,
-            'message': self.message
         }
 
     @staticmethod
     def _fromDict(obj: dict):
         return Locked(
             runId=obj['runId'],
-            message=obj['message']
         )
 
 
 @dataclass
 class Started(SubmitResponse):
     """Represents an intermediate response stating a long running command has been started"""
-    message: str
 
     def _asDict(self):
         """
@@ -126,14 +122,12 @@ class Started(SubmitResponse):
         return {
             "_type": self.__class__.__name__,
             'runId': self.runId,
-            'message': self.message
         }
 
     @staticmethod
     def _fromDict(obj: dict):
         return Started(
             runId=obj['runId'],
-            message=obj['message']
         )
 
 

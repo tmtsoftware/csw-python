@@ -16,7 +16,7 @@ import csw.location.api.models.{
 }
 import csw.logging.api.scaladsl.Logger
 import csw.params.commands.CommandResponse._
-import csw.params.commands.{CommandName, ControlCommand, Setup}
+import csw.params.commands.{CommandName, ControlCommand, Observe, Setup}
 import csw.time.core.models.{TAITime, UTCTime}
 import csw.params.core.models.{Angle, Coords, Id, ProperMotion}
 import csw.params.events.{Event, EventKey, EventName, SystemEvent}
@@ -146,8 +146,26 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
       controlCommand: ControlCommand): ValidateCommandResponse = Accepted(runId)
 
   override def onSubmit(runId: Id,
-                        controlCommand: ControlCommand): SubmitResponse =
-    Completed(runId)
+                        controlCommand: ControlCommand): SubmitResponse = {
+    controlCommand match {
+      case obs: Observe => onObserve(runId, obs)
+      case setup: Setup => onSetup(runId, setup)
+    }
+  }
+
+  //noinspection ScalaUnusedSymbol
+  private def onObserve(runId: Id, observe: Observe): SubmitResponse = {
+    Error(runId, "Observe not handled")
+  }
+
+  private def onSetup(runId: Id, setup: Setup): SubmitResponse = {
+    if (setup.commandName.name == "longRunningCommand") {
+      cswCtx.timeServiceScheduler.scheduleOnce(UTCTime.after(1.seconds))(
+        cswCtx.commandResponseManager.updateCommand(Completed(runId))
+      )
+      Started(runId)
+    } else Completed(runId)
+  }
 
   override def onOneway(runId: Id, controlCommand: ControlCommand): Unit = {}
 
@@ -226,6 +244,7 @@ class TestAssemblyHandlers(ctx: ActorContext[TopLevelActorMessage],
 
     val testFd = new FileOutputStream(commandTestFile)
 
+    //noinspection RegExpSimplifiable
     def testLog(msg: String): Unit = {
       log.info(msg)
       val s = msg.replaceAll("Id\\([a-z0-9\\-]*\\)", "Id(test)")

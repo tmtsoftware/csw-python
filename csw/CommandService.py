@@ -1,9 +1,9 @@
 import uuid
-
 import requests
+import websockets
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway
+from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 
 # A CSW command service client
+# noinspection PyProtectedMember
 @dataclass
 class CommandService:
     prefix: Prefix
@@ -45,6 +46,12 @@ class CommandService:
         resp = CommandResponse._fromDict(response.json())
         return resp
 
+    # def _wsCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
+    #     baseUri = self._getBaseUri()
+    #     wsUri = f"{baseUri}websocket-endpoint"
+    #     match command:
+    #         case 'QueryFinal': pass
+
     def submit(self, controlCommand: ControlCommand) -> SubmitResponse:
         return self._postCommand("Submit", controlCommand)
 
@@ -53,3 +60,16 @@ class CommandService:
 
     def oneway(self, controlCommand: ControlCommand) -> SubmitResponse:
         return self._postCommand("Oneway", controlCommand)
+
+    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        async with websockets.connect(wsUri) as websocket:
+            await websocket.send(jsonStr)
+            jsonResp = await websocket.recv()
+            return CommandResponse._fromDict(json.loads(jsonResp))
+
+
+

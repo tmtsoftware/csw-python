@@ -1,7 +1,7 @@
 import json
+import pathlib
 
 import structlog
-from _pytest import pathlib
 
 from csw.CommandResponse import CommandIssue
 from csw.Parameter import Parameter

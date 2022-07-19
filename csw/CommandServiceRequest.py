@@ -90,6 +90,17 @@ class QueryFinal:
         except:
             traceback.print_exc()
 
+    def _asDict(self):
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            'runId': self.runId,
+            'timeoutInSeconds': self.timeoutInSeconds
+        }
+
 
 @dataclass_json
 @dataclass

@@ -212,7 +212,6 @@ class LocationService:
     log = structlog.get_logger()
     baseUri = "http://127.0.0.1:7654/"
     postUri = f"{baseUri}post-endpoint"
-    wsUri = f"{baseUri}websocket-endpoint"
 
     # If port is 0, return a random free port, otherwise the given port
     @staticmethod
