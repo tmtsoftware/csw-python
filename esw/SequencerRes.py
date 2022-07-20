@@ -22,6 +22,14 @@ class SequencerRes:
                 return IdDoesNotExist()
             case "CannotOperateOnAnInFlightOrFinishedStep":
                 return CannotOperateOnAnInFlightOrFinishedStep()
+            case "GoOnlineHookFailed":
+                return GoOnlineHookFailed()
+            case "GoOfflineHookFailed":
+                return GoOfflineHookFailed()
+            case "DiagnosticHookFailed":
+                return DiagnosticHookFailed()
+            case "OperationsHookFailed":
+                return OperationsHookFailed()
 
 
 @dataclass
@@ -48,7 +56,7 @@ class Unhandled(SequencerRes):
 
     @staticmethod
     def _fromDict(obj: dict):
-        Unhandled(obj["state"], obj["messageType"], obj["msg"])
+        return Unhandled(obj["state"], obj["messageType"], obj["msg"])
 
 
 @dataclass

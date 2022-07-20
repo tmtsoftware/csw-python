@@ -10,7 +10,7 @@ from esw.SequencerClient import SequencerClient
 # "esw_imager_only_sequence.json".
 
 # @pytest.mark.skip(reason="Requires running ESW observing simulation from the esw-observing-simulation repo")
-from esw.SequencerRes import Ok
+from esw.SequencerRes import Ok, Unhandled
 
 
 class TestSequencerClient:
@@ -72,8 +72,8 @@ class TestSequencerClient:
 
     def test_pause(self):
         resp = self.seqClient.pause()
-        assert (isinstance(resp, Ok))
+        assert (isinstance(resp, Unhandled))
 
     def test_resume(self):
         resp = self.seqClient.resume()
-        assert (isinstance(resp, Ok))
+        assert (isinstance(resp, Unhandled))

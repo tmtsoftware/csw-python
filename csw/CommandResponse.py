@@ -42,13 +42,7 @@ class CommandResponse:
 
 
 @dataclass
-class SubmitResponse(CommandResponse):
-    """Returned by Submit message which calls the onSubmit handler"""
-    pass
-
-
-@dataclass
-class Cancelled(SubmitResponse):
+class Cancelled(CommandResponse):
     """Represents a negative response that describes the cancellation of command"""
 
     @staticmethod
@@ -70,7 +64,7 @@ class Accepted(CommandResponse):
 
 
 @dataclass
-class Error(SubmitResponse):
+class Error(CommandResponse):
     """Represents a negative response that describes an error in executing the command"""
     message: str
 
@@ -94,7 +88,7 @@ class Error(SubmitResponse):
 
 
 @dataclass
-class Locked(SubmitResponse):
+class Locked(CommandResponse):
     """Represents a negative response stating that a component is Locked and command was not validated or executed"""
 
     def _asDict(self):
@@ -115,8 +109,8 @@ class Locked(SubmitResponse):
 
 
 @dataclass
-class Started(SubmitResponse):
-    """Represents an intermediate response stating a long running command has been started"""
+class Started(CommandResponse):
+    """Represents an intermediate response stating a long-running command has been started"""
 
     def _asDict(self):
         """
@@ -161,7 +155,7 @@ class Result:
 
 
 @dataclass
-class Completed(SubmitResponse):
+class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
     result: Result = Result([])
 
@@ -205,7 +199,7 @@ class HCDBusyIssue(CommandIssue):
 
 
 class WrongCommandTypeIssue(CommandIssue):
-    """Returned when some given command type is not expected"""
+    """Returned when the given command type is not expected"""
 
 
 class MissingKeyIssue(CommandIssue):
@@ -296,3 +290,8 @@ class Invalid(CommandResponse):
             runId=obj['runId'],
             issue=CommandIssue._fromDict(obj['issue']),
         )
+
+
+SubmitResponse = Error | Invalid | Locked | Started | Completed | Cancelled
+ValidateResponse = Accepted | Invalid | Locked
+OnewayResponse = Accepted | Invalid | Locked

@@ -3,7 +3,7 @@ import requests
 import websockets
 from websocket import create_connection
 
-from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started
+from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
 from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
@@ -63,11 +63,9 @@ class CommandService:
        """
         return self._postCommand("Submit", controlCommand)
 
-    def validate(self, controlCommand: ControlCommand) -> SubmitResponse:
+    def validate(self, controlCommand: ControlCommand) -> ValidateResponse:
         """
         Validates a command to be sent to the command service.
-        Note that in the jvm CSW API the return value is a ValidateResponse.
-        Since Python does not have traits, the return type is marked as SubmitResponse.
 
         Args:
             controlCommand (ControlCommand): command to submit
@@ -77,11 +75,9 @@ class CommandService:
        """
         return self._postCommand("Validate", controlCommand)
 
-    def oneway(self, controlCommand: ControlCommand) -> SubmitResponse:
+    def oneway(self, controlCommand: ControlCommand) -> OnewayResponse:
         """
        Sends a command to the command service without expecting a reply.
-       Note that in the jvm CSW API the return value is a OnewayResponse.
-       Since Python does not have traits, the return type is marked as SubmitResponse.
 
        Args:
            controlCommand (ControlCommand): command to submit
