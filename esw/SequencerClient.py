@@ -6,11 +6,12 @@ from requests import Response
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
-from esw.SequencerRequest import GetSequence
+from esw.SequencerRequest import *
+from esw.SequencerRes import *
 from esw.StepList import StepList
 
 
-# noinspection PyProtectedMember
+# noinspection PyProtectedMember,PyShadowingBuiltins
 @dataclass
 class SequencerClient:
     prefix: Prefix
@@ -31,37 +32,66 @@ class SequencerClient:
         jsonData = json.loads(json.dumps(data))
         return requests.post(postUri, headers=headers, json=jsonData)
 
-
     def getSequence(self) -> StepList | None:
         response = self._postCommand(GetSequence()._asDict())
         if not response.ok:
             return None
         return StepList._fromDict(response.json())
 
+    def isAvailable(self) -> bool:
+        response = self._postCommand(IsAvailable()._asDict())
+        if not response.ok:
+            return False
+        return response.json()
 
-#     override def isAvailable: Future[Boolean] = postClient.requestResponse[Boolean](IsAvailable)
-#
-#     override def isOnline: Future[Boolean] = postClient.requestResponse[Boolean](IsOnline)
-#
-#     override def add(commands: List[SequenceCommand]): Future[OkOrUnhandledResponse] =
-#     postClient.requestResponse[OkOrUnhandledResponse](Add(commands))
-#
-# override def prepend(commands: List[SequenceCommand]): Future[OkOrUnhandledResponse] =
-# postClient.requestResponse[OkOrUnhandledResponse](Prepend(commands))
-#
-# override def replace(id: Id, commands: List[SequenceCommand]): Future[GenericResponse] =
-# postClient.requestResponse[GenericResponse](Replace(id, commands))
-#
-# override def insertAfter(id: Id, commands: List[SequenceCommand]): Future[GenericResponse] =
-# postClient.requestResponse[GenericResponse](InsertAfter(id, commands))
-#
-# override def delete(id: Id): Future[GenericResponse] = postClient.requestResponse[GenericResponse](Delete(id))
-#
-# override def pause: Future[PauseResponse] = {
-#     postClient.requestResponse[PauseResponse](Pause)
-# }
-#
-# override def resume: Future[OkOrUnhandledResponse] = postClient.requestResponse[OkOrUnhandledResponse](Resume)
+    def isOnline(self) -> bool:
+        response = self._postCommand(IsOnline()._asDict())
+        if not response.ok:
+            return False
+        return response.json()
+
+    def add(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
+        response = self._postCommand(Add(commands)._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "Add", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
+    def prepend(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
+        response = self._postCommand(Prepend(commands)._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "Prepend", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
+    def replace(self, id: str, commands: List[SequenceCommand]) -> GenericResponse:
+        response = self._postCommand(Replace(id, commands)._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "Replace", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
+    def insertAfter(self, id: str, commands: List[SequenceCommand]) -> GenericResponse:
+        response = self._postCommand(InsertAfter(id, commands)._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "InsertAfter", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
+    def delete(self, id: str) -> GenericResponse:
+        response = self._postCommand(Delete(id)._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "Delete", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
+    def pause(self) -> PauseResponse:
+        response = self._postCommand(Pause()._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "Pause", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
+    def resume(self) -> PauseResponse:
+        response = self._postCommand(Resume()._asDict())
+        if not response.ok:
+            return Unhandled("Unknown", "Resume", f"Error: {response.text}")
+        return SequencerRes._fromDict(response.json())
+
 #
 # override def addBreakpoint(id: Id): Future[GenericResponse] =
 # postClient.requestResponse[GenericResponse](AddBreakpoint(id))

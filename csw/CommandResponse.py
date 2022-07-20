@@ -24,17 +24,21 @@ class CommandResponse:
 
     @staticmethod
     def _fromDict(obj: dict):
-        switcher = {
-            "Cancelled": Cancelled,
-            "Error": Error,
-            "Locked": Locked,
-            "Started": Started,
-            "Completed": Completed,
-            "Accepted": Accepted,
-            "Invalid": Invalid,
-        }
-        typ = obj["_type"]
-        return switcher[typ]._fromDict(obj)
+        match obj["_type"]:
+            case "Cancelled":
+                return Cancelled._fromDict(obj)
+            case "Error":
+                return Error._fromDict(obj)
+            case "Locked":
+                return Locked._fromDict(obj)
+            case "Started":
+                return Started._fromDict(obj)
+            case "Completed":
+                return Completed._fromDict(obj)
+            case "Accepted":
+                return Accepted._fromDict(obj)
+            case "Invalid":
+                return Invalid._fromDict(obj)
 
 
 @dataclass
