@@ -5,9 +5,8 @@ import requests
 from requests import Response
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
-from csw.ParameterSetType import SequenceCommand
 from csw.Prefix import Prefix
-from esw.SequencerRequest import SequencerRequest, GetSequence
+from esw.SequencerRequest import GetSequence
 from esw.StepList import StepList
 
 
@@ -29,14 +28,16 @@ class SequencerClient:
         baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
-        jsonStr = json.loads(json.dumps(data))
-        return requests.post(postUri, headers=headers, json=jsonStr)
+        jsonData = json.loads(json.dumps(data))
+        return requests.post(postUri, headers=headers, json=jsonData)
 
 
     def getSequence(self) -> StepList | None:
-        resp = self._postCommand(GetSequence._asDict())
-        pass
-    # postClient.requestResponse[Option[StepList]](GetSequence)
+        response = self._postCommand(GetSequence()._asDict())
+        if not response.ok:
+            return None
+        return StepList._fromDict(response.json())
+
 
 #     override def isAvailable: Future[Boolean] = postClient.requestResponse[Boolean](IsAvailable)
 #

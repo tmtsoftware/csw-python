@@ -39,8 +39,8 @@ class CommandService:
                 data = Validate(controlCommand)._asDict()
             case _:
                 data = Oneway(controlCommand)._asDict()
-        jsonStr = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonStr)
+        jsonData = json.loads(json.dumps(data))
+        response = requests.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
             runId = str(uuid.uuid4())
             return Error(runId, response.text)
