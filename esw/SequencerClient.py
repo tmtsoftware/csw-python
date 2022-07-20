@@ -6,6 +6,7 @@ from requests import Response
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
+from esw.Sequence import Sequence
 from esw.SequencerRequest import *
 from esw.SequencerRes import *
 from esw.StepList import StepList
@@ -86,15 +87,17 @@ class SequencerClient:
     def reset(self) -> OkOrUnhandledResponse:
         return self._postCommandGetResponse(Reset())
 
-# override def reset(): Future[OkOrUnhandledResponse] = postClient.requestResponse[OkOrUnhandledResponse](Reset)
-#
-# override def abortSequence(): Future[OkOrUnhandledResponse] =
-# postClient.requestResponse[OkOrUnhandledResponse](AbortSequence)
-#
-# override def stop(): Future[OkOrUnhandledResponse] =
-# postClient.requestResponse[OkOrUnhandledResponse](Stop)
-#
-# // commandApi
+    def abortSequence(self) -> OkOrUnhandledResponse:
+        return self._postCommandGetResponse(AbortSequence())
+
+    def stop(self) -> OkOrUnhandledResponse:
+        return self._postCommandGetResponse(Stop())
+
+# --- commandApi ---
+
+    def loadSequence(self, sequence: Sequence) -> OkOrUnhandledResponse:
+        return self._postCommandGetResponse(LoadSequence(sequence.commands))
+
 # override def loadSequence(sequence: Sequence): Future[OkOrUnhandledResponse] =
 # postClient.requestResponse[OkOrUnhandledResponse](LoadSequence(sequence))
 #

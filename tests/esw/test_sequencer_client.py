@@ -4,6 +4,7 @@ from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
+from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
 
 # Note: Before running this test, start the esw-observing-simulation and load the sequence
@@ -81,3 +82,24 @@ class TestSequencerClient:
         id = stepList.steps[0].id
         resp = self.seqClient.removeBreakpoint(id)
         assert (isinstance(resp, Ok))
+
+    def test_reset(self):
+        resp = self.seqClient.reset()
+        assert (isinstance(resp, Ok))
+
+    def test_abort_sequence(self):
+        resp = self.seqClient.abortSequence()
+        assert (isinstance(resp, Unhandled))
+
+    def test_stop(self):
+        resp = self.seqClient.stop()
+        assert (isinstance(resp, Unhandled))
+
+    def test_load_sequence(self):
+        setup1 = self._makeSetup("Test1")
+        setup2 = self._makeSetup("Test2")
+        setup3 = self._makeSetup("Test3")
+        sequence = Sequence([setup1, setup2, setup3])
+        resp = self.seqClient.loadSequence(sequence)
+        assert (isinstance(resp, Ok))
+
