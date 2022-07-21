@@ -1,9 +1,10 @@
 import json
-from dataclasses import dataclass
+from websocket import create_connection
 
 import requests
 from requests import Response
 
+from csw.CommandResponse import SubmitResponse, CommandResponse, Started
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
 from esw.Sequence import Sequence
@@ -11,8 +12,11 @@ from esw.SequencerRequest import *
 from esw.SequencerRes import *
 from esw.StepList import StepList
 
-
 # noinspection PyProtectedMember,PyShadowingBuiltins
+from esw.WsCommands import QueryFinal
+
+
+# noinspection DuplicatedCode,PyShadowingBuiltins
 @dataclass
 class SequencerClient:
     prefix: Prefix
@@ -93,42 +97,65 @@ class SequencerClient:
     def stop(self) -> OkOrUnhandledResponse:
         return self._postCommandGetResponse(Stop())
 
-# --- commandApi ---
+    # --- commandApi ---
 
     def loadSequence(self, sequence: Sequence) -> OkOrUnhandledResponse:
         return self._postCommandGetResponse(LoadSequence(sequence.commands))
 
-# override def loadSequence(sequence: Sequence): Future[OkOrUnhandledResponse] =
-# postClient.requestResponse[OkOrUnhandledResponse](LoadSequence(sequence))
-#
-# override def startSequence(): Future[SubmitResponse] = postClient.requestResponse[SubmitResponse](StartSequence)
-#
-# override def submit(sequence: Sequence): Future[SubmitResponse] =
-# postClient.requestResponse[SubmitResponse](Submit(sequence))
-#
-# override def submitAndWait(sequence: Sequence)(implicit timeout: Timeout): Future[SubmitResponse] =
-# extensions.submitAndWait(sequence)
-#
-# override def query(runId: Id): Future[SubmitResponse] =
-# postClient.requestResponse[SubmitResponse](Query(runId))
-#
-# override def queryFinal(runId: Id)(implicit timeout: Timeout): Future[SubmitResponse] =
-# websocketClient.requestResponse[SubmitResponse](QueryFinal(runId, timeout), timeout.duration)
-#
-# override def goOnline(): Future[GoOnlineResponse] = postClient.requestResponse[GoOnlineResponse](GoOnline)
-#
-# override def goOffline(): Future[GoOfflineResponse] = postClient.requestResponse[GoOfflineResponse](GoOffline)
-#
-# override def diagnosticMode(startTime: UTCTime, hint: String): Future[DiagnosticModeResponse] =
-# postClient.requestResponse[DiagnosticModeResponse](DiagnosticMode(startTime, hint))
-#
-# override def operationsMode(): Future[OperationsModeResponse] =
-# postClient.requestResponse[OperationsModeResponse](OperationsMode)
-#
-# override def getSequenceComponent: Future[AkkaLocation] = postClient.requestResponse[AkkaLocation](GetSequenceComponent)
-#
-# override def getSequencerState: Future[SequencerState] =
-# postClient.requestResponse[SequencerState](GetSequencerState)
-#
-# override def subscribeSequencerState(): Source[SequencerStateResponse, Subscription] =
-# websocketClient.requestStream[SequencerStateResponse](SubscribeSequencerState)
+    def startSequence(self) -> SubmitResponse:
+        return self._postCommandGetResponse(StartSequence())
+
+    def submit(self, sequence: Sequence) -> SubmitResponse:
+        return self._postCommandGetResponse(Submit(sequence.commands))
+
+    def query(self, id: str) -> SubmitResponse:
+        return self._postCommandGetResponse(Query(id))
+
+    def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(respDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
+
+    def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:
+        resp = self.submit(sequence)
+        match resp:
+            case Started(runId):
+                return self.queryFinal(runId, timeoutInSeconds)
+            case _:
+                return resp
+
+    def goOnline(self) -> GoOnlineResponse:
+        return self._postCommandGetResponse(GoOnline())
+
+    def goOffline(self) -> GoOfflineResponse:
+        return self._postCommandGetResponse(GoOffline())
+
+    def diagnosticMode(self, startTime: UTCTime, hint: str) -> DiagnosticModeResponse:
+        return self._postCommandGetResponse(DiagnosticMode(startTime, hint))
+
+    def operationsMode(self) -> OperationsModeResponse:
+        return self._postCommandGetResponse(OperationsMode())
+
+    def getSequencerState(self) -> SequencerState:
+        response = self._postCommand(GetSequencerState()._asDict())
+        if not response.ok:
+            return SequencerState.Offline
+        match response.json()["_type"]:
+            case "Idle":
+                return SequencerState.Idle
+            case "Processing":
+                return SequencerState.Processing
+            case "Loaded":
+                return SequencerState.Loaded
+            case "Offline":
+                return SequencerState.Offline
+            case "Running":
+                return SequencerState.Running
+
+    # def subscribeSequencerState(self):
+    #     xxx websocket ... = SubscribeSequencerState()

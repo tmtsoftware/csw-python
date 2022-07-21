@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 
 
 @dataclass
@@ -97,3 +98,10 @@ GoOnlineResponse = OkOrUnhandledResponse | GoOnlineHookFailed
 GoOfflineResponse = OkOrUnhandledResponse | GoOfflineHookFailed
 DiagnosticModeResponse = Ok | DiagnosticHookFailed
 OperationsModeResponse = Ok | OperationsHookFailed
+
+class SequencerState(Enum):
+    Idle = 1
+    Processing = 2
+    Loaded = 3
+    Offline = 4
+    Running = 5

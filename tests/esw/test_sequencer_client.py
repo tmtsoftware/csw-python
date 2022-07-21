@@ -87,6 +87,10 @@ class TestSequencerClient:
         resp = self.seqClient.reset()
         assert (isinstance(resp, Ok))
 
+    def test_start_sequence(self):
+        resp = self.seqClient.startSequence()
+        assert (isinstance(resp, Ok))
+
     def test_abort_sequence(self):
         resp = self.seqClient.abortSequence()
         assert (isinstance(resp, Unhandled))
@@ -102,4 +106,5 @@ class TestSequencerClient:
         sequence = Sequence([setup1, setup2, setup3])
         resp = self.seqClient.loadSequence(sequence)
         assert (isinstance(resp, Ok))
+
 

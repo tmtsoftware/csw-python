@@ -23,7 +23,7 @@ __pdoc__ = {}
 
 # XXX This class is in progress, not implemented yet
 
-# noinspection PyProtectedMember
+# noinspection PyProtectedMember,PyShadowingBuiltins
 class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
@@ -45,19 +45,19 @@ class SequencerServer:
                 pass
             case Prepend(commands):
                 pass
-            case Replace(id_, commands):
+            case Replace(id, commands):
                 pass
-            case InsertAfter(id_, commands):
+            case InsertAfter(id, commands):
                 pass
-            case Delete(id_):
+            case Delete(id):
                 pass
             case Pause():
                 pass
             case Resume():
                 pass
-            case AddBreakpoint(id_):
+            case AddBreakpoint(id):
                 pass
-            case RemoveBreakpoint(id_):
+            case RemoveBreakpoint(id):
                 pass
             case Reset():
                 pass
