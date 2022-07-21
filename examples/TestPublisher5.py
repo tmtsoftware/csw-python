@@ -10,7 +10,7 @@ from csw.TAITime import TAITime
 prefix = Prefix(Subsystems.CSW, "testassembly")
 eventName = EventName("myAssemblyEvent")
 
-param = TAITimeKey.make("assemblyEventValue").set(TAITime.fromSystem())
+param = TAITimeKey.make("assemblyEventValue").set(TAITime.now())
 paramSet = [param]
 
 event = SystemEvent(prefix, eventName, paramSet)

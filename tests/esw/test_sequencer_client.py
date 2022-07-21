@@ -1,29 +1,32 @@
 import pytest
 
+from csw.CommandResponse import Started, Error
 from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystems
+from csw.UTCTime import UTCTime
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
 
 # Note: Before running this test, start the esw-observing-simulation and load the sequence
 # "esw_imager_only_sequence.json".
 
-# @pytest.mark.skip(reason="Requires running ESW observing simulation from the esw-observing-simulation repo")
-from esw.SequencerRes import Ok, Unhandled
+from esw.SequencerRes import Ok, Unhandled, SequencerState
 
 
 # noinspection PyShadowingBuiltins
+@pytest.mark.skip(reason="Requires running ESW observing simulation from the esw-observing-simulation repo")
 class TestSequencerClient:
-    seqClient = SequencerClient(Prefix(Subsystems.ESW, "IRIS_ImagerOnly"))
-    prefix = Prefix(Subsystems.CSW, "TestClient")
+    sequencerPrefix = Prefix(Subsystems.ESW, "IRIS_ImagerOnly")
+    seqClient = SequencerClient(sequencerPrefix)
+    clientPrefix = Prefix(Subsystems.CSW, "TestClient")
     maybeObsId = []
     param = IntKey.make("testValue").set(42)
     paramSet = [param]
 
     def _makeSetup(self, name: str):
-        return Setup(self.prefix, CommandName(name), self.maybeObsId, self.paramSet)
+        return Setup(self.clientPrefix, CommandName(name), self.maybeObsId, self.paramSet)
 
     def test_get_sequence(self):
         stepList = self.seqClient.getSequence()
@@ -77,6 +80,10 @@ class TestSequencerClient:
         resp = self.seqClient.addBreakpoint(id)
         assert (isinstance(resp, Ok))
 
+    # def test_start_sequence(self):
+    #     resp = self.seqClient.startSequence()
+    #     assert (isinstance(resp, Ok))
+
     def test_remove_breakpoint(self):
         stepList = self.seqClient.getSequence()
         id = stepList.steps[0].id
@@ -85,10 +92,6 @@ class TestSequencerClient:
 
     def test_reset(self):
         resp = self.seqClient.reset()
-        assert (isinstance(resp, Ok))
-
-    def test_start_sequence(self):
-        resp = self.seqClient.startSequence()
         assert (isinstance(resp, Ok))
 
     def test_abort_sequence(self):
@@ -107,4 +110,46 @@ class TestSequencerClient:
         resp = self.seqClient.loadSequence(sequence)
         assert (isinstance(resp, Ok))
 
+    def test_submit(self):
+        setup = self._makeSetup("Test")
+        resp = self.seqClient.submit(Sequence([setup]))
+        assert (isinstance(resp, Started))
 
+    def test_query(self):
+        setup = self._makeSetup("Test")
+        resp1 = self.seqClient.submit(Sequence([setup]))
+        resp2 = self.seqClient.query(resp1.runId)
+        assert (isinstance(resp1, Started))
+        assert (isinstance(resp2, Error))
+
+    def test_query_final(self):
+        setup = self._makeSetup("Test")
+        resp1 = self.seqClient.submit(Sequence([setup]))
+        resp2 = self.seqClient.queryFinal(resp1.runId, 2)
+        assert (isinstance(resp1, Started))
+        assert (isinstance(resp2, Error))
+
+    def test_submit_and_wait(self):
+        setup = self._makeSetup("Test")
+        resp = self.seqClient.submitAndWait(Sequence([setup]), 2)
+        assert (isinstance(resp, Error))
+
+    def test_go_offline(self):
+        resp = self.seqClient.goOffline()
+        assert (isinstance(resp, Ok))
+
+    def test_go_online(self):
+        resp = self.seqClient.goOnline()
+        assert (isinstance(resp, Ok))
+
+    def test_diagnostic_mode(self):
+        resp = self.seqClient.diagnosticMode(UTCTime.now(), "some hint")
+        assert (isinstance(resp, Ok))
+
+    def test_operations_mode(self):
+        resp = self.seqClient.operationsMode()
+        assert (isinstance(resp, Ok))
+
+    def test_get_sequencer_state(self):
+        resp = self.seqClient.getSequencerState()
+        assert (resp == SequencerState.Idle)

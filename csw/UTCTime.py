@@ -33,7 +33,7 @@ class UTCTime:
         return UTCTime(seconds, nanos)
 
     @staticmethod
-    def fromSystem():
+    def now():
         """
         Returns a UTCTime with the current time.
         """

@@ -30,7 +30,7 @@ class Event:
     source: Prefix
     eventName: EventName
     paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.fromSystem()
+    eventTime: EventTime = EventTime.now()
     eventId: str = str(uuid.uuid4())
 
     @abstractmethod

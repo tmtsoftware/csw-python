@@ -22,6 +22,6 @@ class Prefix:
         return f"{self.subsystem.name}.{self.componentName}"
 
     @classmethod
-    def from_str(class_object, prefixStr: str):
+    def from_str(cls, prefixStr: str):
         [s, c] = prefixStr.split('.', 1)
-        return class_object(Subsystems[s.upper()], c)
+        return cls(Subsystems[s.upper()], c)

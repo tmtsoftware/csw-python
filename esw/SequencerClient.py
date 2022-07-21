@@ -1,10 +1,13 @@
 import json
+import uuid
+
 from websocket import create_connection
+from dataclasses import dataclass
 
 import requests
 from requests import Response
 
-from csw.CommandResponse import SubmitResponse, CommandResponse, Started
+from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
 from esw.Sequence import Sequence
@@ -106,15 +109,23 @@ class SequencerClient:
         return self._postCommandGetResponse(StartSequence())
 
     def submit(self, sequence: Sequence) -> SubmitResponse:
-        return self._postCommandGetResponse(Submit(sequence.commands))
+        response = self._postCommand(Submit(sequence.commands)._asDict())
+        if not response.ok:
+            runId = str(uuid.uuid4())
+            return Error(runId, response.text)
+        return CommandResponse._fromDict(response.json())
 
     def query(self, id: str) -> SubmitResponse:
-        return self._postCommandGetResponse(Query(id))
+        response = self._postCommand(Query(id)._asDict())
+        if not response.ok:
+            runId = str(uuid.uuid4())
+            return Error(runId, response.text)
+        return CommandResponse._fromDict(response.json())
 
     def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
         jsonStr = json.dumps(respDict)
         ws = create_connection(wsUri)
         ws.send(jsonStr)

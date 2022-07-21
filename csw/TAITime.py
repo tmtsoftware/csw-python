@@ -35,7 +35,7 @@ class TAITime:
         return TAITime(seconds, nanos)
 
     @staticmethod
-    def fromSystem():
+    def now():
         """
         Returns a TAITime with the current time.
         """

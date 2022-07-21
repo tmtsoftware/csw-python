@@ -23,7 +23,7 @@ class EventTime:
         return EventTime(**obj)
 
     @staticmethod
-    def fromSystem():
+    def now():
         """
         Returns an EventTime with the current time.
         """

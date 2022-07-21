@@ -349,7 +349,7 @@ class DiagnosticMode(SequencerRequest):
         """
         return {
             "_type": self.__class__.__name__,
-            "startTime": self.startTime._asDict(),
+            "startTime": str(self.startTime),
             "hint": self.hint,
         }
 
@@ -384,7 +384,25 @@ class Submit(SequencerRequest):
         }
 
 
-@dataclass_json
 @dataclass
 class Query(SequencerRequest):
     runId: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an Add object for the given dict.
+        """
+        runId = obj['runId']
+        return Query(runId)
+
+    def _asDict(self) -> dict:
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "runId": self.runId
+        }

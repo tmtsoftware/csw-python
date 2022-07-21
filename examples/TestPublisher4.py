@@ -10,7 +10,7 @@ from csw.UTCTime import UTCTime
 prefix = Prefix(Subsystems.CSW, "testassembly")
 eventName = EventName("myAssemblyEvent")
 
-param = UTCTimeKey.make("assemblyEventValue").set(UTCTime.fromSystem())
+param = UTCTimeKey.make("assemblyEventValue").set(UTCTime.now())
 paramSet = [param]
 event = SystemEvent(prefix, eventName, paramSet)
 pub = EventPublisher()
