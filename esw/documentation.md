@@ -14,8 +14,10 @@ with the difference that in some cases the Python types are simpler, due to less
 
 ## ESW Shell
 
-The esw-shell command provides an interactive shell with predefined imports
-where you can type in CSW and ESW commands. The following example publishes an event:
+The `esw-shell.sh` script provides an interactive shell with predefined imports
+where you can type in CSW and ESW commands. 
+It is meant to be run from the top level csw-python directory.
+The following example publishes an event:
 
 ```bash
 > esw-shell.sh
@@ -63,14 +65,6 @@ async def foo:
 Assuming a sequencer is running, you can control it from Python using the ESW Sequencer Client (see [SequencerClient](SequencerClient.html)):
 
 ```python
-from csw.Parameter import IntKey
-from csw.ParameterSetType import Setup, CommandName
-from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
-from esw.Sequence import Sequence
-from esw.SequencerClient import SequencerClient
-from esw.SequencerRes import Ok
-
 sequencerPrefix = Prefix(Subsystems.ESW, "IRIS_ImagerOnly")
 seqClient = SequencerClient(sequencerPrefix)
 clientPrefix = Prefix(Subsystems.CSW, "TestClient")
@@ -89,4 +83,5 @@ resp = seqClient.loadSequence(sequence)
 assert (isinstance(resp, Ok))
 ```
 
+The above code can also be copy/pasted into the Python based `esw-shell` (esw-shell.sh).
 See tests/esw/test_sequencer_client.py for some examples.

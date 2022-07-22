@@ -18,6 +18,13 @@ from csw.Units import Units
 from csw.Coords import *
 from csw.CurrentState import CurrentState
 
+from esw.Sequence import Sequence
+from esw.SequencerClient import SequencerClient
+from esw.SequencerRes import *
+from esw.StepList import StepList
+from esw.Step import Step
+from esw.StepStatus import *
+
 
 def hcdCommandService(prefix: str) -> CommandService:
     return CommandService(Prefix.from_str(prefix), ComponentType.HCD)
