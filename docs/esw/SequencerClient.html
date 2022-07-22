@@ -1,0 +1,1536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>esw.SequencerClient API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>esw.SequencerClient</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import json
+import uuid
+
+from websocket import create_connection
+from dataclasses import dataclass
+
+import requests
+from requests import Response
+
+from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
+from csw.Prefix import Prefix
+from esw.Sequence import Sequence
+from esw.SequencerRequest import *
+from esw.SequencerRes import *
+from esw.StepList import StepList
+
+# noinspection PyProtectedMember,PyShadowingBuiltins
+from esw.WsCommands import QueryFinal
+
+
+# noinspection DuplicatedCode,PyShadowingBuiltins
+@dataclass
+class SequencerClient:
+    prefix: Prefix
+
+    def _getBaseUri(self) -&gt; str:
+        locationService = LocationService()
+        connection = ConnectionInfo.make(self.prefix, ComponentType.Sequencer, ConnectionType.HttpType)
+        location = locationService.resolve(connection)
+        if location is not None:
+            location.__class__ = HttpLocation
+            return location.uri
+        raise RuntimeError
+
+    def _postCommand(self, data: dict) -&gt; Response:
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        jsonData = json.loads(json.dumps(data))
+        return requests.post(postUri, headers=headers, json=jsonData)
+
+    def _postCommandGetResponse(self, request: SequencerRequest) -&gt; SequencerRes:
+        response = self._postCommand(request._asDict())
+        if not response.ok:
+            return Unhandled(&#34;Unknown&#34;, request.__class__.__name__, f&#34;Error: {response.text}&#34;)
+        return SequencerRes._fromDict(response.json())
+
+    def getSequence(self) -&gt; StepList | None:
+        &#34;&#34;&#34;
+        Get the sequence in sequencer - current or last.
+        If there is no sequence
+        then None response is returned
+        otherwise a StepList is returned.
+
+        Returns: StepList
+            a list of steps in the sequence
+       &#34;&#34;&#34;
+        response = self._postCommand(GetSequence()._asDict())
+        if not response.ok:
+            return None
+        return StepList._fromDict(response.json())
+
+    def isAvailable(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Checks if sequencer is in Idle state.
+
+        Returns: bool
+            true if the sequencer is available
+       &#34;&#34;&#34;
+        response = self._postCommand(IsAvailable()._asDict())
+        if not response.ok:
+            return False
+        return response.json()
+
+    def isOnline(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Checks if sequencer is in Online(any state except Offline) state
+
+        Returns: bool
+            true if the sequencer is online
+       &#34;&#34;&#34;
+        response = self._postCommand(IsOnline()._asDict())
+        if not response.ok:
+            return False
+        return response.json()
+
+    def add(self, commands: List[SequenceCommand]) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Adds the given list of sequence commands at the end of the sequencee
+
+        Args:
+            commands (List[SequenceCommand]): list of SequenceCommand to add in the sequence of sequencer
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Add(commands))
+
+    def prepend(self, commands: List[SequenceCommand]) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Prepends the given list of sequence commands in the sequence
+
+        Args:
+            commands (List[SequenceCommand]): list of SequenceCommand to prepend in the sequence of sequencer
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Prepend(commands))
+
+    def replace(self, id: str, commands: List[SequenceCommand]) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Replaces the command of the given id with the given list of sequence commands in the sequence
+
+        Args:
+            id (str): runId of command which is to be replaced
+            commands (List[SequenceCommand]): list of SequenceCommand to replace with
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Replace(id, commands))
+
+    def insertAfter(self, id: str, commands: List[SequenceCommand]) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Inserts the given list of sequence commands after the command of given id in the sequence
+
+        Args:
+            id (str): runId of command after which the given list of commands is to be inserted
+            commands (List[SequenceCommand]): list of SequenceCommand to be inserted
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(InsertAfter(id, commands))
+
+    def delete(self, id: str) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Deletes the command of the given id in the sequence
+
+        Args:
+            id (str): runId of the command which is to be deleted
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Delete(id))
+
+    def pause(self) -&gt; PauseResponse:
+        &#34;&#34;&#34;
+        Pauses the running sequence
+
+        Returns: PauseResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Pause())
+
+    def resume(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Resumes the paused sequence
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Resume())
+
+    def addBreakpoint(self, id: str) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Adds a breakpoint at the command of the given id in the sequence
+
+        Args:
+            id (str): runId of the command where breakpoint is to be added
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(AddBreakpoint(id))
+
+    def removeBreakpoint(self, id: str) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+       Removes a breakpoint from the command of the given id in the sequence
+
+       Args:
+           id (str): runId of command where breakpoint is set
+
+       Returns: GenericResponse
+      &#34;&#34;&#34;
+        return self._postCommandGetResponse(RemoveBreakpoint(id))
+
+    def reset(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Resets the sequence by discarding all the pending steps of the sequence
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Reset())
+
+    def abortSequence(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Discards all the pending steps of the sequence and call the abort handler of the sequencer&#39;s script
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(AbortSequence())
+
+    def stop(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Discards all the pending steps of the sequence and call the stop handler of the sequencer&#39;s script
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Stop())
+
+    # --- commandApi ---
+
+    def loadSequence(self, sequence: Sequence) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Loads the given sequence to the sequencer.
+        If the sequencer is in Idle or Loaded state
+        then Ok response is returned
+        otherwise Unhandled response is returned
+
+        Args:
+           sequence (Sequence): sequence to run on the sequencer
+
+        Returns: OkOrUnhandledResponse
+      &#34;&#34;&#34;
+        return self._postCommandGetResponse(LoadSequence(sequence.commands))
+
+    def startSequence(self) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Starts the loaded sequence in the sequencer.
+        If the sequencer is loaded then a Started response is returned.
+        If the sequencer is already running another sequence, an Invalid response is returned.
+
+        Returns: SubmitResponse
+            an initial SubmitResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(StartSequence())
+
+    def submit(self, sequence: Sequence) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits the given sequence to the sequencer.
+        If the sequencer is idle, the provided sequence is loaded in the sequencer and execution of the sequence
+        starts immediately, and a Started response is returned.
+        If the sequencer is already running another sequence, an Invalid response is returned.
+
+        Args:
+           sequence (Sequence): sequence to run on the sequencer
+
+        Returns: SubmitResponse
+            initial response
+      &#34;&#34;&#34;
+        response = self._postCommand(Submit(sequence.commands)._asDict())
+        if not response.ok:
+            runId = str(uuid.uuid4())
+            return Error(runId, response.text)
+        return CommandResponse._fromDict(response.json())
+
+    def query(self, id: str) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Query for the result of the sequence which was submitted to get a SubmitResponse.
+        Query allows checking to see if the long-running sequence is completed without waiting as with queryFinal.
+
+        Args:
+           id (str): runId of the sequence under execution
+
+        Returns: SubmitResponse
+      &#34;&#34;&#34;
+        response = self._postCommand(Query(id)._asDict())
+        if not response.ok:
+            runId = str(uuid.uuid4())
+            return Error(runId, response.text)
+        return CommandResponse._fromDict(response.json())
+
+    def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Query for the final result of a long-running sequence which was sent through submit().
+
+        Args:
+           id (str): runId of the sequence under execution
+           timeoutInSeconds (int): max-time in secs to wait for a final response
+
+        Returns: SubmitResponse
+            The final submit response
+      &#34;&#34;&#34;
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
+        jsonStr = json.dumps(respDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
+
+    def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
+        &#39;Started&#39;.
+        If the sequencer is idle, the provided sequence will be submitted to the sequencer and the final response will
+        be returned.
+        If the sequencer is already running another sequence, an &#39;Invalid&#39; response is returned.
+
+        Args:
+           sequence (Sequence): sequence to run on the sequencer
+           timeoutInSeconds (int): max-time in secs to wait for a final response
+
+        Returns: SubmitResponse
+            The final submit response
+      &#34;&#34;&#34;
+        resp = self.submit(sequence)
+        match resp:
+            case Started(runId):
+                return self.queryFinal(runId, timeoutInSeconds)
+            case _:
+                return resp
+
+    def goOnline(self) -&gt; GoOnlineResponse:
+        &#34;&#34;&#34;
+        sends command to the sequencer to go in Online state if it is in Offline state
+
+        Returns: GoOnlineResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(GoOnline())
+
+    def goOffline(self) -&gt; GoOfflineResponse:
+        &#34;&#34;&#34;
+        sends command to the sequencer to go in Offline state if it is in Online state
+
+        Returns: GoOfflineResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(GoOffline())
+
+    def diagnosticMode(self, startTime: UTCTime, hint: str) -&gt; DiagnosticModeResponse:
+        &#34;&#34;&#34;
+        Sends command to the sequencer to call the diagnostic mode handler of the sequencer&#39;s script
+
+        Args:
+           startTime (UTCTime): time at which the diagnostic mode will take effect
+           hint (str): String to support diagnostic data mode
+
+        Returns: DiagnosticModeResponse
+      &#34;&#34;&#34;
+        return self._postCommandGetResponse(DiagnosticMode(startTime, hint))
+
+    def operationsMode(self) -&gt; OperationsModeResponse:
+        &#34;&#34;&#34;
+        Sends command to the sequencer to call the operations mode handler of the sequencer&#39;s script
+
+        Returns: OperationsModeResponse
+        &#34;&#34;&#34;
+        return self._postCommandGetResponse(OperationsMode())
+
+    def getSequencerState(self) -&gt; SequencerState:
+        &#34;&#34;&#34;
+        Returns the current state of the sequencer (Idle, Loaded, Offline, Running, Processing)
+
+        Returns: SequencerState
+        &#34;&#34;&#34;
+        response = self._postCommand(GetSequencerState()._asDict())
+        if not response.ok:
+            return SequencerState.Offline
+        match response.json()[&#34;_type&#34;]:
+            case &#34;Idle&#34;:
+                return SequencerState.Idle
+            case &#34;Processing&#34;:
+                return SequencerState.Processing
+            case &#34;Loaded&#34;:
+                return SequencerState.Loaded
+            case &#34;Offline&#34;:
+                return SequencerState.Offline
+            case &#34;Running&#34;:
+                return SequencerState.Running
+
+    # def subscribeSequencerState(self):
+    #     xxx websocket ... = SubscribeSequencerState()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="esw.SequencerClient.SequencerClient"><code class="flex name class">
+<span>class <span class="ident">SequencerClient</span></span>
+<span>(</span><span>prefix: csw.Prefix.Prefix)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerClient(prefix: csw.Prefix.Prefix)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SequencerClient:
+    prefix: Prefix
+
+    def _getBaseUri(self) -&gt; str:
+        locationService = LocationService()
+        connection = ConnectionInfo.make(self.prefix, ComponentType.Sequencer, ConnectionType.HttpType)
+        location = locationService.resolve(connection)
+        if location is not None:
+            location.__class__ = HttpLocation
+            return location.uri
+        raise RuntimeError
+
+    def _postCommand(self, data: dict) -&gt; Response:
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        jsonData = json.loads(json.dumps(data))
+        return requests.post(postUri, headers=headers, json=jsonData)
+
+    def _postCommandGetResponse(self, request: SequencerRequest) -&gt; SequencerRes:
+        response = self._postCommand(request._asDict())
+        if not response.ok:
+            return Unhandled(&#34;Unknown&#34;, request.__class__.__name__, f&#34;Error: {response.text}&#34;)
+        return SequencerRes._fromDict(response.json())
+
+    def getSequence(self) -&gt; StepList | None:
+        &#34;&#34;&#34;
+        Get the sequence in sequencer - current or last.
+        If there is no sequence
+        then None response is returned
+        otherwise a StepList is returned.
+
+        Returns: StepList
+            a list of steps in the sequence
+       &#34;&#34;&#34;
+        response = self._postCommand(GetSequence()._asDict())
+        if not response.ok:
+            return None
+        return StepList._fromDict(response.json())
+
+    def isAvailable(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Checks if sequencer is in Idle state.
+
+        Returns: bool
+            true if the sequencer is available
+       &#34;&#34;&#34;
+        response = self._postCommand(IsAvailable()._asDict())
+        if not response.ok:
+            return False
+        return response.json()
+
+    def isOnline(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Checks if sequencer is in Online(any state except Offline) state
+
+        Returns: bool
+            true if the sequencer is online
+       &#34;&#34;&#34;
+        response = self._postCommand(IsOnline()._asDict())
+        if not response.ok:
+            return False
+        return response.json()
+
+    def add(self, commands: List[SequenceCommand]) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Adds the given list of sequence commands at the end of the sequencee
+
+        Args:
+            commands (List[SequenceCommand]): list of SequenceCommand to add in the sequence of sequencer
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Add(commands))
+
+    def prepend(self, commands: List[SequenceCommand]) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Prepends the given list of sequence commands in the sequence
+
+        Args:
+            commands (List[SequenceCommand]): list of SequenceCommand to prepend in the sequence of sequencer
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Prepend(commands))
+
+    def replace(self, id: str, commands: List[SequenceCommand]) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Replaces the command of the given id with the given list of sequence commands in the sequence
+
+        Args:
+            id (str): runId of command which is to be replaced
+            commands (List[SequenceCommand]): list of SequenceCommand to replace with
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Replace(id, commands))
+
+    def insertAfter(self, id: str, commands: List[SequenceCommand]) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Inserts the given list of sequence commands after the command of given id in the sequence
+
+        Args:
+            id (str): runId of command after which the given list of commands is to be inserted
+            commands (List[SequenceCommand]): list of SequenceCommand to be inserted
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(InsertAfter(id, commands))
+
+    def delete(self, id: str) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Deletes the command of the given id in the sequence
+
+        Args:
+            id (str): runId of the command which is to be deleted
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Delete(id))
+
+    def pause(self) -&gt; PauseResponse:
+        &#34;&#34;&#34;
+        Pauses the running sequence
+
+        Returns: PauseResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Pause())
+
+    def resume(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Resumes the paused sequence
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Resume())
+
+    def addBreakpoint(self, id: str) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+        Adds a breakpoint at the command of the given id in the sequence
+
+        Args:
+            id (str): runId of the command where breakpoint is to be added
+
+        Returns: GenericResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(AddBreakpoint(id))
+
+    def removeBreakpoint(self, id: str) -&gt; GenericResponse:
+        &#34;&#34;&#34;
+       Removes a breakpoint from the command of the given id in the sequence
+
+       Args:
+           id (str): runId of command where breakpoint is set
+
+       Returns: GenericResponse
+      &#34;&#34;&#34;
+        return self._postCommandGetResponse(RemoveBreakpoint(id))
+
+    def reset(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Resets the sequence by discarding all the pending steps of the sequence
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Reset())
+
+    def abortSequence(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Discards all the pending steps of the sequence and call the abort handler of the sequencer&#39;s script
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(AbortSequence())
+
+    def stop(self) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Discards all the pending steps of the sequence and call the stop handler of the sequencer&#39;s script
+
+        Returns: OkOrUnhandledResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(Stop())
+
+    # --- commandApi ---
+
+    def loadSequence(self, sequence: Sequence) -&gt; OkOrUnhandledResponse:
+        &#34;&#34;&#34;
+        Loads the given sequence to the sequencer.
+        If the sequencer is in Idle or Loaded state
+        then Ok response is returned
+        otherwise Unhandled response is returned
+
+        Args:
+           sequence (Sequence): sequence to run on the sequencer
+
+        Returns: OkOrUnhandledResponse
+      &#34;&#34;&#34;
+        return self._postCommandGetResponse(LoadSequence(sequence.commands))
+
+    def startSequence(self) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Starts the loaded sequence in the sequencer.
+        If the sequencer is loaded then a Started response is returned.
+        If the sequencer is already running another sequence, an Invalid response is returned.
+
+        Returns: SubmitResponse
+            an initial SubmitResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(StartSequence())
+
+    def submit(self, sequence: Sequence) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submits the given sequence to the sequencer.
+        If the sequencer is idle, the provided sequence is loaded in the sequencer and execution of the sequence
+        starts immediately, and a Started response is returned.
+        If the sequencer is already running another sequence, an Invalid response is returned.
+
+        Args:
+           sequence (Sequence): sequence to run on the sequencer
+
+        Returns: SubmitResponse
+            initial response
+      &#34;&#34;&#34;
+        response = self._postCommand(Submit(sequence.commands)._asDict())
+        if not response.ok:
+            runId = str(uuid.uuid4())
+            return Error(runId, response.text)
+        return CommandResponse._fromDict(response.json())
+
+    def query(self, id: str) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Query for the result of the sequence which was submitted to get a SubmitResponse.
+        Query allows checking to see if the long-running sequence is completed without waiting as with queryFinal.
+
+        Args:
+           id (str): runId of the sequence under execution
+
+        Returns: SubmitResponse
+      &#34;&#34;&#34;
+        response = self._postCommand(Query(id)._asDict())
+        if not response.ok:
+            runId = str(uuid.uuid4())
+            return Error(runId, response.text)
+        return CommandResponse._fromDict(response.json())
+
+    def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Query for the final result of a long-running sequence which was sent through submit().
+
+        Args:
+           id (str): runId of the sequence under execution
+           timeoutInSeconds (int): max-time in secs to wait for a final response
+
+        Returns: SubmitResponse
+            The final submit response
+      &#34;&#34;&#34;
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
+        jsonStr = json.dumps(respDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
+
+    def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -&gt; SubmitResponse:
+        &#34;&#34;&#34;
+        Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
+        &#39;Started&#39;.
+        If the sequencer is idle, the provided sequence will be submitted to the sequencer and the final response will
+        be returned.
+        If the sequencer is already running another sequence, an &#39;Invalid&#39; response is returned.
+
+        Args:
+           sequence (Sequence): sequence to run on the sequencer
+           timeoutInSeconds (int): max-time in secs to wait for a final response
+
+        Returns: SubmitResponse
+            The final submit response
+      &#34;&#34;&#34;
+        resp = self.submit(sequence)
+        match resp:
+            case Started(runId):
+                return self.queryFinal(runId, timeoutInSeconds)
+            case _:
+                return resp
+
+    def goOnline(self) -&gt; GoOnlineResponse:
+        &#34;&#34;&#34;
+        sends command to the sequencer to go in Online state if it is in Offline state
+
+        Returns: GoOnlineResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(GoOnline())
+
+    def goOffline(self) -&gt; GoOfflineResponse:
+        &#34;&#34;&#34;
+        sends command to the sequencer to go in Offline state if it is in Online state
+
+        Returns: GoOfflineResponse
+       &#34;&#34;&#34;
+        return self._postCommandGetResponse(GoOffline())
+
+    def diagnosticMode(self, startTime: UTCTime, hint: str) -&gt; DiagnosticModeResponse:
+        &#34;&#34;&#34;
+        Sends command to the sequencer to call the diagnostic mode handler of the sequencer&#39;s script
+
+        Args:
+           startTime (UTCTime): time at which the diagnostic mode will take effect
+           hint (str): String to support diagnostic data mode
+
+        Returns: DiagnosticModeResponse
+      &#34;&#34;&#34;
+        return self._postCommandGetResponse(DiagnosticMode(startTime, hint))
+
+    def operationsMode(self) -&gt; OperationsModeResponse:
+        &#34;&#34;&#34;
+        Sends command to the sequencer to call the operations mode handler of the sequencer&#39;s script
+
+        Returns: OperationsModeResponse
+        &#34;&#34;&#34;
+        return self._postCommandGetResponse(OperationsMode())
+
+    def getSequencerState(self) -&gt; SequencerState:
+        &#34;&#34;&#34;
+        Returns the current state of the sequencer (Idle, Loaded, Offline, Running, Processing)
+
+        Returns: SequencerState
+        &#34;&#34;&#34;
+        response = self._postCommand(GetSequencerState()._asDict())
+        if not response.ok:
+            return SequencerState.Offline
+        match response.json()[&#34;_type&#34;]:
+            case &#34;Idle&#34;:
+                return SequencerState.Idle
+            case &#34;Processing&#34;:
+                return SequencerState.Processing
+            case &#34;Loaded&#34;:
+                return SequencerState.Loaded
+            case &#34;Offline&#34;:
+                return SequencerState.Offline
+            case &#34;Running&#34;:
+                return SequencerState.Running
+
+    # def subscribeSequencerState(self):
+    #     xxx websocket ... = SubscribeSequencerState()</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerClient.SequencerClient.prefix"><code class="name">var <span class="ident">prefix</span> : csw.Prefix.Prefix</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="esw.SequencerClient.SequencerClient.abortSequence"><code class="name flex">
+<span>def <span class="ident">abortSequence</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Discards all the pending steps of the sequence and call the abort handler of the sequencer's script</p>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def abortSequence(self) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Discards all the pending steps of the sequence and call the abort handler of the sequencer&#39;s script
+
+    Returns: OkOrUnhandledResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(AbortSequence())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, commands: List[csw.ParameterSetType.SequenceCommand]) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds the given list of sequence commands at the end of the sequencee</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>commands</code></strong> :&ensp;<code>List[SequenceCommand]</code></dt>
+<dd>list of SequenceCommand to add in the sequence of sequencer</dd>
+</dl>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, commands: List[SequenceCommand]) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Adds the given list of sequence commands at the end of the sequencee
+
+    Args:
+        commands (List[SequenceCommand]): list of SequenceCommand to add in the sequence of sequencer
+
+    Returns: OkOrUnhandledResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Add(commands))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.addBreakpoint"><code class="name flex">
+<span>def <span class="ident">addBreakpoint</span></span>(<span>self, id: str) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.IdDoesNotExist" href="SequencerRes.html#esw.SequencerRes.IdDoesNotExist">IdDoesNotExist</a> | <a title="esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep" href="SequencerRes.html#esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep">CannotOperateOnAnInFlightOrFinishedStep</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a breakpoint at the command of the given id in the sequence</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of the command where breakpoint is to be added</dd>
+</dl>
+<p>Returns: GenericResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addBreakpoint(self, id: str) -&gt; GenericResponse:
+    &#34;&#34;&#34;
+    Adds a breakpoint at the command of the given id in the sequence
+
+    Args:
+        id (str): runId of the command where breakpoint is to be added
+
+    Returns: GenericResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(AddBreakpoint(id))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, id: str) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.IdDoesNotExist" href="SequencerRes.html#esw.SequencerRes.IdDoesNotExist">IdDoesNotExist</a> | <a title="esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep" href="SequencerRes.html#esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep">CannotOperateOnAnInFlightOrFinishedStep</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes the command of the given id in the sequence</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of the command which is to be deleted</dd>
+</dl>
+<p>Returns: GenericResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self, id: str) -&gt; GenericResponse:
+    &#34;&#34;&#34;
+    Deletes the command of the given id in the sequence
+
+    Args:
+        id (str): runId of the command which is to be deleted
+
+    Returns: GenericResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Delete(id))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.diagnosticMode"><code class="name flex">
+<span>def <span class="ident">diagnosticMode</span></span>(<span>self, startTime: csw.UTCTime.UTCTime, hint: str) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.DiagnosticHookFailed" href="SequencerRes.html#esw.SequencerRes.DiagnosticHookFailed">DiagnosticHookFailed</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sends command to the sequencer to call the diagnostic mode handler of the sequencer's script</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>startTime</code></strong> :&ensp;<code>UTCTime</code></dt>
+<dd>time at which the diagnostic mode will take effect</dd>
+<dt><strong><code>hint</code></strong> :&ensp;<code>str</code></dt>
+<dd>String to support diagnostic data mode</dd>
+</dl>
+<p>Returns: DiagnosticModeResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def diagnosticMode(self, startTime: UTCTime, hint: str) -&gt; DiagnosticModeResponse:
+    &#34;&#34;&#34;
+    Sends command to the sequencer to call the diagnostic mode handler of the sequencer&#39;s script
+
+    Args:
+       startTime (UTCTime): time at which the diagnostic mode will take effect
+       hint (str): String to support diagnostic data mode
+
+    Returns: DiagnosticModeResponse
+  &#34;&#34;&#34;
+    return self._postCommandGetResponse(DiagnosticMode(startTime, hint))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.getSequence"><code class="name flex">
+<span>def <span class="ident">getSequence</span></span>(<span>self) ‑> <a title="esw.StepList.StepList" href="StepList.html#esw.StepList.StepList">StepList</a> | None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the sequence in sequencer - current or last.
+If there is no sequence
+then None response is returned
+otherwise a StepList is returned.</p>
+<p>Returns: StepList
+a list of steps in the sequence</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getSequence(self) -&gt; StepList | None:
+    &#34;&#34;&#34;
+    Get the sequence in sequencer - current or last.
+    If there is no sequence
+    then None response is returned
+    otherwise a StepList is returned.
+
+    Returns: StepList
+        a list of steps in the sequence
+   &#34;&#34;&#34;
+    response = self._postCommand(GetSequence()._asDict())
+    if not response.ok:
+        return None
+    return StepList._fromDict(response.json())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.getSequencerState"><code class="name flex">
+<span>def <span class="ident">getSequencerState</span></span>(<span>self) ‑> <a title="esw.SequencerRes.SequencerState" href="SequencerRes.html#esw.SequencerRes.SequencerState">SequencerState</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the current state of the sequencer (Idle, Loaded, Offline, Running, Processing)</p>
+<p>Returns: SequencerState</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getSequencerState(self) -&gt; SequencerState:
+    &#34;&#34;&#34;
+    Returns the current state of the sequencer (Idle, Loaded, Offline, Running, Processing)
+
+    Returns: SequencerState
+    &#34;&#34;&#34;
+    response = self._postCommand(GetSequencerState()._asDict())
+    if not response.ok:
+        return SequencerState.Offline
+    match response.json()[&#34;_type&#34;]:
+        case &#34;Idle&#34;:
+            return SequencerState.Idle
+        case &#34;Processing&#34;:
+            return SequencerState.Processing
+        case &#34;Loaded&#34;:
+            return SequencerState.Loaded
+        case &#34;Offline&#34;:
+            return SequencerState.Offline
+        case &#34;Running&#34;:
+            return SequencerState.Running</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.goOffline"><code class="name flex">
+<span>def <span class="ident">goOffline</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.GoOfflineHookFailed" href="SequencerRes.html#esw.SequencerRes.GoOfflineHookFailed">GoOfflineHookFailed</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>sends command to the sequencer to go in Offline state if it is in Online state</p>
+<p>Returns: GoOfflineResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def goOffline(self) -&gt; GoOfflineResponse:
+    &#34;&#34;&#34;
+    sends command to the sequencer to go in Offline state if it is in Online state
+
+    Returns: GoOfflineResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(GoOffline())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.goOnline"><code class="name flex">
+<span>def <span class="ident">goOnline</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.GoOnlineHookFailed" href="SequencerRes.html#esw.SequencerRes.GoOnlineHookFailed">GoOnlineHookFailed</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>sends command to the sequencer to go in Online state if it is in Offline state</p>
+<p>Returns: GoOnlineResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def goOnline(self) -&gt; GoOnlineResponse:
+    &#34;&#34;&#34;
+    sends command to the sequencer to go in Online state if it is in Offline state
+
+    Returns: GoOnlineResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(GoOnline())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.insertAfter"><code class="name flex">
+<span>def <span class="ident">insertAfter</span></span>(<span>self, id: str, commands: List[csw.ParameterSetType.SequenceCommand]) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.IdDoesNotExist" href="SequencerRes.html#esw.SequencerRes.IdDoesNotExist">IdDoesNotExist</a> | <a title="esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep" href="SequencerRes.html#esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep">CannotOperateOnAnInFlightOrFinishedStep</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Inserts the given list of sequence commands after the command of given id in the sequence</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of command after which the given list of commands is to be inserted</dd>
+<dt><strong><code>commands</code></strong> :&ensp;<code>List[SequenceCommand]</code></dt>
+<dd>list of SequenceCommand to be inserted</dd>
+</dl>
+<p>Returns: GenericResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def insertAfter(self, id: str, commands: List[SequenceCommand]) -&gt; GenericResponse:
+    &#34;&#34;&#34;
+    Inserts the given list of sequence commands after the command of given id in the sequence
+
+    Args:
+        id (str): runId of command after which the given list of commands is to be inserted
+        commands (List[SequenceCommand]): list of SequenceCommand to be inserted
+
+    Returns: GenericResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(InsertAfter(id, commands))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.isAvailable"><code class="name flex">
+<span>def <span class="ident">isAvailable</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if sequencer is in Idle state.</p>
+<p>Returns: bool
+true if the sequencer is available</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isAvailable(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Checks if sequencer is in Idle state.
+
+    Returns: bool
+        true if the sequencer is available
+   &#34;&#34;&#34;
+    response = self._postCommand(IsAvailable()._asDict())
+    if not response.ok:
+        return False
+    return response.json()</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.isOnline"><code class="name flex">
+<span>def <span class="ident">isOnline</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if sequencer is in Online(any state except Offline) state</p>
+<p>Returns: bool
+true if the sequencer is online</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isOnline(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Checks if sequencer is in Online(any state except Offline) state
+
+    Returns: bool
+        true if the sequencer is online
+   &#34;&#34;&#34;
+    response = self._postCommand(IsOnline()._asDict())
+    if not response.ok:
+        return False
+    return response.json()</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.loadSequence"><code class="name flex">
+<span>def <span class="ident">loadSequence</span></span>(<span>self, sequence: <a title="esw.Sequence.Sequence" href="Sequence.html#esw.Sequence.Sequence">Sequence</a>) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads the given sequence to the sequencer.
+If the sequencer is in Idle or Loaded state
+then Ok response is returned
+otherwise Unhandled response is returned</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sequence</code></strong> :&ensp;<code>Sequence</code></dt>
+<dd>sequence to run on the sequencer</dd>
+</dl>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loadSequence(self, sequence: Sequence) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Loads the given sequence to the sequencer.
+    If the sequencer is in Idle or Loaded state
+    then Ok response is returned
+    otherwise Unhandled response is returned
+
+    Args:
+       sequence (Sequence): sequence to run on the sequencer
+
+    Returns: OkOrUnhandledResponse
+  &#34;&#34;&#34;
+    return self._postCommandGetResponse(LoadSequence(sequence.commands))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.operationsMode"><code class="name flex">
+<span>def <span class="ident">operationsMode</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.OperationsHookFailed" href="SequencerRes.html#esw.SequencerRes.OperationsHookFailed">OperationsHookFailed</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sends command to the sequencer to call the operations mode handler of the sequencer's script</p>
+<p>Returns: OperationsModeResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def operationsMode(self) -&gt; OperationsModeResponse:
+    &#34;&#34;&#34;
+    Sends command to the sequencer to call the operations mode handler of the sequencer&#39;s script
+
+    Returns: OperationsModeResponse
+    &#34;&#34;&#34;
+    return self._postCommandGetResponse(OperationsMode())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.pause"><code class="name flex">
+<span>def <span class="ident">pause</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep" href="SequencerRes.html#esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep">CannotOperateOnAnInFlightOrFinishedStep</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Pauses the running sequence</p>
+<p>Returns: PauseResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pause(self) -&gt; PauseResponse:
+    &#34;&#34;&#34;
+    Pauses the running sequence
+
+    Returns: PauseResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Pause())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.prepend"><code class="name flex">
+<span>def <span class="ident">prepend</span></span>(<span>self, commands: List[csw.ParameterSetType.SequenceCommand]) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepends the given list of sequence commands in the sequence</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>commands</code></strong> :&ensp;<code>List[SequenceCommand]</code></dt>
+<dd>list of SequenceCommand to prepend in the sequence of sequencer</dd>
+</dl>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepend(self, commands: List[SequenceCommand]) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Prepends the given list of sequence commands in the sequence
+
+    Args:
+        commands (List[SequenceCommand]): list of SequenceCommand to prepend in the sequence of sequencer
+
+    Returns: OkOrUnhandledResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Prepend(commands))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.query"><code class="name flex">
+<span>def <span class="ident">query</span></span>(<span>self, id: str) ‑> csw.CommandResponse.Error | csw.CommandResponse.Invalid | csw.CommandResponse.Locked | csw.CommandResponse.Started | csw.CommandResponse.Completed | csw.CommandResponse.Cancelled</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Query for the result of the sequence which was submitted to get a SubmitResponse.
+Query allows checking to see if the long-running sequence is completed without waiting as with queryFinal.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of the sequence under execution</dd>
+</dl>
+<p>Returns: SubmitResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def query(self, id: str) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Query for the result of the sequence which was submitted to get a SubmitResponse.
+    Query allows checking to see if the long-running sequence is completed without waiting as with queryFinal.
+
+    Args:
+       id (str): runId of the sequence under execution
+
+    Returns: SubmitResponse
+  &#34;&#34;&#34;
+    response = self._postCommand(Query(id)._asDict())
+    if not response.ok:
+        runId = str(uuid.uuid4())
+        return Error(runId, response.text)
+    return CommandResponse._fromDict(response.json())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.queryFinal"><code class="name flex">
+<span>def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> csw.CommandResponse.Error | csw.CommandResponse.Invalid | csw.CommandResponse.Locked | csw.CommandResponse.Started | csw.CommandResponse.Completed | csw.CommandResponse.Cancelled</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Query for the final result of a long-running sequence which was sent through submit().</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of the sequence under execution</dd>
+<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
+<dd>max-time in secs to wait for a final response</dd>
+</dl>
+<p>Returns: SubmitResponse
+The final submit response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Query for the final result of a long-running sequence which was sent through submit().
+
+    Args:
+       id (str): runId of the sequence under execution
+       timeoutInSeconds (int): max-time in secs to wait for a final response
+
+    Returns: SubmitResponse
+        The final submit response
+  &#34;&#34;&#34;
+    baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+    respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
+    jsonStr = json.dumps(respDict)
+    ws = create_connection(wsUri)
+    ws.send(jsonStr)
+    jsonResp = ws.recv()
+    return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.removeBreakpoint"><code class="name flex">
+<span>def <span class="ident">removeBreakpoint</span></span>(<span>self, id: str) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.IdDoesNotExist" href="SequencerRes.html#esw.SequencerRes.IdDoesNotExist">IdDoesNotExist</a> | <a title="esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep" href="SequencerRes.html#esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep">CannotOperateOnAnInFlightOrFinishedStep</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Removes a breakpoint from the command of the given id in the sequence</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of command where breakpoint is set</dd>
+</dl>
+<p>Returns: GenericResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def removeBreakpoint(self, id: str) -&gt; GenericResponse:
+    &#34;&#34;&#34;
+   Removes a breakpoint from the command of the given id in the sequence
+
+   Args:
+       id (str): runId of command where breakpoint is set
+
+   Returns: GenericResponse
+  &#34;&#34;&#34;
+    return self._postCommandGetResponse(RemoveBreakpoint(id))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, id: str, commands: List[csw.ParameterSetType.SequenceCommand]) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a> | <a title="esw.SequencerRes.IdDoesNotExist" href="SequencerRes.html#esw.SequencerRes.IdDoesNotExist">IdDoesNotExist</a> | <a title="esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep" href="SequencerRes.html#esw.SequencerRes.CannotOperateOnAnInFlightOrFinishedStep">CannotOperateOnAnInFlightOrFinishedStep</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Replaces the command of the given id with the given list of sequence commands in the sequence</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId of command which is to be replaced</dd>
+<dt><strong><code>commands</code></strong> :&ensp;<code>List[SequenceCommand]</code></dt>
+<dd>list of SequenceCommand to replace with</dd>
+</dl>
+<p>Returns: GenericResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, id: str, commands: List[SequenceCommand]) -&gt; GenericResponse:
+    &#34;&#34;&#34;
+    Replaces the command of the given id with the given list of sequence commands in the sequence
+
+    Args:
+        id (str): runId of command which is to be replaced
+        commands (List[SequenceCommand]): list of SequenceCommand to replace with
+
+    Returns: GenericResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Replace(id, commands))</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.reset"><code class="name flex">
+<span>def <span class="ident">reset</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resets the sequence by discarding all the pending steps of the sequence</p>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset(self) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Resets the sequence by discarding all the pending steps of the sequence
+
+    Returns: OkOrUnhandledResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Reset())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.resume"><code class="name flex">
+<span>def <span class="ident">resume</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resumes the paused sequence</p>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resume(self) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Resumes the paused sequence
+
+    Returns: OkOrUnhandledResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Resume())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.startSequence"><code class="name flex">
+<span>def <span class="ident">startSequence</span></span>(<span>self) ‑> csw.CommandResponse.Error | csw.CommandResponse.Invalid | csw.CommandResponse.Locked | csw.CommandResponse.Started | csw.CommandResponse.Completed | csw.CommandResponse.Cancelled</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starts the loaded sequence in the sequencer.
+If the sequencer is loaded then a Started response is returned.
+If the sequencer is already running another sequence, an Invalid response is returned.</p>
+<p>Returns: SubmitResponse
+an initial SubmitResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def startSequence(self) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Starts the loaded sequence in the sequencer.
+    If the sequencer is loaded then a Started response is returned.
+    If the sequencer is already running another sequence, an Invalid response is returned.
+
+    Returns: SubmitResponse
+        an initial SubmitResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(StartSequence())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.stop"><code class="name flex">
+<span>def <span class="ident">stop</span></span>(<span>self) ‑> <a title="esw.SequencerRes.Ok" href="SequencerRes.html#esw.SequencerRes.Ok">Ok</a> | <a title="esw.SequencerRes.Unhandled" href="SequencerRes.html#esw.SequencerRes.Unhandled">Unhandled</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Discards all the pending steps of the sequence and call the stop handler of the sequencer's script</p>
+<p>Returns: OkOrUnhandledResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stop(self) -&gt; OkOrUnhandledResponse:
+    &#34;&#34;&#34;
+    Discards all the pending steps of the sequence and call the stop handler of the sequencer&#39;s script
+
+    Returns: OkOrUnhandledResponse
+   &#34;&#34;&#34;
+    return self._postCommandGetResponse(Stop())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.submit"><code class="name flex">
+<span>def <span class="ident">submit</span></span>(<span>self, sequence: <a title="esw.Sequence.Sequence" href="Sequence.html#esw.Sequence.Sequence">Sequence</a>) ‑> csw.CommandResponse.Error | csw.CommandResponse.Invalid | csw.CommandResponse.Locked | csw.CommandResponse.Started | csw.CommandResponse.Completed | csw.CommandResponse.Cancelled</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Submits the given sequence to the sequencer.
+If the sequencer is idle, the provided sequence is loaded in the sequencer and execution of the sequence
+starts immediately, and a Started response is returned.
+If the sequencer is already running another sequence, an Invalid response is returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sequence</code></strong> :&ensp;<code>Sequence</code></dt>
+<dd>sequence to run on the sequencer</dd>
+</dl>
+<p>Returns: SubmitResponse
+initial response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submit(self, sequence: Sequence) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits the given sequence to the sequencer.
+    If the sequencer is idle, the provided sequence is loaded in the sequencer and execution of the sequence
+    starts immediately, and a Started response is returned.
+    If the sequencer is already running another sequence, an Invalid response is returned.
+
+    Args:
+       sequence (Sequence): sequence to run on the sequencer
+
+    Returns: SubmitResponse
+        initial response
+  &#34;&#34;&#34;
+    response = self._postCommand(Submit(sequence.commands)._asDict())
+    if not response.ok:
+        runId = str(uuid.uuid4())
+        return Error(runId, response.text)
+    return CommandResponse._fromDict(response.json())</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerClient.SequencerClient.submitAndWait"><code class="name flex">
+<span>def <span class="ident">submitAndWait</span></span>(<span>self, sequence: <a title="esw.Sequence.Sequence" href="Sequence.html#esw.Sequence.Sequence">Sequence</a>, timeoutInSeconds: int) ‑> csw.CommandResponse.Error | csw.CommandResponse.Invalid | csw.CommandResponse.Locked | csw.CommandResponse.Started | csw.CommandResponse.Completed | csw.CommandResponse.Cancelled</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
+'Started'.
+If the sequencer is idle, the provided sequence will be submitted to the sequencer and the final response will
+be returned.
+If the sequencer is already running another sequence, an 'Invalid' response is returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sequence</code></strong> :&ensp;<code>Sequence</code></dt>
+<dd>sequence to run on the sequencer</dd>
+<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
+<dd>max-time in secs to wait for a final response</dd>
+</dl>
+<p>Returns: SubmitResponse
+The final submit response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
+    &#39;Started&#39;.
+    If the sequencer is idle, the provided sequence will be submitted to the sequencer and the final response will
+    be returned.
+    If the sequencer is already running another sequence, an &#39;Invalid&#39; response is returned.
+
+    Args:
+       sequence (Sequence): sequence to run on the sequencer
+       timeoutInSeconds (int): max-time in secs to wait for a final response
+
+    Returns: SubmitResponse
+        The final submit response
+  &#34;&#34;&#34;
+    resp = self.submit(sequence)
+    match resp:
+        case Started(runId):
+            return self.queryFinal(runId, timeoutInSeconds)
+        case _:
+            return resp</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="esw" href="index.html">esw</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="esw.SequencerClient.SequencerClient" href="#esw.SequencerClient.SequencerClient">SequencerClient</a></code></h4>
+<ul class="two-column">
+<li><code><a title="esw.SequencerClient.SequencerClient.abortSequence" href="#esw.SequencerClient.SequencerClient.abortSequence">abortSequence</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.add" href="#esw.SequencerClient.SequencerClient.add">add</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.addBreakpoint" href="#esw.SequencerClient.SequencerClient.addBreakpoint">addBreakpoint</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.delete" href="#esw.SequencerClient.SequencerClient.delete">delete</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.diagnosticMode" href="#esw.SequencerClient.SequencerClient.diagnosticMode">diagnosticMode</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.getSequence" href="#esw.SequencerClient.SequencerClient.getSequence">getSequence</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.getSequencerState" href="#esw.SequencerClient.SequencerClient.getSequencerState">getSequencerState</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.goOffline" href="#esw.SequencerClient.SequencerClient.goOffline">goOffline</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.goOnline" href="#esw.SequencerClient.SequencerClient.goOnline">goOnline</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.insertAfter" href="#esw.SequencerClient.SequencerClient.insertAfter">insertAfter</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.isAvailable" href="#esw.SequencerClient.SequencerClient.isAvailable">isAvailable</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.isOnline" href="#esw.SequencerClient.SequencerClient.isOnline">isOnline</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.loadSequence" href="#esw.SequencerClient.SequencerClient.loadSequence">loadSequence</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.operationsMode" href="#esw.SequencerClient.SequencerClient.operationsMode">operationsMode</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.pause" href="#esw.SequencerClient.SequencerClient.pause">pause</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.prefix" href="#esw.SequencerClient.SequencerClient.prefix">prefix</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.prepend" href="#esw.SequencerClient.SequencerClient.prepend">prepend</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.query" href="#esw.SequencerClient.SequencerClient.query">query</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.queryFinal" href="#esw.SequencerClient.SequencerClient.queryFinal">queryFinal</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.removeBreakpoint" href="#esw.SequencerClient.SequencerClient.removeBreakpoint">removeBreakpoint</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.replace" href="#esw.SequencerClient.SequencerClient.replace">replace</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.reset" href="#esw.SequencerClient.SequencerClient.reset">reset</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.resume" href="#esw.SequencerClient.SequencerClient.resume">resume</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.startSequence" href="#esw.SequencerClient.SequencerClient.startSequence">startSequence</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.stop" href="#esw.SequencerClient.SequencerClient.stop">stop</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.submit" href="#esw.SequencerClient.SequencerClient.submit">submit</a></code></li>
+<li><code><a title="esw.SequencerClient.SequencerClient.submitAndWait" href="#esw.SequencerClient.SequencerClient.submitAndWait">submitAndWait</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

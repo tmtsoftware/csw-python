@@ -27,44 +27,13 @@
 including the
 <a href="https://tmtsoftware.github.io/csw/services/location.html">Location Service</a>,
 <a href="https://tmtsoftware.github.io/csw/services/event.html">Event Service</a> and
-<a href="https://tmtsoftware.github.io/csw/commons/command.html">Command Service</a> (receiving end only at this point).</p>
+<a href="https://tmtsoftware.github.io/csw/commons/command.html">Command Service</a>.</p>
 <p>See <a href="https://tmtsoftware.github.io/csw/index.html">here</a> for the CSW documentation.</p>
 <p>You can find the <a href="https://github.com/tmtsoftware/csw-python">tmtpycsw sources</a> on GitHub.</p>
 <p>Note that all APIs here assume that the latest version of CSW services are running
 For example, during development, run: <code>csw-services start</code>.</p>
 <p>The Python APIs mirror the CSW Scala and Java APIs. The classes usually have the same fields,
 with the difference that in some cases the Python types are simpler, due to less strict typing.</p>
-<h2 id="requirements">Requirements</h2>
-<ul>
-<li>Python version 3.10 or newer</li>
-<li>pdoc3 (<code>pip3 install pdoc3</code>)</li>
-<li>pipenv (latest)</li>
-</ul>
-<h3 id="python-dependencies">Python Dependencies:</h3>
-<p>The following Python dependencies are required and can be installed in a local "virtual environment"
-by typing:</p>
-<pre><code>make venv
-</code></pre>
-<p>This uses pip and pipenv to create a .venv directory containing the dependencies and python interpreter.</p>
-<p>Dependecies (See <a href="Pipfile">Pipfile</a>):</p>
-<ul>
-<li>astropy</li>
-<li>cbor2</li>
-<li>redis</li>
-<li>requests</li>
-<li>openpyxl</li>
-<li>multipledispatch</li>
-<li>aiohttp</li>
-<li>dataclasses-json</li>
-</ul>
-<p>For running the tests:</p>
-<ul>
-<li>pytest</li>
-<li>termcolor</li>
-</ul>
-<p>The latest release has been published to <a href="https://pypi.org/project/tmtpycsw/">https://pypi.org/project/tmtpycsw/</a> and can be installed with:</p>
-<pre><code>pip3 install tmtpycsw
-</code></pre>
 <h2 id="csw-location-service">CSW Location Service</h2>
 <p>The Location Service can be used to register, list and lookup CSW services.
 Python applications can access <code>tcp</code> and <code>http</code> based services, but not <code>akka</code> services,
@@ -351,48 +320,12 @@ The following example gets the first value of the "BasePosition", which is expec
     assert (eqCoord.ra == Angle(&quot;12:13:14.15 hours&quot;))
     assert (eqCoord.dec == Angle(&quot;-30:31:32.3 deg&quot;))
 </code></pre>
-<h2 id="esw-shell">ESW Shell</h2>
-<p>The <a href="esw/esw-shell.py">esw-shell</a> command provides an interactive shell with predefined imports
-where you can type in CSW and ESW commands. The following example publishes an event:</p>
-<pre><code class="language-bash">&gt; esw-shell.sh
-Wellcome to ESW Shell
-&gt;&gt;&gt; source = Prefix(Subsystems.CSW, &quot;testassembly&quot;)
-&gt;&gt;&gt; eventName = EventName(&quot;myAssemblyEvent&quot;)
-&gt;&gt;&gt; param = DoubleKey.make(&quot;assemblyEventValue&quot;).set(42.0)
-&gt;&gt;&gt; paramSet = [param]
-&gt;&gt;&gt; event = SystemEvent(source, eventName, paramSet)
-&gt;&gt;&gt; pub = EventPublisher()
-&gt;&gt;&gt; pub.publish(event)
-&gt;&gt;&gt; 
-</code></pre>
-<p>This is just an interactive Python session with the commonly used imports provided.
-You can add your own imports, etc. The following example submits commands to an assembly:</p>
-<pre><code class="language-bash">&gt; esw-shell.sh
-Wellcome to ESW Shell
-&gt;&gt;&gt; prefix = Prefix(Subsystems.CSW, &quot;TestClient&quot;)
-&gt;&gt;&gt; maybeObsId = []
-&gt;&gt;&gt; param = IntKey.make(&quot;testValue&quot;).set(42)
-&gt;&gt;&gt; paramSet = [param]
-&gt;&gt;&gt; cs = CommandService(Prefix(Subsystems.CSW, &quot;TestPublisher&quot;), ComponentType.Assembly)
-&gt;&gt;&gt; setup = Setup(prefix, CommandName(&quot;longRunningCommand&quot;), maybeObsId, paramSet)
-&gt;&gt;&gt; resp = cs.submitAndWait(setup, 5)
-&gt;&gt;&gt; resp
-Completed(runId='6c476544-4e84-4f8f-b10a-8172576ef68d', result=Result(paramSet=[]))
-</code></pre>
-<p>The <code>submitAndWait()</code> method submits a command and waits, if needed for the final response.
-You can use plain <code>submit()</code> if the command returns a direct response.
-There are also asynchronous versions of some methods: <code>queryFinalAsync()</code> and <code>submitAndWaitAsync()</code>,
-that can be used in scripts using the <code>async</code> and <code>await</code> keywords.</p>
-<pre><code class="language-python">async def foo:
-    resp1 = await cs.queryFinalAsync(runId, 5)
-    resp2 = await cs.submitAndWaitAsync(setup, 5)
-</code></pre>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-.. include:: ../documentation.md
+.. include:: documentation.md
 &#34;&#34;&#34;</code></pre>
 </details>
 </section>
@@ -491,14 +424,6 @@ that can be used in scripts using the <code>async</code> and <code>await</code> 
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="csw.xxx" href="xxx.html">csw.xxx</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="csw.yyy" href="yyy.html">csw.yyy</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 </dl>
 </section>
 <section>
@@ -513,15 +438,10 @@ that can be used in scripts using the <code>async</code> and <code>await</code> 
 <div class="toc">
 <ul>
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#requirements">Requirements</a><ul>
-<li><a href="#python-dependencies">Python Dependencies:</a></li>
-</ul>
-</li>
 <li><a href="#csw-location-service">CSW Location Service</a></li>
 <li><a href="#csw-event-service">CSW Event Service</a></li>
 <li><a href="#command-service-api">Command Service API</a></li>
 <li><a href="#working-with-parameters">Working with Parameters</a></li>
-<li><a href="#esw-shell">ESW Shell</a></li>
 </ul>
 </div>
 <ul id="index">
@@ -550,8 +470,6 @@ that can be used in scripts using the <code>async</code> and <code>await</code> 
 <li><code><a title="csw.TAITime" href="TAITime.html">csw.TAITime</a></code></li>
 <li><code><a title="csw.UTCTime" href="UTCTime.html">csw.UTCTime</a></code></li>
 <li><code><a title="csw.Units" href="Units.html">csw.Units</a></code></li>
-<li><code><a title="csw.xxx" href="xxx.html">csw.xxx</a></code></li>
-<li><code><a title="csw.yyy" href="yyy.html">csw.yyy</a></code></li>
 </ul>
 </li>
 </ul>

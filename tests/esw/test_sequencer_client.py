@@ -8,11 +8,10 @@ from csw.Subsystem import Subsystems
 from csw.UTCTime import UTCTime
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
+from esw.SequencerRes import Ok, Unhandled, SequencerState
 
 # Note: Before running this test, start the esw-observing-simulation and load the sequence
 # "esw_imager_only_sequence.json".
-
-from esw.SequencerRes import Ok, Unhandled, SequencerState
 
 
 # noinspection PyShadowingBuiltins

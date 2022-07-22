@@ -1,0 +1,1724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>esw.SequencerRequest API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>esw.SequencerRequest</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from dataclasses import dataclass
+from typing import List
+
+from dataclasses_json import dataclass_json
+
+from csw.ParameterSetType import SequenceCommand
+from csw.UTCTime import UTCTime
+
+# noinspection PyProtectedMember
+
+@dataclass
+class SequencerRequest:
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+        }
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a LoadSequence object for the given dict.
+        &#34;&#34;&#34;
+        method = obj[&#39;_type&#39;]
+        match method:
+            case &#39;LoadSequence&#39;:
+                return LoadSequence._fromDict(obj)
+            case &#39;StartSequence&#39;:
+                return StartSequence()
+            case &#39;GetSequence&#39;:
+                return GetSequence()
+            case &#39;Add&#39;:
+                return Add._fromDict(obj)
+            case &#39;Prepend&#39;:
+                return Prepend._fromDict(obj)
+            case &#39;Replace&#39;:
+                return Replace._fromDict(obj)
+            case &#39;InsertAfter&#39;:
+                return InsertAfter._fromDict(obj)
+            case &#39;Delete&#39;:
+                return Delete._fromDict(obj)
+            case &#39;Reset&#39;:
+                return Reset()
+            case &#39;Pause&#39;:
+                return Pause()
+            case &#39;Resume&#39;:
+                return Resume()
+            case &#39;AddBreakpoint&#39;:
+                return AddBreakpoint.from_dict(obj)
+            case &#39;RemoveBreakpoint&#39;:
+                return RemoveBreakpoint.from_dict(obj)
+            case &#39;AbortSequence&#39;:
+                return AbortSequence()
+            case &#39;Stop&#39;:
+                return Stop()
+            case &#39;Submit&#39;:
+                return Submit._fromDict(obj)
+            case &#39;Query&#39;:
+                return Query.from_dict(obj)
+            case &#39;GoOnline&#39;:
+                return GoOnline()
+            case &#39;GoOffline&#39;:
+                return GoOffline()
+            case &#39;DiagnosticMode&#39;:
+                return DiagnosticMode._fromDict(obj)
+            case &#39;OperationsMode&#39;:
+                return OperationsMode()
+            case &#39;GetSequenceComponent&#39;:
+                return GetSequenceComponent()
+            case &#39;GetSequencerState&#39;:
+                return GetSequencerState()
+
+
+# noinspection DuplicatedCode,PyProtectedMember
+@dataclass
+class LoadSequence(SequencerRequest):
+    sequence: List[SequenceCommand]
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a LoadSequence object for the given dict.
+        &#34;&#34;&#34;
+        sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;sequence&#39;]))
+        return LoadSequence(sequence)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;sequence&#34;: list(map(lambda p: p._asDict(), self.sequence))
+        }
+
+
+class StartSequence(SequencerRequest):
+    pass
+
+
+class GetSequence(SequencerRequest):
+    pass
+
+
+@dataclass
+class Add(SequencerRequest):
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return Add(commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }
+
+
+@dataclass
+class Prepend(SequencerRequest):
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return Prepend(commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }
+
+
+@dataclass
+class Replace(SequencerRequest):
+    id: str
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return Replace(id, commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }
+
+
+@dataclass
+class InsertAfter(SequencerRequest):
+    id: str
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return InsertAfter(id, commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }
+
+
+@dataclass
+class Delete(SequencerRequest):
+    id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        return Delete(id)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id
+        }
+
+
+class Reset(SequencerRequest):
+    pass
+
+
+class Pause(SequencerRequest):
+    pass
+
+
+class Resume(SequencerRequest):
+    pass
+
+
+@dataclass_json
+@dataclass
+class AddBreakpoint(SequencerRequest):
+    id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        return AddBreakpoint(id)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id
+        }
+
+
+@dataclass_json
+@dataclass
+class RemoveBreakpoint(SequencerRequest):
+    id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        return RemoveBreakpoint(id)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id
+        }
+
+
+class GetSequenceComponent(SequencerRequest):
+    pass
+
+
+class GetSequencerState(SequencerRequest):
+    pass
+
+
+class IsAvailable(SequencerRequest):
+    pass
+
+
+class IsOnline(SequencerRequest):
+    pass
+
+
+class GoOnline(SequencerRequest):
+    pass
+
+
+class GoOffline(SequencerRequest):
+    pass
+
+
+class AbortSequence(SequencerRequest):
+    pass
+
+
+class Stop(SequencerRequest):
+    pass
+
+
+@dataclass
+class DiagnosticMode(SequencerRequest):
+    startTime: UTCTime
+    hint: str
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a DiagnosticMode object for the given dict.
+        &#34;&#34;&#34;
+        startTime = UTCTime.from_str(obj[&#39;startTime&#39;])
+        hint = obj[&#39;hint&#39;]
+        return DiagnosticMode(startTime, hint)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;startTime&#34;: str(self.startTime),
+            &#34;hint&#34;: self.hint,
+        }
+
+
+class OperationsMode(SequencerRequest):
+    pass
+
+
+# Sequencer Command Protocol
+
+@dataclass
+class Submit(SequencerRequest):
+    sequence: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a Submit object for the given dict.
+        &#34;&#34;&#34;
+        sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;sequence&#39;]))
+        return LoadSequence(sequence)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;sequence&#34;: list(map(lambda p: p._asDict(), self.sequence))
+        }
+
+
+@dataclass
+class Query(SequencerRequest):
+    runId: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        runId = obj[&#39;runId&#39;]
+        return Query(runId)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;runId&#34;: self.runId
+        }</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="esw.SequencerRequest.AbortSequence"><code class="flex name class">
+<span>class <span class="ident">AbortSequence</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AbortSequence(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.Add"><code class="flex name class">
+<span>class <span class="ident">Add</span></span>
+<span>(</span><span>commands: List[csw.ParameterSetType.SequenceCommand])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add(commands: List[csw.ParameterSetType.SequenceCommand])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Add(SequencerRequest):
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return Add(commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.Add.commands"><code class="name">var <span class="ident">commands</span> : List[csw.ParameterSetType.SequenceCommand]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.AddBreakpoint"><code class="flex name class">
+<span>class <span class="ident">AddBreakpoint</span></span>
+<span>(</span><span>id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>AddBreakpoint(id: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass_json
+@dataclass
+class AddBreakpoint(SequencerRequest):
+    id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        return AddBreakpoint(id)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.AddBreakpoint.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="esw.SequencerRequest.AddBreakpoint.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_dict(cls: Type[A],
+              kvs: Json,
+              *,
+              infer_missing=False) -&gt; A:
+    return _decode_dataclass(cls, kvs, infer_missing)</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerRequest.AddBreakpoint.from_json"><code class="name flex">
+<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_json(cls: Type[A],
+              s: JsonData,
+              *,
+              parse_float=None,
+              parse_int=None,
+              parse_constant=None,
+              infer_missing=False,
+              **kw) -&gt; A:
+    kvs = json.loads(s,
+                     parse_float=parse_float,
+                     parse_int=parse_int,
+                     parse_constant=parse_constant,
+                     **kw)
+    return cls.from_dict(kvs, infer_missing=infer_missing)</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerRequest.AddBreakpoint.schema"><code class="name flex">
+<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def schema(cls: Type[A],
+           *,
+           infer_missing: bool = False,
+           only=None,
+           exclude=(),
+           many: bool = False,
+           context=None,
+           load_only=(),
+           dump_only=(),
+           partial: bool = False,
+           unknown=None) -&gt; SchemaType:
+    Schema = build_schema(cls, DataClassJsonMixin, infer_missing, partial)
+
+    if unknown is None:
+        undefined_parameter_action = _undefined_parameter_action_safe(cls)
+        if undefined_parameter_action is not None:
+            # We can just make use of the same-named mm keywords
+            unknown = undefined_parameter_action.name.lower()
+
+    return Schema(only=only,
+                  exclude=exclude,
+                  many=many,
+                  context=context,
+                  load_only=load_only,
+                  dump_only=dump_only,
+                  partial=partial,
+                  unknown=unknown)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="esw.SequencerRequest.AddBreakpoint.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self, encode_json=False) -&gt; Dict[str, Json]:
+    return _asdict(self, encode_json=encode_json)</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerRequest.AddBreakpoint.to_json"><code class="name flex">
+<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Tuple[str, str] = None, default: Callable = None, sort_keys: bool = False, **kw) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_json(self,
+            *,
+            skipkeys: bool = False,
+            ensure_ascii: bool = True,
+            check_circular: bool = True,
+            allow_nan: bool = True,
+            indent: Optional[Union[int, str]] = None,
+            separators: Tuple[str, str] = None,
+            default: Callable = None,
+            sort_keys: bool = False,
+            **kw) -&gt; str:
+    return json.dumps(self.to_dict(encode_json=False),
+                      cls=_ExtendedEncoder,
+                      skipkeys=skipkeys,
+                      ensure_ascii=ensure_ascii,
+                      check_circular=check_circular,
+                      allow_nan=allow_nan,
+                      indent=indent,
+                      separators=separators,
+                      default=default,
+                      sort_keys=sort_keys,
+                      **kw)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.Delete"><code class="flex name class">
+<span>class <span class="ident">Delete</span></span>
+<span>(</span><span>id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Delete(id: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Delete(SequencerRequest):
+    id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        return Delete(id)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.Delete.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.DiagnosticMode"><code class="flex name class">
+<span>class <span class="ident">DiagnosticMode</span></span>
+<span>(</span><span>startTime: csw.UTCTime.UTCTime, hint: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>DiagnosticMode(startTime: csw.UTCTime.UTCTime, hint: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class DiagnosticMode(SequencerRequest):
+    startTime: UTCTime
+    hint: str
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a DiagnosticMode object for the given dict.
+        &#34;&#34;&#34;
+        startTime = UTCTime.from_str(obj[&#39;startTime&#39;])
+        hint = obj[&#39;hint&#39;]
+        return DiagnosticMode(startTime, hint)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;startTime&#34;: str(self.startTime),
+            &#34;hint&#34;: self.hint,
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.DiagnosticMode.hint"><code class="name">var <span class="ident">hint</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="esw.SequencerRequest.DiagnosticMode.startTime"><code class="name">var <span class="ident">startTime</span> : csw.UTCTime.UTCTime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.GetSequence"><code class="flex name class">
+<span>class <span class="ident">GetSequence</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GetSequence(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.GetSequenceComponent"><code class="flex name class">
+<span>class <span class="ident">GetSequenceComponent</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GetSequenceComponent(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.GetSequencerState"><code class="flex name class">
+<span>class <span class="ident">GetSequencerState</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GetSequencerState(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.GoOffline"><code class="flex name class">
+<span>class <span class="ident">GoOffline</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GoOffline(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.GoOnline"><code class="flex name class">
+<span>class <span class="ident">GoOnline</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GoOnline(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.InsertAfter"><code class="flex name class">
+<span>class <span class="ident">InsertAfter</span></span>
+<span>(</span><span>id: str, commands: List[csw.ParameterSetType.SequenceCommand])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>InsertAfter(id: str, commands: List[csw.ParameterSetType.SequenceCommand])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class InsertAfter(SequencerRequest):
+    id: str
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return InsertAfter(id, commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.InsertAfter.commands"><code class="name">var <span class="ident">commands</span> : List[csw.ParameterSetType.SequenceCommand]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="esw.SequencerRequest.InsertAfter.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.IsAvailable"><code class="flex name class">
+<span>class <span class="ident">IsAvailable</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IsAvailable(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.IsOnline"><code class="flex name class">
+<span>class <span class="ident">IsOnline</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IsOnline(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.LoadSequence"><code class="flex name class">
+<span>class <span class="ident">LoadSequence</span></span>
+<span>(</span><span>sequence: List[csw.ParameterSetType.SequenceCommand])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>LoadSequence(sequence: List[csw.ParameterSetType.SequenceCommand])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class LoadSequence(SequencerRequest):
+    sequence: List[SequenceCommand]
+
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a LoadSequence object for the given dict.
+        &#34;&#34;&#34;
+        sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;sequence&#39;]))
+        return LoadSequence(sequence)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;sequence&#34;: list(map(lambda p: p._asDict(), self.sequence))
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.LoadSequence.sequence"><code class="name">var <span class="ident">sequence</span> : List[csw.ParameterSetType.SequenceCommand]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.OperationsMode"><code class="flex name class">
+<span>class <span class="ident">OperationsMode</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OperationsMode(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.Pause"><code class="flex name class">
+<span>class <span class="ident">Pause</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Pause(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.Prepend"><code class="flex name class">
+<span>class <span class="ident">Prepend</span></span>
+<span>(</span><span>commands: List[csw.ParameterSetType.SequenceCommand])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepend(commands: List[csw.ParameterSetType.SequenceCommand])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Prepend(SequencerRequest):
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return Prepend(commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.Prepend.commands"><code class="name">var <span class="ident">commands</span> : List[csw.ParameterSetType.SequenceCommand]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.Query"><code class="flex name class">
+<span>class <span class="ident">Query</span></span>
+<span>(</span><span>runId: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Query(runId: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Query(SequencerRequest):
+    runId: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        runId = obj[&#39;runId&#39;]
+        return Query(runId)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;runId&#34;: self.runId
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.Query.runId"><code class="name">var <span class="ident">runId</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.RemoveBreakpoint"><code class="flex name class">
+<span>class <span class="ident">RemoveBreakpoint</span></span>
+<span>(</span><span>id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>RemoveBreakpoint(id: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass_json
+@dataclass
+class RemoveBreakpoint(SequencerRequest):
+    id: str
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        return RemoveBreakpoint(id)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.RemoveBreakpoint.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="esw.SequencerRequest.RemoveBreakpoint.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_dict(cls: Type[A],
+              kvs: Json,
+              *,
+              infer_missing=False) -&gt; A:
+    return _decode_dataclass(cls, kvs, infer_missing)</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerRequest.RemoveBreakpoint.from_json"><code class="name flex">
+<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_json(cls: Type[A],
+              s: JsonData,
+              *,
+              parse_float=None,
+              parse_int=None,
+              parse_constant=None,
+              infer_missing=False,
+              **kw) -&gt; A:
+    kvs = json.loads(s,
+                     parse_float=parse_float,
+                     parse_int=parse_int,
+                     parse_constant=parse_constant,
+                     **kw)
+    return cls.from_dict(kvs, infer_missing=infer_missing)</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerRequest.RemoveBreakpoint.schema"><code class="name flex">
+<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def schema(cls: Type[A],
+           *,
+           infer_missing: bool = False,
+           only=None,
+           exclude=(),
+           many: bool = False,
+           context=None,
+           load_only=(),
+           dump_only=(),
+           partial: bool = False,
+           unknown=None) -&gt; SchemaType:
+    Schema = build_schema(cls, DataClassJsonMixin, infer_missing, partial)
+
+    if unknown is None:
+        undefined_parameter_action = _undefined_parameter_action_safe(cls)
+        if undefined_parameter_action is not None:
+            # We can just make use of the same-named mm keywords
+            unknown = undefined_parameter_action.name.lower()
+
+    return Schema(only=only,
+                  exclude=exclude,
+                  many=many,
+                  context=context,
+                  load_only=load_only,
+                  dump_only=dump_only,
+                  partial=partial,
+                  unknown=unknown)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="esw.SequencerRequest.RemoveBreakpoint.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self, encode_json=False) -&gt; Dict[str, Json]:
+    return _asdict(self, encode_json=encode_json)</code></pre>
+</details>
+</dd>
+<dt id="esw.SequencerRequest.RemoveBreakpoint.to_json"><code class="name flex">
+<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Tuple[str, str] = None, default: Callable = None, sort_keys: bool = False, **kw) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_json(self,
+            *,
+            skipkeys: bool = False,
+            ensure_ascii: bool = True,
+            check_circular: bool = True,
+            allow_nan: bool = True,
+            indent: Optional[Union[int, str]] = None,
+            separators: Tuple[str, str] = None,
+            default: Callable = None,
+            sort_keys: bool = False,
+            **kw) -&gt; str:
+    return json.dumps(self.to_dict(encode_json=False),
+                      cls=_ExtendedEncoder,
+                      skipkeys=skipkeys,
+                      ensure_ascii=ensure_ascii,
+                      check_circular=check_circular,
+                      allow_nan=allow_nan,
+                      indent=indent,
+                      separators=separators,
+                      default=default,
+                      sort_keys=sort_keys,
+                      **kw)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.Replace"><code class="flex name class">
+<span>class <span class="ident">Replace</span></span>
+<span>(</span><span>id: str, commands: List[csw.ParameterSetType.SequenceCommand])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Replace(id: str, commands: List[csw.ParameterSetType.SequenceCommand])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Replace(SequencerRequest):
+    id: str
+    commands: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns an Add object for the given dict.
+        &#34;&#34;&#34;
+        id = obj[&#39;id&#39;]
+        commands = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;commands&#39;]))
+        return Replace(id, commands)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;id&#34;: self.id,
+            &#34;commands&#34;: list(map(lambda p: p._asDict(), self.commands))
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.Replace.commands"><code class="name">var <span class="ident">commands</span> : List[csw.ParameterSetType.SequenceCommand]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="esw.SequencerRequest.Replace.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="esw.SequencerRequest.Reset"><code class="flex name class">
+<span>class <span class="ident">Reset</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Reset(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.Resume"><code class="flex name class">
+<span>class <span class="ident">Resume</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Resume(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.SequencerRequest"><code class="flex name class">
+<span>class <span class="ident">SequencerRequest</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SequencerRequest:
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+        }
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a LoadSequence object for the given dict.
+        &#34;&#34;&#34;
+        method = obj[&#39;_type&#39;]
+        match method:
+            case &#39;LoadSequence&#39;:
+                return LoadSequence._fromDict(obj)
+            case &#39;StartSequence&#39;:
+                return StartSequence()
+            case &#39;GetSequence&#39;:
+                return GetSequence()
+            case &#39;Add&#39;:
+                return Add._fromDict(obj)
+            case &#39;Prepend&#39;:
+                return Prepend._fromDict(obj)
+            case &#39;Replace&#39;:
+                return Replace._fromDict(obj)
+            case &#39;InsertAfter&#39;:
+                return InsertAfter._fromDict(obj)
+            case &#39;Delete&#39;:
+                return Delete._fromDict(obj)
+            case &#39;Reset&#39;:
+                return Reset()
+            case &#39;Pause&#39;:
+                return Pause()
+            case &#39;Resume&#39;:
+                return Resume()
+            case &#39;AddBreakpoint&#39;:
+                return AddBreakpoint.from_dict(obj)
+            case &#39;RemoveBreakpoint&#39;:
+                return RemoveBreakpoint.from_dict(obj)
+            case &#39;AbortSequence&#39;:
+                return AbortSequence()
+            case &#39;Stop&#39;:
+                return Stop()
+            case &#39;Submit&#39;:
+                return Submit._fromDict(obj)
+            case &#39;Query&#39;:
+                return Query.from_dict(obj)
+            case &#39;GoOnline&#39;:
+                return GoOnline()
+            case &#39;GoOffline&#39;:
+                return GoOffline()
+            case &#39;DiagnosticMode&#39;:
+                return DiagnosticMode._fromDict(obj)
+            case &#39;OperationsMode&#39;:
+                return OperationsMode()
+            case &#39;GetSequenceComponent&#39;:
+                return GetSequenceComponent()
+            case &#39;GetSequencerState&#39;:
+                return GetSequencerState()</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.AbortSequence" href="#esw.SequencerRequest.AbortSequence">AbortSequence</a></li>
+<li><a title="esw.SequencerRequest.Add" href="#esw.SequencerRequest.Add">Add</a></li>
+<li><a title="esw.SequencerRequest.AddBreakpoint" href="#esw.SequencerRequest.AddBreakpoint">AddBreakpoint</a></li>
+<li><a title="esw.SequencerRequest.Delete" href="#esw.SequencerRequest.Delete">Delete</a></li>
+<li><a title="esw.SequencerRequest.DiagnosticMode" href="#esw.SequencerRequest.DiagnosticMode">DiagnosticMode</a></li>
+<li><a title="esw.SequencerRequest.GetSequence" href="#esw.SequencerRequest.GetSequence">GetSequence</a></li>
+<li><a title="esw.SequencerRequest.GetSequenceComponent" href="#esw.SequencerRequest.GetSequenceComponent">GetSequenceComponent</a></li>
+<li><a title="esw.SequencerRequest.GetSequencerState" href="#esw.SequencerRequest.GetSequencerState">GetSequencerState</a></li>
+<li><a title="esw.SequencerRequest.GoOffline" href="#esw.SequencerRequest.GoOffline">GoOffline</a></li>
+<li><a title="esw.SequencerRequest.GoOnline" href="#esw.SequencerRequest.GoOnline">GoOnline</a></li>
+<li><a title="esw.SequencerRequest.InsertAfter" href="#esw.SequencerRequest.InsertAfter">InsertAfter</a></li>
+<li><a title="esw.SequencerRequest.IsAvailable" href="#esw.SequencerRequest.IsAvailable">IsAvailable</a></li>
+<li><a title="esw.SequencerRequest.IsOnline" href="#esw.SequencerRequest.IsOnline">IsOnline</a></li>
+<li><a title="esw.SequencerRequest.LoadSequence" href="#esw.SequencerRequest.LoadSequence">LoadSequence</a></li>
+<li><a title="esw.SequencerRequest.OperationsMode" href="#esw.SequencerRequest.OperationsMode">OperationsMode</a></li>
+<li><a title="esw.SequencerRequest.Pause" href="#esw.SequencerRequest.Pause">Pause</a></li>
+<li><a title="esw.SequencerRequest.Prepend" href="#esw.SequencerRequest.Prepend">Prepend</a></li>
+<li><a title="esw.SequencerRequest.Query" href="#esw.SequencerRequest.Query">Query</a></li>
+<li><a title="esw.SequencerRequest.RemoveBreakpoint" href="#esw.SequencerRequest.RemoveBreakpoint">RemoveBreakpoint</a></li>
+<li><a title="esw.SequencerRequest.Replace" href="#esw.SequencerRequest.Replace">Replace</a></li>
+<li><a title="esw.SequencerRequest.Reset" href="#esw.SequencerRequest.Reset">Reset</a></li>
+<li><a title="esw.SequencerRequest.Resume" href="#esw.SequencerRequest.Resume">Resume</a></li>
+<li><a title="esw.SequencerRequest.StartSequence" href="#esw.SequencerRequest.StartSequence">StartSequence</a></li>
+<li><a title="esw.SequencerRequest.Stop" href="#esw.SequencerRequest.Stop">Stop</a></li>
+<li><a title="esw.SequencerRequest.Submit" href="#esw.SequencerRequest.Submit">Submit</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.StartSequence"><code class="flex name class">
+<span>class <span class="ident">StartSequence</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StartSequence(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.Stop"><code class="flex name class">
+<span>class <span class="ident">Stop</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>SequencerRequest()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Stop(SequencerRequest):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+</dd>
+<dt id="esw.SequencerRequest.Submit"><code class="flex name class">
+<span>class <span class="ident">Submit</span></span>
+<span>(</span><span>sequence: List[csw.ParameterSetType.SequenceCommand])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Submit(sequence: List[csw.ParameterSetType.SequenceCommand])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Submit(SequencerRequest):
+    sequence: List[SequenceCommand]
+
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _fromDict(obj):
+        &#34;&#34;&#34;
+        Returns a Submit object for the given dict.
+        &#34;&#34;&#34;
+        sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj[&#39;sequence&#39;]))
+        return LoadSequence(sequence)
+
+    def _asDict(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Returns: dict
+            a dictionary corresponding to this object
+        &#34;&#34;&#34;
+        return {
+            &#34;_type&#34;: self.__class__.__name__,
+            &#34;sequence&#34;: list(map(lambda p: p._asDict(), self.sequence))
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="esw.SequencerRequest.Submit.sequence"><code class="name">var <span class="ident">sequence</span> : List[csw.ParameterSetType.SequenceCommand]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="esw" href="index.html">esw</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="esw.SequencerRequest.AbortSequence" href="#esw.SequencerRequest.AbortSequence">AbortSequence</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Add" href="#esw.SequencerRequest.Add">Add</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.Add.commands" href="#esw.SequencerRequest.Add.commands">commands</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.AddBreakpoint" href="#esw.SequencerRequest.AddBreakpoint">AddBreakpoint</a></code></h4>
+<ul class="two-column">
+<li><code><a title="esw.SequencerRequest.AddBreakpoint.from_dict" href="#esw.SequencerRequest.AddBreakpoint.from_dict">from_dict</a></code></li>
+<li><code><a title="esw.SequencerRequest.AddBreakpoint.from_json" href="#esw.SequencerRequest.AddBreakpoint.from_json">from_json</a></code></li>
+<li><code><a title="esw.SequencerRequest.AddBreakpoint.id" href="#esw.SequencerRequest.AddBreakpoint.id">id</a></code></li>
+<li><code><a title="esw.SequencerRequest.AddBreakpoint.schema" href="#esw.SequencerRequest.AddBreakpoint.schema">schema</a></code></li>
+<li><code><a title="esw.SequencerRequest.AddBreakpoint.to_dict" href="#esw.SequencerRequest.AddBreakpoint.to_dict">to_dict</a></code></li>
+<li><code><a title="esw.SequencerRequest.AddBreakpoint.to_json" href="#esw.SequencerRequest.AddBreakpoint.to_json">to_json</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Delete" href="#esw.SequencerRequest.Delete">Delete</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.Delete.id" href="#esw.SequencerRequest.Delete.id">id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.DiagnosticMode" href="#esw.SequencerRequest.DiagnosticMode">DiagnosticMode</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.DiagnosticMode.hint" href="#esw.SequencerRequest.DiagnosticMode.hint">hint</a></code></li>
+<li><code><a title="esw.SequencerRequest.DiagnosticMode.startTime" href="#esw.SequencerRequest.DiagnosticMode.startTime">startTime</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.GetSequence" href="#esw.SequencerRequest.GetSequence">GetSequence</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.GetSequenceComponent" href="#esw.SequencerRequest.GetSequenceComponent">GetSequenceComponent</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.GetSequencerState" href="#esw.SequencerRequest.GetSequencerState">GetSequencerState</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.GoOffline" href="#esw.SequencerRequest.GoOffline">GoOffline</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.GoOnline" href="#esw.SequencerRequest.GoOnline">GoOnline</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.InsertAfter" href="#esw.SequencerRequest.InsertAfter">InsertAfter</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.InsertAfter.commands" href="#esw.SequencerRequest.InsertAfter.commands">commands</a></code></li>
+<li><code><a title="esw.SequencerRequest.InsertAfter.id" href="#esw.SequencerRequest.InsertAfter.id">id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.IsAvailable" href="#esw.SequencerRequest.IsAvailable">IsAvailable</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.IsOnline" href="#esw.SequencerRequest.IsOnline">IsOnline</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.LoadSequence" href="#esw.SequencerRequest.LoadSequence">LoadSequence</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.LoadSequence.sequence" href="#esw.SequencerRequest.LoadSequence.sequence">sequence</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.OperationsMode" href="#esw.SequencerRequest.OperationsMode">OperationsMode</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Pause" href="#esw.SequencerRequest.Pause">Pause</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Prepend" href="#esw.SequencerRequest.Prepend">Prepend</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.Prepend.commands" href="#esw.SequencerRequest.Prepend.commands">commands</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Query" href="#esw.SequencerRequest.Query">Query</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.Query.runId" href="#esw.SequencerRequest.Query.runId">runId</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.RemoveBreakpoint" href="#esw.SequencerRequest.RemoveBreakpoint">RemoveBreakpoint</a></code></h4>
+<ul class="two-column">
+<li><code><a title="esw.SequencerRequest.RemoveBreakpoint.from_dict" href="#esw.SequencerRequest.RemoveBreakpoint.from_dict">from_dict</a></code></li>
+<li><code><a title="esw.SequencerRequest.RemoveBreakpoint.from_json" href="#esw.SequencerRequest.RemoveBreakpoint.from_json">from_json</a></code></li>
+<li><code><a title="esw.SequencerRequest.RemoveBreakpoint.id" href="#esw.SequencerRequest.RemoveBreakpoint.id">id</a></code></li>
+<li><code><a title="esw.SequencerRequest.RemoveBreakpoint.schema" href="#esw.SequencerRequest.RemoveBreakpoint.schema">schema</a></code></li>
+<li><code><a title="esw.SequencerRequest.RemoveBreakpoint.to_dict" href="#esw.SequencerRequest.RemoveBreakpoint.to_dict">to_dict</a></code></li>
+<li><code><a title="esw.SequencerRequest.RemoveBreakpoint.to_json" href="#esw.SequencerRequest.RemoveBreakpoint.to_json">to_json</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Replace" href="#esw.SequencerRequest.Replace">Replace</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.Replace.commands" href="#esw.SequencerRequest.Replace.commands">commands</a></code></li>
+<li><code><a title="esw.SequencerRequest.Replace.id" href="#esw.SequencerRequest.Replace.id">id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Reset" href="#esw.SequencerRequest.Reset">Reset</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Resume" href="#esw.SequencerRequest.Resume">Resume</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.SequencerRequest" href="#esw.SequencerRequest.SequencerRequest">SequencerRequest</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.StartSequence" href="#esw.SequencerRequest.StartSequence">StartSequence</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Stop" href="#esw.SequencerRequest.Stop">Stop</a></code></h4>
+</li>
+<li>
+<h4><code><a title="esw.SequencerRequest.Submit" href="#esw.SequencerRequest.Submit">Submit</a></code></h4>
+<ul class="">
+<li><code><a title="esw.SequencerRequest.Submit.sequence" href="#esw.SequencerRequest.Submit.sequence">sequence</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

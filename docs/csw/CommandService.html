@@ -31,7 +31,7 @@ import requests
 import websockets
 from websocket import create_connection
 
-from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started
+from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
 from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
@@ -67,8 +67,8 @@ class CommandService:
                 data = Validate(controlCommand)._asDict()
             case _:
                 data = Oneway(controlCommand)._asDict()
-        jsonStr = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonStr)
+        jsonData = json.loads(json.dumps(data))
+        response = requests.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
             runId = str(uuid.uuid4())
             return Error(runId, response.text)
@@ -91,11 +91,9 @@ class CommandService:
        &#34;&#34;&#34;
         return self._postCommand(&#34;Submit&#34;, controlCommand)
 
-    def validate(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
         &#34;&#34;&#34;
         Validates a command to be sent to the command service.
-        Note that in the jvm CSW API the return value is a ValidateResponse.
-        Since Python does not have traits, the return type is marked as SubmitResponse.
 
         Args:
             controlCommand (ControlCommand): command to submit
@@ -105,11 +103,9 @@ class CommandService:
        &#34;&#34;&#34;
         return self._postCommand(&#34;Validate&#34;, controlCommand)
 
-    def oneway(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
         &#34;&#34;&#34;
        Sends a command to the command service without expecting a reply.
-       Note that in the jvm CSW API the return value is a OnewayResponse.
-       Since Python does not have traits, the return type is marked as SubmitResponse.
 
        Args:
            controlCommand (ControlCommand): command to submit
@@ -246,8 +242,8 @@ class CommandService:
                 data = Validate(controlCommand)._asDict()
             case _:
                 data = Oneway(controlCommand)._asDict()
-        jsonStr = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonStr)
+        jsonData = json.loads(json.dumps(data))
+        response = requests.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
             runId = str(uuid.uuid4())
             return Error(runId, response.text)
@@ -270,11 +266,9 @@ class CommandService:
        &#34;&#34;&#34;
         return self._postCommand(&#34;Submit&#34;, controlCommand)
 
-    def validate(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
         &#34;&#34;&#34;
         Validates a command to be sent to the command service.
-        Note that in the jvm CSW API the return value is a ValidateResponse.
-        Since Python does not have traits, the return type is marked as SubmitResponse.
 
         Args:
             controlCommand (ControlCommand): command to submit
@@ -284,11 +278,9 @@ class CommandService:
        &#34;&#34;&#34;
         return self._postCommand(&#34;Validate&#34;, controlCommand)
 
-    def oneway(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
         &#34;&#34;&#34;
        Sends a command to the command service without expecting a reply.
-       Note that in the jvm CSW API the return value is a OnewayResponse.
-       Since Python does not have traits, the return type is marked as SubmitResponse.
 
        Args:
            controlCommand (ControlCommand): command to submit
@@ -394,12 +386,10 @@ class CommandService:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.CommandService.CommandService.oneway"><code class="name flex">
-<span>def <span class="ident">oneway</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>def <span class="ident">oneway</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sends a command to the command service without expecting a reply.
-Note that in the jvm CSW API the return value is a OnewayResponse.
-Since Python does not have traits, the return type is marked as SubmitResponse.</p>
+<div class="desc"><p>Sends a command to the command service without expecting a reply.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
@@ -411,11 +401,9 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def oneway(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+<pre><code class="python">def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
     &#34;&#34;&#34;
    Sends a command to the command service without expecting a reply.
-   Note that in the jvm CSW API the return value is a OnewayResponse.
-   Since Python does not have traits, the return type is marked as SubmitResponse.
 
    Args:
        controlCommand (ControlCommand): command to submit
@@ -427,7 +415,7 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.queryFinal"><code class="name flex">
-<span>def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>If the command for runId returned Started (long-running command), this will
@@ -468,7 +456,7 @@ a subclass of SubmitResponse</p></div>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.queryFinalAsync"><code class="name flex">
-<span>async def <span class="ident">queryFinalAsync</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>async def <span class="ident">queryFinalAsync</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>If the command for runId returned Started (long running command), this will
@@ -513,7 +501,7 @@ a subclass of SubmitResponse</p></div>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.submit"><code class="name flex">
-<span>def <span class="ident">submit</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>def <span class="ident">submit</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Submits a command to the command service</p>
@@ -542,7 +530,7 @@ a subclass of SubmitResponse</p></div>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.submitAndWait"><code class="name flex">
-<span>def <span class="ident">submitAndWait</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>def <span class="ident">submitAndWait</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Submits a command to the command service and waits for the final response.</p>
@@ -579,7 +567,7 @@ a subclass of SubmitResponse</p></div>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.submitAndWaitAsync"><code class="name flex">
-<span>async def <span class="ident">submitAndWaitAsync</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>async def <span class="ident">submitAndWaitAsync</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Submits a command to the command service and waits for the final response.
@@ -620,12 +608,10 @@ a subclass of SubmitResponse</p></div>
 </details>
 </dd>
 <dt id="csw.CommandService.CommandService.validate"><code class="name flex">
-<span>def <span class="ident">validate</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.SubmitResponse" href="CommandResponse.html#csw.CommandResponse.SubmitResponse">SubmitResponse</a></span>
+<span>def <span class="ident">validate</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Validates a command to be sent to the command service.
-Note that in the jvm CSW API the return value is a ValidateResponse.
-Since Python does not have traits, the return type is marked as SubmitResponse.</p>
+<div class="desc"><p>Validates a command to be sent to the command service.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
@@ -637,11 +623,9 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def validate(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+<pre><code class="python">def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
     &#34;&#34;&#34;
     Validates a command to be sent to the command service.
-    Note that in the jvm CSW API the return value is a ValidateResponse.
-    Since Python does not have traits, the return type is marked as SubmitResponse.
 
     Args:
         controlCommand (ControlCommand): command to submit

@@ -1,6 +1,7 @@
 # Python CSW APIs
 
-This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw). 
+This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw)
+and the [TMT Executive Software (ESW)](https://tmtsoftware.github.io/esw/). 
 
 Note: Python version 3.10 was used for testing.
 
@@ -27,7 +28,6 @@ this project.
 | v3.0.2     | v3.0.0-M1  |
 | v2.0.1     | v2.0.1     |
 | v2.0.0     | v2.0.0     |
-
 
 
 ## API Documentation

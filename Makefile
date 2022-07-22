@@ -6,8 +6,12 @@ all: doc
 doc:
 	test -d .venv || $(MAKE) venv
 	pipenv run pdoc3 --force --html --output-dir build csw
-	rm -f docs/*.html
-	cp build/csw/*.html docs/
+	pipenv run pdoc3 --force --html --output-dir build esw
+	test -d docs/csw || mkdir docs/csw
+	test -d docs/esw || mkdir docs/esw
+	rm -f docs/*.html docs/csw/*.html docs/esw/*.html
+	cp build/csw/*.html docs/csw
+	cp build/esw/*.html docs/esw
 
 # Run tests against an included, Scala based assembly
 test: all
