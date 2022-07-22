@@ -1,7 +1,7 @@
 # Python APIs for CSW and ESW
 
 This repository contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw)
-and [TMT Executive Software (ESW)](https://tmtsoftware.github.io/esw/].
+and [TMT Executive Software (ESW)](https://tmtsoftware.github.io/esw/).
 
 * [Python APIs for CSW](csw/index.html)
 * [Python APIs for ESW](esw/index.html)
