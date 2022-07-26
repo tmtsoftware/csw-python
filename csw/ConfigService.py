@@ -102,17 +102,27 @@ class ConfigService:
                 f"Input file path '{path}' contains invalid characters. "
                 + f"Note, these characters {charsMessage} or 'white space' are not allowed in file path`")
 
-    def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
+    def _createOrUpdate(self, create: bool, path: str, configData: ConfigData,
+                        annex: bool = False, comment: str = "Created") -> ConfigId:
         self._validatePath(path)
         token = self._getToken()
         params = urlencode({'annex': annex, 'comment': comment})
         baseUri = self._endPoint(f'config/{path}')
         uri = f'{baseUri}?{params}'
         headers = {'Content-type': 'application/octet-stream', 'Authorization': f'Bearer {token}'}
-        response = requests.post(uri, headers=headers, data=configData.content)
+        if create:
+            response = requests.post(uri, headers=headers, data=configData.content)
+        else:
+            response = requests.put(uri, headers=headers, data=configData.content)
         if not response.ok:
             raise RuntimeError(response.text)
         return ConfigId(response.json())
+
+    def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
+        return self._createOrUpdate(True, path, configData, annex, comment)
+
+    def update(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
+        return self._createOrUpdate(False, path, configData, annex, comment)
 
     def delete(self, path: str, comment: str = "Deleted"):
         token = self._getToken()
