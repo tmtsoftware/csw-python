@@ -39,12 +39,31 @@ class FileType(Enum):
     Annex = 1
 
 
+@dataclass_json
+@dataclass
+class ConfigMetadata:
+    repoPath: str
+    annexPath: str
+    annexMinFileSize: str
+    maxConfigFileSize: str
+
+
+@dataclass_json
+@dataclass
+class ConfigFileRevision:
+    id: str
+    author: str
+    comment: str
+    time: str
+
+
 @dataclass
 class ConfigService:
     client_id = "tmt-frontend-app"
     user = "config-admin1"
     password = "config-admin1"
     _locationService = LocationService()
+    _locationService.checkConnection()
 
     def _getBaseUri(self) -> str:
         prefix = Prefix(Subsystems.CSW, "ConfigServer")
@@ -111,7 +130,7 @@ class ConfigService:
             params.update({'type': fileType.name})
         if pattern:
             params.update({'pattern': pattern})
-        uri = f"{self._endPoint(f'list')}?{urlencode(params)}"
+        uri = f"{self._endPoint('list')}?{urlencode(params)}"
         response = requests.get(uri)
         return list(map(lambda p: ConfigFileInfo.from_dict(p), response.json()))
 
@@ -119,12 +138,12 @@ class ConfigService:
         params = {}
         if configId:
             params.update({'id': configId.id})
-        uri = f"{self._endPoint(f'config')}/{path}?{urlencode(params)}"
+        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
         response = requests.head(uri)
         return response.ok
 
     def getLatest(self, path: str) -> ConfigData:
-        uri = f"{self._endPoint(f'config')}/{path}"
+        uri = f"{self._endPoint('config')}/{path}"
         response = requests.get(uri)
         if not response.ok:
             raise RuntimeError(response.text)
@@ -132,7 +151,7 @@ class ConfigService:
 
     def getById(self, path: str, configId: ConfigId) -> ConfigData:
         params = {'id': configId.id}
-        uri = f"{self._endPoint(f'config')}/{path}?{urlencode(params)}"
+        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
         response = requests.get(uri)
         if not response.ok:
             raise RuntimeError(response.text)
@@ -140,8 +159,63 @@ class ConfigService:
 
     def getByTime(self, path: str, time: datetime) -> ConfigData:
         params = {'date': time.isoformat()}
-        uri = f"{self._endPoint(f'config')}/{path}?{urlencode(params)}"
+        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
         response = requests.get(uri)
         if not response.ok:
             raise RuntimeError(response.text)
         return ConfigData(response.content)
+
+    def getActive(self, path: str) -> ConfigData:
+        uri = f"{self._endPoint('active-config')}/{path}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return ConfigData(response.content)
+
+    def getActiveByTime(self, path: str, time: datetime) -> ConfigData:
+        params = {'date': time.isoformat()}
+        uri = f"{self._endPoint('active-config')}/{path}?{urlencode(params)}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return ConfigData(response.content)
+
+    def getActiveVersion(self, path: str) -> ConfigId:
+        uri = f"{self._endPoint('active-version')}/{path}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return ConfigId(response.json())
+
+    def getMetadata(self) -> ConfigMetadata:
+        uri = f"{self._endPoint('metadata')}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return ConfigMetadata.from_dict(response.json())
+
+    def _history(self, key: str, path: str,
+                 fromTime: datetime, toTime: datetime,
+                 maxResults: int) -> List[ConfigFileRevision]:
+        params = {}
+        if fromTime:
+            params.update({'from': fromTime.isoformat()})
+        if toTime:
+            params.update({'to': toTime.isoformat()})
+        if maxResults:
+            params.update({'maxResults': maxResults})
+        uri = f"{self._endPoint(key)}/{path}?{urlencode(params)}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return list(map(lambda p: ConfigFileRevision.from_dict(p), response.json()))
+
+    def history(self, path: str,
+                fromTime: datetime = None, toTime: datetime = None,
+                maxResults: int = 10000) -> List[ConfigFileRevision]:
+        return self._history('history', path, fromTime, toTime, maxResults)
+
+    def historyActive(self, path: str,
+                      fromTime: datetime = None, toTime: datetime = None,
+                      maxResults: int = None) -> List[ConfigFileRevision]:
+        return self._history('history-active', path, fromTime, toTime, maxResults)

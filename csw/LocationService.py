@@ -363,3 +363,10 @@ class LocationService:
         """
         jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{str(prefix)}"}}'
         return self._list(jsonBody)
+
+    # This is just to make sure the Location Service is working
+    def checkConnection(self):
+        try:
+            self.list()
+        except Exception as ex:
+            raise Exception("Failed to connect to CSW Location Service") from ex
