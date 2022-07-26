@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from csw.ConfigService import ConfigService, ConfigData, FileType
+from csw.ConfigService import *
 
 
 class TestConfigService:

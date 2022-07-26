@@ -17,7 +17,7 @@ CSW_VERSION=98771982d4829e20e0e8485d8e09d9873542b961
 
 logfile=test.log
 set -x
-cs launch csw-services:$CSW_VERSION -- start -e > $logfile 2>&1 &
+cs launch csw-services:$CSW_VERSION -- start -e -c -k > $logfile 2>&1 &
 cd tests/testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
 test-deploy/target/universal/stage/bin/test-container-cmd-app --local test-deploy/src/main/resources/TestContainer.conf   >> $logfile 2>&1 &

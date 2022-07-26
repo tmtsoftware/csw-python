@@ -32,8 +32,10 @@ For example, during development, run: <code>csw-services start</code>.</p>
 <p>The Python APIs mirror the ESW Scala and Java APIs. The classes usually have the same fields,
 with the difference that in some cases the Python types are simpler, due to less strict typing.</p>
 <h2 id="esw-shell">ESW Shell</h2>
-<p>The esw-shell command provides an interactive shell with predefined imports
-where you can type in CSW and ESW commands. The following example publishes an event:</p>
+<p>The <code>esw-shell.sh</code> script provides an interactive shell with predefined imports
+where you can type in CSW and ESW commands.
+It is meant to be run from the top level csw-python directory.
+The following example publishes an event:</p>
 <pre><code class="language-bash">&gt; esw-shell.sh
 Wellcome to ESW Shell
 &gt;&gt;&gt; source = Prefix(Subsystems.CSW, &quot;testassembly&quot;)
@@ -69,15 +71,7 @@ that can be used in scripts using the <code>async</code> and <code>await</code> 
 </code></pre>
 <h2 id="esw-sequencer-client">ESW Sequencer Client</h2>
 <p>Assuming a sequencer is running, you can control it from Python using the ESW Sequencer Client (see <a href="SequencerClient.html">SequencerClient</a>):</p>
-<pre><code class="language-python">from csw.Parameter import IntKey
-from csw.ParameterSetType import Setup, CommandName
-from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
-from esw.Sequence import Sequence
-from esw.SequencerClient import SequencerClient
-from esw.SequencerRes import Ok
-
-sequencerPrefix = Prefix(Subsystems.ESW, &quot;IRIS_ImagerOnly&quot;)
+<pre><code class="language-python">sequencerPrefix = Prefix(Subsystems.ESW, &quot;IRIS_ImagerOnly&quot;)
 seqClient = SequencerClient(sequencerPrefix)
 clientPrefix = Prefix(Subsystems.CSW, &quot;TestClient&quot;)
 maybeObsId = []
@@ -94,7 +88,8 @@ sequence = Sequence([setup1, setup2, setup3])
 resp = seqClient.loadSequence(sequence)
 assert (isinstance(resp, Ok))
 </code></pre>
-<p>See tests/esw/test_sequencer_client.py for some examples.</p>
+<p>The above code can also be copy/pasted into the Python based <code>esw-shell</code> (esw-shell.sh).
+See tests/esw/test_sequencer_client.py for some examples.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>

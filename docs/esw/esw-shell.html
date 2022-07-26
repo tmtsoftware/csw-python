@@ -27,6 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import asyncio
+from datetime import datetime, timezone
 from csw.ParameterSetType import *
 from csw.CommandResponse import *
 from csw.Prefix import Prefix
@@ -45,6 +46,14 @@ from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.Coords import *
 from csw.CurrentState import CurrentState
+from csw.ConfigService import *
+
+from esw.Sequence import Sequence
+from esw.SequencerClient import SequencerClient
+from esw.SequencerRes import *
+from esw.StepList import StepList
+from esw.Step import Step
+from esw.StepStatus import *
 
 
 def hcdCommandService(prefix: str) -&gt; CommandService:

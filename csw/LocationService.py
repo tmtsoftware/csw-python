@@ -9,23 +9,9 @@ import requests
 import json
 from csw.Prefix import Prefix
 
-# Ignore generated functions in API docs
-# noinspection SpellCheckingInspection
-__pdoc__ = {}
 
-
-# Note: Update this before each release!
 def csw_version():
     return {"csw-version": "4.0.1"}
-
-
-# noinspection SpellCheckingInspection
-def _pdocIgnoreGenerated(className: str):
-    __pdoc__[f"{className}.from_dict"] = False
-    __pdoc__[f"{className}.from_json"] = False
-    __pdoc__[f"{className}.schema"] = False
-    __pdoc__[f"{className}.to_dict"] = False
-    __pdoc__[f"{className}.to_json"] = False
 
 
 # Python API for CSW Location Service
@@ -58,9 +44,6 @@ class ConnectionType(Enum):
     AkkaType = "akka"
 
 
-_pdocIgnoreGenerated("ConnectionInfo")
-
-
 @dataclass_json
 @dataclass
 class ComponentId:
@@ -80,18 +63,12 @@ class ConnectionInfo:
         return ConnectionInfo(str(prefix), componentType.value, connectionType.value)
 
 
-_pdocIgnoreGenerated("ResolveInfo")
-
-
 @dataclass_json
 @dataclass
 class ResolveInfo:
     _type: str
     connection: ConnectionInfo
     within: str
-
-
-_pdocIgnoreGenerated("Location")
 
 
 @dataclass_json
@@ -115,16 +92,10 @@ class Location:
                 raise Exception(f"Invalid location type: {obj['_type']}")
 
 
-_pdocIgnoreGenerated("AkkaLocation")
-
-
 @dataclass_json
 @dataclass
 class AkkaLocation(Location):
     pass
-
-
-_pdocIgnoreGenerated("TcpLocation")
 
 
 @dataclass_json
@@ -133,16 +104,10 @@ class TcpLocation(Location):
     pass
 
 
-_pdocIgnoreGenerated("HttpLocation")
-
-
 @dataclass_json
 @dataclass
 class HttpLocation(Location):
     pass
-
-
-_pdocIgnoreGenerated("Registration")
 
 
 @dataclass_json
@@ -154,9 +119,6 @@ class Registration:
     connection: ConnectionInfo
 
 
-_pdocIgnoreGenerated("NetworkType")
-
-
 @dataclass_json
 @dataclass
 class NetworkType:
@@ -164,9 +126,6 @@ class NetworkType:
     NetworkType enum {Outside, Inside)
     """
     _type: str
-
-
-_pdocIgnoreGenerated("HttpRegistration")
 
 
 @dataclass_json
@@ -191,9 +150,6 @@ class AkkaRegistration(Registration):
     actorRefURI: str
     metadata: dict = field(default_factory=dict)
     _type: str = "AkkaRegistration"
-
-
-_pdocIgnoreGenerated("TcpRegistration")
 
 
 @dataclass_json
@@ -364,9 +320,3 @@ class LocationService:
         jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{str(prefix)}"}}'
         return self._list(jsonBody)
 
-    # This is just to make sure the Location Service is working
-    def checkConnection(self):
-        try:
-            self.list()
-        except Exception as ex:
-            raise Exception("Failed to connect to CSW Location Service") from ex

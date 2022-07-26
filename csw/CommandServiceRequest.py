@@ -6,25 +6,6 @@ from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import ControlCommand
 
-# Ignore generated functions in API docs
-__pdoc__ = {}
-
-
-def _pdocIgnoreGenerated(className: str):
-    __pdoc__[f"{className}.from_dict"] = False
-    __pdoc__[f"{className}.from_json"] = False
-    __pdoc__[f"{className}.schema"] = False
-    __pdoc__[f"{className}.to_dict"] = False
-    __pdoc__[f"{className}.to_json"] = False
-
-
-_pdocIgnoreGenerated("Validate")
-_pdocIgnoreGenerated("Submit")
-_pdocIgnoreGenerated("Oneway")
-_pdocIgnoreGenerated("QueryFinal")
-_pdocIgnoreGenerated("SubscribeCurrentState")
-
-
 @dataclass_json
 @dataclass
 class CommandServiceRequest:

@@ -40,11 +40,12 @@ class TestEventsWithAssembly:
     prefix = Prefix(Subsystems.CSW, "TestPublisher")
 
     def setup_method(self):
-        self.cleanup()
+        pass
+        # self.cleanup()
 
     def teardown_method(self):
-        # pass
-        self.cleanup()
+        pass
+        # self.cleanup()
 
     def cleanup(self):
         if os.path.exists(self.tmpInFile):
