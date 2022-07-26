@@ -229,3 +229,21 @@ class ConfigService:
                       fromTime: datetime = None, toTime: datetime = None,
                       maxResults: int = None) -> List[ConfigFileRevision]:
         return self._history('history-active', path, fromTime, toTime, maxResults)
+
+    def setActiveVersion(self, path: str, configId: ConfigId, comment: str):
+        token = self._getToken()
+        params = {'id': configId.id, 'comment': comment}
+        headers = {'Authorization': f'Bearer {token}'}
+        uri = f"{self._endPoint('active-version')}/{path}?{urlencode(params)}"
+        response = requests.put(uri, headers=headers)
+        if not response.ok:
+            raise RuntimeError(response.text)
+
+    def resetActiveVersion(self, path: str, comment: str):
+        token = self._getToken()
+        params = {'comment': comment}
+        headers = {'Authorization': f'Bearer {token}'}
+        uri = f"{self._endPoint('active-version')}/{path}?{urlencode(params)}"
+        response = requests.put(uri, headers=headers)
+        if not response.ok:
+            raise RuntimeError(response.text)

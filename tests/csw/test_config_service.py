@@ -48,3 +48,11 @@ class TestConfigService:
         assert len(hist3) == 2
         assert hist3[1].id == id.id
         assert hist3[0].id == id2.id
+
+        self.configService.setActiveVersion('foo', id, 'test3')
+        x6 = self.configService.getActive('foo')
+        assert(x6.content.decode('utf-8') == 'hello')
+
+        self.configService.resetActiveVersion('foo', 'test4')
+        x7 = self.configService.getActive('foo')
+        assert(x7.content.decode('utf-8') == 'hello again')
