@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from typing import List
 from urllib.parse import urlencode
@@ -38,13 +39,17 @@ class FileType(Enum):
     Annex = 1
 
 
+@dataclass
 class ConfigService:
-    locationService = LocationService()
+    client_id = "tmt-frontend-app"
+    user = "config-admin1"
+    password = "config-admin1"
+    _locationService = LocationService()
 
     def _getBaseUri(self) -> str:
         prefix = Prefix(Subsystems.CSW, "ConfigServer")
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        location = self.locationService.resolve(connection)
+        location = self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
@@ -55,7 +60,7 @@ class ConfigService:
 
     def _locateAuthService(self) -> str:
         connection = ConnectionInfo.make(Prefix(Subsystems.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
-        location = self.locationService.resolve(connection)
+        location = self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
@@ -64,12 +69,13 @@ class ConfigService:
     def _getToken(self):
         uri = self._locateAuthService()
         keycloak_openid = KeycloakOpenID(server_url=f'{uri}/',
-                                         client_id='tmt-frontend-app',
+                                         client_id=self.client_id,
                                          realm_name='TMT')
-        d = keycloak_openid.token("config-admin1", "config-admin1")
+        d = keycloak_openid.token(self.user, self.password)
         return d['access_token']
 
-    def _validatePath(self, path: str):
+    @staticmethod
+    def _validatePath(path: str):
         invalidChars = "!#<>$%&'@^`~+,;=\\s"
         if re.match(invalidChars, path):
             charsMessage = invalidChars.replace('\\s', '')
@@ -119,6 +125,22 @@ class ConfigService:
 
     def getLatest(self, path: str) -> ConfigData:
         uri = f"{self._endPoint(f'config')}/{path}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return ConfigData(response.content)
+
+    def getById(self, path: str, configId: ConfigId) -> ConfigData:
+        params = {'id': configId.id}
+        uri = f"{self._endPoint(f'config')}/{path}?{urlencode(params)}"
+        response = requests.get(uri)
+        if not response.ok:
+            raise RuntimeError(response.text)
+        return ConfigData(response.content)
+
+    def getByTime(self, path: str, time: datetime) -> ConfigData:
+        params = {'date': time.isoformat()}
+        uri = f"{self._endPoint(f'config')}/{path}?{urlencode(params)}"
         response = requests.get(uri)
         if not response.ok:
             raise RuntimeError(response.text)
