@@ -6,11 +6,11 @@ from urllib.parse import urlencode
 
 import requests
 from dataclasses_json import dataclass_json
-from keycloak import KeycloakOpenID
+from keycloak import KeycloakOpenID, KeycloakAdmin
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystems, Subsystem
 
 
 @dataclass
@@ -39,28 +39,36 @@ class FileType(Enum):
 
 
 class ConfigService:
-    @staticmethod
-    def _getBaseUri() -> str:
+    locationService = LocationService()
+
+    def _getBaseUri(self) -> str:
         prefix = Prefix(Subsystems.CSW, "ConfigServer")
-        locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        location = locationService.resolve(connection)
+        location = self.locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
-        raise RuntimeError
+        raise RuntimeError("Can't location CSW Config Service")
 
     def _endPoint(self, path: str) -> str:
         return f'{self._getBaseUri()}{path}'
 
+    def _locateAuthService(self) -> str:
+        connection = ConnectionInfo.make(Prefix(Subsystems.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
+        location = self.locationService.resolve(connection)
+        if location is not None:
+            location.__class__ = HttpLocation
+            return location.uri
+        raise RuntimeError("Can't locate CSW Auth Service")
+
     def _getToken(self):
-        keycloak_openid = KeycloakOpenID(server_url='http://localhost:8081/auth/',
+        uri = self._locateAuthService()
+        keycloak_openid = KeycloakOpenID(server_url=f'{uri}/',
                                          client_id='tmt-frontend-app',
                                          realm_name='TMT')
         d = keycloak_openid.token("config-admin1", "config-admin1")
         return d['access_token']
 
-    # XXX TODO FIXME not working
     def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
         # ConfigUtils.validatePath(path)
         token = self._getToken()
@@ -73,6 +81,16 @@ class ConfigService:
             raise RuntimeError(response.text)
         return ConfigId(response.text)
 
+    def delete(self, path: str, comment: str = "Deleted"):
+        token = self._getToken()
+        params = urlencode({'comment': comment})
+        baseUri = self._endPoint(f'config/{path}')
+        uri = f'{baseUri}?{params}'
+        headers = {'Authorization': f'Bearer {token}'}
+        response = requests.delete(uri, headers=headers)
+        if not response.ok:
+            raise RuntimeError(response.text)
+
     def list(self, fileType: FileType = None, pattern: str = None) -> List[ConfigFileInfo]:
         params = {}
         if fileType:
@@ -82,7 +100,6 @@ class ConfigService:
         uri = f"{self._endPoint(f'list')}?{urlencode(params)}"
         response = requests.get(uri)
         return list(map(lambda p: ConfigFileInfo.from_dict(p), response.json()))
-
 
     def exists(self, path: str, configId: ConfigId = None):
         params = {}
