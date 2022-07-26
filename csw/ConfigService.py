@@ -1,16 +1,16 @@
-import json
 from dataclasses import dataclass
 from enum import Enum
 from typing import List
 from urllib.parse import urlencode
 
+import re
 import requests
 from dataclasses_json import dataclass_json
-from keycloak import KeycloakOpenID, KeycloakAdmin
+from keycloak import KeycloakOpenID
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems, Subsystem
+from csw.Subsystem import Subsystems
 
 
 @dataclass
@@ -69,8 +69,16 @@ class ConfigService:
         d = keycloak_openid.token("config-admin1", "config-admin1")
         return d['access_token']
 
+    def _validatePath(self, path: str):
+        invalidChars = "!#<>$%&'@^`~+,;=\\s"
+        if re.match(invalidChars, path):
+            charsMessage = invalidChars.replace('\\s', '')
+            raise RuntimeError(
+                f"Input file path '{path}' contains invalid characters. "
+                + f"Note, these characters {charsMessage} or 'white space' are not allowed in file path`")
+
     def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
-        # ConfigUtils.validatePath(path)
+        self._validatePath(path)
         token = self._getToken()
         params = urlencode({'annex': annex, 'comment': comment})
         baseUri = self._endPoint(f'config/{path}')
@@ -79,7 +87,7 @@ class ConfigService:
         response = requests.post(uri, headers=headers, data=configData.content)
         if not response.ok:
             raise RuntimeError(response.text)
-        return ConfigId(response.text)
+        return ConfigId(response.json())
 
     def delete(self, path: str, comment: str = "Deleted"):
         token = self._getToken()
