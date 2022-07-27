@@ -5,16 +5,19 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Updated dependencies and moved to Python 3.10
 - Changed the way parameters are accessed to be more like the Java/Scala CSW APIs
 - Added use of Python Generics for keys and parameters, to provide type hints for IDEs
-- Added some ESW class definitions and an esw-shell application, similar to the Scala CSW one
-- Added command service client features
+- Added Sequencer client APIs (so you can control a running sequencer from Python)
+- Add an esw-shell application, similar to the Scala CSW one (see ./esw-shell.sh wrapper)
+- Added command service client features (class csw.CommandService)
 - Renamed KeyType enum to KeyTypes and added KeyType class hierarchy, similar to CSW APIs
 - Refactored code to use new python 3.10 features
 - Added code to find a unique port when registering with the Location Service with port=0
-- Updated Units to match CSW version
+- Updated Units to match latest CSW version
 - Fixed issue with Redis sentinal (need to use localhost)
-- Updated CSW version to SHA of latest snapshot
+- Updated CSW version to SHA of the latest snapshot
+- Added Command Service and Config Service client APIs
 
 ## [tmtpycsw v4.0.3] - 2022-04-27
 
