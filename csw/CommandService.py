@@ -103,8 +103,8 @@ class CommandService:
       """
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         async with websockets.connect(wsUri) as websocket:
             await websocket.send(jsonStr)
             jsonResp = await websocket.recv()
@@ -144,8 +144,8 @@ class CommandService:
       """
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         ws = create_connection(wsUri)
         ws.send(jsonStr)
         jsonResp = ws.recv()

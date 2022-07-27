@@ -5,6 +5,7 @@ including the
 [Location Service](https://tmtsoftware.github.io/csw/services/location.html),
 [Event Service](https://tmtsoftware.github.io/csw/services/event.html) and
 [Command Service](https://tmtsoftware.github.io/csw/commons/command.html).
+[Config Service](https://tmtsoftware.github.io/csw/services/config.html).
 
 See [here](https://tmtsoftware.github.io/csw/index.html) for the CSW documentation.
 
@@ -327,3 +328,29 @@ The following example gets the first value of the "BasePosition", which is expec
     assert (eqCoord.ra == Angle("12:13:14.15 hours"))
     assert (eqCoord.dec == Angle("-30:31:32.3 deg"))
 ```
+
+## Config Service
+
+There is also a Python API for the [CSW Config Service](ConfigService.html):
+
+```python
+    configService = ConfigService()
+    id = self.configService.create("foo", ConfigData(bytes('hello', 'utf-8')), comment="test")
+    x = self.configService.getLatest('foo')
+    assert (x.content.decode('utf-8') == 'hello')
+```
+
+The constructor takes an optional username and password. The default is config-admin1:config-admin1, 
+which works for the development environment.
+
+The content of the file to store in the Config Service is represented by the ConfigData class, which
+has a content of type `bytes`:
+
+```python
+@dataclass
+class ConfigData:
+    content: bytes
+```
+
+This can be used for binary files. For text files, you can use the built-in `bytes` function to 
+convert text to bytes or the `decode` function to convert bytes to text.

@@ -131,8 +131,8 @@ class CommandService:
       &#34;&#34;&#34;
         baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
         wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         async with websockets.connect(wsUri) as websocket:
             await websocket.send(jsonStr)
             jsonResp = await websocket.recv()
@@ -172,8 +172,8 @@ class CommandService:
       &#34;&#34;&#34;
         baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
         wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         ws = create_connection(wsUri)
         ws.send(jsonStr)
         jsonResp = ws.recv()
@@ -306,8 +306,8 @@ class CommandService:
       &#34;&#34;&#34;
         baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
         wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         async with websockets.connect(wsUri) as websocket:
             await websocket.send(jsonStr)
             jsonResp = await websocket.recv()
@@ -347,8 +347,8 @@ class CommandService:
       &#34;&#34;&#34;
         baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
         wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         ws = create_connection(wsUri)
         ws.send(jsonStr)
         jsonResp = ws.recv()
@@ -447,8 +447,8 @@ a subclass of SubmitResponse</p></div>
   &#34;&#34;&#34;
     baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-    respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-    jsonStr = json.dumps(respDict)
+    msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+    jsonStr = json.dumps(msgDict)
     ws = create_connection(wsUri)
     ws.send(jsonStr)
     jsonResp = ws.recv()
@@ -492,8 +492,8 @@ a subclass of SubmitResponse</p></div>
   &#34;&#34;&#34;
     baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-    respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-    jsonStr = json.dumps(respDict)
+    msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+    jsonStr = json.dumps(msgDict)
     async with websockets.connect(wsUri) as websocket:
         await websocket.send(jsonStr)
         jsonResp = await websocket.recv()
