@@ -6,6 +6,7 @@ from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import ControlCommand
 
+
 @dataclass_json
 @dataclass
 class CommandServiceRequest:
@@ -45,7 +46,6 @@ class Oneway(CommandServiceRequest):
     pass
 
 
-@dataclass_json
 @dataclass
 class QueryFinal:
     """
@@ -85,6 +85,11 @@ class QueryFinal:
 
 @dataclass_json
 @dataclass
+class StateName:
+    name: str
+
+
+@dataclass
 class SubscribeCurrentState:
     """
     Message used to subscribe to the current state of a component.
@@ -99,9 +104,18 @@ class SubscribeCurrentState:
         """
         Returns a SubscribeCurrentState for the given dict.
         """
-        # typ = obj["_type"]
         if "names" in obj.keys():
             stateNames = obj.get("names")
         else:
             stateNames = []
         return SubscribeCurrentState(stateNames)
+
+    def _asDict(self):
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            'names': self.stateNames
+        }

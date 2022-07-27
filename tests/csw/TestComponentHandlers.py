@@ -50,7 +50,7 @@ class TestComponentHandlers(ComponentHandlers):
         self.log.debug(f"MyComponentHandlers Received setup {str(command)} with {n} params")
         if command.commandName.name == "LongRunningCommand":
             task = asyncio.create_task(self.longRunningCommand(runId, command))
-            return Started(runId, "Long running task in progress..."), task
+            return Started(runId), task
         elif command.commandName.name == "SimpleCommand":
             return Completed(runId), None
         elif command.commandName.name == "ResultCommand":

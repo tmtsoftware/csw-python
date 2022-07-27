@@ -1,15 +1,29 @@
 import uuid
+from typing import List
+
 import requests
 import websockets
 from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
+from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState
+from csw.CurrentState import CurrentState
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
+
+
+@dataclass
+class Subscription:
+    _cancelled = False
+
+    def cancel(self):
+        self._cancelled = True
+
+    def isCancelled(self):
+        return self._cancelled
 
 
 # A CSW command service client
@@ -103,8 +117,8 @@ class CommandService:
       """
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         async with websockets.connect(wsUri) as websocket:
             await websocket.send(jsonStr)
             jsonResp = await websocket.recv()
@@ -144,8 +158,8 @@ class CommandService:
       """
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
-        respDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(respDict)
+        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        jsonStr = json.dumps(msgDict)
         ws = create_connection(wsUri)
         ws.send(jsonStr)
         jsonResp = ws.recv()
@@ -168,3 +182,26 @@ class CommandService:
                 return self.queryFinal(runId, timeoutInSeconds)
             case _:
                 return resp
+
+    async def subscribeCurrentState(self, names: List[str], callback) -> Subscription:
+        """
+        Subscribe to the current state of a component
+
+        Args:
+           names (List[str]): subscribe to states which have any of the provided value for name.
+                              If no states are provided, all the current states will be received.
+           callback: a function to be called with the CurrentState values
+
+        """
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        msgDict = SubscribeCurrentState(names)._asDict()
+        jsonStr = json.dumps(msgDict)
+        subscription = Subscription()
+        async with websockets.connect(wsUri) as websocket:
+            await websocket.send(jsonStr)
+            while not subscription.isCancelled():
+                jsonResp = await websocket.recv()
+                cs = CurrentState._fromDict(json.loads(jsonResp))
+                callback(cs)
+        return subscription
