@@ -1,4 +1,6 @@
+import asyncio
 import uuid
+from asyncio import Task
 from typing import List
 
 import requests
@@ -13,17 +15,6 @@ from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
-
-
-@dataclass
-class Subscription:
-    _cancelled = False
-
-    def cancel(self):
-        self._cancelled = True
-
-    def isCancelled(self):
-        return self._cancelled
 
 
 # A CSW command service client
@@ -183,7 +174,19 @@ class CommandService:
             case _:
                 return resp
 
-    async def subscribeCurrentState(self, names: List[str], callback) -> Subscription:
+    async def _subscribeCurrentState(self, names: List[str], callback):
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        msgDict = SubscribeCurrentState(names)._asDict()
+        jsonStr = json.dumps(msgDict)
+        async with websockets.connect(wsUri) as websocket:
+            await websocket.send(jsonStr)
+            while True:
+                jsonResp = await websocket.recv()
+                cs = CurrentState._fromDict(json.loads(jsonResp))
+                callback(cs)
+
+    def subscribeCurrentState(self, names: List[str], callback) -> Task:
         """
         Subscribe to the current state of a component
 
@@ -192,16 +195,6 @@ class CommandService:
                               If no states are provided, all the current states will be received.
            callback: a function to be called with the CurrentState values
 
+        Returns: subscription task
         """
-        baseUri = self._getBaseUri().replace('http:', 'ws:')
-        wsUri = f"{baseUri}websocket-endpoint"
-        msgDict = SubscribeCurrentState(names)._asDict()
-        jsonStr = json.dumps(msgDict)
-        subscription = Subscription()
-        async with websockets.connect(wsUri) as websocket:
-            await websocket.send(jsonStr)
-            while not subscription.isCancelled():
-                jsonResp = await websocket.recv()
-                cs = CurrentState._fromDict(json.loads(jsonResp))
-                callback(cs)
-        return subscription
+        return asyncio.create_task(self._subscribeCurrentState(names, callback))

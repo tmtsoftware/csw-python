@@ -33,7 +33,8 @@ class ComponentHandlers:
 
         Returns: (CommandResponse, Task)
             a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-            For long running commands, you can respond with Started(runId, "...") and a task that completes the work in the background.
+            For long running commands, you can respond with Started(runId, "...") and a task that completes the work
+            in the background.
         """
         # noinspection PyTypeChecker
         return Error(runId, "Not implemented: submit command handler"), None

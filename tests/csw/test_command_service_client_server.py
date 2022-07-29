@@ -1,5 +1,7 @@
+import asyncio
 import os
 import sys
+
 import py
 import pytest
 from xprocess import ProcessStarter
@@ -31,32 +33,38 @@ def start_server(xprocess):
     xprocess.getinfo("TestComponentHandlers").terminate()
 
 
-def currentStateHandler(cs: CurrentState):
-    print(f'XXX Received current state: {cs}')
-
-
 # noinspection DuplicatedCode
-@pytest.mark.asyncio
-async def test_command_client_server():
-    # Create a python based command service client
-    cs = CommandService(Prefix(Subsystems.CSW, "pycswTest2"), ComponentType.Service)
-    prefix = Prefix(Subsystems.CSW, "TestClient")
-    maybeObsId = []
-    resp = cs.submit(Setup(prefix, CommandName("SimpleCommand"), maybeObsId, []))
-    assert isinstance(resp, Completed)
-    resp2 = cs.submit(Setup(prefix, CommandName("ResultCommand"), maybeObsId, []))
-    assert isinstance(resp2, Completed)
-    assert len(resp2.result.paramSet) == 1
+class TestCommandServiceClientServer:
+    _csCount = 0
 
-    # LongRunningCommand
-    subscriptionF = cs.subscribeCurrentState(["PyCswState"], currentStateHandler)
-    resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []))
-    assert isinstance(resp3, Started)
-    resp4 = cs.queryFinal(resp3.runId, 5)
-    assert isinstance(resp4, Completed)
-    subscription = await subscriptionF
-    subscription.cancel()
-    resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
-    assert isinstance(resp5, Completed)
+    def _currentStateHandler(self, cs: CurrentState):
+        print(f'XXX Received current state: {cs}')
+        self._csCount = self._csCount + 1
 
+    @pytest.mark.asyncio
+    async def test_command_client_server(self):
+        # Create a python based command service client
+        cs = CommandService(Prefix(Subsystems.CSW, "pycswTest2"), ComponentType.Service)
+        prefix = Prefix(Subsystems.CSW, "TestClient")
+        maybeObsId = []
+        resp = cs.submit(Setup(prefix, CommandName("SimpleCommand"), maybeObsId, []))
+        assert isinstance(resp, Completed)
+        resp2 = cs.submit(Setup(prefix, CommandName("ResultCommand"), maybeObsId, []))
+        assert isinstance(resp2, Completed)
+        assert len(resp2.result.paramSet) == 1
 
+        # LongRunningCommand
+        task = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+        resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []))
+        assert isinstance(resp3, Started)
+        resp4 = cs.queryFinal(resp3.runId, 5)
+        assert isinstance(resp4, Completed)
+        resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
+        assert isinstance(resp5, Completed)
+        # await asyncio.sleep(5)
+        # task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            print("XXX cancelled task")
+        assert self._csCount > 0
