@@ -2,6 +2,7 @@ import asyncio
 import uuid
 from asyncio import Task
 from typing import List
+import traceback
 
 import requests
 import websockets
@@ -15,6 +16,14 @@ from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
+
+
+@dataclass
+class Subscription:
+    task: Task
+
+    def cancel(self):
+        self.task.cancel()
 
 
 # A CSW command service client
@@ -179,14 +188,13 @@ class CommandService:
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
-        async with websockets.connect(wsUri) as websocket:
+        async for websocket in websockets.connect(wsUri):
             await websocket.send(jsonStr)
-            while True:
-                jsonResp = await websocket.recv()
-                cs = CurrentState._fromDict(json.loads(jsonResp))
-                callback(cs)
+            async for message in websocket:
+                print(f'XXX Recv ws: {message}')
+                callback(CurrentState._fromDict(json.loads(message)))
 
-    def subscribeCurrentState(self, names: List[str], callback) -> Task:
+    def subscribeCurrentState(self, names: List[str], callback) -> Subscription:
         """
         Subscribe to the current state of a component
 
@@ -197,4 +205,5 @@ class CommandService:
 
         Returns: subscription task
         """
-        return asyncio.create_task(self._subscribeCurrentState(names, callback))
+        task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+        return Subscription(task)

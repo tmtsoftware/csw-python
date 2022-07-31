@@ -1,5 +1,3 @@
-import pytest
-
 from csw.CommandResponse import Completed, Accepted, Started
 from csw.CommandService import CommandService
 from csw.LocationService import ComponentType
@@ -10,7 +8,6 @@ from csw.Subsystem import Subsystems
 
 
 # Assumes csw-services and test assembly are running!
-@pytest.mark.asyncio
 async def test_command_service_client():
     cs = CommandService(Prefix(Subsystems.CSW, "TestPublisher"), ComponentType.Assembly)
     prefix = Prefix(Subsystems.CSW, "TestClient")

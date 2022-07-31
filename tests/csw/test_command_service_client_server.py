@@ -41,7 +41,6 @@ class TestCommandServiceClientServer:
         print(f'XXX Received current state: {cs}')
         self._csCount = self._csCount + 1
 
-    @pytest.mark.asyncio
     async def test_command_client_server(self):
         # Create a python based command service client
         cs = CommandService(Prefix(Subsystems.CSW, "pycswTest2"), ComponentType.Service)
@@ -54,17 +53,20 @@ class TestCommandServiceClientServer:
         assert len(resp2.result.paramSet) == 1
 
         # LongRunningCommand
-        task = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+        subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+        await asyncio.sleep(1)
         resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []))
         assert isinstance(resp3, Started)
         resp4 = cs.queryFinal(resp3.runId, 5)
         assert isinstance(resp4, Completed)
         resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
         assert isinstance(resp5, Completed)
-        # await asyncio.sleep(5)
-        # task.cancel()
-        try:
-            await task
-        except asyncio.CancelledError:
-            print("XXX cancelled task")
+        await asyncio.sleep(1)
         assert self._csCount > 0
+        # subscription.cancel()
+        asyncio.get_event_loop().stop()
+        # try:
+        #     await subscription.task
+        # except asyncio.CancelledError:
+        #     print("XXX cancelled task")
+        #     asyncio.get_event_loop().stop()
