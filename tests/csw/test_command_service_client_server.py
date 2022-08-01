@@ -15,22 +15,22 @@ from csw.Subsystem import Subsystems
 
 
 # Start a local python based command service (defined in TestComponentHandlers.py) for testing
-@pytest.fixture(autouse=True)
-def start_server(xprocess):
-    python_executable_full_path = sys.executable
-    python_server_script_full_path = py.path.local(__file__).dirpath("TestComponentHandlers.py")
-    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-
-    class Starter(ProcessStarter):
-        pattern = '======== Running on'
-        # See https://pytest-xprocess.readthedocs.io/en/latest/starter.html
-        env = {"PYTHONPATH": str(path), "PYTHONUNBUFFERED": "1"}
-        terminate_on_interrupt = True
-        args = [python_executable_full_path, python_server_script_full_path]
-
-    xprocess.ensure("TestComponentHandlers", Starter)
-    yield
-    xprocess.getinfo("TestComponentHandlers").terminate()
+# @pytest.fixture(autouse=True)
+# def start_server(xprocess):
+#     python_executable_full_path = sys.executable
+#     python_server_script_full_path = py.path.local(__file__).dirpath("TestComponentHandlers.py")
+#     path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+#
+#     class Starter(ProcessStarter):
+#         pattern = '======== Running on'
+#         # See https://pytest-xprocess.readthedocs.io/en/latest/starter.html
+#         env = {"PYTHONPATH": str(path), "PYTHONUNBUFFERED": "1"}
+#         terminate_on_interrupt = True
+#         args = [python_executable_full_path, python_server_script_full_path]
+#
+#     xprocess.ensure("TestComponentHandlers", Starter)
+#     yield
+#     xprocess.getinfo("TestComponentHandlers").terminate()
 
 
 # noinspection DuplicatedCode
@@ -63,10 +63,6 @@ class TestCommandServiceClientServer:
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount > 0
-        # subscription.cancel()
+        subscription.cancel()
+        await asyncio.sleep(1)
         asyncio.get_event_loop().stop()
-        # try:
-        #     await subscription.task
-        # except asyncio.CancelledError:
-        #     print("XXX cancelled task")
-        #     asyncio.get_event_loop().stop()
