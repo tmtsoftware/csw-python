@@ -191,7 +191,6 @@ class CommandService:
         async for websocket in websockets.connect(wsUri):
             await websocket.send(jsonStr)
             async for message in websocket:
-                print(f'XXX Recv ws: {message}')
                 callback(CurrentState._fromDict(json.loads(message)))
 
     def subscribeCurrentState(self, names: List[str], callback) -> Subscription:

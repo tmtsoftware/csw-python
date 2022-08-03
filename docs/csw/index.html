@@ -27,7 +27,8 @@
 including the
 <a href="https://tmtsoftware.github.io/csw/services/location.html">Location Service</a>,
 <a href="https://tmtsoftware.github.io/csw/services/event.html">Event Service</a> and
-<a href="https://tmtsoftware.github.io/csw/commons/command.html">Command Service</a>.</p>
+<a href="https://tmtsoftware.github.io/csw/commons/command.html">Command Service</a>.
+<a href="https://tmtsoftware.github.io/csw/services/config.html">Config Service</a>.</p>
 <p>See <a href="https://tmtsoftware.github.io/csw/index.html">here</a> for the CSW documentation.</p>
 <p>You can find the <a href="https://github.com/tmtsoftware/csw-python">tmtpycsw sources</a> on GitHub.</p>
 <p>Note that all APIs here assume that the latest version of CSW services are running
@@ -152,7 +153,7 @@ class TestSubscriber3:
 </li>
 </ul>
 <p>In the above example, the callback expects SystemEvents. </p>
-<h2 id="command-service-api">Command Service API</h2>
+<h2 id="command-service-client-api">Command Service Client API</h2>
 <p>The <a href="CommandService.html">CommandService</a> class provides a client API for sending commands to an
 assembly or HCD.</p>
 <pre><code class="language-python">from csw.CommandResponse import Completed, Accepted
@@ -179,8 +180,19 @@ def test_command_service_client():
     assert isinstance(resp2, Accepted)
     resp3 = cs.oneway(setup)
     assert isinstance(resp3, Accepted)
-
 </code></pre>
+<h3 id="subscribing-to-currentstate">Subscribing to CurrentState</h3>
+<p>You can subscribe to the CurrentState of an Assembly or HCD like this:</p>
+<pre><code>    def _currentStateHandler(self, cs: CurrentState):
+        print(f'Received CurrentState: {cs.stateName}')
+
+    subscription = cs.subscribeCurrentState([&quot;PyCswState&quot;], self._currentStateHandler)
+    ...
+    subscription.cancel()
+</code></pre>
+<p>The returned <code>Subscription</code> object contains a reference to an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> task
+that reads the CurrentState web socket messages from the component. To cancel the subscription, call the <code>cancel()</code> method.</p>
+<h2 id="implementing-an-assembly-or-hcd-in-python">Implementing an Assembly or HCD in Python</h2>
 <p>The <a href="CommandServer.html">CommandServer</a> class lets you start an HTTP server that will accept
 CSW Setup commands to implement an assembly or HCD in Python.
 By overriding the <code>onSetup</code> and <code>onOneway</code> methods of the <a href="ComponentHandlers.html">ComponentHandlers</a>
@@ -188,7 +200,7 @@ class, you can handle commands being sent from a CSW component in Python code
 and return a <a href="CommandResponse.html">CommandResponse</a> to the component.
 The messages are serialized using JSON (events use CBOR, since talking directly to Redis).</p>
 <p>Below is an example command server that accepts different types of commands.
-Note that a <em>long running command</em> should do the work in another thread and
+Note that a <em>long-running command</em> should do the work in another thread and
 return the <a href="CommandResponse.html">CommandResponse</a> later, while a <em>simple command</em>
 returns the command response immediately, possibly with a <a href="CommandResponse.html#csw.CommandResponse.Result">Result</a>.
 If an error occurs, <a href="CommandResponse.html#csw.CommandResponse.Error">Error</a> should be returned.
@@ -320,6 +332,23 @@ The following example gets the first value of the "BasePosition", which is expec
     assert (eqCoord.ra == Angle(&quot;12:13:14.15 hours&quot;))
     assert (eqCoord.dec == Angle(&quot;-30:31:32.3 deg&quot;))
 </code></pre>
+<h2 id="config-service">Config Service</h2>
+<p>There is also a Python API for the <a href="ConfigService.html">CSW Config Service</a>:</p>
+<pre><code class="language-python">    configService = ConfigService()
+    id = self.configService.create(&quot;foo&quot;, ConfigData(bytes('hello', 'utf-8')), comment=&quot;test&quot;)
+    x = self.configService.getLatest('foo')
+    assert (x.content.decode('utf-8') == 'hello')
+</code></pre>
+<p>The constructor takes an optional username and password. The default is config-admin1:config-admin1,
+which works for the development environment.</p>
+<p>The content of the file to store in the Config Service is represented by the ConfigData class, which
+has a content of type <code>bytes</code>:</p>
+<pre><code class="language-python">@dataclass
+class ConfigData:
+    content: bytes
+</code></pre>
+<p>This can be used for binary files. For text files, you can use the built-in <code>bytes</code> function to
+convert text to bytes or the <code>decode</code> function to convert bytes to text.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -444,8 +473,13 @@ The following example gets the first value of the "BasePosition", which is expec
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#csw-location-service">CSW Location Service</a></li>
 <li><a href="#csw-event-service">CSW Event Service</a></li>
-<li><a href="#command-service-api">Command Service API</a></li>
+<li><a href="#command-service-client-api">Command Service Client API</a><ul>
+<li><a href="#subscribing-to-currentstate">Subscribing to CurrentState</a></li>
+</ul>
+</li>
+<li><a href="#implementing-an-assembly-or-hcd-in-python">Implementing an Assembly or HCD in Python</a></li>
 <li><a href="#working-with-parameters">Working with Parameters</a></li>
+<li><a href="#config-service">Config Service</a></li>
 </ul>
 </div>
 <ul id="index">

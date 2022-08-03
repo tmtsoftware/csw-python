@@ -59,20 +59,15 @@ object TestAssemblyHandlers {
   private def eventHandler(log: Logger): Behavior[Event] = {
     def handleEvent(event: SystemEvent): Unit = {
       log.info(s"Received event: $event")
-      // Check that event time is recent
-      val isRecent =
-        event.eventTime.value.isAfter(UTCTime.now().value.minusSeconds(10))
-      if (isRecent && event.eventName.name.startsWith("testEvent")) {
-        // sort params for comparison
-        val params = event.paramSet.toList.sortBy(_.keyName).mkString(", ")
-        val s = s"SystemEvent(${event.eventName.name}, $params)\n"
-        // Create the file when the first event is received from the test, close it on the last
-        val append = event.eventName.name != "testEvent1"
-        val testFd = new FileOutputStream(eventTestFile, append)
-        testFd.write(s.getBytes)
-        log.info(s"XXX Writing to $eventTestFile")
-        testFd.close()
-      }
+      // sort params for comparison
+      val params = event.paramSet.toList.sortBy(_.keyName).mkString(", ")
+      val s = s"SystemEvent(${event.eventName.name}, $params)\n"
+      // Create the file when the first event is received from the test, close it on the last
+      val append = event.eventName.name != "testEvent1"
+      val testFd = new FileOutputStream(eventTestFile, append)
+      testFd.write(s.getBytes)
+      log.info(s"XXX Writing to $eventTestFile")
+      testFd.close()
     }
 
     Behaviors.receive { (_, msg) =>

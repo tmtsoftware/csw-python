@@ -25,7 +25,7 @@ from csw.EventKey import EventKey
 # The assembly writes the received events as JSON to "/tmp/PyTestAssemblyEventHandlers.out" and we compare with
 # a known, valid copy. To test the subscriber API, another file "/tmp/PyTestAssemblyEventHandlers.in" is
 # generated from the received events here.
-# @pytest.mark.skip(reason="Test passes when run alone, but not together with all others")
+#@pytest.mark.skip(reason="Test passes when run alone, but not together with all others")
 class TestEventsWithAssembly:
     log = structlog.get_logger()
     dir = pathlib.Path(__file__).parent.absolute()
@@ -40,12 +40,10 @@ class TestEventsWithAssembly:
     prefix = Prefix(Subsystems.CSW, "TestPublisher")
 
     def setup_method(self):
-        pass
-        # self.cleanup()
+        self.cleanup()
 
     def teardown_method(self):
-        pass
-        # self.cleanup()
+        self.cleanup()
 
     def cleanup(self):
         if os.path.exists(self.tmpInFile):

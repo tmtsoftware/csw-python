@@ -17,6 +17,7 @@ this project.
 
 | csw-python | csw        |
 |------------|------------|
+| v4.0.4     | 98771982d4829e20e0e8485d8e09d9873542b961     |
 | v4.0.3     | v4.0.1     |
 | v4.0.2     | v4.0.1     |
 | v4.0.1     | v4.0.0     |
@@ -44,10 +45,3 @@ Then open `build/csw/index.html`.
 You can run the tests by typing `make test`.
 This creates the .venv directory, if it does not exist, and then runs the `runTests.sh` script,
 which does some checks and then uses pytest to run the tests.
-
-Some of the tests require that csw-services and a Scala based CSW command service application are running in the background.
-These are started in the runTests.sh script. 
-Once they are running, you can run all the tests with:
-```
-pipenv run python -m pytest tests
-```
