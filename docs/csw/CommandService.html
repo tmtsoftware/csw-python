@@ -26,18 +26,32 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import uuid
+<pre><code class="python">import asyncio
+import uuid
+from asyncio import Task
+from typing import List
+import traceback
+
 import requests
 import websockets
 from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
+from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState
+from csw.CurrentState import CurrentState
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
+
+
+@dataclass
+class Subscription:
+    task: Task
+
+    def cancel(self):
+        self.task.cancel()
 
 
 # A CSW command service client
@@ -195,7 +209,31 @@ class CommandService:
             case Started(runId):
                 return self.queryFinal(runId, timeoutInSeconds)
             case _:
-                return resp</code></pre>
+                return resp
+
+    async def _subscribeCurrentState(self, names: List[str], callback):
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        msgDict = SubscribeCurrentState(names)._asDict()
+        jsonStr = json.dumps(msgDict)
+        async for websocket in websockets.connect(wsUri):
+            await websocket.send(jsonStr)
+            async for message in websocket:
+                callback(CurrentState._fromDict(json.loads(message)))
+
+    def subscribeCurrentState(self, names: List[str], callback) -&gt; Subscription:
+        &#34;&#34;&#34;
+        Subscribe to the current state of a component
+
+        Args:
+           names (List[str]): subscribe to states which have any of the provided value for name.
+                              If no states are provided, all the current states will be received.
+           callback: a function to be called with the CurrentState values
+
+        Returns: subscription task
+        &#34;&#34;&#34;
+        task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+        return Subscription(task)</code></pre>
 </details>
 </section>
 <section>
@@ -370,7 +408,31 @@ class CommandService:
             case Started(runId):
                 return self.queryFinal(runId, timeoutInSeconds)
             case _:
-                return resp</code></pre>
+                return resp
+
+    async def _subscribeCurrentState(self, names: List[str], callback):
+        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+        msgDict = SubscribeCurrentState(names)._asDict()
+        jsonStr = json.dumps(msgDict)
+        async for websocket in websockets.connect(wsUri):
+            await websocket.send(jsonStr)
+            async for message in websocket:
+                callback(CurrentState._fromDict(json.loads(message)))
+
+    def subscribeCurrentState(self, names: List[str], callback) -&gt; Subscription:
+        &#34;&#34;&#34;
+        Subscribe to the current state of a component
+
+        Args:
+           names (List[str]): subscribe to states which have any of the provided value for name.
+                              If no states are provided, all the current states will be received.
+           callback: a function to be called with the CurrentState values
+
+        Returns: subscription task
+        &#34;&#34;&#34;
+        task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+        return Subscription(task)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -607,6 +669,39 @@ a subclass of SubmitResponse</p></div>
             return resp</code></pre>
 </details>
 </dd>
+<dt id="csw.CommandService.CommandService.subscribeCurrentState"><code class="name flex">
+<span>def <span class="ident">subscribeCurrentState</span></span>(<span>self, names: List[str], callback) ‑> <a title="csw.CommandService.Subscription" href="#csw.CommandService.Subscription">Subscription</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Subscribe to the current state of a component</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>names</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>subscribe to states which have any of the provided value for name.
+If no states are provided, all the current states will be received.</dd>
+<dt><strong><code>callback</code></strong></dt>
+<dd>a function to be called with the CurrentState values</dd>
+</dl>
+<p>Returns: subscription task</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subscribeCurrentState(self, names: List[str], callback) -&gt; Subscription:
+    &#34;&#34;&#34;
+    Subscribe to the current state of a component
+
+    Args:
+       names (List[str]): subscribe to states which have any of the provided value for name.
+                          If no states are provided, all the current states will be received.
+       callback: a function to be called with the CurrentState values
+
+    Returns: subscription task
+    &#34;&#34;&#34;
+    task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+    return Subscription(task)</code></pre>
+</details>
+</dd>
 <dt id="csw.CommandService.CommandService.validate"><code class="name flex">
 <span>def <span class="ident">validate</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
 </code></dt>
@@ -638,6 +733,47 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 </dd>
 </dl>
 </dd>
+<dt id="csw.CommandService.Subscription"><code class="flex name class">
+<span>class <span class="ident">Subscription</span></span>
+<span>(</span><span>task: _asyncio.Task)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Subscription(task: _asyncio.Task)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Subscription:
+    task: Task
+
+    def cancel(self):
+        self.task.cancel()</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.CommandService.Subscription.task"><code class="name">var <span class="ident">task</span> : _asyncio.Task</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.CommandService.Subscription.cancel"><code class="name flex">
+<span>def <span class="ident">cancel</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cancel(self):
+    self.task.cancel()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 </dl>
 </section>
 </article>
@@ -656,7 +792,7 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <ul>
 <li>
 <h4><code><a title="csw.CommandService.CommandService" href="#csw.CommandService.CommandService">CommandService</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="csw.CommandService.CommandService.componentType" href="#csw.CommandService.CommandService.componentType">componentType</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.oneway" href="#csw.CommandService.CommandService.oneway">oneway</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.prefix" href="#csw.CommandService.CommandService.prefix">prefix</a></code></li>
@@ -665,7 +801,15 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <li><code><a title="csw.CommandService.CommandService.submit" href="#csw.CommandService.CommandService.submit">submit</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.submitAndWait" href="#csw.CommandService.CommandService.submitAndWait">submitAndWait</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.submitAndWaitAsync" href="#csw.CommandService.CommandService.submitAndWaitAsync">submitAndWaitAsync</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.subscribeCurrentState" href="#csw.CommandService.CommandService.subscribeCurrentState">subscribeCurrentState</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.validate" href="#csw.CommandService.CommandService.validate">validate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.CommandService.Subscription" href="#csw.CommandService.Subscription">Subscription</a></code></h4>
+<ul class="">
+<li><code><a title="csw.CommandService.Subscription.cancel" href="#csw.CommandService.Subscription.cancel">cancel</a></code></li>
+<li><code><a title="csw.CommandService.Subscription.task" href="#csw.CommandService.Subscription.task">task</a></code></li>
 </ul>
 </li>
 </ul>

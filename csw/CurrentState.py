@@ -1,10 +1,13 @@
 import traceback
 from dataclasses import dataclass
-from typing import List
-from csw.Parameter import Parameter
+from typing import List, TypeVar
+from csw.Parameter import Parameter, Key, KeyType
 from csw.Prefix import Prefix
 
+T = TypeVar('T')
 
+
+# noinspection PyPep8Naming
 @dataclass
 class CurrentState:
     """
@@ -29,24 +32,50 @@ class CurrentState:
         Returns: dict
             a dictionary corresponding to this object
         """
-        try:
-            d = {
-                'prefix': str(self.prefix),
-                'stateName': self.stateName,
-                'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
-            }
-            return d
-        except Exception as ex:
-            traceback.print_exc()
+        return {
+            'prefix': str(self.prefix),
+            'stateName': self.stateName,
+            'paramSet': list(map(lambda p: p._asDict(), self.paramSet))
+        }
 
-    def get(self, keyName: str):
+    def __call__(self, key: Key[T]) -> Parameter[T] | None:
         """
-        Gets the parameter with the given name, or else returns None
+        This is similar to Scala's apply() method and gets the parameter for the given key, or else returns None.
+
+        Args:
+            key (Key[T]): parameter key
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        """
+        for p in self.paramSet:
+            if p.keyName == key.keyName:
+                return p
+
+    # noinspection PyUnusedLocal
+    def get(self, keyName: str, keyType: KeyType[T]) -> Parameter[T] | None:
+        """
+        Gets the parameter with the given name, or else returns None.
+
+        Args:
+            keyName (str): parameter name
+            keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        """
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def gets(self, keyName: str) -> Parameter | None:
+        """
+        Gets the parameter with the given name, or else returns None.
 
         Args:
             keyName (str): parameter name
 
-        Returns: Parameter|None
+        Returns: Parameter | None
             the parameter, if found
         """
         for p in self.paramSet:

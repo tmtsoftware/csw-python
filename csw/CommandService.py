@@ -1,15 +1,29 @@
+import asyncio
 import uuid
+from asyncio import Task
+from typing import List
+import traceback
+
 import requests
 import websockets
 from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal
+from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState
+from csw.CurrentState import CurrentState
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
+
+
+@dataclass
+class Subscription:
+    task: Task
+
+    def cancel(self):
+        self.task.cancel()
 
 
 # A CSW command service client
@@ -168,3 +182,27 @@ class CommandService:
                 return self.queryFinal(runId, timeoutInSeconds)
             case _:
                 return resp
+
+    async def _subscribeCurrentState(self, names: List[str], callback):
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        msgDict = SubscribeCurrentState(names)._asDict()
+        jsonStr = json.dumps(msgDict)
+        async for websocket in websockets.connect(wsUri):
+            await websocket.send(jsonStr)
+            async for message in websocket:
+                callback(CurrentState._fromDict(json.loads(message)))
+
+    def subscribeCurrentState(self, names: List[str], callback) -> Subscription:
+        """
+        Subscribe to the current state of a component
+
+        Args:
+           names (List[str]): subscribe to states which have any of the provided value for name.
+                              If no states are provided, all the current states will be received.
+           callback: a function to be called with the CurrentState values
+
+        Returns: subscription task
+        """
+        task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+        return Subscription(task)

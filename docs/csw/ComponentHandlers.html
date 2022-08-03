@@ -61,7 +61,8 @@ class ComponentHandlers:
 
         Returns: (CommandResponse, Task)
             a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-            For long running commands, you can respond with Started(runId, &#34;...&#34;) and a task that completes the work in the background.
+            For long running commands, you can respond with Started(runId, &#34;...&#34;) and a task that completes the work
+            in the background.
         &#34;&#34;&#34;
         # noinspection PyTypeChecker
         return Error(runId, &#34;Not implemented: submit command handler&#34;), None
@@ -181,7 +182,8 @@ component.</p></div>
 
         Returns: (CommandResponse, Task)
             a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-            For long running commands, you can respond with Started(runId, &#34;...&#34;) and a task that completes the work in the background.
+            For long running commands, you can respond with Started(runId, &#34;...&#34;) and a task that completes the work
+            in the background.
         &#34;&#34;&#34;
         # noinspection PyTypeChecker
         return Error(runId, &#34;Not implemented: submit command handler&#34;), None
@@ -329,7 +331,8 @@ a subclass of CommandResponse (only Accepted, Invalid or Locked are allowed)</p>
 </dl>
 <p>Returns: (CommandResponse, Task)
 a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-For long running commands, you can respond with Started(runId, "&hellip;") and a task that completes the work in the background.</p></div>
+For long running commands, you can respond with Started(runId, "&hellip;") and a task that completes the work
+in the background.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -344,7 +347,8 @@ For long running commands, you can respond with Started(runId, "&hellip;") and a
 
     Returns: (CommandResponse, Task)
         a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-        For long running commands, you can respond with Started(runId, &#34;...&#34;) and a task that completes the work in the background.
+        For long running commands, you can respond with Started(runId, &#34;...&#34;) and a task that completes the work
+        in the background.
     &#34;&#34;&#34;
     # noinspection PyTypeChecker
     return Error(runId, &#34;Not implemented: submit command handler&#34;), None</code></pre>

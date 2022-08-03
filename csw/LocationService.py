@@ -11,7 +11,7 @@ from csw.Prefix import Prefix
 
 
 def csw_version():
-    return {"csw-version": "4.0.1"}
+    return {"csw-version": "98771982d4829e20e0e8485d8e09d9873542b961"}
 
 
 # Python API for CSW Location Service

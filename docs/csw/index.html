@@ -153,7 +153,7 @@ class TestSubscriber3:
 </li>
 </ul>
 <p>In the above example, the callback expects SystemEvents. </p>
-<h2 id="command-service-api">Command Service API</h2>
+<h2 id="command-service-client-api">Command Service Client API</h2>
 <p>The <a href="CommandService.html">CommandService</a> class provides a client API for sending commands to an
 assembly or HCD.</p>
 <pre><code class="language-python">from csw.CommandResponse import Completed, Accepted
@@ -180,8 +180,19 @@ def test_command_service_client():
     assert isinstance(resp2, Accepted)
     resp3 = cs.oneway(setup)
     assert isinstance(resp3, Accepted)
-
 </code></pre>
+<h3 id="subscribing-to-currentstate">Subscribing to CurrentState</h3>
+<p>You can subscribe to the CurrentState of an Assembly or HCD like this:</p>
+<pre><code>    def _currentStateHandler(self, cs: CurrentState):
+        print(f'Received CurrentState: {cs.stateName}')
+
+    subscription = cs.subscribeCurrentState([&quot;PyCswState&quot;], self._currentStateHandler)
+    ...
+    subscription.cancel()
+</code></pre>
+<p>The returned <code>Subscription</code> object contains a reference to an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> task
+that reads the CurrentState web socket messages from the component. To cancel the subscription, call the <code>cancel()</code> method.</p>
+<h2 id="implementing-an-assembly-or-hcd-in-python">Implementing an Assembly or HCD in Python</h2>
 <p>The <a href="CommandServer.html">CommandServer</a> class lets you start an HTTP server that will accept
 CSW Setup commands to implement an assembly or HCD in Python.
 By overriding the <code>onSetup</code> and <code>onOneway</code> methods of the <a href="ComponentHandlers.html">ComponentHandlers</a>
@@ -189,7 +200,7 @@ class, you can handle commands being sent from a CSW component in Python code
 and return a <a href="CommandResponse.html">CommandResponse</a> to the component.
 The messages are serialized using JSON (events use CBOR, since talking directly to Redis).</p>
 <p>Below is an example command server that accepts different types of commands.
-Note that a <em>long running command</em> should do the work in another thread and
+Note that a <em>long-running command</em> should do the work in another thread and
 return the <a href="CommandResponse.html">CommandResponse</a> later, while a <em>simple command</em>
 returns the command response immediately, possibly with a <a href="CommandResponse.html#csw.CommandResponse.Result">Result</a>.
 If an error occurs, <a href="CommandResponse.html#csw.CommandResponse.Error">Error</a> should be returned.
@@ -462,7 +473,11 @@ convert text to bytes or the <code>decode</code> function to convert bytes to te
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#csw-location-service">CSW Location Service</a></li>
 <li><a href="#csw-event-service">CSW Event Service</a></li>
-<li><a href="#command-service-api">Command Service API</a></li>
+<li><a href="#command-service-client-api">Command Service Client API</a><ul>
+<li><a href="#subscribing-to-currentstate">Subscribing to CurrentState</a></li>
+</ul>
+</li>
+<li><a href="#implementing-an-assembly-or-hcd-in-python">Implementing an Assembly or HCD in Python</a></li>
 <li><a href="#working-with-parameters">Working with Parameters</a></li>
 <li><a href="#config-service">Config Service</a></li>
 </ul>

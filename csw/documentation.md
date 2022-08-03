@@ -145,7 +145,7 @@ See [here](Event.html) for the structure of an event. There are two types of eve
 
 In the above example, the callback expects SystemEvents. 
 
-## Command Service API
+## Command Service Client API
 
 The [CommandService](CommandService.html) class provides a client API for sending commands to an 
 assembly or HCD.
@@ -175,8 +175,25 @@ def test_command_service_client():
     assert isinstance(resp2, Accepted)
     resp3 = cs.oneway(setup)
     assert isinstance(resp3, Accepted)
+```
+
+### Subscribing to CurrentState
+
+You can subscribe to the CurrentState of an Assembly or HCD like this:
 
 ```
+    def _currentStateHandler(self, cs: CurrentState):
+        print(f'Received CurrentState: {cs.stateName}')
+
+    subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+    ...
+    subscription.cancel()
+```
+
+The returned `Subscription` object contains a reference to an [asyncio](https://docs.python.org/3/library/asyncio.html) task 
+that reads the CurrentState web socket messages from the component. To cancel the subscription, call the `cancel()` method.
+
+## Implementing an Assembly or HCD in Python
 
 The [CommandServer](CommandServer.html) class lets you start an HTTP server that will accept 
 CSW Setup commands to implement an assembly or HCD in Python.
@@ -186,7 +203,7 @@ and return a [CommandResponse](CommandResponse.html) to the component.
 The messages are serialized using JSON (events use CBOR, since talking directly to Redis).
 
 Below is an example command server that accepts different types of commands.
-Note that a *long running command* should do the work in another thread and
+Note that a *long-running command* should do the work in another thread and
 return the [CommandResponse](CommandResponse.html) later, while a *simple command* 
 returns the command response immediately, possibly with a [Result](CommandResponse.html#csw.CommandResponse.Result).
 If an error occurs, [Error](CommandResponse.html#csw.CommandResponse.Error) should be returned.

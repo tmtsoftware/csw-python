@@ -6,6 +6,7 @@ from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import ControlCommand
 
+
 @dataclass_json
 @dataclass
 class CommandServiceRequest:
@@ -83,6 +84,11 @@ class QueryFinal:
 
 
 @dataclass_json
+@dataclass
+class StateName:
+    name: str
+
+
 @dataclass
 class SubscribeCurrentState:
     """

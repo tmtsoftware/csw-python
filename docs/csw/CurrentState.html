@@ -28,11 +28,14 @@
 </summary>
 <pre><code class="python">import traceback
 from dataclasses import dataclass
-from typing import List
-from csw.Parameter import Parameter
+from typing import List, TypeVar
+from csw.Parameter import Parameter, Key, KeyType
 from csw.Prefix import Prefix
 
+T = TypeVar(&#39;T&#39;)
 
+
+# noinspection PyPep8Naming
 @dataclass
 class CurrentState:
     &#34;&#34;&#34;
@@ -57,24 +60,50 @@ class CurrentState:
         Returns: dict
             a dictionary corresponding to this object
         &#34;&#34;&#34;
-        try:
-            d = {
-                &#39;prefix&#39;: str(self.prefix),
-                &#39;stateName&#39;: self.stateName,
-                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
-            }
-            return d
-        except Exception as ex:
-            traceback.print_exc()
+        return {
+            &#39;prefix&#39;: str(self.prefix),
+            &#39;stateName&#39;: self.stateName,
+            &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+        }
 
-    def get(self, keyName: str):
+    def __call__(self, key: Key[T]) -&gt; Parameter[T] | None:
         &#34;&#34;&#34;
-        Gets the parameter with the given name, or else returns None
+        This is similar to Scala&#39;s apply() method and gets the parameter for the given key, or else returns None.
+
+        Args:
+            key (Key[T]): parameter key
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == key.keyName:
+                return p
+
+    # noinspection PyUnusedLocal
+    def get(self, keyName: str, keyType: KeyType[T]) -&gt; Parameter[T] | None:
+        &#34;&#34;&#34;
+        Gets the parameter with the given name, or else returns None.
+
+        Args:
+            keyName (str): parameter name
+            keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def gets(self, keyName: str) -&gt; Parameter | None:
+        &#34;&#34;&#34;
+        Gets the parameter with the given name, or else returns None.
 
         Args:
             keyName (str): parameter name
 
-        Returns: Parameter|None
+        Returns: Parameter | None
             the parameter, if found
         &#34;&#34;&#34;
         for p in self.paramSet:
@@ -140,24 +169,50 @@ class CurrentState:
         Returns: dict
             a dictionary corresponding to this object
         &#34;&#34;&#34;
-        try:
-            d = {
-                &#39;prefix&#39;: str(self.prefix),
-                &#39;stateName&#39;: self.stateName,
-                &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
-            }
-            return d
-        except Exception as ex:
-            traceback.print_exc()
+        return {
+            &#39;prefix&#39;: str(self.prefix),
+            &#39;stateName&#39;: self.stateName,
+            &#39;paramSet&#39;: list(map(lambda p: p._asDict(), self.paramSet))
+        }
 
-    def get(self, keyName: str):
+    def __call__(self, key: Key[T]) -&gt; Parameter[T] | None:
         &#34;&#34;&#34;
-        Gets the parameter with the given name, or else returns None
+        This is similar to Scala&#39;s apply() method and gets the parameter for the given key, or else returns None.
+
+        Args:
+            key (Key[T]): parameter key
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == key.keyName:
+                return p
+
+    # noinspection PyUnusedLocal
+    def get(self, keyName: str, keyType: KeyType[T]) -&gt; Parameter[T] | None:
+        &#34;&#34;&#34;
+        Gets the parameter with the given name, or else returns None.
+
+        Args:
+            keyName (str): parameter name
+            keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+        Returns: Parameter[T] | None
+            the parameter, if found
+        &#34;&#34;&#34;
+        for p in self.paramSet:
+            if p.keyName == keyName:
+                return p
+
+    def gets(self, keyName: str) -&gt; Parameter | None:
+        &#34;&#34;&#34;
+        Gets the parameter with the given name, or else returns None.
 
         Args:
             keyName (str): parameter name
 
-        Returns: Parameter|None
+        Returns: Parameter | None
             the parameter, if found
         &#34;&#34;&#34;
         for p in self.paramSet:
@@ -229,29 +284,63 @@ true if the parameter is found</p></div>
 </details>
 </dd>
 <dt id="csw.CurrentState.CurrentState.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, keyName: str)</span>
+<span>def <span class="ident">get</span></span>(<span>self, keyName: str, keyType: <a title="csw.Parameter.KeyType" href="Parameter.html#csw.Parameter.KeyType">KeyType</a>[~T]) ‑> Optional[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>[~T]]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gets the parameter with the given name, or else returns None</p>
+<div class="desc"><p>Gets the parameter with the given name, or else returns None.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>keyName</code></strong> :&ensp;<code>str</code></dt>
 <dd>parameter name</dd>
+<dt><strong><code>keyType</code></strong> :&ensp;<code>KeyType[T]</code></dt>
+<dd>parameter key type (used only for type hint: See also gets(keyName))</dd>
 </dl>
-<p>Returns: Parameter|None
+<p>Returns: Parameter[T] | None
 the parameter, if found</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, keyName: str):
+<pre><code class="python">def get(self, keyName: str, keyType: KeyType[T]) -&gt; Parameter[T] | None:
     &#34;&#34;&#34;
-    Gets the parameter with the given name, or else returns None
+    Gets the parameter with the given name, or else returns None.
+
+    Args:
+        keyName (str): parameter name
+        keyType (KeyType[T]): parameter key type (used only for type hint: See also gets(keyName))
+
+    Returns: Parameter[T] | None
+        the parameter, if found
+    &#34;&#34;&#34;
+    for p in self.paramSet:
+        if p.keyName == keyName:
+            return p</code></pre>
+</details>
+</dd>
+<dt id="csw.CurrentState.CurrentState.gets"><code class="name flex">
+<span>def <span class="ident">gets</span></span>(<span>self, keyName: str) ‑> <a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a> | None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the parameter with the given name, or else returns None.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyName</code></strong> :&ensp;<code>str</code></dt>
+<dd>parameter name</dd>
+</dl>
+<p>Returns: Parameter | None
+the parameter, if found</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gets(self, keyName: str) -&gt; Parameter | None:
+    &#34;&#34;&#34;
+    Gets the parameter with the given name, or else returns None.
 
     Args:
         keyName (str): parameter name
 
-    Returns: Parameter|None
+    Returns: Parameter | None
         the parameter, if found
     &#34;&#34;&#34;
     for p in self.paramSet:
@@ -279,9 +368,10 @@ the parameter, if found</p></div>
 <ul>
 <li>
 <h4><code><a title="csw.CurrentState.CurrentState" href="#csw.CurrentState.CurrentState">CurrentState</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="csw.CurrentState.CurrentState.exists" href="#csw.CurrentState.CurrentState.exists">exists</a></code></li>
 <li><code><a title="csw.CurrentState.CurrentState.get" href="#csw.CurrentState.CurrentState.get">get</a></code></li>
+<li><code><a title="csw.CurrentState.CurrentState.gets" href="#csw.CurrentState.CurrentState.gets">gets</a></code></li>
 <li><code><a title="csw.CurrentState.CurrentState.paramSet" href="#csw.CurrentState.CurrentState.paramSet">paramSet</a></code></li>
 <li><code><a title="csw.CurrentState.CurrentState.prefix" href="#csw.CurrentState.CurrentState.prefix">prefix</a></code></li>
 <li><code><a title="csw.CurrentState.CurrentState.stateName" href="#csw.CurrentState.CurrentState.stateName">stateName</a></code></li>
