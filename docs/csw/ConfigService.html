@@ -111,6 +111,9 @@ class ConfigService:
     password = &#34;config-admin1&#34;
     _locationService = LocationService()
 
+    def _formatTime(self, time: datetime):
+        return time.strftime(&#34;%Y-%m-%dT%H:%M:%SZ&#34;)
+
     def _getBaseUri(self) -&gt; str:
         prefix = Prefix(Subsystems.CSW, &#34;ConfigServer&#34;)
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
@@ -290,7 +293,7 @@ class ConfigService:
 
         Returns: file contents
         &#34;&#34;&#34;
-        params = {&#39;date&#39;: time.isoformat()}
+        params = {&#39;date&#39;: self._formatTime(time)}
         uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
         response = requests.get(uri)
         if not response.ok:
@@ -324,7 +327,7 @@ class ConfigService:
         Returns: file contents
 
         &#34;&#34;&#34;
-        params = {&#39;date&#39;: time.isoformat()}
+        params = {&#39;date&#39;: self._formatTime(time)}
         uri = f&#34;{self._endPoint(&#39;active-config&#39;)}/{path}?{urlencode(params)}&#34;
         response = requests.get(uri)
         if not response.ok:
@@ -364,9 +367,9 @@ class ConfigService:
                  maxResults: int) -&gt; List[ConfigFileRevision]:
         params = {}
         if fromTime:
-            params.update({&#39;from&#39;: fromTime.isoformat()})
+            params.update({&#39;from&#39;: self._formatTime(fromTime)})
         if toTime:
-            params.update({&#39;to&#39;: toTime.isoformat()})
+            params.update({&#39;to&#39;: self._formatTime(toTime)})
         if maxResults:
             params.update({&#39;maxResults&#39;: maxResults})
         uri = f&#34;{self._endPoint(key)}/{path}?{urlencode(params)}&#34;
@@ -1189,6 +1192,9 @@ class ConfigService:
     password = &#34;config-admin1&#34;
     _locationService = LocationService()
 
+    def _formatTime(self, time: datetime):
+        return time.strftime(&#34;%Y-%m-%dT%H:%M:%SZ&#34;)
+
     def _getBaseUri(self) -&gt; str:
         prefix = Prefix(Subsystems.CSW, &#34;ConfigServer&#34;)
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
@@ -1368,7 +1374,7 @@ class ConfigService:
 
         Returns: file contents
         &#34;&#34;&#34;
-        params = {&#39;date&#39;: time.isoformat()}
+        params = {&#39;date&#39;: self._formatTime(time)}
         uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
         response = requests.get(uri)
         if not response.ok:
@@ -1402,7 +1408,7 @@ class ConfigService:
         Returns: file contents
 
         &#34;&#34;&#34;
-        params = {&#39;date&#39;: time.isoformat()}
+        params = {&#39;date&#39;: self._formatTime(time)}
         uri = f&#34;{self._endPoint(&#39;active-config&#39;)}/{path}?{urlencode(params)}&#34;
         response = requests.get(uri)
         if not response.ok:
@@ -1442,9 +1448,9 @@ class ConfigService:
                  maxResults: int) -&gt; List[ConfigFileRevision]:
         params = {}
         if fromTime:
-            params.update({&#39;from&#39;: fromTime.isoformat()})
+            params.update({&#39;from&#39;: self._formatTime(fromTime)})
         if toTime:
-            params.update({&#39;to&#39;: toTime.isoformat()})
+            params.update({&#39;to&#39;: self._formatTime(toTime)})
         if maxResults:
             params.update({&#39;maxResults&#39;: maxResults})
         uri = f&#34;{self._endPoint(key)}/{path}?{urlencode(params)}&#34;
@@ -1709,7 +1715,7 @@ class ConfigService:
     Returns: file contents
 
     &#34;&#34;&#34;
-    params = {&#39;date&#39;: time.isoformat()}
+    params = {&#39;date&#39;: self._formatTime(time)}
     uri = f&#34;{self._endPoint(&#39;active-config&#39;)}/{path}?{urlencode(params)}&#34;
     response = requests.get(uri)
     if not response.ok:
@@ -1815,7 +1821,7 @@ If instant is after the last change, the most recent version is returned.</p>
 
     Returns: file contents
     &#34;&#34;&#34;
-    params = {&#39;date&#39;: time.isoformat()}
+    params = {&#39;date&#39;: self._formatTime(time)}
     uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
     response = requests.get(uri)
     if not response.ok:

@@ -83,6 +83,9 @@ class ConfigService:
     password = "config-admin1"
     _locationService = LocationService()
 
+    def _formatTime(self, time: datetime):
+        return time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
     def _getBaseUri(self) -> str:
         prefix = Prefix(Subsystems.CSW, "ConfigServer")
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
@@ -262,7 +265,7 @@ class ConfigService:
 
         Returns: file contents
         """
-        params = {'date': time.isoformat()}
+        params = {'date': self._formatTime(time)}
         uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
         response = requests.get(uri)
         if not response.ok:
@@ -296,7 +299,7 @@ class ConfigService:
         Returns: file contents
 
         """
-        params = {'date': time.isoformat()}
+        params = {'date': self._formatTime(time)}
         uri = f"{self._endPoint('active-config')}/{path}?{urlencode(params)}"
         response = requests.get(uri)
         if not response.ok:
@@ -336,9 +339,9 @@ class ConfigService:
                  maxResults: int) -> List[ConfigFileRevision]:
         params = {}
         if fromTime:
-            params.update({'from': fromTime.isoformat()})
+            params.update({'from': self._formatTime(fromTime)})
         if toTime:
-            params.update({'to': toTime.isoformat()})
+            params.update({'to': self._formatTime(toTime)})
         if maxResults:
             params.update({'maxResults': maxResults})
         uri = f"{self._endPoint(key)}/{path}?{urlencode(params)}"

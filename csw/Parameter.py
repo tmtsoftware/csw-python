@@ -119,24 +119,87 @@ class Parameter(Generic[T]):
         return Parameter(obj['keyName'], keyType, values, Units[obj['units']])
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class Key(Generic[T]):
+    """
+    A generic Key class. Never meant to be instantiated directly. [[csw.params.core.generics.KeyType]] exposes
+    allowed types of Keys and make method to create instances of Key.
+
+    Args:
+        keyName: the name of the key
+        keyType: reference to an object of type KeyType[S]
+        units: applicable units
+    """
     keyName: str
     keyType: KeyTypes
     units: Units
 
     def set(self, *values: T) -> Parameter[T]:
+        """
+        Set values for this key using variable number of arguments
+        Args:
+            *values: an Array of values
+
+        Returns:
+            an instance of Parameter[T] containing the key name and values
+
+        """
         return Parameter(self.keyName, self.keyType, [*values], self.units)
 
     def setAll(self, values: List[T]) -> Parameter[T]:
+        """
+        Set values for this key using a list
+        Args:
+            *values: an Array of values
+
+        Returns:
+            an instance of Parameter[T] containing the key name and values
+
+        """
+        return Parameter(self.keyName, self.keyType, values, self.units)
+
+
+# noinspection PyUnresolvedReferences
+@dataclass
+class GChoiceKey(Key[T]):
+    """
+    A key for a choice item similar to an enumeration
+
+    Args:
+        keyName: the name of the key
+        keyType: reference to an object of type KeyType[S]
+        units: applicable units
+        choices: the available choices, the values set must be in the choices
+    """
+    choices: List[str]
+
+    def validate(self, *values: str):
+        """
+        validates the input list of choices
+
+        Args:
+            *values:  one or more values
+        """
+        assert all(i in self.choices for i in values), \
+            f"Bad choice for key: {self.keyName} which must be one of: {self.choices}"
+
+    def set(self, *values: str) -> Parameter[str]:
+        self.validate(*values)
+        return Parameter(self.keyName, self.keyType, [*values], self.units)
+
+    def setAll(self, values: List[str]) -> Parameter[str]:
+        self.validate(*values)
         return Parameter(self.keyName, self.keyType, values, self.units)
 
 
 # noinspection DuplicatedCode
+@dataclass
 class ChoiceKey(KeyType[str]):
+
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -> Key[str]:
-        return Key(name, KeyTypes.ChoiceKey, units)
+    def make(name: str, choices: List[str]) -> GChoiceKey[str]:
+        return GChoiceKey(name, KeyTypes.ChoiceKey, Units.NoUnits, choices)
 
 
 # noinspection DuplicatedCode

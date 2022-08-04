@@ -16,13 +16,13 @@ class TestConfigService:
         x2 = self.configService.getById('foo', id)
         assert (x2.content.decode('utf-8') == 'hello')
 
-        x3 = self.configService.getByTime('foo', datetime.now(timezone.utc))
+        x3 = self.configService.getByTime('foo', datetime.now())
         assert (x3.content.decode('utf-8') == 'hello')
 
         x4 = self.configService.getActive('foo')
         assert (x4.content.decode('utf-8') == 'hello')
 
-        x5 = self.configService.getActiveByTime('foo', datetime.now(timezone.utc))
+        x5 = self.configService.getActiveByTime('foo', datetime.now())
         assert (x5.content.decode('utf-8') == 'hello')
         assert self.configService.getActiveVersion('foo') == id
 
@@ -35,8 +35,8 @@ class TestConfigService:
         print(f'metadata = {metadata}')
 
         hist = self.configService.history('foo',
-                                          fromTime=datetime(2000, 1, 1, tzinfo=timezone.utc),
-                                          toTime=datetime.now(tz=timezone.utc), maxResults=100)
+                                          fromTime=datetime(2000, 1, 1),
+                                          toTime=datetime.now(), maxResults=100)
         assert len(hist) == 1
         assert hist[0].id == id.id
 

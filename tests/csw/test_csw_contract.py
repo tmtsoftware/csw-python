@@ -4,7 +4,7 @@ import pathlib
 import structlog
 
 from csw.CommandResponse import CommandIssue
-from csw.Parameter import Parameter
+from csw.Parameter import Parameter, ChoiceKey
 from csw.CurrentState import CurrentState
 from csw.UTCTime import UTCTime
 from csw.Units import Units
@@ -84,6 +84,10 @@ class TestCswContract:
                         # (ignore time values since resolution of fractional seconds is different in Typescript!)
                         if key not in ['UTCTimeKey', 'TAITimeKey']:
                             assert (entry == Parameter._fromDict(entry)._asDict())
+                        if key == 'ChoiceKey':
+                            # Double check Choice param
+                            choiceParam = ChoiceKey.make("ChoiceKey", ['First', 'Second']).set('First', 'Second')
+                            assert choiceParam._asDict() == entry
             for p in data["CommandIssue"]:
                 # Check that the CommandIssue subclass exists
                 assert (p['_type'] in self.commandIssueSubclasses)

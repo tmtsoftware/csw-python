@@ -147,24 +147,87 @@ class Parameter(Generic[T]):
         return Parameter(obj[&#39;keyName&#39;], keyType, values, Units[obj[&#39;units&#39;]])
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class Key(Generic[T]):
+    &#34;&#34;&#34;
+    A generic Key class. Never meant to be instantiated directly. [[csw.params.core.generics.KeyType]] exposes
+    allowed types of Keys and make method to create instances of Key.
+
+    Args:
+        keyName: the name of the key
+        keyType: reference to an object of type KeyType[S]
+        units: applicable units
+    &#34;&#34;&#34;
     keyName: str
     keyType: KeyTypes
     units: Units
 
     def set(self, *values: T) -&gt; Parameter[T]:
+        &#34;&#34;&#34;
+        Set values for this key using variable number of arguments
+        Args:
+            *values: an Array of values
+
+        Returns:
+            an instance of Parameter[T] containing the key name and values
+
+        &#34;&#34;&#34;
         return Parameter(self.keyName, self.keyType, [*values], self.units)
 
     def setAll(self, values: List[T]) -&gt; Parameter[T]:
+        &#34;&#34;&#34;
+        Set values for this key using a list
+        Args:
+            *values: an Array of values
+
+        Returns:
+            an instance of Parameter[T] containing the key name and values
+
+        &#34;&#34;&#34;
+        return Parameter(self.keyName, self.keyType, values, self.units)
+
+
+# noinspection PyUnresolvedReferences
+@dataclass
+class GChoiceKey(Key[T]):
+    &#34;&#34;&#34;
+    A key for a choice item similar to an enumeration
+
+    Args:
+        keyName: the name of the key
+        keyType: reference to an object of type KeyType[S]
+        units: applicable units
+        choices: the available choices, the values set must be in the choices
+    &#34;&#34;&#34;
+    choices: List[str]
+
+    def validate(self, *values: str):
+        &#34;&#34;&#34;
+        validates the input list of choices
+
+        Args:
+            *values:  one or more values
+        &#34;&#34;&#34;
+        assert all(i in self.choices for i in values), \
+            f&#34;Bad choice for key: {self.keyName} which must be one of: {self.choices}&#34;
+
+    def set(self, *values: str) -&gt; Parameter[str]:
+        self.validate(*values)
+        return Parameter(self.keyName, self.keyType, [*values], self.units)
+
+    def setAll(self, values: List[str]) -&gt; Parameter[str]:
+        self.validate(*values)
         return Parameter(self.keyName, self.keyType, values, self.units)
 
 
 # noinspection DuplicatedCode
+@dataclass
 class ChoiceKey(KeyType[str]):
+
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyTypes.ChoiceKey, units)
+    def make(name: str, choices: List[str]) -&gt; GChoiceKey[str]:
+        return GChoiceKey(name, KeyTypes.ChoiceKey, Units.NoUnits, choices)
 
 
 # noinspection DuplicatedCode
@@ -551,15 +614,17 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 <span>class <span class="ident">ChoiceKey</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>KeyType()</p></div>
+<div class="desc"><p>ChoiceKey()</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class ChoiceKey(KeyType[str]):
+<pre><code class="python">@dataclass
+class ChoiceKey(KeyType[str]):
+
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-        return Key(name, KeyTypes.ChoiceKey, units)</code></pre>
+    def make(name: str, choices: List[str]) -&gt; GChoiceKey[str]:
+        return GChoiceKey(name, KeyTypes.ChoiceKey, Units.NoUnits, choices)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -569,7 +634,7 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.Parameter.ChoiceKey.make"><code class="name flex">
-<span>def <span class="ident">make</span></span>(<span>name: str, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a> = Units.NoUnits) ‑> <a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a>[str]</span>
+<span>def <span class="ident">make</span></span>(<span>name: str, choices: List[str]) ‑> <a title="csw.Parameter.GChoiceKey" href="#csw.Parameter.GChoiceKey">GChoiceKey</a>[str]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -578,8 +643,8 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def make(name: str, units: Units = Units.NoUnits) -&gt; Key[str]:
-    return Key(name, KeyTypes.ChoiceKey, units)</code></pre>
+def make(name: str, choices: List[str]) -&gt; GChoiceKey[str]:
+    return GChoiceKey(name, KeyTypes.ChoiceKey, Units.NoUnits, choices)</code></pre>
 </details>
 </dd>
 </dl>
@@ -872,6 +937,108 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[float]]]:
 </dd>
 </dl>
 </dd>
+<dt id="csw.Parameter.GChoiceKey"><code class="flex name class">
+<span>class <span class="ident">GChoiceKey</span></span>
+<span>(</span><span>keyName: str, keyType: <a title="csw.KeyTypes.KeyTypes" href="KeyTypes.html#csw.KeyTypes.KeyTypes">KeyTypes</a>, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a>, choices: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A key for a choice item similar to an enumeration</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyName</code></strong></dt>
+<dd>the name of the key</dd>
+<dt><strong><code>keyType</code></strong></dt>
+<dd>reference to an object of type KeyType[S]</dd>
+<dt><strong><code>units</code></strong></dt>
+<dd>applicable units</dd>
+<dt><strong><code>choices</code></strong></dt>
+<dd>the available choices, the values set must be in the choices</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class GChoiceKey(Key[T]):
+    &#34;&#34;&#34;
+    A key for a choice item similar to an enumeration
+
+    Args:
+        keyName: the name of the key
+        keyType: reference to an object of type KeyType[S]
+        units: applicable units
+        choices: the available choices, the values set must be in the choices
+    &#34;&#34;&#34;
+    choices: List[str]
+
+    def validate(self, *values: str):
+        &#34;&#34;&#34;
+        validates the input list of choices
+
+        Args:
+            *values:  one or more values
+        &#34;&#34;&#34;
+        assert all(i in self.choices for i in values), \
+            f&#34;Bad choice for key: {self.keyName} which must be one of: {self.choices}&#34;
+
+    def set(self, *values: str) -&gt; Parameter[str]:
+        self.validate(*values)
+        return Parameter(self.keyName, self.keyType, [*values], self.units)
+
+    def setAll(self, values: List[str]) -&gt; Parameter[str]:
+        self.validate(*values)
+        return Parameter(self.keyName, self.keyType, values, self.units)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a></li>
+<li>typing.Generic</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.Parameter.GChoiceKey.choices"><code class="name">var <span class="ident">choices</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.Parameter.GChoiceKey.validate"><code class="name flex">
+<span>def <span class="ident">validate</span></span>(<span>self, *values: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>validates the input list of choices</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*values</code></strong></dt>
+<dd>one or more values</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate(self, *values: str):
+    &#34;&#34;&#34;
+    validates the input list of choices
+
+    Args:
+        *values:  one or more values
+    &#34;&#34;&#34;
+    assert all(i in self.choices for i in values), \
+        f&#34;Bad choice for key: {self.keyName} which must be one of: {self.choices}&#34;</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="csw.Parameter.Key" href="#csw.Parameter.Key">Key</a></b></code>:
+<ul class="hlist">
+<li><code><a title="csw.Parameter.Key.set" href="#csw.Parameter.Key.set">set</a></code></li>
+<li><code><a title="csw.Parameter.Key.setAll" href="#csw.Parameter.Key.setAll">setAll</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 <dt id="csw.Parameter.IntArrayKey"><code class="flex name class">
 <span>class <span class="ident">IntArrayKey</span></span>
 </code></dt>
@@ -973,26 +1140,67 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[List[List[int]]]:
 <span>(</span><span>keyName: str, keyType: <a title="csw.KeyTypes.KeyTypes" href="KeyTypes.html#csw.KeyTypes.KeyTypes">KeyTypes</a>, units: <a title="csw.Units.Units" href="Units.html#csw.Units.Units">Units</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Key(keyName: str, keyType: csw.KeyTypes.KeyTypes, units: csw.Units.Units)</p></div>
+<div class="desc"><p>A generic Key class. Never meant to be instantiated directly. [[csw.params.core.generics.KeyType]] exposes
+allowed types of Keys and make method to create instances of Key.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>keyName</code></strong></dt>
+<dd>the name of the key</dd>
+<dt><strong><code>keyType</code></strong></dt>
+<dd>reference to an object of type KeyType[S]</dd>
+<dt><strong><code>units</code></strong></dt>
+<dd>applicable units</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
 class Key(Generic[T]):
+    &#34;&#34;&#34;
+    A generic Key class. Never meant to be instantiated directly. [[csw.params.core.generics.KeyType]] exposes
+    allowed types of Keys and make method to create instances of Key.
+
+    Args:
+        keyName: the name of the key
+        keyType: reference to an object of type KeyType[S]
+        units: applicable units
+    &#34;&#34;&#34;
     keyName: str
     keyType: KeyTypes
     units: Units
 
     def set(self, *values: T) -&gt; Parameter[T]:
+        &#34;&#34;&#34;
+        Set values for this key using variable number of arguments
+        Args:
+            *values: an Array of values
+
+        Returns:
+            an instance of Parameter[T] containing the key name and values
+
+        &#34;&#34;&#34;
         return Parameter(self.keyName, self.keyType, [*values], self.units)
 
     def setAll(self, values: List[T]) -&gt; Parameter[T]:
+        &#34;&#34;&#34;
+        Set values for this key using a list
+        Args:
+            *values: an Array of values
+
+        Returns:
+            an instance of Parameter[T] containing the key name and values
+
+        &#34;&#34;&#34;
         return Parameter(self.keyName, self.keyType, values, self.units)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>typing.Generic</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="csw.Parameter.GChoiceKey" href="#csw.Parameter.GChoiceKey">GChoiceKey</a></li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -1015,12 +1223,28 @@ class Key(Generic[T]):
 <span>def <span class="ident">set</span></span>(<span>self, *values: ~T) ‑> <a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a>[~T]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Set values for this key using variable number of arguments</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*values</code></strong></dt>
+<dd>an Array of values</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>an instance of Parameter[T] containing the key name and values</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def set(self, *values: T) -&gt; Parameter[T]:
+    &#34;&#34;&#34;
+    Set values for this key using variable number of arguments
+    Args:
+        *values: an Array of values
+
+    Returns:
+        an instance of Parameter[T] containing the key name and values
+
+    &#34;&#34;&#34;
     return Parameter(self.keyName, self.keyType, [*values], self.units)</code></pre>
 </details>
 </dd>
@@ -1028,12 +1252,28 @@ class Key(Generic[T]):
 <span>def <span class="ident">setAll</span></span>(<span>self, values: List[~T]) ‑> <a title="csw.Parameter.Parameter" href="#csw.Parameter.Parameter">Parameter</a>[~T]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Set values for this key using a list</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*values</code></strong></dt>
+<dd>an Array of values</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>an instance of Parameter[T] containing the key name and values</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def setAll(self, values: List[T]) -&gt; Parameter[T]:
+    &#34;&#34;&#34;
+    Set values for this key using a list
+    Args:
+        *values: an Array of values
+
+    Returns:
+        an instance of Parameter[T] containing the key name and values
+
+    &#34;&#34;&#34;
     return Parameter(self.keyName, self.keyType, values, self.units)</code></pre>
 </details>
 </dd>
@@ -1665,6 +1905,13 @@ def make(name: str, units: Units = Units.NoUnits) -&gt; Key[UTCTime]:
 <h4><code><a title="csw.Parameter.FloatMatrixKey" href="#csw.Parameter.FloatMatrixKey">FloatMatrixKey</a></code></h4>
 <ul class="">
 <li><code><a title="csw.Parameter.FloatMatrixKey.make" href="#csw.Parameter.FloatMatrixKey.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.Parameter.GChoiceKey" href="#csw.Parameter.GChoiceKey">GChoiceKey</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Parameter.GChoiceKey.choices" href="#csw.Parameter.GChoiceKey.choices">choices</a></code></li>
+<li><code><a title="csw.Parameter.GChoiceKey.validate" href="#csw.Parameter.GChoiceKey.validate">validate</a></code></li>
 </ul>
 </li>
 <li>
