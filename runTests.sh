@@ -13,7 +13,7 @@ hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1;
 
 # Note: Make sure version matches ones used in csw/LocationService.py and tests/testSupport/project/Libs.scala
 #CSW_VERSION=4.0.1
-CSW_VERSION=98771982d4829e20e0e8485d8e09d9873542b961
+CSW_VERSION=5.0.0-RC1
 
 logfile=test.log
 set -x
