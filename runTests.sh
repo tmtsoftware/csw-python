@@ -27,7 +27,7 @@ export PYTHONPATH=`pwd`
 # give the background assembly time to initialize
 sleep 10
 # Run the python tests (add -s option to see stdout)
-pytest tests
+pytest -s tests
 kill $assemblyPid
 # Kill csw-services
 kill `ps aux | grep 'csw-services' | grep -v grep | awk '{print $2}'`
