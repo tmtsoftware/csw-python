@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Added code to find a unique port when registering with the Location Service with port=0
 - Updated Units to match latest CSW version
 - Fixed issue with Redis sentinal (need to use localhost)
-- Updated CSW version to v5.0.0-RC1
+- Updated CSW version to v5.0.0
 - Added Command Service and Config Service client APIs
 
 ## [tmtpycsw v4.0.3] - 2022-04-27

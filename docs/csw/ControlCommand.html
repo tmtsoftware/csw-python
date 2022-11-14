@@ -31,7 +31,6 @@ from typing import List
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
-
 @dataclass
 class CommandName:
     &#34;&#34;&#34;
@@ -39,9 +38,8 @@ class CommandName:
     &#34;&#34;&#34;
     name: str
 
-
 @dataclass
-class ParameterSetType:
+class ControlCommand:
     &#34;&#34;&#34;
     Represents a CSW command.
     &#34;&#34;&#34;
@@ -115,11 +113,6 @@ class ParameterSetType:
 
 
 @dataclass
-class ControlCommand(ParameterSetType):
-    pass
-
-
-@dataclass
 class Setup(ControlCommand):
     &#34;&#34;&#34;
     A Setup is a command that can be sent to an HCD or Assembly.
@@ -174,78 +167,13 @@ class CommandName:
 <span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>ControlCommand(source: csw.Prefix.Prefix, commandName: csw.ControlCommand.CommandName, maybeObsId: List[str], paramSet: List[csw.Parameter.Parameter])</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@dataclass
-class ControlCommand(ParameterSetType):
-    pass</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="csw.ControlCommand.ParameterSetType" href="#csw.ControlCommand.ParameterSetType">ParameterSetType</a></li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="csw.ControlCommand.Observe" href="#csw.ControlCommand.Observe">Observe</a></li>
-<li><a title="csw.ControlCommand.Setup" href="#csw.ControlCommand.Setup">Setup</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="csw.ControlCommand.ParameterSetType" href="#csw.ControlCommand.ParameterSetType">ParameterSetType</a></b></code>:
-<ul class="hlist">
-<li><code><a title="csw.ControlCommand.ParameterSetType.exists" href="#csw.ControlCommand.ParameterSetType.exists">exists</a></code></li>
-<li><code><a title="csw.ControlCommand.ParameterSetType.get" href="#csw.ControlCommand.ParameterSetType.get">get</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="csw.ControlCommand.Observe"><code class="flex name class">
-<span>class <span class="ident">Observe</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
-</code></dt>
-<dd>
-<div class="desc"><p>An Observe is a special command that can be sent to an HCD or Assembly.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@dataclass
-class Observe(ControlCommand):
-    &#34;&#34;&#34;
-    An Observe is a special command that can be sent to an HCD or Assembly.
-    &#34;&#34;&#34;
-    pass</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></li>
-<li><a title="csw.ControlCommand.ParameterSetType" href="#csw.ControlCommand.ParameterSetType">ParameterSetType</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></b></code>:
-<ul class="hlist">
-<li><code><a title="csw.ControlCommand.ControlCommand.exists" href="#csw.ControlCommand.ParameterSetType.exists">exists</a></code></li>
-<li><code><a title="csw.ControlCommand.ControlCommand.get" href="#csw.ControlCommand.ParameterSetType.get">get</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="csw.ControlCommand.ParameterSetType"><code class="flex name class">
-<span>class <span class="ident">ParameterSetType</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
-</code></dt>
-<dd>
 <div class="desc"><p>Represents a CSW command.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class ParameterSetType:
+class ControlCommand:
     &#34;&#34;&#34;
     Represents a CSW command.
     &#34;&#34;&#34;
@@ -319,31 +247,31 @@ class ParameterSetType:
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></li>
-<li><a title="csw.SequenceCommand.SequenceCommand" href="SequenceCommand.html#csw.SequenceCommand.SequenceCommand">SequenceCommand</a></li>
+<li><a title="csw.ControlCommand.Observe" href="#csw.ControlCommand.Observe">Observe</a></li>
+<li><a title="csw.ControlCommand.Setup" href="#csw.ControlCommand.Setup">Setup</a></li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.ControlCommand.ParameterSetType.commandName"><code class="name">var <span class="ident">commandName</span> : <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a></code></dt>
+<dt id="csw.ControlCommand.ControlCommand.commandName"><code class="name">var <span class="ident">commandName</span> : <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.ControlCommand.ParameterSetType.maybeObsId"><code class="name">var <span class="ident">maybeObsId</span> : List[str]</code></dt>
+<dt id="csw.ControlCommand.ControlCommand.maybeObsId"><code class="name">var <span class="ident">maybeObsId</span> : List[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.ControlCommand.ParameterSetType.paramSet"><code class="name">var <span class="ident">paramSet</span> : List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>]</code></dt>
+<dt id="csw.ControlCommand.ControlCommand.paramSet"><code class="name">var <span class="ident">paramSet</span> : List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.ControlCommand.ParameterSetType.source"><code class="name">var <span class="ident">source</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
+<dt id="csw.ControlCommand.ControlCommand.source"><code class="name">var <span class="ident">source</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="csw.ControlCommand.ParameterSetType.exists"><code class="name flex">
+<dt id="csw.ControlCommand.ControlCommand.exists"><code class="name flex">
 <span>def <span class="ident">exists</span></span>(<span>self, keyName: str)</span>
 </code></dt>
 <dd>
@@ -375,7 +303,7 @@ true if the parameter is found</p></div>
     return False</code></pre>
 </details>
 </dd>
-<dt id="csw.ControlCommand.ParameterSetType.get"><code class="name flex">
+<dt id="csw.ControlCommand.ControlCommand.get"><code class="name flex">
 <span>def <span class="ident">get</span></span>(<span>self, keyName: str)</span>
 </code></dt>
 <dd>
@@ -408,6 +336,37 @@ the parameter, if found</p></div>
 </dd>
 </dl>
 </dd>
+<dt id="csw.ControlCommand.Observe"><code class="flex name class">
+<span>class <span class="ident">Observe</span></span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An Observe is a special command that can be sent to an HCD or Assembly.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Observe(ControlCommand):
+    &#34;&#34;&#34;
+    An Observe is a special command that can be sent to an HCD or Assembly.
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></b></code>:
+<ul class="hlist">
+<li><code><a title="csw.ControlCommand.ControlCommand.exists" href="#csw.ControlCommand.ControlCommand.exists">exists</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.get" href="#csw.ControlCommand.ControlCommand.get">get</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 <dt id="csw.ControlCommand.Setup"><code class="flex name class">
 <span>class <span class="ident">Setup</span></span>
 <span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, commandName: <a title="csw.ControlCommand.CommandName" href="#csw.ControlCommand.CommandName">CommandName</a>, maybeObsId: List[str], paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
@@ -428,14 +387,13 @@ class Setup(ControlCommand):
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></li>
-<li><a title="csw.ControlCommand.ParameterSetType" href="#csw.ControlCommand.ParameterSetType">ParameterSetType</a></li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></b></code>:
 <ul class="hlist">
-<li><code><a title="csw.ControlCommand.ControlCommand.exists" href="#csw.ControlCommand.ParameterSetType.exists">exists</a></code></li>
-<li><code><a title="csw.ControlCommand.ControlCommand.get" href="#csw.ControlCommand.ParameterSetType.get">get</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.exists" href="#csw.ControlCommand.ControlCommand.exists">exists</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.get" href="#csw.ControlCommand.ControlCommand.get">get</a></code></li>
 </ul>
 </li>
 </ul>
@@ -464,20 +422,17 @@ class Setup(ControlCommand):
 </li>
 <li>
 <h4><code><a title="csw.ControlCommand.ControlCommand" href="#csw.ControlCommand.ControlCommand">ControlCommand</a></code></h4>
+<ul class="two-column">
+<li><code><a title="csw.ControlCommand.ControlCommand.commandName" href="#csw.ControlCommand.ControlCommand.commandName">commandName</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.exists" href="#csw.ControlCommand.ControlCommand.exists">exists</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.get" href="#csw.ControlCommand.ControlCommand.get">get</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.maybeObsId" href="#csw.ControlCommand.ControlCommand.maybeObsId">maybeObsId</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.paramSet" href="#csw.ControlCommand.ControlCommand.paramSet">paramSet</a></code></li>
+<li><code><a title="csw.ControlCommand.ControlCommand.source" href="#csw.ControlCommand.ControlCommand.source">source</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="csw.ControlCommand.Observe" href="#csw.ControlCommand.Observe">Observe</a></code></h4>
-</li>
-<li>
-<h4><code><a title="csw.ControlCommand.ParameterSetType" href="#csw.ControlCommand.ParameterSetType">ParameterSetType</a></code></h4>
-<ul class="two-column">
-<li><code><a title="csw.ControlCommand.ParameterSetType.commandName" href="#csw.ControlCommand.ParameterSetType.commandName">commandName</a></code></li>
-<li><code><a title="csw.ControlCommand.ParameterSetType.exists" href="#csw.ControlCommand.ParameterSetType.exists">exists</a></code></li>
-<li><code><a title="csw.ControlCommand.ParameterSetType.get" href="#csw.ControlCommand.ParameterSetType.get">get</a></code></li>
-<li><code><a title="csw.ControlCommand.ParameterSetType.maybeObsId" href="#csw.ControlCommand.ParameterSetType.maybeObsId">maybeObsId</a></code></li>
-<li><code><a title="csw.ControlCommand.ParameterSetType.paramSet" href="#csw.ControlCommand.ParameterSetType.paramSet">paramSet</a></code></li>
-<li><code><a title="csw.ControlCommand.ParameterSetType.source" href="#csw.ControlCommand.ParameterSetType.source">source</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="csw.ControlCommand.Setup" href="#csw.ControlCommand.Setup">Setup</a></code></h4>

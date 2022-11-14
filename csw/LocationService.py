@@ -11,7 +11,7 @@ from csw.Prefix import Prefix
 
 
 def csw_version():
-    return {"csw-version": "5.0.0-RC1"}
+    return {"csw-version": "5.0.0"}
 
 
 # Python API for CSW Location Service
