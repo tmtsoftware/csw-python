@@ -12,8 +12,8 @@ hash sbt 2>/dev/null || { echo >&2 "Please install sbt first.  Aborting."; exit 
 hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1; }
 
 # Note: Make sure version matches ones used in csw/LocationService.py and tests/testSupport/project/Libs.scala
-#CSW_VERSION=4.0.1
-CSW_VERSION=5.0.0
+#CSW_VERSION=5.0.0
+CSW_VERSION=6f29ed1
 
 logfile=test.log
 set -x

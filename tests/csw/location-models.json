@@ -2,11 +2,11 @@
   "TrackingEvent" : [ {
     "_type" : "LocationUpdated",
     "location" : {
-      "_type" : "AkkaLocation",
+      "_type" : "PekkoLocation",
       "connection" : {
         "prefix" : "TCS.filter.wheel",
         "componentType" : "HCD",
-        "connectionType" : "akka"
+        "connectionType" : "pekko"
       },
       "uri" : "path",
       "metadata" : {
@@ -18,14 +18,14 @@
     "connection" : {
       "prefix" : "TCS.filter.wheel",
       "componentType" : "HCD",
-      "connectionType" : "akka"
+      "connectionType" : "pekko"
     }
   } ],
   "ComponentType" : [ "Container", "HCD", "Assembly", "Sequencer", "SequenceComponent", "Service", "Machine" ],
   "Connection" : [ {
     "prefix" : "TCS.filter.wheel",
     "componentType" : "HCD",
-    "connectionType" : "akka"
+    "connectionType" : "pekko"
   }, {
     "prefix" : "TCS.filter.wheel",
     "componentType" : "HCD",
@@ -36,11 +36,11 @@
     "connectionType" : "tcp"
   } ],
   "Registration" : [ {
-    "_type" : "AkkaRegistration",
+    "_type" : "PekkoRegistration",
     "connection" : {
       "prefix" : "TCS.filter.wheel",
       "componentType" : "HCD",
-      "connectionType" : "akka"
+      "connectionType" : "pekko"
     },
     "actorRefURI" : "path",
     "metadata" : {
@@ -98,19 +98,19 @@
     "connection" : {
       "prefix" : "TCS.filter.wheel",
       "componentType" : "HCD",
-      "connectionType" : "akka"
+      "connectionType" : "pekko"
     }
   }, {
     "_type" : "RegistrationListingFailed"
   } ],
-  "ConnectionType" : [ "http", "tcp", "akka" ],
+  "ConnectionType" : [ "http", "tcp", "pekko" ],
   "Subsystem" : [ "AOESW", "APS", "CIS", "CLN", "CRYO", "CSW", "DMS", "DPS", "ENC", "ESEN", "ESW", "HNDL", "HQ", "IRIS", "LGSF", "M1COAT", "M1CS", "M1S", "M2COAT", "M2S", "M3S", "MODHIS", "NFIRAOS", "OSS", "REFR", "SCMS", "SER", "SOSS", "STR", "SUM", "TCS", "TINS", "WFOS", "Container" ],
   "Location" : [ {
-    "_type" : "AkkaLocation",
+    "_type" : "PekkoLocation",
     "connection" : {
       "prefix" : "TCS.filter.wheel",
       "componentType" : "HCD",
-      "connectionType" : "akka"
+      "connectionType" : "pekko"
     },
     "uri" : "path",
     "metadata" : {

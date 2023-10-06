@@ -20,8 +20,8 @@ with the difference that in some cases the Python types are simpler, due to less
 ## CSW Location Service
 
 The Location Service can be used to register, list and lookup CSW services.
-Python applications can access `tcp` and `http` based services, but not `akka` services,
-which are based on akka actors.
+Python applications can access `tcp` and `http` based services, but not `pekko` services,
+which are based on pekko actors.
 
 The following code demonstrates the Python API for the Location Service:
 

@@ -64,7 +64,7 @@
     "responseType" : "OperationsModeResponse"
   }, {
     "requestType" : "GetSequenceComponent",
-    "responseType" : "AkkaLocation"
+    "responseType" : "PekkoLocation"
   }, {
     "requestType" : "GetSequencerState",
     "responseType" : "SequencerState"

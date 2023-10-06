@@ -11,7 +11,7 @@ from csw.Prefix import Prefix
 
 
 def csw_version():
-    return {"csw-version": "5.0.0"}
+    return {"csw-version": "6f29ed1"}
 
 
 # Python API for CSW Location Service
@@ -36,12 +36,12 @@ class ComponentType(Enum):
 class ConnectionType(Enum):
     """
     Enum type: Represents a type of connection offered by the Component.
-    Note that AkkaType is for Akka Actor based connections.
+    Note that PekkoType is for Pekko Actor based connections.
     Python applications can only communicate via HTTP or TCP connections.
     """
     HttpType = "http"
     TcpType = "tcp"
-    AkkaType = "akka"
+    PekkoType = "pekko"
 
 
 @dataclass_json
@@ -86,15 +86,15 @@ class Location:
                 return HttpLocation.from_dict(obj)
             case "TcpLocation":
                 return TcpLocation.from_dict(obj)
-            case "AkkaLocation":
-                return AkkaLocation.from_dict(obj)
+            case "PekkoLocation":
+                return PekkoLocation.from_dict(obj)
             case _:
                 raise Exception(f"Invalid location type: {obj['_type']}")
 
 
 @dataclass_json
 @dataclass
-class AkkaLocation(Location):
+class PekkoLocation(Location):
     pass
 
 
@@ -143,13 +143,13 @@ class HttpRegistration(Registration):
 
 @dataclass_json
 @dataclass
-class AkkaRegistration(Registration):
+class PekkoRegistration(Registration):
     """
     Used to register an http based service with the Location Service.
     """
     actorRefURI: str
     metadata: dict = field(default_factory=dict)
-    _type: str = "AkkaRegistration"
+    _type: str = "PekkoRegistration"
 
 
 @dataclass_json

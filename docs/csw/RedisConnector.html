@@ -50,6 +50,7 @@ class RedisConnector:
         uri = urlparse(loc.uri)
         # XXX TODO Check why only localhost works!
         # sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
+        # print(f&#34;XXX Sentinel({uri.port})&#34;)
         sentinel = Sentinel([(&#34;localhost&#34;, uri.port)], socket_timeout=0.1)
         self.__redis = sentinel.master_for(&#39;eventServer&#39;, socket_timeout=0.1)
         self.__redis_pubsub = self.__redis.pubsub()
@@ -161,6 +162,7 @@ class RedisConnector:
         uri = urlparse(loc.uri)
         # XXX TODO Check why only localhost works!
         # sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
+        # print(f&#34;XXX Sentinel({uri.port})&#34;)
         sentinel = Sentinel([(&#34;localhost&#34;, uri.port)], socket_timeout=0.1)
         self.__redis = sentinel.master_for(&#39;eventServer&#39;, socket_timeout=0.1)
         self.__redis_pubsub = self.__redis.pubsub()

@@ -11,7 +11,7 @@ from csw.Units import Units
 from csw.Subsystem import Subsystems
 from csw.Prefix import Prefix
 from csw.LocationService import ComponentType, ConnectionInfo, HttpRegistration, TcpRegistration, \
-    AkkaRegistration, ComponentId, ConnectionType, AkkaLocation, HttpLocation, TcpLocation
+    PekkoRegistration, ComponentId, ConnectionType, PekkoLocation, HttpLocation, TcpLocation
 
 
 class TestCswContract:
@@ -37,8 +37,8 @@ class TestCswContract:
                     registration = HttpRegistration.from_dict(p)
                 elif regType == "TcpRegistration":
                     registration = TcpRegistration.from_dict(p)
-                elif regType == "AkkaRegistration":
-                    registration = AkkaRegistration.from_dict(p)
+                elif regType == "PekkoRegistration":
+                    registration = PekkoRegistration.from_dict(p)
                 assert (registration.to_dict() == p)
             for p in data['ComponentId']:
                 componentId = ComponentId.from_dict(p)
@@ -53,8 +53,8 @@ class TestCswContract:
                 assert (Subsystems[p].name == p)
             for p in data['Location']:
                 locType = p['_type']
-                if locType == "AkkaLocation":
-                    loc = AkkaLocation.from_dict(p)
+                if locType == "PekkoLocation":
+                    loc = PekkoLocation.from_dict(p)
                 elif locType == "HttpLocation":
                     loc = HttpLocation.from_dict(p)
                 elif locType == "TcpLocation":
