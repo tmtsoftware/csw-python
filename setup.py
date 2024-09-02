@@ -8,7 +8,7 @@ setuptools.setup(
     version="6f29ed1",
     python_requires='>=3.10',
     author="Allan Brighton",
-    author_email="allanexus@gmail.com",
+    author_email="abrighton@tmt.org",
     description="A python API for TMT CSW services",
     long_description="This package provides some Python APIs for TMT Common Software (CSW) services.",
     long_description_content_type="text/markdown",
