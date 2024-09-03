@@ -3,7 +3,7 @@
 This package contains python APIs for the [TMT Common Software (CSW)](https://github.com/tmtsoftware/csw)
 and the [TMT Executive Software (ESW)](https://tmtsoftware.github.io/esw/). 
 
-Note: Python version 3.10 was used for testing.
+Note: Python version 3.12 was used for testing.
 
 The latest release has been published to https://pypi.org/project/tmtpycsw/ and can be installed with:
 

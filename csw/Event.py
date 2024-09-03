@@ -1,5 +1,5 @@
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 from abc import abstractmethod
 
@@ -30,8 +30,8 @@ class Event:
     source: Prefix
     eventName: EventName
     paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.now()
-    eventId: str = str(uuid.uuid4())
+    eventTime: EventTime = field(default_factory=lambda: EventTime.now())
+    eventId: str = field(default_factory=lambda: str(uuid.uuid4()))
 
     @abstractmethod
     def eventType(self) -> str:

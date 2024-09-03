@@ -136,7 +136,7 @@ class HttpRegistration(Registration):
     """
     port: int
     path: str = ""
-    networkType: NetworkType = NetworkType("Inside")
+    networkType: NetworkType = field(default_factory=lambda: NetworkType("Inside"))
     metadata: dict = field(default_factory=csw_version)
     _type: str = "HttpRegistration"
 

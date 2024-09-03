@@ -1,4 +1,6 @@
-PYTHON = python3.10
+PYTHON_VERSION = 3.12
+PYTHON = .venv/bin/python
+PIPENV = .venv/bin/pipenv
 
 all: doc
 
@@ -25,6 +27,7 @@ clean:
 
 # Upload release (requires username, password)
 release: doc
+	test -d .venv || $(MAKE) venv
 	rm -rf dist build tmtpycsw.egg-info
 	$(PYTHON) -m pip install --upgrade setuptools wheel
 	$(PYTHON) setup.py sdist bdist_wheel
@@ -38,6 +41,7 @@ release: doc
 venv:
 	rm -rf .venv
 	mkdir .venv
-	$(PYTHON) -m venv .venv
-	pipenv run pip install pdoc3
-	pipenv install
+	python${PYTHON_VERSION} -m venv .venv
+	${PYTHON} -m pip install pipenv
+	${PIPENV} run pip install pdoc3
+	${PIPENV} install

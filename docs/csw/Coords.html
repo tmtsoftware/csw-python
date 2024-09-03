@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
 <title>csw.Coords API documentation</title>
-<meta name="description" content="" />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
 </head>
 <body>
 <main>
@@ -22,303 +25,6 @@
 <h1 class="title">Module <code>csw.Coords</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">from dataclasses import dataclass, asdict
-from enum import Enum
-from astropy.coordinates import Angle
-from astropy import units as u
-
-
-@dataclass
-class Tag:
-    &#34;&#34;&#34;
-    A tag is a label to indicate the use of the coordinate
-    &#34;&#34;&#34;
-    name: str
-
-
-# noinspection PyUnresolvedReferences
-@dataclass
-class _CswAngle:
-    &#34;&#34;&#34;
-    A wrapper for Angle values (See the csw.params.core.models.Angle class).
-    Note: The Python API uses astropy Angle. This class is used internally for compatibility.
-    Normally Angle would be stored in double as radians, but this introduces rounding errors.
-    This class stores value in microarc seconds to prevent rounding errors.
-    &#34;&#34;&#34;
-    uas: int
-
-    def toAngle(self):
-        return Angle(self.uas * u.uarcsec)
-
-    @staticmethod
-    def fromAngle(a: Angle):
-        return _CswAngle(int(a.uarcsec))
-
-
-class EqFrame(Enum):
-    ICRS = 0
-    FK5 = 1
-
-
-class SolarSystemObject(Enum):
-    &#34;&#34;&#34;
-    Enum type: Represents the possible values for a Solar System Object.
-    &#34;&#34;&#34;
-    Mercury = 0
-    Venus = 1
-    Moon = 2
-    Mars = 3
-    Jupiter = 4
-    Saturn = 5
-    Neptune = 6
-    Uranus = 7
-    Pluto = 8
-
-
-@dataclass
-class ProperMotion:
-    pmx: float
-    pmy: float
-
-
-@dataclass
-class Coord:
-    &#34;&#34;&#34;
-    This is the base class of the coordinate types.
-    If the key type is CoordKey, the value type can be any of the Coord subtypes.
-    The dict key gives the class name.
-
-    Args:
-        tag (Tag): a label to indicate the use of the coordinate
-
-    &#34;&#34;&#34;
-    tag: Tag
-
-    @staticmethod
-    def _fromDict(obj: dict):
-        switcher = {
-            &#34;EqCoord&#34;: EqCoord,
-            &#34;SolarSystemCoord&#34;: SolarSystemCoord,
-            &#34;MinorPlanetCoord&#34;: MinorPlanetCoord,
-            &#34;CometCoord&#34;: CometCoord,
-            &#34;AltAzCoord&#34;: AltAzCoord
-        }
-        typ = obj[&#34;_type&#34;]
-        return switcher[typ]._fromValueDict(obj)
-
-    def _asDict(self):
-        pass
-
-
-# noinspection PyUnresolvedReferences
-@dataclass
-class EqCoord(Coord):
-    &#34;&#34;&#34;
-    Represents equatorial coordinates (mirrors class of same name in the CSW Scala code).
-    &#34;&#34;&#34;
-    ra: Angle
-    dec: Angle
-    frame: EqFrame
-    catalogName: str
-    pm: ProperMotion
-
-    @staticmethod
-    def make(tag: str = &#34;BASE&#34;, ra: any = &#34;0 deg&#34;, dec: any = &#34;0 deg&#34;, frame: EqFrame = EqFrame.ICRS,
-             catalogName: str = &#34;none&#34;, pm: tuple = (0.0, 0.0)):
-        &#34;&#34;&#34;
-        Convenience factory method.
-        Note that the ra and dec args should be in a format accepted by astropy&#39;s Angle class.
-        &#34;&#34;&#34;
-        return EqCoord(Tag(tag), Angle(ra), Angle(dec), frame, catalogName, ProperMotion(pm[0], pm[1]))
-
-    def _asDict(self):
-        return {
-            &#34;_type&#34;: self.__class__.__name__,
-            &#34;tag&#34;: self.tag.name,
-            &#34;ra&#34;: _CswAngle.fromAngle(self.ra).uas,
-            &#34;dec&#34;: _CswAngle.fromAngle(self.dec).uas,
-            &#34;frame&#34;: self.frame.name,
-            &#34;catalogName&#34;: self.catalogName,
-            &#34;pm&#34;: asdict(self.pm)
-        }
-
-    @staticmethod
-    def _fromValueDict(obj: dict):
-        return EqCoord(
-            tag=Tag(obj[&#34;tag&#34;]),
-            ra=_CswAngle(obj[&#34;ra&#34;]).toAngle().to(u.deg),
-            dec=_CswAngle(obj[&#34;dec&#34;]).toAngle().to(u.deg),
-            frame=EqFrame[obj[&#34;frame&#34;]],
-            catalogName=obj[&#34;catalogName&#34;],
-            pm=ProperMotion(**obj[&#34;pm&#34;]),
-        )
-
-
-@dataclass
-class SolarSystemCoord(Coord):
-    &#34;&#34;&#34;
-    Represents Solar System Coordinates (mirrors class of same name in the CSW Scala code).
-    &#34;&#34;&#34;
-    body: SolarSystemObject
-
-    @staticmethod
-    def make(tag: str, body: SolarSystemObject):
-        return SolarSystemCoord(Tag(tag), body)
-
-    def _asDict(self):
-        return {
-            &#34;_type&#34;: self.__class__.__name__,
-            &#34;tag&#34;: self.tag.name,
-            &#34;body&#34;: self.body.name,
-        }
-
-    @staticmethod
-    def _fromValueDict(obj: dict):
-        return SolarSystemCoord(
-            tag=Tag(obj[&#34;tag&#34;]),
-            body=SolarSystemObject[obj[&#34;body&#34;]]
-        )
-
-
-# noinspection PyUnresolvedReferences
-@dataclass
-class MinorPlanetCoord(Coord):
-    &#34;&#34;&#34;
-    Represents Minor Planet Coordinates (mirrors class of same name in the CSW Scala code).
-    &#34;&#34;&#34;
-    epoch: float  # TT as a Modified Julian Date
-    inclination: Angle
-    longAscendingNode: Angle
-    argOfPerihelion: Angle
-    meanDistance: float  # AU
-    eccentricity: float
-    meanAnomaly: Angle
-
-    @staticmethod
-    def make(tag: str, epoch: float, inclination: any, longAscendingNode: any, argOfPerihelion: any,
-             meanDistance: float, eccentricity: float, meanAnomaly: any):
-        &#34;&#34;&#34;
-        Convenience factory method.
-        Note that the inclination, longAscendingNode, argOfPerihelion and meanAnomaly args
-        should be in a format accepted by astropy&#39;s Angle class.
-        &#34;&#34;&#34;
-        return MinorPlanetCoord(Tag(tag), epoch, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
-                                meanDistance, eccentricity, Angle(meanAnomaly))
-
-    def _asDict(self):
-        return {
-            &#34;_type&#34;: self.__class__.__name__,
-            &#34;tag&#34;: self.tag.name,
-            &#34;epoch&#34;: self.epoch,
-            &#34;inclination&#34;: _CswAngle.fromAngle(self.inclination).uas,
-            &#34;longAscendingNode&#34;: _CswAngle.fromAngle(self.longAscendingNode).uas,
-            &#34;argOfPerihelion&#34;: _CswAngle.fromAngle(self.argOfPerihelion).uas,
-            &#34;meanDistance&#34;: self.meanDistance,
-            &#34;eccentricity&#34;: self.eccentricity,
-            &#34;meanAnomaly&#34;: _CswAngle.fromAngle(self.meanAnomaly).uas
-        }
-
-    @staticmethod
-    def _fromValueDict(obj: dict):
-        return MinorPlanetCoord(
-            tag=Tag(obj[&#34;tag&#34;]),
-            epoch=obj[&#34;epoch&#34;],
-            inclination=_CswAngle(obj[&#34;inclination&#34;]).toAngle().to(u.deg),
-            longAscendingNode=_CswAngle(obj[&#34;longAscendingNode&#34;]).toAngle().to(u.deg),
-            argOfPerihelion=_CswAngle(obj[&#34;argOfPerihelion&#34;]).toAngle().to(u.deg),
-            meanDistance=obj[&#34;meanDistance&#34;],
-            eccentricity=obj[&#34;eccentricity&#34;],
-            meanAnomaly=_CswAngle(obj[&#34;meanAnomaly&#34;]).toAngle().to(u.deg)
-        )
-
-
-# noinspection PyUnresolvedReferences
-@dataclass
-class CometCoord(Coord):
-    &#34;&#34;&#34;
-    Represents Comet Coordinates (mirrors class of same name in the CSW Scala code).
-    &#34;&#34;&#34;
-    epochOfPerihelion: float  # TT as a Modified Julian Date
-    inclination: Angle
-    longAscendingNode: Angle
-    argOfPerihelion: Angle
-    perihelionDistance: float  # AU
-    eccentricity: float
-
-    @staticmethod
-    def make(tag: str, epochOfPerihelion: float, inclination: any, longAscendingNode: any, argOfPerihelion: any,
-             perihelionDistance: float, eccentricity: float):
-        &#34;&#34;&#34;
-        Convenience factory method.
-        Note that the inclination, longAscendingNode and argOfPerihelion args
-        should be in a format accepted by astropy&#39;s Angle class.
-        &#34;&#34;&#34;
-        return CometCoord(Tag(tag), epochOfPerihelion, Angle(inclination), Angle(longAscendingNode),
-                          Angle(argOfPerihelion),
-                          perihelionDistance, eccentricity)
-
-    def _asDict(self):
-        return {
-            &#34;_type&#34;: self.__class__.__name__,
-            &#34;tag&#34;: self.tag.name,
-            &#34;epochOfPerihelion&#34;: self.epochOfPerihelion,
-            &#34;inclination&#34;: _CswAngle.fromAngle(self.inclination).uas,
-            &#34;longAscendingNode&#34;: _CswAngle.fromAngle(self.longAscendingNode).uas,
-            &#34;argOfPerihelion&#34;: _CswAngle.fromAngle(self.argOfPerihelion).uas,
-            &#34;perihelionDistance&#34;: self.perihelionDistance,
-            &#34;eccentricity&#34;: self.eccentricity
-        }
-
-    @staticmethod
-    def _fromValueDict(obj: dict):
-        return CometCoord(
-            tag=Tag(obj[&#34;tag&#34;]),
-            epochOfPerihelion=obj[&#34;epochOfPerihelion&#34;],
-            inclination=_CswAngle(obj[&#34;inclination&#34;]).toAngle().to(u.deg),
-            longAscendingNode=_CswAngle(obj[&#34;longAscendingNode&#34;]).toAngle().to(u.deg),
-            argOfPerihelion=_CswAngle(obj[&#34;argOfPerihelion&#34;]).toAngle().to(u.deg),
-            perihelionDistance=obj[&#34;perihelionDistance&#34;],
-            eccentricity=obj[&#34;eccentricity&#34;]
-        )
-
-
-# noinspection PyUnresolvedReferences
-@dataclass
-class AltAzCoord(Coord):
-    &#34;&#34;&#34;
-    Represents Alt-Az Coordinates (mirrors class of same name in the CSW Scala code).
-    &#34;&#34;&#34;
-    alt: Angle = Angle(&#34;0 deg&#34;)
-    az: Angle = Angle(&#34;0 deg&#34;)
-
-    @staticmethod
-    def make(tag: str = &#34;BASE&#34;, alt: any = &#34;0 deg&#34;, az: any = &#34;0 deg&#34;):
-        &#34;&#34;&#34;
-        Convenience factory method.
-        Note that the alt and az args should be in a format accepted by astropy&#39;s Angle class.
-        &#34;&#34;&#34;
-        return AltAzCoord(Tag(tag), Angle(alt), Angle(az))
-
-    def _asDict(self):
-        return {
-            &#34;_type&#34;: self.__class__.__name__,
-            &#34;tag&#34;: self.tag.name,
-            &#34;alt&#34;: _CswAngle.fromAngle(self.alt).uas,
-            &#34;az&#34;: _CswAngle.fromAngle(self.az).uas
-        }
-
-    @staticmethod
-    def _fromValueDict(obj: dict):
-        return AltAzCoord(
-            tag=Tag(obj[&#34;tag&#34;]),
-            alt=_CswAngle(obj[&#34;alt&#34;]).toAngle().to(u.deg),
-            az=_CswAngle(obj[&#34;az&#34;]).toAngle().to(u.deg),
-        )</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -331,7 +37,7 @@ class AltAzCoord(Coord):
 <dl>
 <dt id="csw.Coords.AltAzCoord"><code class="flex name class">
 <span>class <span class="ident">AltAzCoord</span></span>
-<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, alt: astropy.coordinates.angles.Angle = &lt;Angle 0. deg&gt;, az: astropy.coordinates.angles.Angle = &lt;Angle 0. deg&gt;)</span>
+<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, alt: astropy.coordinates.angles.core.Angle = &lt;Angle 0. deg&gt;, az: astropy.coordinates.angles.core.Angle = &lt;Angle 0. deg&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents Alt-Az Coordinates (mirrors class of same name in the CSW Scala code).</p></div>
@@ -377,11 +83,11 @@ class AltAzCoord(Coord):
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.Coords.AltAzCoord.alt"><code class="name">var <span class="ident">alt</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.AltAzCoord.alt"><code class="name">var <span class="ident">alt</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.AltAzCoord.az"><code class="name">var <span class="ident">az</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.AltAzCoord.az"><code class="name">var <span class="ident">az</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -394,24 +100,12 @@ class AltAzCoord(Coord):
 <dd>
 <div class="desc"><p>Convenience factory method.
 Note that the alt and az args should be in a format accepted by astropy's Angle class.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def make(tag: str = &#34;BASE&#34;, alt: any = &#34;0 deg&#34;, az: any = &#34;0 deg&#34;):
-    &#34;&#34;&#34;
-    Convenience factory method.
-    Note that the alt and az args should be in a format accepted by astropy&#39;s Angle class.
-    &#34;&#34;&#34;
-    return AltAzCoord(Tag(tag), Angle(alt), Angle(az))</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
 <dt id="csw.Coords.CometCoord"><code class="flex name class">
 <span>class <span class="ident">CometCoord</span></span>
-<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, epochOfPerihelion: float, inclination: astropy.coordinates.angles.Angle, longAscendingNode: astropy.coordinates.angles.Angle, argOfPerihelion: astropy.coordinates.angles.Angle, perihelionDistance: float, eccentricity: float)</span>
+<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, epochOfPerihelion: float, inclination: astropy.coordinates.angles.core.Angle, longAscendingNode: astropy.coordinates.angles.core.Angle, argOfPerihelion: astropy.coordinates.angles.core.Angle, perihelionDistance: float, eccentricity: float)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents Comet Coordinates (mirrors class of same name in the CSW Scala code).</p></div>
@@ -473,7 +167,7 @@ class CometCoord(Coord):
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.Coords.CometCoord.argOfPerihelion"><code class="name">var <span class="ident">argOfPerihelion</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.CometCoord.argOfPerihelion"><code class="name">var <span class="ident">argOfPerihelion</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -485,11 +179,11 @@ class CometCoord(Coord):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.CometCoord.inclination"><code class="name">var <span class="ident">inclination</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.CometCoord.inclination"><code class="name">var <span class="ident">inclination</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.CometCoord.longAscendingNode"><code class="name">var <span class="ident">longAscendingNode</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.CometCoord.longAscendingNode"><code class="name">var <span class="ident">longAscendingNode</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -507,22 +201,6 @@ class CometCoord(Coord):
 <div class="desc"><p>Convenience factory method.
 Note that the inclination, longAscendingNode and argOfPerihelion args
 should be in a format accepted by astropy's Angle class.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def make(tag: str, epochOfPerihelion: float, inclination: any, longAscendingNode: any, argOfPerihelion: any,
-         perihelionDistance: float, eccentricity: float):
-    &#34;&#34;&#34;
-    Convenience factory method.
-    Note that the inclination, longAscendingNode and argOfPerihelion args
-    should be in a format accepted by astropy&#39;s Angle class.
-    &#34;&#34;&#34;
-    return CometCoord(Tag(tag), epochOfPerihelion, Angle(inclination), Angle(longAscendingNode),
-                      Angle(argOfPerihelion),
-                      perihelionDistance, eccentricity)</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -589,7 +267,7 @@ class Coord:
 </dd>
 <dt id="csw.Coords.EqCoord"><code class="flex name class">
 <span>class <span class="ident">EqCoord</span></span>
-<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, ra: astropy.coordinates.angles.Angle, dec: astropy.coordinates.angles.Angle, frame: <a title="csw.Coords.EqFrame" href="#csw.Coords.EqFrame">EqFrame</a>, catalogName: str, pm: <a title="csw.Coords.ProperMotion" href="#csw.Coords.ProperMotion">ProperMotion</a>)</span>
+<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, ra: astropy.coordinates.angles.core.Angle, dec: astropy.coordinates.angles.core.Angle, frame: <a title="csw.Coords.EqFrame" href="#csw.Coords.EqFrame">EqFrame</a>, catalogName: str, pm: <a title="csw.Coords.ProperMotion" href="#csw.Coords.ProperMotion">ProperMotion</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents equatorial coordinates (mirrors class of same name in the CSW Scala code).</p></div>
@@ -649,7 +327,7 @@ class EqCoord(Coord):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.EqCoord.dec"><code class="name">var <span class="ident">dec</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.EqCoord.dec"><code class="name">var <span class="ident">dec</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -661,7 +339,7 @@ class EqCoord(Coord):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.EqCoord.ra"><code class="name">var <span class="ident">ra</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.EqCoord.ra"><code class="name">var <span class="ident">ra</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -674,19 +352,6 @@ class EqCoord(Coord):
 <dd>
 <div class="desc"><p>Convenience factory method.
 Note that the ra and dec args should be in a format accepted by astropy's Angle class.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def make(tag: str = &#34;BASE&#34;, ra: any = &#34;0 deg&#34;, dec: any = &#34;0 deg&#34;, frame: EqFrame = EqFrame.ICRS,
-         catalogName: str = &#34;none&#34;, pm: tuple = (0.0, 0.0)):
-    &#34;&#34;&#34;
-    Convenience factory method.
-    Note that the ra and dec args should be in a format accepted by astropy&#39;s Angle class.
-    &#34;&#34;&#34;
-    return EqCoord(Tag(tag), Angle(ra), Angle(dec), frame, catalogName, ProperMotion(pm[0], pm[1]))</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -722,7 +387,7 @@ def make(tag: str = &#34;BASE&#34;, ra: any = &#34;0 deg&#34;, dec: any = &#34;0
 </dd>
 <dt id="csw.Coords.MinorPlanetCoord"><code class="flex name class">
 <span>class <span class="ident">MinorPlanetCoord</span></span>
-<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, epoch: float, inclination: astropy.coordinates.angles.Angle, longAscendingNode: astropy.coordinates.angles.Angle, argOfPerihelion: astropy.coordinates.angles.Angle, meanDistance: float, eccentricity: float, meanAnomaly: astropy.coordinates.angles.Angle)</span>
+<span>(</span><span>tag: <a title="csw.Coords.Tag" href="#csw.Coords.Tag">Tag</a>, epoch: float, inclination: astropy.coordinates.angles.core.Angle, longAscendingNode: astropy.coordinates.angles.core.Angle, argOfPerihelion: astropy.coordinates.angles.core.Angle, meanDistance: float, eccentricity: float, meanAnomaly: astropy.coordinates.angles.core.Angle)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents Minor Planet Coordinates (mirrors class of same name in the CSW Scala code).</p></div>
@@ -786,7 +451,7 @@ class MinorPlanetCoord(Coord):
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.Coords.MinorPlanetCoord.argOfPerihelion"><code class="name">var <span class="ident">argOfPerihelion</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.MinorPlanetCoord.argOfPerihelion"><code class="name">var <span class="ident">argOfPerihelion</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -798,15 +463,15 @@ class MinorPlanetCoord(Coord):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.MinorPlanetCoord.inclination"><code class="name">var <span class="ident">inclination</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.MinorPlanetCoord.inclination"><code class="name">var <span class="ident">inclination</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.MinorPlanetCoord.longAscendingNode"><code class="name">var <span class="ident">longAscendingNode</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.MinorPlanetCoord.longAscendingNode"><code class="name">var <span class="ident">longAscendingNode</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="csw.Coords.MinorPlanetCoord.meanAnomaly"><code class="name">var <span class="ident">meanAnomaly</span> : astropy.coordinates.angles.Angle</code></dt>
+<dt id="csw.Coords.MinorPlanetCoord.meanAnomaly"><code class="name">var <span class="ident">meanAnomaly</span> : astropy.coordinates.angles.core.Angle</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -824,21 +489,6 @@ class MinorPlanetCoord(Coord):
 <div class="desc"><p>Convenience factory method.
 Note that the inclination, longAscendingNode, argOfPerihelion and meanAnomaly args
 should be in a format accepted by astropy's Angle class.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def make(tag: str, epoch: float, inclination: any, longAscendingNode: any, argOfPerihelion: any,
-         meanDistance: float, eccentricity: float, meanAnomaly: any):
-    &#34;&#34;&#34;
-    Convenience factory method.
-    Note that the inclination, longAscendingNode, argOfPerihelion and meanAnomaly args
-    should be in a format accepted by astropy&#39;s Angle class.
-    &#34;&#34;&#34;
-    return MinorPlanetCoord(Tag(tag), epoch, Angle(inclination), Angle(longAscendingNode), Angle(argOfPerihelion),
-                            meanDistance, eccentricity, Angle(meanAnomaly))</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -922,14 +572,6 @@ class SolarSystemCoord(Coord):
 </code></dt>
 <dd>
 <div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def make(tag: str, body: SolarSystemObject):
-    return SolarSystemCoord(Tag(tag), body)</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -1030,7 +672,6 @@ class Tag:
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -1139,7 +780,7 @@ class Tag:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
 </footer>
 </body>
 </html>

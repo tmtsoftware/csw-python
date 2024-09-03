@@ -1,5 +1,5 @@
 # noinspection PyUnresolvedReferences
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TypeVar, Generic, List
 
 from csw.KeyTypes import KeyTypes
@@ -37,7 +37,7 @@ class Parameter(Generic[T]):
     keyName: str
     keyType: KeyTypes
     values: List[T]
-    units: Units = Units.NoUnits
+    units: Units = field(default_factory=lambda: Units.NoUnits)
 
     @staticmethod
     def _paramValueOrDict(keyType: KeyTypes, param: T, forEvent: bool):

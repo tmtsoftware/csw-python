@@ -21,8 +21,8 @@ pipeline {
                 withEnv(['PATH+LOCALBIN=/usr/local/bin:/var/lib/jenkins/.local/bin']) {
                     sh "cs channel --add https://raw.githubusercontent.com/tmtsoftware/osw-apps/master/apps.json"
                     sh "rm -rf .venv"
-                    sh "python3.10 -m pip install --upgrade pip"
-                    sh "python3.10 -m pip install pipenv"
+                    sh "python3.12 -m pip install --upgrade pip"
+                    sh "python3.12 -m pip install pipenv"
                 }
             }
         }

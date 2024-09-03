@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 from csw.Parameter import Parameter
@@ -157,7 +157,7 @@ class Result:
 @dataclass
 class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
-    result: Result = Result([])
+    result: Result = field(default_factory=lambda: Result([]))
 
     # noinspection PyProtectedMember
     def _asDict(self):
