@@ -1,6 +1,6 @@
-from sequencer.ScriptDsl import *
+from sequencer.Script import *
 
-class TestScript(ScriptDsl):
+class TestScript(Script):
     lgsfSequencer = Sequencer(Subsystems.LGSF, ObsMode("darknight"))
     testAssembly = Assembly(Prefix(Subsystems.ESW, "test"))
 
