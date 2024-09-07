@@ -23,6 +23,7 @@ pytest-asyncio = "*"
 pytest = "*"
 pytest-xprocess = "*"
 python-keycloak = "*"
+extended_configparser = "*"
 
 [requires]
 python_version = "3.12"

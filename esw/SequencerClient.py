@@ -10,6 +10,8 @@ from requests import Response
 from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
+from csw.Subsystem import Subsystems
+from esw.ObsMode import ObsMode
 from esw.Sequence import Sequence
 from esw.SequencerRequest import *
 from esw.SequencerRes import *
