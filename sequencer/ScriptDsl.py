@@ -5,5 +5,5 @@ from sequencer.ScriptApi import ScriptApi
 
 class ScriptDsl(ScriptApi):
     isOnline = True
-    setupCommandHandler = FunctionBuilder[CommandName, Setup]()
-    observerCommandHandler = FunctionBuilder[CommandName, Observe]()
+    setupCommandHandler = FunctionBuilder[str, Setup, None]()
+    observerCommandHandler = FunctionBuilder[str, Observe, None]()
