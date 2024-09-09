@@ -24,4 +24,5 @@ class FunctionBuilder[K, I, O]:
         return self.handlers[key](input)
 
     def merge(self, that: Self) -> Self:
-        return self.handlers | that.handlers
+        self.handlers |= that.handlers
+        return self

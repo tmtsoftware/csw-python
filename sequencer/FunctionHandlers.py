@@ -18,4 +18,5 @@ class FunctionHandlers[I, O]:
         return list(map(lambda f: f(input), self.handlers))
 
     def merge(self, that: Self) -> Self:
-        return self.handlers + that.handlers
+        self.handlers += that.handlers
+        return self
