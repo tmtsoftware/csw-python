@@ -1,3 +1,4 @@
+from csw.ObsId import ObsId
 from sequencer.Script import *
 
 class TestScript(Script):
@@ -8,7 +9,7 @@ class TestScript(Script):
         print(f"XXX onSetup command-2: {setup}")
 
     def handleExposureStart(self, observe: Observe):
-        obsId = ObsId("2021A-011-153")
+        obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
         print(obsId.programId)
         print(obsId.programId.semesterId)
@@ -16,7 +17,7 @@ class TestScript(Script):
 
         # create exposureId
         exposureIdStr = "${obsId}-TCS-DET-SCI0-0001"
-        exposureId = ExposureId(exposureIdStr)
+        exposureId = ExposureId.make(exposureIdStr)
         # do something with exposureId components
         print(exposureId.subsystem)
         print(exposureId.det)
