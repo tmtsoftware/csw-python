@@ -23,14 +23,14 @@ class ScriptDsl(ScriptApi):
 
     @classmethod
     def merge(self, that: Self) -> Self:
-        self.setupCommandHandler ++ that.setupCommandHandler
-        self.observerCommandHandler ++ that.observerCommandHandler
-        self.onlineHandlers ++ that.onlineHandlers
-        self.offlineHandlers ++ that.offlineHandlers
-        self.shutdownHandlers ++ that.shutdownHandlers
-        self.abortHandlers ++ that.abortHandlers
-        self.stopHandlers ++ that.stopHandlers
-        self.diagnosticHandlers ++ that.diagnosticHandlers
-        self.operationsHandlers ++ that.operationsHandlers
-        self.exceptionHandlers ++ that.exceptionHandlers
+        self.setupCommandHandler.merge(that.setupCommandHandler)
+        self.observerCommandHandler.merge(that.observerCommandHandler)
+        self.onlineHandlers.merge(that.onlineHandlers)
+        self.offlineHandlers.merge(that.offlineHandlers)
+        self.shutdownHandlers.merge(that.shutdownHandlers)
+        self.abortHandlers.merge(that.abortHandlers)
+        self.stopHandlers.merge(that.stopHandlers)
+        self.diagnosticHandlers.merge(that.diagnosticHandlers)
+        self.operationsHandlers.merge(that.operationsHandlers)
+        self.exceptionHandlers.merge(that.exceptionHandlers)
         return self

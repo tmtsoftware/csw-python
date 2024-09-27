@@ -4,33 +4,36 @@ class TestScript(Script):
     lgsfSequencer = Sequencer(Subsystems.LGSF, ObsMode("darknight"))
     testAssembly = Assembly(Prefix(Subsystems.ESW, "test"))
 
+    def handleCommand2(self, setup: Setup):
+        print(f"XXX onSetup command-2: {setup}")
+
+    def handleExposureStart(self, observe: Observe):
+        obsId = ObsId("2021A-011-153")
+        # do something with ObsId components
+        print(obsId.programId)
+        print(obsId.programId.semesterId)
+        print(obsId.programId.semesterId.semester)
+
+        # create exposureId
+        exposureIdStr = "${obsId}-TCS-DET-SCI0-0001"
+        exposureId = ExposureId(exposureIdStr)
+        # do something with exposureId components
+        print(exposureId.subsystem)
+        print(exposureId.det)
+
+        publishEvent(exposureStart(exposureId))
+
+    def __init__(self):
+        #
+        #     // ESW-134: Reuse code by ability to import logic from one script into another
+        #     loadScripts(InitialCommandHandler)
+
+        self.onSetup("command-2", self.handleCommand2)
+
+        # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
+        self.onObserve("exposure-start", self.handleExposureStart)
 
 
-
-#
-#     // ESW-134: Reuse code by ability to import logic from one script into another
-#     loadScripts(InitialCommandHandler)
-#
-#     onSetup("command-2") {
-#     }
-#
-#     // ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-#     onObserve("exposure-start") {
-#         val obsId = ObsId("2021A-011-153")
-#         // do something with ObsId components
-#         println(obsId.programId)
-#         println(obsId.programId.semesterId)
-#         println(obsId.programId.semesterId.semester)
-#
-#         // create exposureId
-#         val exposureIdStr = "${obsId}-TCS-DET-SCI0-0001"
-#         val exposureId = ExposureId(exposureIdStr)
-#         // do something with exposureId components
-#         println(exposureId.subsystem)
-#         println(exposureId.det)
-#
-#         publishEvent(exposureStart(exposureId))
-#     }
 #
 #     onSetup("command-3") {
 #     }
