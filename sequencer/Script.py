@@ -9,12 +9,17 @@ from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
 
-class Script():
-    def onSetup(self, commandName: str, func: Callable[[Setup], None]):
-        pass
+def onSetup(commandName: str):
+    def onSetupDecorator(func: Callable[[Setup], None]):
+        def addSetupHandler():
+            print(f"XXX addSetupHandler for {commandName}")
+        return addSetupHandler
 
-    def onObserve(self, commandName: str, func: Callable[[Observe], None]):
-        pass
+def onObserve(commandName: str):
+    def onObserveDecorator(func: Callable[[Observe], None]):
+        def addObserveHandler():
+            print(f"XXX addObserveHandler for {commandName}")
+        return addObserveHandler
 
 def Sequencer(subsystem: Subsystems, obsMode: ObsMode, variation: str | None = None) -> SequencerClient:
     return SequencerClient(Variation.prefix(subsystem, obsMode, variation))
@@ -25,5 +30,3 @@ def Assembly(prefix: Prefix) -> CommandService:
 def Hcd(prefix: Prefix) -> CommandService:
     return CommandService(prefix, ComponentType.HCD)
 
-# def onSetup(commandName: str, func: Callable[[], None]):
-#     pass

@@ -19,16 +19,16 @@ class ProgramId:
 
     def __post_init__(self):
         if not (self.programNumber >= 1 and self.programNumber <= 999):
-                raise ValueError("requirement failed: Program Number should be integer in the range of 1 to 999")
+            raise ValueError("requirement failed: Program Number should be integer in the range of 1 to 999")
 
     def __str__(self):
         return Separator.hyphenate(f"{self.semesterId}", "{:03d}".format(self.programNumber))
 
     @classmethod
     def make(cls, programId: str) -> Self:
-        list = programId.split(Separator.Hyphen)
-        if (len(list) != 2 or not list[1].isnumeric):
-            raise ValueError(
-                f"A program Id consists of a semester Id and program number separated by '{Separator.Hyphen}', ex: 2020A-001")
-        semesterId, programNumber = list
-        return ProgramId(SemesterId.make(semesterId), int(programNumber))
+        match programId.split(Separator.Hyphen):
+            case [semesterId, programNumber] if programNumber.isnumeric:
+                return ProgramId(SemesterId.make(semesterId), int(programNumber))
+            case _:
+                raise ValueError(
+                    f"A program Id consists of a semester Id and program number separated by '{Separator.Hyphen}', ex: 2020A-001")

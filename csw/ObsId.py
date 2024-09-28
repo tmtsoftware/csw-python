@@ -25,9 +25,9 @@ class ObsId:
 
     @classmethod
     def make(cls, obsId: str) -> Self:
-        list = obsId.split(Separator.Hyphen)
-        if (len(list) != 3 or not list[2].isnumeric):
-            raise ValueError(
-                f"An ObsId must consist of a semesterId, programNumber, and observationNumber separated by '{Separator.Hyphen}', ex: 2020A-001-123")
-        semesterId, programNumber, obsNumber = list
-        return ObsId(ProgramId.make(Separator.hyphenate(semesterId, programNumber)), int(obsNumber))
+        match obsId.split(Separator.Hyphen):
+            case [semesterId, programNumber, obsNumber] if obsNumber.isnumeric:
+                return ObsId(ProgramId.make(Separator.hyphenate(semesterId, programNumber)), int(obsNumber))
+            case _:
+                raise ValueError(
+                    f"An ObsId must consist of a semesterId, programNumber, and observationNumber separated by '{Separator.Hyphen}', ex: 2020A-001-123")

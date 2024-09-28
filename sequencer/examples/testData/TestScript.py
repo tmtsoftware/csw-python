@@ -2,39 +2,30 @@ from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
 from sequencer.Script import *
 
-class   TestScript(Script):
-    lgsfSequencer = Sequencer(Subsystems.LGSF, ObsMode("darknight"))
-    testAssembly = Assembly(Prefix(Subsystems.ESW, "test"))
+lgsfSequencer = Sequencer(Subsystems.LGSF, ObsMode("darknight"))
+testAssembly = Assembly(Prefix(Subsystems.ESW, "test"))
 
-    def handleCommand2(self, setup: Setup):
-        print(f"XXX onSetup command-2: {setup}")
+# // ESW-134: Reuse code by ability to import logic from one script into another
+# loadScripts(InitialCommandHandler)
 
-    def handleExposureStart(self, observe: Observe):
-        obsId = ObsId.make("2021A-011-153")
-        # do something with ObsId components
-        print(obsId.programId)
-        print(obsId.programId.semesterId)
-        print(obsId.programId.semesterId.semester)
+@onSetup("command-2")
+def handleCommand2(setup: Setup):
+    print(f"XXX onSetup command-2: {setup}")
 
-        # create exposureId
-        exposureIdStr = "${obsId}-TCS-DET-SCI0-0001"
-        exposureId = ExposureId.make(exposureIdStr)
-        # do something with exposureId components
-        print(exposureId.subsystem)
-        print(exposureId.det)
+@onObserve("exposure-start")
+def handleExposureStart(observe: Observe):
+    obsId = ObsId.make("2021A-011-153")
+    # do something with ObsId components
+    print(obsId.programId)
+    print(obsId.programId.semesterId)
+    print(obsId.programId.semesterId.semester)
 
-        publishEvent(exposureStart(exposureId))
-
-    def __init__(self):
-        #
-        #     // ESW-134: Reuse code by ability to import logic from one script into another
-        #     loadScripts(InitialCommandHandler)
-
-        self.onSetup("command-2", self.handleCommand2)
-
-        # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-        self.onObserve("exposure-start", self.handleExposureStart)
-
+    # create exposureId
+    exposureIdStr = "${obsId}-TCS-DET-SCI0-0001"
+    exposureId = ExposureId.make(exposureIdStr)
+    # do something with exposureId components
+    print(exposureId.subsystem)
+    print(exposureId.det)
 
 #
 #     onSetup("command-3") {
