@@ -7,7 +7,7 @@ from csw.EventPublisher import EventPublisher
 from csw.Parameter import IntKey
 from csw.Event import SystemEvent, EventName
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
 
 
@@ -21,7 +21,7 @@ class TestEventPublisher:
         pub = EventPublisher()
         sub = EventSubscriber()
 
-        prefix = Prefix(Subsystems.CSW, "assembly")
+        prefix = Prefix(Subsystem.CSW, "assembly")
         eventName = EventName("test_event")
         eventKey = EventKey(prefix, eventName)
         param = IntKey.make("testEventValue").set(42)

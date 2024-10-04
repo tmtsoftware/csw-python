@@ -4,7 +4,7 @@ from csw.CommandService import CommandService
 from csw.LocationService import ComponentType
 from csw.ParameterSetType import Setup, Observe
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
@@ -21,7 +21,7 @@ def onObserve(commandName: str):
             print(f"XXX addObserveHandler for {commandName}")
         return addObserveHandler
 
-def Sequencer(subsystem: Subsystems, obsMode: ObsMode, variation: str | None = None) -> SequencerClient:
+def Sequencer(subsystem: Subsystem, obsMode: ObsMode, variation: str | None = None) -> SequencerClient:
     return SequencerClient(Variation.prefix(subsystem, obsMode, variation))
 
 def Assembly(prefix: Prefix) -> CommandService:

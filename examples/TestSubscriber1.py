@@ -1,6 +1,6 @@
 from csw.Event import Event, EventName
 from csw.EventSubscriber import EventSubscriber
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
 from csw.EventKey import EventKey
 
@@ -10,7 +10,7 @@ class TestSubscriber1:
 
     def __init__(self):
         self.count = 0
-        self.eventKey = EventKey(Prefix(Subsystems.CSW, "testassembly"), EventName("myAssemblyEvent"))
+        self.eventKey = EventKey(Prefix(Subsystem.CSW, "testassembly"), EventName("myAssemblyEvent"))
         self.eventSubscriber = EventSubscriber()
         self.eventThread = self.eventSubscriber.subscribe([self.eventKey], self.callback)
 

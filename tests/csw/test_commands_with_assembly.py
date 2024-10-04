@@ -15,12 +15,12 @@ from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import *
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # noinspection PyTypeChecker,PyBroadException
 class MyComponentHandlers(ComponentHandlers):
-    prefix = Prefix(Subsystems.CSW, "pycswTest")
+    prefix = Prefix(Subsystem.CSW, "pycswTest")
     dir = pathlib.Path(__file__).parent.absolute()
     outFileName = "PyTestAssemblyCommandResponses.out"
     tmpOutFile = f"/tmp/{outFileName}"

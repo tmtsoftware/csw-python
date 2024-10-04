@@ -4,13 +4,13 @@ from csw.LocationService import ComponentType
 from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Assumes csw-services and test assembly are running!
 async def test_command_service_client():
-    cs = CommandService(Prefix(Subsystems.CSW, "TestPublisher"), ComponentType.Assembly)
-    prefix = Prefix(Subsystems.CSW, "TestClient")
+    cs = CommandService(Prefix(Subsystem.CSW, "TestPublisher"), ComponentType.Assembly)
+    prefix = Prefix(Subsystem.CSW, "TestClient")
     maybeObsId = []
     param = IntKey.make("testValue").set(42)
     paramSet = [param]

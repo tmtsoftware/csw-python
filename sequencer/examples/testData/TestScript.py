@@ -2,8 +2,8 @@ from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
 from sequencer.Script import *
 
-lgsfSequencer = Sequencer(Subsystems.LGSF, ObsMode("darknight"))
-testAssembly = Assembly(Prefix(Subsystems.ESW, "test"))
+lgsfSequencer = Sequencer(Subsystem.LGSF, ObsMode("darknight"))
+testAssembly = Assembly(Prefix(Subsystem.ESW, "test"))
 
 # // ESW-134: Reuse code by ability to import logic from one script into another
 # loadScripts(InitialCommandHandler)

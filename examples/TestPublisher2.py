@@ -3,7 +3,7 @@ from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Units import Units
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Test publishing events using the Parameter and Event wrapper classes
@@ -17,7 +17,7 @@ class TestPublisher2:
         intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
                                                                               [[-1, -2, -3, -4], [-5, -6, -7, -8]])
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
-        prefix = Prefix(Subsystems.CSW, "testassembly")
+        prefix = Prefix(Subsystem.CSW, "testassembly")
         eventName = EventName("myAssemblyEvent")
         event = SystemEvent(prefix, eventName, paramSet)
         self.pub.publish(event)

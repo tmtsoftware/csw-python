@@ -12,7 +12,7 @@ from csw.LocationService import ComponentType, LocationService, ConnectionInfo, 
 from csw.Parameter import IntKey
 from csw.ParameterSetType import CommandName, Setup
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Start a local python based command service (defined in TestComponentHandlers.py) for testing
@@ -23,7 +23,7 @@ from csw.Units import Units
 def start_server(xprocess):
     # Remove any leftover reg from loc service
     locationService = LocationService()
-    prefix = Prefix(Subsystems.CSW, "pycswTest2")
+    prefix = Prefix(Subsystem.CSW, "pycswTest2")
     connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
     locationService.unregister(connection)
 
@@ -56,8 +56,8 @@ class TestCommandServiceClientServer:
 
     async def test_command_client_server(self):
         # Create a python based command service client
-        cs = CommandService(Prefix(Subsystems.CSW, "pycswTest2"), ComponentType.Service)
-        prefix = Prefix(Subsystems.CSW, "TestClient")
+        cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service)
+        prefix = Prefix(Subsystem.CSW, "TestClient")
         maybeObsId = []
         resp = cs.submit(Setup(prefix, CommandName("SimpleCommand"), maybeObsId, []))
         assert isinstance(resp, Completed)

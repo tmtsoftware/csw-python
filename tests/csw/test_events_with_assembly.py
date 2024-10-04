@@ -15,7 +15,7 @@ from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, Mi
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
 
 
@@ -37,7 +37,7 @@ class TestEventsWithAssembly:
     outFile = f"{dir}/{outFileName}"
     pub = EventPublisher()
     sub = EventSubscriber()
-    prefix = Prefix(Subsystems.CSW, "TestPublisher")
+    prefix = Prefix(Subsystem.CSW, "TestPublisher")
 
     def setup_method(self):
         self.cleanup()

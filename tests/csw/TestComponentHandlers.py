@@ -9,14 +9,14 @@ from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import *
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # noinspection DuplicatedCode
 # This is a local command service used with the @pytest.fixture annotation for testing.
 # See ./test_command_service_client_server.py.
 class TestComponentHandlers(ComponentHandlers):
-    prefix = Prefix(Subsystems.CSW, "pycswTest2")
+    prefix = Prefix(Subsystem.CSW, "pycswTest2")
     dir = pathlib.Path(__file__).parent.absolute()
 
     # noinspection PyUnusedLocal

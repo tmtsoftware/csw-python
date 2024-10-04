@@ -8,7 +8,7 @@ from csw.Parameter import Parameter, ChoiceKey
 from csw.CurrentState import CurrentState
 from csw.UTCTime import UTCTime
 from csw.Units import Units
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
 from csw.LocationService import ComponentType, ConnectionInfo, HttpRegistration, TcpRegistration, \
     PekkoRegistration, ComponentId, ConnectionType, PekkoLocation, HttpLocation, TcpLocation
@@ -50,7 +50,7 @@ class TestCswContract:
             for p in data['ConnectionType']:
                 assert (ConnectionType(p).value == p)
             for p in data['Subsystem']:
-                assert (Subsystems[p].name == p)
+                assert (Subsystem[p].name == p)
             for p in data['Location']:
                 locType = p['_type']
                 if locType == "PekkoLocation":

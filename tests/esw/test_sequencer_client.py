@@ -4,7 +4,7 @@ from csw.CommandResponse import Started, Error
 from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.UTCTime import UTCTime
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
@@ -17,9 +17,9 @@ from esw.SequencerRes import Ok, Unhandled, SequencerState
 # noinspection PyShadowingBuiltins
 @pytest.mark.skip(reason="Requires running ESW observing simulation from the esw-observing-simulation repo")
 class TestSequencerClient:
-    sequencerPrefix = Prefix(Subsystems.ESW, "IRIS_ImagerOnly")
+    sequencerPrefix = Prefix(Subsystem.ESW, "IRIS_ImagerOnly")
     seqClient = SequencerClient(sequencerPrefix)
-    clientPrefix = Prefix(Subsystems.CSW, "TestClient")
+    clientPrefix = Prefix(Subsystem.CSW, "TestClient")
     maybeObsId = []
     param = IntKey.make("testValue").set(42)
     paramSet = [param]

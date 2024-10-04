@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 @dataclass
@@ -9,7 +9,7 @@ class Prefix:
     A class representing a component prefix, made up of the subsystem and the component name.
     Note: Component name should not contain leading or trailing spaces or a hyphen (-).
     """
-    subsystem: Subsystems
+    subsystem: Subsystem
     componentName: str
 
     def __post_init__(self):
@@ -22,4 +22,4 @@ class Prefix:
     @classmethod
     def from_str(cls, prefixStr: str):
         [s, c] = prefixStr.split('.', 1)
-        return cls(Subsystems[s.upper()], c)
+        return cls(Subsystem[s.upper()], c)

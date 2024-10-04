@@ -11,7 +11,7 @@ from csw.Parameter import *
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
 from csw.Event import SystemEvent, EventName
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
 from csw.TAITime import TAITime
 from csw.UTCTime import UTCTime

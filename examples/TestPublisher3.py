@@ -2,7 +2,7 @@ from csw.Parameter import *
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.Units import Units
 
 
@@ -36,7 +36,7 @@ class TestPublisher3:
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
 
-        prefix = Prefix(Subsystems.CSW, "testassembly")
+        prefix = Prefix(Subsystem.CSW, "testassembly")
         eventName = EventName("myAssemblyEvent")
         event = SystemEvent(prefix, eventName, paramSet)
         self.pub.publish(event)

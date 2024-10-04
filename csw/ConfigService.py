@@ -11,7 +11,7 @@ from keycloak import KeycloakOpenID
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 @dataclass
 class ConfigData:
@@ -87,7 +87,7 @@ class ConfigService:
         return time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def _getBaseUri(self) -> str:
-        prefix = Prefix(Subsystems.CSW, "ConfigServer")
+        prefix = Prefix(Subsystem.CSW, "ConfigServer")
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         location = self._locationService.resolve(connection)
         if location is not None:
@@ -99,7 +99,7 @@ class ConfigService:
         return f'{self._getBaseUri()}{path}'
 
     def _locateAuthService(self) -> str:
-        connection = ConnectionInfo.make(Prefix(Subsystems.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
+        connection = ConnectionInfo.make(Prefix(Subsystem.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
         location = self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation

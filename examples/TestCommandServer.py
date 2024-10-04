@@ -12,11 +12,11 @@ from csw.TAITime import TAITime
 from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 class MyComponentHandlers(ComponentHandlers):
-    prefix = Prefix(Subsystems.CSW, "pycswTest")
+    prefix = Prefix(Subsystem.CSW, "pycswTest")
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(3)
