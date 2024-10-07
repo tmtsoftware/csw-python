@@ -22,4 +22,4 @@ class Prefix:
     @classmethod
     def from_str(cls, prefixStr: str):
         [s, c] = prefixStr.split('.', 1)
-        return cls(Subsystem[s.upper()], c)
+        return cls(Subsystem.fromString(s), c)

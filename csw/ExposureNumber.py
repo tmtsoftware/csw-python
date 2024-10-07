@@ -10,10 +10,10 @@ class ExposureNumber:
     subArray: int | None = None
 
     def __str__(self):
-        if (self.subArray):
-            return f"{self.exposureNumber:04d}-{self.subArray:02d}"
-        else:
+        if (self.subArray is None):
             return f"{self.exposureNumber:04d}"
+        else:
+            return f"{self.exposureNumber:04d}-{self.subArray:02d}"
 
     def next(self) -> Self:
         """
@@ -25,10 +25,10 @@ class ExposureNumber:
         """
         Returns the next subarray number
         """
-        if (self.subArray):
-            return ExposureNumber(self.exposureNumber, self.subArray + 1)
-        else:
+        if (self.subArray is None):
             return ExposureNumber(self.exposureNumber, 0)
+        else:
+            return ExposureNumber(self.exposureNumber, self.subArray + 1)
 
     @classmethod
     def default(cls) -> Self:

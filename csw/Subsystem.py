@@ -1,6 +1,8 @@
 from enum import Enum
 from dataclasses import dataclass
 
+from csw.EnumUtil import UpperCaseEnum
+
 
 @dataclass
 class SubsystemValue:
@@ -10,7 +12,8 @@ class SubsystemValue:
     name: str
     description: str
 
-class Subsystem(Enum):
+
+class Subsystem(UpperCaseEnum):
     AOESW = SubsystemValue("AOESW", "Adaptive Optics Executive Software")
     APS = SubsystemValue("APS", "Alignment and Phasing System ")
     CIS = SubsystemValue("CIS", "Communications and Information Systems")
@@ -45,3 +48,4 @@ class Subsystem(Enum):
     TINS = SubsystemValue("TINS", "Test Instruments")
     WFOS = SubsystemValue("WFOS", "Wide Field Optical Spectrograph")
     Container = SubsystemValue("Container", "Container Subsystem")
+

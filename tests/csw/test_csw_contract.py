@@ -50,7 +50,7 @@ class TestCswContract:
             for p in data['ConnectionType']:
                 assert (ConnectionType(p).value == p)
             for p in data['Subsystem']:
-                assert (Subsystem[p].name == p)
+                assert (Subsystem.fromString(p).name == p)
             for p in data['Location']:
                 locType = p['_type']
                 if locType == "PekkoLocation":

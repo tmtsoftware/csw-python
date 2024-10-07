@@ -27,7 +27,7 @@ class ProgramId:
     @classmethod
     def make(cls, programId: str) -> Self:
         match programId.split(Separator.Hyphen):
-            case [semesterId, programNumber] if programNumber.isnumeric:
+            case [semesterId, programNumber] if programNumber.isnumeric():
                 return ProgramId(SemesterId.make(semesterId), int(programNumber))
             case _:
                 raise ValueError(

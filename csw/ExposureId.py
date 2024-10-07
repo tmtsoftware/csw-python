@@ -44,9 +44,11 @@ class ExposureId:
 
     @classmethod
     def _parseDateTime(cls, timeStr: str) -> UTCTime:
-        t = datetime.strptime(timeStr, cls._exposureIdPattern).timestamp()
-        seconds = int(t)
-        nanos = int((t - seconds) * 1e9)
+        t = datetime.strptime(timeStr, cls._exposureIdPattern)
+        epoch = datetime(1970, 1, 1)
+        diff = (t - epoch).total_seconds()
+        seconds = int(diff)
+        nanos = int((diff - seconds) * 1e9)
         return UTCTime(seconds, nanos)
 
     @classmethod
@@ -211,7 +213,7 @@ class ExposureId:
                 # This is the case with an ObsId and a sub array
                 return ExposureIdWithObsId(
                     obsId=ObsId.make(Separator.hyphenate(obs1, obs2, obs3)),
-                    subsystem=Subsystem[subsystemStr.upper()],
+                    subsystem=Subsystem.fromString(subsystemStr),
                     det=detStr,
                     typLevel=TYPLevel.make(typStr),
                     exposureNumber=ExposureNumber.make(f"{expNumStr}{Separator.Hyphen}{subArrayStr}"))
@@ -224,7 +226,7 @@ class ExposureId:
                 if len(p1) == 5:
                     return ExposureIdWithObsId(
                         obsId=ObsId.make(Separator.hyphenate(p1, p2, p3)),
-                        subsystem=Subsystem[p4.upper()],
+                        subsystem=Subsystem.fromString(p4),
                         det=p5,
                         typLevel=TYPLevel.make(p6),
                         exposureNumber=ExposureNumber.make(p7))
@@ -232,17 +234,17 @@ class ExposureId:
                     # It is a standalone with a subarray
                     return StandaloneExposureId(
                         obsId=None,
-                        subsystem=Subsystem[p3.upper()],
+                        subsystem=Subsystem.fromString(p3),
                         det=p4,
                         typLevel=TYPLevel.make(p5),
                         exposureNumber=ExposureNumber.make(f"{p6}{Separator.Hyphen}{p7}"),
                         utcTime=cls.toTimeDateAtUTC(p1, p2))
 
-            case [date, time, subsystemStr, detStr, typStr, expNumStr] if (date.length != 5):
+            case [date, time, subsystemStr, detStr, typStr, expNumStr] if (len(date) != 5):
                 # 6 args - first two should be UTC time
                 return StandaloneExposureId(
                     obsId=None,
-                    subsystem=Subsystem[subsystemStr],
+                    subsystem=Subsystem.fromString(subsystemStr),
                     det=detStr,
                     typLevel=TYPLevel.make(typStr),
                     exposureNumber=ExposureNumber.make(expNumStr),
@@ -252,7 +254,7 @@ class ExposureId:
                 # 5 args = this is standalone with subarray
                 return StandaloneExposureId(
                     obsId=None,
-                    subsystem=Subsystem[subsystemStr],
+                    subsystem=Subsystem.fromString(subsystemStr),
                     det=detStr,
                     typLevel=TYPLevel.make(typStr),
                     exposureNumber=ExposureNumber.make(f"{expNumStr}{Separator.Hyphen}{subArrayStr}"),
@@ -262,7 +264,7 @@ class ExposureId:
                 # This is standalone with no subarray
                 return StandaloneExposureId(
                     obsId=None,
-                    subsystem=Subsystem[subsystemStr],
+                    subsystem=Subsystem.fromString(subsystemStr),
                     det=detStr,
                     typLevel=TYPLevel.make(typStr),
                     exposureNumber=ExposureNumber.make(expNumStr),

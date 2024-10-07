@@ -9,6 +9,6 @@ class Variation:
 
     @classmethod
     def prefix(cls, subsystem: Subsystem, obsMode: ObsMode, variation: str | None = None) -> Prefix:
-        if variation == None:
+        if variation is None:
             return Prefix(subsystem, obsMode.name)
         return Prefix(subsystem, obsMode.name + "." + variation)

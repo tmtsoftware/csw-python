@@ -4,6 +4,8 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Self
 
+from csw.EnumUtil import UpperCaseEnum
+
 
 class CalibrationLevel(Enum):
     Raw = 0
@@ -31,10 +33,10 @@ class TYP:
         """
         Represents the name of the TYP e.g SCI
         """
-        return eventName
+        return self.entryName
 
 
-class TYPs(Enum):
+class TYPs(UpperCaseEnum):
     SCI = TYP("SCI", "Science exposure")
     CAL = TYP("CAL", "Calibration exposure")
     ARC = TYP("ARC", "Wavelength calibration")
@@ -75,4 +77,4 @@ class TYPLevel:
         typ = typLevel[:3]
         calibrationLevel = typLevel[3:]
         level = cls.parseCalibrationLevel(calibrationLevel)
-        return TYPLevel(TYPs[typ.upper()], level)
+        return TYPLevel(TYPs.fromString(typ), level)

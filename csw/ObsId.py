@@ -26,7 +26,7 @@ class ObsId:
     @classmethod
     def make(cls, obsId: str) -> Self:
         match obsId.split(Separator.Hyphen):
-            case [semesterId, programNumber, obsNumber] if obsNumber.isnumeric:
+            case [semesterId, programNumber, obsNumber] if obsNumber.isnumeric():
                 return ObsId(ProgramId.make(Separator.hyphenate(semesterId, programNumber)), int(obsNumber))
             case _:
                 raise ValueError(
