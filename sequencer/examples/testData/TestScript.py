@@ -12,6 +12,7 @@ testAssembly = Assembly(Prefix(Subsystem.ESW, "test"))
 def handleCommand2(setup: Setup):
     print(f"XXX onSetup command-2: {setup}")
 
+# ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
 @onObserve("exposure-start")
 def handleExposureStart(observe: Observe):
     obsId = ObsId.make("2021A-011-153")
@@ -21,11 +22,12 @@ def handleExposureStart(observe: Observe):
     print(obsId.programId.semesterId.semester)
 
     # create exposureId
-    exposureIdStr = "${obsId}-TCS-DET-SCI0-0001"
+    exposureIdStr = f"{obsId}-TCS-DET-SCI0-0001"
     exposureId = ExposureId.make(exposureIdStr)
     # do something with exposureId components
     print(exposureId.subsystem)
     print(exposureId.det)
+    publishEvent(exposureStart(exposureId))
 
 #
 #     onSetup("command-3") {
