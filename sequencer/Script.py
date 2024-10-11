@@ -12,18 +12,16 @@ from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
+from sequencer.FunctionBuilder import FunctionBuilder
 
-def onSetup(commandName: str):
-    def onSetupDecorator(func: Callable[[Setup], None]):
-        def addSetupHandler():
-            print(f"XXX addSetupHandler for {commandName}")
-        return addSetupHandler
+setupCommandHandler = FunctionBuilder[str, Setup, None]()
+observeCommandHandler = FunctionBuilder[str, Observe, None]()
 
-def onObserve(commandName: str):
-    def onObserveDecorator(func: Callable[[Observe], None]):
-        def addObserveHandler():
-            print(f"XXX addObserveHandler for {commandName}")
-        return addObserveHandler
+def onSetup(commandName: str, func: Callable[[Setup], None]):
+    setupCommandHandler.add(commandName, func)
+
+def onObserve(commandName: str, func: Callable[[Observe], None]):
+    observeCommandHandler.add(commandName, func)
 
 def Sequencer(subsystem: Subsystem, obsMode: ObsMode, variation: str | None = None) -> SequencerClient:
     return SequencerClient(Variation.prefix(subsystem, obsMode, variation))
