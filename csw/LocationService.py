@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Callable, Self
 from dataclasses import dataclass, field
 from socket import socket
 import structlog
@@ -163,6 +163,16 @@ class TcpRegistration(Registration):
     _type: str = "TcpRegistration"
 
 
+@dataclass
+class RegistrationResult:
+    unregister: Callable[[], None]
+    location: Location
+
+    @classmethod
+    def make(cls, _location: Location, _unregister: Callable[[ConnectionInfo], None]) -> Self:
+        return cls(lambda: _unregister(_location.connection), _location)
+
+
 # noinspection PyProtectedMember
 class LocationService:
     log = structlog.get_logger()
@@ -178,7 +188,7 @@ class LocationService:
             s.bind(('', 0))
             return s.getsockname()[1]
 
-    def register(self, registration: Registration) -> ConnectionInfo:
+    def register(self, registration: Registration) -> RegistrationResult:
         """
         Registers a connection.
 
@@ -196,7 +206,10 @@ class LocationService:
         r = requests.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        return registration.connection
+        maybeResult = json.loads(r.text)
+        if len(maybeResult) != 0:
+            location = Location._makeLocation(maybeResult)
+            return RegistrationResult.make(location, self.unregister)
 
     def unregister(self, connection: ConnectionInfo):
         """
@@ -307,16 +320,15 @@ class LocationService:
         jsonBody = f'{{"_type": "ListByConnectionType", "connectionType": "{connectionType.value}"}}'
         return self._list(jsonBody)
 
-    def listByPrefix(self, prefix: Prefix) -> List[Location]:
+    def listByPrefix(self, prefix: str) -> List[Location]:
         """
         Lists all locations with the given prefix
 
         Args:
-            prefix (Prefix): restrict result to this prefix
+            prefix (str): restrict result to those starting with prefix
 
         Returns: List[Location]
             list of locations
         """
-        jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{str(prefix)}"}}'
+        jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{prefix}"}}'
         return self._list(jsonBody)
-
