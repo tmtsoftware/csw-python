@@ -1,12 +1,9 @@
 from dataclasses import dataclass
-from typing import Callable
 
 from csw.AlarmService import AlarmService
 from csw.EventService import EventService
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
-from esw.Variation import Variation
 
 
 @dataclass

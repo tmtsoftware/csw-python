@@ -1,5 +1,8 @@
+from typing import Callable
+
 import cbor2
 
+from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
 from csw.EventKey import EventKey
@@ -10,25 +13,26 @@ class EventSubscriber:
         self.__redis = RedisConnector()
 
     @staticmethod
-    def __handleCallback(message: dict, callback):
+    def __handleCallback(message: dict, callback: Callable[[Event], None]):
         data = message['data']
         event = Event._fromDict(cbor2.loads(data))
         callback(event)
 
-    def subscribe(self, eventKeyList: list[EventKey], callback):
+    def subscribe(self, eventKeyList: list[EventKey], callback: Callable[[Event], None]) -> EventSubscription:
         """
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
         Args:
             eventKeyList (list[EventKey]): list of event EventKey to subscribe to
-            callback (function): function to be called when event updates. Should take Event and return void
+            callback (Callable[[Event], None]): function to be called when event updates. Should take Event and return void
 
-        Returns: PubSubWorkerThread
-            subscription thread. Use .stop() method to stop subscription.
+        Returns:
+            an object that can be used to unsubscribe
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
+        t = self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
+        return EventSubscription(t)
 
     def unsubscribe(self, eventKeyList: list[EventKey]):
         """

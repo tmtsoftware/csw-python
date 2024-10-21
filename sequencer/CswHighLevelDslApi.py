@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Callable
 
 from csw.CoordinateSystem import CoordinateSystem
@@ -9,20 +10,30 @@ from csw.SequencerObserveEvent import SequencerObserveEvent
 from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from esw.Variation import Variation
+from sequencer.ConfigServiceDsl import ConfigServiceDsl
 from sequencer.CswServices import CswServices
+from sequencer.EventServiceDsl import EventServiceDsl
+from sequencer.LocationServiceDsl import LocationServiceDsl
+from sequencer.ScriptContext import ScriptContext
 
 
-class CswHighLevelDslApi(CswServices, LocationServiceDsl, ConfigServiceDsl, EventServiceDsl, LoggingDsl, CommandServiceDsl,
-        AlarmServiceDsl, TimeServiceDsl, DatabaseServiceDsl, LoopDsl):
+class CswHighLevelDsl(LocationServiceDsl,
+                      ConfigServiceDsl,
+                      EventServiceDsl,
+                      # LoggingDsl,
+                      # CommandServiceDsl,
+                      # AlarmServiceDsl,
+                      # TimeServiceDsl,
+                      # DatabaseServiceDsl,
+                      # LoopDsl
+                      ):
     """
     Interface which contains methods to create different observe events by delegating to DSL of creating observe events
     and has abstract methods to create FSM, CommandFlag, command service for Sequencer, Assembly and Hcd
     """
 
-    isOnline: bool
-    prefix: str
-    obsMode: ObsMode
-    sequencerObserveEvent: SequencerObserveEvent
+    def __init__(self, cswServices: CswServices, scriptContext: ScriptContext):
+        super().__init__()
 
     def presetStart(self, obsId: ObsId) -> ObserveEvent:
         """
@@ -210,7 +221,7 @@ class CswHighLevelDslApi(CswServices, LocationServiceDsl, ConfigServiceDsl, Even
         pass
 
     def Assembly2(self, subsystem: Subsystem, compName: str, defaultTimeoutSecs: int = 10) -> RichComponent:
-            return self.Assembly(Prefix(subsystem, compName), defaultTimeoutSecs)
+        return self.Assembly(Prefix(subsystem, compName), defaultTimeoutSecs)
 
     def Hcd(prefix: Prefix, defaultTimeoutSecs: int = 10) -> RichComponent:
         """
@@ -239,7 +250,8 @@ class CswHighLevelDslApi(CswServices, LocationServiceDsl, ConfigServiceDsl, Even
         """
         pass
 
-    def Sequencer4(subsystem: Subsystem, obsMode: ObsMode, variation: Variation, defaultTimeoutSecs: int) -> RichSequencer:
+    def Sequencer4(subsystem: Subsystem, obsMode: ObsMode, variation: Variation,
+                   defaultTimeoutSecs: int) -> RichSequencer:
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """

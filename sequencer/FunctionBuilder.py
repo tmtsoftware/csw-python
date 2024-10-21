@@ -12,7 +12,9 @@ class FunctionBuilder[K, I, O]:
     I - Type of the input param of the Function
     O - Type of the output result of the Function
    """
-    handlers = {}
+
+    def __init__(self):
+        self.handlers = {}
 
     def add(self, key: K, handler: Callable[[I], O]):
         self.handlers[key] = handler

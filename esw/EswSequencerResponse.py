@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Self
+
+from esw.Step import Step
 
 
 @dataclass
-class SequencerRes:
+class EswSequencerResponse:
     def _asDict(self):
         """
         Returns: a dictionary corresponding to this object
@@ -31,15 +34,19 @@ class SequencerRes:
                 return DiagnosticHookFailed()
             case "OperationsHookFailed":
                 return OperationsHookFailed()
+            case "PullNextResult":
+                return PullNextResult._fromDict(obj)
+            case "MaybeNextResult":
+                return MaybeNextResult._fromDict(obj)
 
 
 @dataclass
-class Ok(SequencerRes):
+class Ok(EswSequencerResponse):
     pass
 
 
 @dataclass
-class Unhandled(SequencerRes):
+class Unhandled(EswSequencerResponse):
     state: str
     messageType: str
     msg: str
@@ -61,35 +68,58 @@ class Unhandled(SequencerRes):
 
 
 @dataclass
-class IdDoesNotExist(SequencerRes):
+class IdDoesNotExist(EswSequencerResponse):
     pass
 
 
 @dataclass
-class CannotOperateOnAnInFlightOrFinishedStep(SequencerRes):
+class CannotOperateOnAnInFlightOrFinishedStep(EswSequencerResponse):
     pass
 
 
 @dataclass
-class GoOnlineHookFailed(SequencerRes):
+class GoOnlineHookFailed(EswSequencerResponse):
     pass
 
 
 @dataclass
-class GoOfflineHookFailed(SequencerRes):
+class GoOfflineHookFailed(EswSequencerResponse):
     pass
 
 
 @dataclass
-class DiagnosticHookFailed(SequencerRes):
+class DiagnosticHookFailed(EswSequencerResponse):
     pass
 
 
 @dataclass
-class OperationsHookFailed(SequencerRes):
+class OperationsHookFailed(EswSequencerResponse):
     pass
 
 
+# --- For script use ---
+@dataclass
+class MaybeNextResult(EswSequencerResponse):
+    maybeStep: Step | None
+
+    @classmethod
+    def _fromDict(cls, obj: dict) -> Self:
+        if "maybeStep" in obj:
+            return cls(Step._fromDict(obj["maybeStep"]))
+        return cls(None)
+
+
+@dataclass
+class PullNextResult(EswSequencerResponse):
+    step: Step
+
+    @classmethod
+    def _fromDict(cls, obj: dict) -> Self:
+        return cls(Step._fromDict(obj["step"]))
+
+
+PullNextResponse = PullNextResult | Unhandled
+MaybeNextResponse = MaybeNextResult | Unhandled
 OkOrUnhandledResponse = Ok | Unhandled
 GenericResponse = OkOrUnhandledResponse | IdDoesNotExist | CannotOperateOnAnInFlightOrFinishedStep
 PauseResponse = OkOrUnhandledResponse | CannotOperateOnAnInFlightOrFinishedStep
@@ -98,6 +128,7 @@ GoOnlineResponse = OkOrUnhandledResponse | GoOnlineHookFailed
 GoOfflineResponse = OkOrUnhandledResponse | GoOfflineHookFailed
 DiagnosticModeResponse = Ok | DiagnosticHookFailed
 OperationsModeResponse = Ok | OperationsHookFailed
+
 
 class SequencerState(Enum):
     Idle = 1

@@ -22,7 +22,7 @@ from csw.ConfigService import *
 
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
-from esw.SequencerRes import *
+from esw.EswSequencerResponse import *
 from esw.StepList import StepList
 from esw.Step import Step
 from esw.StepStatus import *

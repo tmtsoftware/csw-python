@@ -10,20 +10,19 @@ from requests import Response
 from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystem
-from esw.ObsMode import ObsMode
 from esw.Sequence import Sequence
 from esw.SequencerRequest import *
-from esw.SequencerRes import *
+from esw.EswSequencerResponse import *
 from esw.StepList import StepList
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
 from esw.WsCommands import QueryFinal
+from sequencer.SequencerApi import SequencerApi
 
 
 # noinspection DuplicatedCode,PyShadowingBuiltins
 @dataclass
-class SequencerClient:
+class SequencerClient(SequencerApi):
     prefix: Prefix
 
     def _getBaseUri(self) -> str:
@@ -42,11 +41,11 @@ class SequencerClient:
         jsonData = json.loads(json.dumps(data))
         return requests.post(postUri, headers=headers, json=jsonData)
 
-    def _postCommandGetResponse(self, request: SequencerRequest) -> SequencerRes:
+    def _postCommandGetResponse(self, request: SequencerRequest) -> EswSequencerResponse:
         response = self._postCommand(request._asDict())
         if not response.ok:
             return Unhandled("Unknown", request.__class__.__name__, f"Error: {response.text}")
-        return SequencerRes._fromDict(response.json())
+        return EswSequencerResponse._fromDict(response.json())
 
     def getSequence(self) -> StepList | None:
         """
@@ -281,6 +280,7 @@ class SequencerClient:
       """
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
+        # noinspection PyUnresolvedReferences
         respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
         jsonStr = json.dumps(respDict)
         ws = create_connection(wsUri)
@@ -369,3 +369,20 @@ class SequencerClient:
 
     # def subscribeSequencerState(self):
     #     xxx websocket ... = SubscribeSequencerState()
+
+    # --- For script use ---
+
+    def pullNext(self) -> PullNextResponse:
+        return self._postCommandGetResponse(PullNext())
+
+    def maybeNext(self) -> MaybeNextResponse:
+        return self._postCommandGetResponse(MaybeNext())
+
+    def readyToExecuteNext(self) -> OkOrUnhandledResponse:
+        return self._postCommandGetResponse(ReadyToExecuteNext())
+
+    def stepSuccess(self):
+        self._postCommandGetResponse(StepSuccess())
+
+    def stepFailure(self, message: str):
+        self._postCommandGetResponse(StepFailure())

@@ -3,25 +3,30 @@ from csw.UTCTime import UTCTime
 from sequencer.FunctionBuilder import FunctionBuilder
 from sequencer.FunctionHandlers import FunctionHandlers
 from sequencer.ScriptApi import ScriptApi
-from typing import Self
+from typing import Self, Callable
+
+from sequencer.SequenceOperatorApi import SequenceOperatorHttp
 
 
 class ScriptDsl(ScriptApi):
-    isOnline = True
-    setupCommandHandler = FunctionBuilder[str, Setup, None]()
-    observerCommandHandler = FunctionBuilder[str, Observe, None]()
 
-    onlineHandlers = FunctionHandlers[None, None]()                      
-    offlineHandlers = FunctionHandlers[None, None]()                     
-    shutdownHandlers = FunctionHandlers[None, None]()                    
-    abortHandlers = FunctionHandlers[None, None]()                       
-    stopHandlers = FunctionHandlers[None, None]()                        
-    diagnosticHandlers = FunctionHandlers[(UTCTime, str), None]()
-    operationsHandlers = FunctionHandlers[None, None]()                  
-    exceptionHandlers = FunctionHandlers[Exception, None]()
-    newSequenceHandlers = FunctionHandlers[None, None]()
+    def __init__(self, sequenceOperatorFactory: Callable[[], SequenceOperatorHttp]):
+        self.sequenceOperatorFactory = sequenceOperatorFactory
+        self.isOnline = True
+        self.setupCommandHandler = FunctionBuilder[str, Setup, None]()
+        self.observerCommandHandler = FunctionBuilder[str, Observe, None]()
 
-    @classmethod
+        self.onlineHandlers = FunctionHandlers[None, None]()
+        self.offlineHandlers = FunctionHandlers[None, None]()
+        self.shutdownHandlers = FunctionHandlers[None, None]()
+        self.abortHandlers = FunctionHandlers[None, None]()
+        self.stopHandlers = FunctionHandlers[None, None]()
+        self.diagnosticHandlers = FunctionHandlers[(UTCTime, str), None]()
+        self.operationsHandlers = FunctionHandlers[None, None]()
+        self.exceptionHandlers = FunctionHandlers[Exception, None]()
+        self.newSequenceHandlers = FunctionHandlers[None, None]()
+
+
     def merge(self, that: Self) -> Self:
         self.setupCommandHandler.merge(that.setupCommandHandler)
         self.observerCommandHandler.merge(that.observerCommandHandler)

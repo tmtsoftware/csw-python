@@ -5,7 +5,8 @@ from csw.LocationService import LocationService, Registration, RegistrationResul
 
 
 class LocationServiceDsl:
-    locationService = LocationService()
+    def __init__(self):
+        self.locationService = LocationService()
 
     def register(self, registration: Registration) -> RegistrationResult:
         """
@@ -61,6 +62,7 @@ class LocationServiceDsl:
         """
         return self.locationService.listByPrefix(prefixStartsWith)
 
+    # XXX TODO
     # /**
     #  * Subscribe to the connection and executes a callback on every location changed event
     #  *

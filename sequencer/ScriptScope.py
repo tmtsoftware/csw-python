@@ -2,7 +2,9 @@ from typing import Callable
 
 from csw.ParameterSetType import Setup, Observe
 from sequencer.CommandHandler import CommandHandler
+from sequencer.CswHighLevelDslApi import CswHighLevelDslApi
 from sequencer.ScriptError import ScriptError
+from sequencer.ScriptScopes import HandlerScope
 
 
 class CommonHandlers(CswHighLevelDslApi):

@@ -1,7 +1,7 @@
 import asyncio
 import uuid
 from asyncio import Task
-from typing import List
+from typing import List, Callable
 import traceback
 
 import requests
@@ -183,7 +183,7 @@ class CommandService:
             case _:
                 return resp
 
-    async def _subscribeCurrentState(self, names: List[str], callback):
+    async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], None]):
         baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
@@ -193,7 +193,7 @@ class CommandService:
             async for message in websocket:
                 callback(CurrentState._fromDict(json.loads(message)))
 
-    def subscribeCurrentState(self, names: List[str], callback) -> Subscription:
+    def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], None]) -> Subscription:
         """
         Subscribe to the current state of a component
 

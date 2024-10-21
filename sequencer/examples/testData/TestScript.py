@@ -1,8 +1,8 @@
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
-from sequencer.Script import *
+from sequencer import ScriptScope
 
-def script():
+def script(ctx: ScriptScope):
     lgsfSequencer = Sequencer(Subsystem.LGSF, ObsMode("darknight"))
     testAssembly = Assembly(Prefix(Subsystem.ESW, "test"))
 

@@ -1,65 +1,10 @@
-from typing import Callable
+from sequencer.ScriptWiring import ScriptWiring
 
-from csw.CommandService import CommandService
-from csw.Event import Event, ObserveEvent
-from csw.EventPublisher import EventPublisher
-from csw.ExposureId import ExposureId
-from csw.LocationService import ComponentType
-from csw.ParameterSetType import Setup, Observe
-from csw.Prefix import Prefix
-from csw.SequencerObserveEvent import SequencerObserveEvent
-from csw.Subsystem import Subsystem
-from esw.ObsMode import ObsMode
-from esw.SequencerClient import SequencerClient
-from esw.Variation import Variation
-from sequencer.FunctionBuilder import FunctionBuilder
 
-setupCommandHandler = FunctionBuilder[str, Setup, None]()
-observeCommandHandler = FunctionBuilder[str, Observe, None]()
+class Script:
+    def __init__(self, wiring: ScriptWiring):
+        self.wiring = wiring
 
-def onSetup(commandName: str, func: Callable[[Setup], None]):
-    setupCommandHandler.add(commandName, func)
 
-def onObserve(commandName: str, func: Callable[[Observe], None]):
-    observeCommandHandler.add(commandName, func)
-
-def Sequencer(subsystem: Subsystem, obsMode: ObsMode, variation: str | None = None) -> SequencerClient:
-    return SequencerClient(Variation.prefix(subsystem, obsMode, variation))
-
-def Assembly(prefix: Prefix) -> CommandService:
-    return CommandService(prefix, ComponentType.Assembly)
-
-def Hcd(prefix: Prefix) -> CommandService:
-    return CommandService(prefix, ComponentType.HCD)
-
-eventPublisher = EventPublisher()
-
-sequencerObserveEvent: SequencerObserveEvent = SequencerObserveEvent(Prefix(prefix))
-
-def publishEvent(event: Event):
-    """
-    Publishes the given `event`. EventServerNotAvailable when event server is not available or
-    PublishFailure containing the cause for other failures.
-
-    Args:
-        event: event to publish
-
-    Returns:
-        when event is published
-    """
-    eventPublisher.publish(event)
-
-def exposureStart(exposureId: ExposureId) -> ObserveEvent:
-    """
-    This event indicates the start of data acquisition that  results in a file produced for DMS. This is a potential metadata event for DMS.
-
-    Args:
-        exposureId: an identifier in ESW/DMS for a single exposure.
-                   The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
-                    when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
-                    when the ExposureId is created.
-
-    Returns:
-        the ObserveEvent
-    """
-    return sequencerObserveEvent.exposureStart(exposureId)
+def script():
+    pass
