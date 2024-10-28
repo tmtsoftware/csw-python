@@ -1,24 +1,43 @@
 from typing import Callable
 
 from csw.ParameterSetType import Setup, Observe
+from csw.UTCTime import UTCTime
 from sequencer.CommandHandler import CommandHandler
-from sequencer.CswHighLevelDslApi import CswHighLevelDslApi
+from sequencer.CswHighLevelDsl import CswHighLevelDsl
+from sequencer.ScriptError import ScriptError
 
-class HandlerScope(CswHighLevelDslApi):
-    pass
+# TODO: add BecomeDsl
+HandlerScope = CswHighLevelDsl
 
-class CommandHandlerScope(HandlerScope, NextIfDsl):
+# TODO:add NextIfDsl
+CommandHandlerScope = HandlerScope
 
-# func: Callable[[], None]
-class CommonHandlers(CswHighLevelDslApi):
-    def onGoOnline(block: suspend HandlerScope.() -> Unit)
-    def onGoOffline(block: suspend HandlerScope.() -> Unit)
-    def onAbortSequence(block: suspend HandlerScope.() -> Unit)
-    def onShutdown(block: suspend HandlerScope.() -> Unit)
-    def onDiagnosticMode(block: suspend HandlerScope.(UTCTime, String) -> Unit)
-    def onOperationsMode(block: suspend HandlerScope.() -> Unit)
-    def onStop(block: suspend HandlerScope.() -> Unit)
-    def onNewSequence(block: suspend HandlerScope.() -> Unit)
+
+class CommonHandlers:
+    def onGoOnline(func: Callable[[HandlerScope], None]):
+        pass
+
+    def onGoOffline(func: Callable[[HandlerScope], None]):
+        pass
+
+    def onAbortSequence(func: Callable[[HandlerScope], None]):
+        pass
+
+    def onShutdown(func: Callable[[HandlerScope], None]):
+        pass
+
+    def onDiagnosticMode(func: Callable[[HandlerScope, UTCTime, str], None]):
+        pass
+
+    def onOperationsMode(func: Callable[[HandlerScope], None]):
+        pass
+
+    def onStop(func: Callable[[HandlerScope], None]):
+        pass
+
+    def onNewSequence(func: Callable[[HandlerScope], None]):
+        pass
+
 
 class ScriptHandlers():
     def onSetup(self, name: str, func: Callable[[Setup], None]) -> CommandHandler:
@@ -27,8 +46,10 @@ class ScriptHandlers():
     def onObserve(self, name: str, func: Callable[[Observe], None]) -> CommandHandler:
         pass
 
-    # XXX TODO
-    # def onGlobalError(block: suspend HandlerScope.(ScriptError) -> Unit)
+    def onGlobalError(func:  Callable[[HandlerScope, ScriptError], None]) -> CommandHandler:
+        pass
+
+# XXX TODO
     # def loadScripts(vararg reusableScriptResult: ReusableScriptResult)
 
 

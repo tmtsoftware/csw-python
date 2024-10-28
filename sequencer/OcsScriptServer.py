@@ -106,7 +106,7 @@ class OcsScriptServer:
     async def _executeExceptionHandlers(self, request: Request) -> Response:
         self.log.info(f"Received executeExceptionHandlers sequence command")
         try:
-            self.scriptApi.executeExceptionHandlers()
+            self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeExceptionHandlers: {err=}, {type(err)=}")
         return web.Response()

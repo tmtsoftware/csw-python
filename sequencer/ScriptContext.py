@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+from typing import Callable
 
 from csw.AlarmService import AlarmService
 from csw.EventService import EventService
 from csw.Prefix import Prefix
 from esw.ObsMode import ObsMode
+from sequencer.SequencerApi import SequencerApi
 
 
 @dataclass
@@ -25,7 +27,7 @@ class ScriptContext:
     heartbeatIntervalSecs: int
     prefix: Prefix
     obsMode: ObsMode
-    # sequenceOperatorFactory: Callable[[], SequencerApi]
+    sequenceOperatorFactory: Callable[[], SequencerApi]
     eventService: EventService
     alarmService: AlarmService
     # sequencerApiFactory: Callable[[Subsystem, ObsMode, Variation], SequencerApi]

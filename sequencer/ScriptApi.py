@@ -64,7 +64,7 @@ class ScriptApi:
         """
         pass
 
-    def executeExceptionHandlers(self):
+    def executeExceptionHandlers(self, ex: Exception):
         """
         Executes the script's onException handler
         """

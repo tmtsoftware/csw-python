@@ -1,20 +1,25 @@
 from dataclasses import dataclass
 from typing import Callable
 
+from csw.CommandService import CommandService
 from csw.CoordinateSystem import CoordinateSystem
 from csw.Event import ObserveEvent
 from csw.ExposureId import ExposureId
+from csw.LocationService import ComponentType
 from csw.ObsId import ObsId
 from csw.Prefix import Prefix
 from csw.SequencerObserveEvent import SequencerObserveEvent
 from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
+from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
 from sequencer.ConfigServiceDsl import ConfigServiceDsl
 from sequencer.CswServices import CswServices
 from sequencer.EventServiceDsl import EventServiceDsl
 from sequencer.LocationServiceDsl import LocationServiceDsl
 from sequencer.ScriptContext import ScriptContext
+from sequencer.ScriptDsl import ScriptDsl
+from sequencer.SequencerApi import SequencerApi
 
 
 class CswHighLevelDsl(LocationServiceDsl,
@@ -34,6 +39,13 @@ class CswHighLevelDsl(LocationServiceDsl,
 
     def __init__(self, cswServices: CswServices, scriptContext: ScriptContext):
         super().__init__()
+        self.cswServices = cswServices
+        self.scriptContext = scriptContext
+        self.scriptDsl = ScriptDsl(scriptContext.sequenceOperatorFactory)
+        self.isOnline: bool = self.scriptDsl.isOnline
+        self.prefix: str = str(self.scriptContext.prefix)
+        self.obsMode: ObsMode = self.scriptContext.obsMode
+        self.sequencerObserveEvent: SequencerObserveEvent = SequencerObserveEvent(self.scriptContext.prefix)
 
     def presetStart(self, obsId: ObsId) -> ObserveEvent:
         """
@@ -207,60 +219,25 @@ class CswHighLevelDsl(LocationServiceDsl,
         """
         return self.sequencerObserveEvent.inputRequestEnd(obsId)
 
-    def Assembly(self, prefix: Prefix, defaultTimeoutSecs: int = 10) -> RichComponent:
-        """
-        Creates an instance of RichComponent for Assembly of given prefix
+    def Assembly(prefix: Prefix) -> CommandService:
+        return CommandService(prefix, ComponentType.Assembly)
 
-        Args:
-            prefix: prefix of Assembly
-            defaultTimeoutSecs: default timeout for the response of the RichComponent's API in secs
+    def Hcd(prefix: Prefix) -> CommandService:
+        return CommandService(prefix, ComponentType.HCD)
 
-        Returns:
-            a RichComponent instance
-        """
-        pass
-
-    def Assembly2(self, subsystem: Subsystem, compName: str, defaultTimeoutSecs: int = 10) -> RichComponent:
-        return self.Assembly(Prefix(subsystem, compName), defaultTimeoutSecs)
-
-    def Hcd(prefix: Prefix, defaultTimeoutSecs: int = 10) -> RichComponent:
-        """
-        Creates an instance of RichComponent for HCD of given prefix
-        """
-        pass
-
-    def Hcd2(self, subsystem: Subsystem, compName: str, defaultTimeoutSecs: int = 10) -> RichComponent:
-        return self.Hcd(Prefix(subsystem, compName), defaultTimeoutSecs)
-
-    def Sequencer(subsystem: Subsystem, obsMode: ObsMode) -> RichSequencer:
+    def Sequencer(subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None) -> SequencerApi:
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """
-        pass
+        return SequencerClient(Variation.prefix(subsystem, obsMode, variation))
 
-    def Sequencer2(subsystem: Subsystem, obsMode: ObsMode, defaultTimeoutSecs: int) -> RichSequencer:
-        """
-        Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
-        """
-        pass
+    # --- XXX TODO ---
 
-    def Sequencer3(subsystem: Subsystem, obsMode: ObsMode, variation: Variation) -> RichSequencer:
-        """
-        Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
-        """
-        pass
-
-    def Sequencer4(subsystem: Subsystem, obsMode: ObsMode, variation: Variation,
-                   defaultTimeoutSecs: int) -> RichSequencer:
-        """
-        Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
-        """
-
-    def Fsm(name: str, initState: str, func: Callable[[FsmScope], None]) -> Fsm:
-        pass
-
-    def commandFlag() -> CommandFlag:
-        pass
+    # def Fsm(name: str, initState: str, func: Callable[[FsmScope], None]) -> Fsm:
+    #     pass
+    #
+    # def commandFlag() -> CommandFlag:
+    #     pass
 
     # /**
     #  * Method to create an instance of [[esw.ocs.dsl.epics.ParamVariable]] tied to the particular param `key` of an [[csw.params.events.Event]]

@@ -1,6 +1,7 @@
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
-from sequencer import ScriptScope
+from sequencer.ScriptScopes import ScriptScope
+
 
 def script(ctx: ScriptScope):
     lgsfSequencer = Sequencer(Subsystem.LGSF, ObsMode("darknight"))

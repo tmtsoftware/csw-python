@@ -6,11 +6,9 @@
 #  *
 #  * @param wiring - An instance of script wiring
 #  */
-from csw.SequencerObserveEvent import SequencerObserveEvent
-from esw.ObsMode import ObsMode
-from sequencer.CswHighLevelDslApi import CswHighLevelDslApi, CswHighLevelDsl
-from sequencer.CswServices import CswServices
-from sequencer.ScriptContext import ScriptContext
+from typing import Callable
+
+from sequencer.CswHighLevelDsl import CswHighLevelDsl
 from sequencer.ScriptDsl import ScriptDsl
 from sequencer.ScriptScopes import HandlerScope
 from sequencer.ScriptWiring import ScriptWiring
@@ -24,36 +22,10 @@ class BaseScript(CswHighLevelDsl):
 
     def __init__(self, wiring: ScriptWiring):
         self.wiring = wiring
+        # self.shutdownTask = wiring.shutdown
         CswHighLevelDsl.__init__(self, wiring.cswServices, wiring.scriptContext)
-        self.scriptDsl = ScriptDsl(
-            wiring.scriptContext.sequenceOperatorFactory(),
-            logger,
-            strandEc,
-            shutdownTask
-        )
+        self.scriptDsl = ScriptDsl(wiring.scriptContext.sequenceOperatorFactory)
 
-    # self.isOnline: bool =
-        self.prefix: str = str(self.wiring.scriptContext.prefix)
-        self.obsMode: ObsMode = self.wiring.scriptContext.obsMode
-        self.sequencerObserveEvent: SequencerObserveEvent = SequencerObserveEvent(self.wiring.scriptContext.prefix)
-
-
-# (CswHighLevelDsl(wiring.cswServices, wiring.scriptContext), HandlerScope):
-    # (wiring: ScriptWiring) :
-#     override val actorSystem: ActorSystem<SpawnProtocol.Command> = wiring.scriptContext.actorSystem()
-#     protected val shutdownTask = Runnable { wiring.shutdown() }
-#     internal open val scriptDsl: ScriptDsl by lazy {
-#         ScriptDsl(
-#                 wiring.scriptContext.sequenceOperatorFactory(),
-#                 logger,
-#                 strandEc,
-#                 shutdownTask
-#         )
-#     }
-#     override val isOnline: Boolean get() = scriptDsl.isOnline
-#     final override val prefix: String = wiring.scriptContext.prefix().toString()
-#     final override val obsMode: ObsMode = wiring.scriptContext.obsMode()
-#     override val sequencerObserveEvent: SequencerObserveEvent = SequencerObserveEvent(Prefix.apply(prefix))
 #
 #     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
 #         error("Exception thrown in script with the message: [${exception.message}], invoking exception handler")
@@ -64,13 +36,9 @@ class BaseScript(CswHighLevelDsl):
 #         error("Shutting down: Exception thrown in script with the message: [${exception.message}]")
 #     }
 #
-#     override val coroutineScope: CoroutineScope = wiring.scope + exceptionHandler
-#
-#     private val shutdownHandlerCoroutineScope = wiring.scope + shutdownExceptionHandler
-#
-#     fun onNewSequence(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onNewSequence { block.toCoroutineScope().toJava() }
-#
+    def onNewSequence(self, func: Callable[[HandlerScope], None]):
+        return self.scriptDsl.onNewSequence(func)
+
 #     fun onGoOnline(block: suspend HandlerScope.() -> Unit) =
 #             scriptDsl.onGoOnline { block.toCoroutineScope().toJava() }
 #

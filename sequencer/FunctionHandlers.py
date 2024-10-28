@@ -11,7 +11,7 @@ class FunctionHandlers[I, O]:
    """
 
     def __init__(self):
-        self.handlers = []
+        self.handlers: List[Callable[[I], O]] = []
 
     def add(self, handler: Callable[[I], O]):
         self.handlers.append(handler)
