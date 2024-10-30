@@ -5,6 +5,7 @@ from csw.AlarmService import AlarmService
 from csw.EventService import EventService
 from csw.Prefix import Prefix
 from esw.ObsMode import ObsMode
+from sequencer.SequenceOperatorApi import SequenceOperatorHttp
 from sequencer.SequencerApi import SequencerApi
 
 
@@ -27,7 +28,7 @@ class ScriptContext:
     heartbeatIntervalSecs: int
     prefix: Prefix
     obsMode: ObsMode
-    sequenceOperatorFactory: Callable[[], SequencerApi]
+    sequenceOperatorFactory: Callable[[], SequenceOperatorHttp]
     eventService: EventService
     alarmService: AlarmService
     # sequencerApiFactory: Callable[[Subsystem, ObsMode, Variation], SequencerApi]

@@ -5,7 +5,6 @@ from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from sequencer.Script import Script
-from sequencer.ScriptScopes import HandlerScope, CommandHandlerScope
 
 
 def script(ctx: Script):
@@ -15,13 +14,10 @@ def script(ctx: Script):
     # // ESW-134: Reuse code by ability to import logic from one script into another
     # loadScripts(InitialCommandHandler)
 
-    def _handleCommand2(scope: CommandHandlerScope, setup: Setup):
-        pass
-
-    ctx.onSetup("command-2", _handleCommand2)
+    ctx.onSetup("command-2", lambda setup: print(f"Received a command-2 setup: {setup}"))
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-    def _handleExposureStart(scope: CommandHandlerScope, observe: Observe):
+    def _handleExposureStart(observe: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
         print(obsId.programId)

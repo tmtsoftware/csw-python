@@ -9,7 +9,6 @@ from sequencer.ScriptApi import ScriptApi
 from typing import Self, Callable
 
 from sequencer.ScriptError import ScriptError
-from sequencer.ScriptScopes import HandlerScope
 from sequencer.SequenceOperatorApi import SequenceOperatorHttp
 
 
@@ -21,15 +20,15 @@ class ScriptDsl(ScriptApi):
         self.setupCommandHandler = FunctionBuilder[str, Setup, None]()
         self.observerCommandHandler = FunctionBuilder[str, Observe, None]()
 
-        self.onlineHandlers = FunctionHandlers[HandlerScope, None]()
-        self.offlineHandlers = FunctionHandlers[HandlerScope, None]()
-        self.shutdownHandlers = FunctionHandlers[HandlerScope, None]()
-        self.abortHandlers = FunctionHandlers[HandlerScope, None]()
-        self.stopHandlers = FunctionHandlers[HandlerScope, None]()
-        self.diagnosticHandlers = FunctionHandlers[(HandlerScope, UTCTime, str), None]()
-        self.operationsHandlers = FunctionHandlers[HandlerScope, None]()
+        self.onlineHandlers = FunctionHandlers[None, None]()
+        self.offlineHandlers = FunctionHandlers[None, None]()
+        self.shutdownHandlers = FunctionHandlers[None, None]()
+        self.abortHandlers = FunctionHandlers[None, None]()
+        self.stopHandlers = FunctionHandlers[None, None]()
+        self.diagnosticHandlers = FunctionHandlers[(UTCTime, str), None]()
+        self.operationsHandlers = FunctionHandlers[None, None]()
         self.exceptionHandlers = FunctionHandlers[ScriptError, None]()
-        self.newSequenceHandlers = FunctionHandlers[HandlerScope, None]()
+        self.newSequenceHandlers = FunctionHandlers[None, None]()
 
     def merge(self, that: Self) -> Self:
         self.setupCommandHandler.merge(that.setupCommandHandler)
@@ -149,28 +148,35 @@ class ScriptDsl(ScriptApi):
     def onObserveCommand(self, name: str, handler: CommandHandler):
         return self.observerCommandHandler.add(name, handler.execute)
 
-    def onGoOnline(self, handler: Callable[[HandlerScope], None]):
+    def onGoOnline(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.onlineHandlers.add(handler)
 
-    def onNewSequence(self, handler: Callable[[HandlerScope], None]):
+    def onNewSequence(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.newSequenceHandlers.add(handler)
 
-    def onAbortSequence(self, handler: Callable[[HandlerScope], None]):
+    def onAbortSequence(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.abortHandlers.add(handler)
 
-    def onStop(self, handler: Callable[[HandlerScope], None]):
+    def onStop(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.stopHandlers.add(handler)
 
-    def onShutdown(self, handler: Callable[[HandlerScope], None]):
+    def onShutdown(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.shutdownHandlers.add(handler)
 
-    def onGoOffline(self, handler: Callable[[HandlerScope], None]):
+    def onGoOffline(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.offlineHandlers.add(handler)
 
-    def onDiagnosticMode(self, handler: Callable[[(HandlerScope, UTCTime, str)], None]):
+    def onDiagnosticMode(self, handler: Callable[[(UTCTime, str)], None]):
         return self.diagnosticHandlers.add(handler)
 
-    def onOperationsMode(self, handler: Callable[[HandlerScope], None]):
+    def onOperationsMode(self, handler: Callable[[], None]):
+        # noinspection PyTypeChecker
         return self.operationsHandlers.add(handler)
 
     def onException(self, handler: Callable[[ScriptError], None]):

@@ -3,16 +3,14 @@ from time import sleep
 
 from csw.ParameterSetType import SequenceCommand, ControlCommand
 from sequencer.ScriptError import ScriptError, OtherError, CommandError
-from sequencer.ScriptScopes import CommandHandlerScope
 
 
 class CommandHandler:
     def _defaultErrorHandler(self, err: ScriptError):
         pass
 
-    def __init__(self, scope: CommandHandlerScope, func: Callable[[CommandHandlerScope, SequenceCommand], None]):
-        self.scope: CommandHandlerScope = scope
-        self.func: Callable[[CommandHandlerScope, SequenceCommand], None] = func
+    def __init__(self, func: Callable[[SequenceCommand], None]):
+        self.func = func
         self._onError: Callable[[ScriptError], None] = self._defaultErrorHandler
         self._retryCount: int = 0
         self._delayInMillis: int = 0
@@ -20,7 +18,7 @@ class CommandHandler:
     def execute(self, sequenceCommand: SequenceCommand):
         localRetryCount = self._retryCount
         try:
-            self.func(self.scope, sequenceCommand)
+            self.func(sequenceCommand)
         except Exception as e:
             if isinstance(e, CommandError):
                 self._onError(e)

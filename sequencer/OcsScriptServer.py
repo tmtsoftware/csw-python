@@ -1,3 +1,5 @@
+from typing import Callable
+
 import structlog
 from aiohttp import web
 from aiohttp.web_request import Request
@@ -6,13 +8,24 @@ import atexit
 import sys
 import configparser
 
+from csw.AlarmService import AlarmService
 from csw.CommandResponseManager import CommandResponseManager
+from csw.EventService import EventService
 from csw.ParameterSetType import SequenceCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from esw.ObsMode import ObsMode
+from esw.SequencerClient import SequencerClient
 from esw.SequencerRequest import DiagnosticMode
+from sequencer.CswServices import CswServices
+from sequencer.Script import Script
 from sequencer.ScriptApi import ScriptApi
+from sequencer.ScriptContext import ScriptContext
+from sequencer.ScriptDsl import ScriptDsl
 from sequencer.ScriptLoader import ScriptLoader
+from sequencer.ScriptWiring import ScriptWiring
+from sequencer.SequenceOperatorApi import SequenceOperatorHttp
+from sequencer.SequencerApi import SequencerApi
 
 
 # noinspection PyPep8Naming,PyUnusedLocal
@@ -176,8 +189,17 @@ def main():
 
     scriptFile = cfg.get("scripts", str(sequencerPrefix))
     module = ScriptLoader.loadPythonScript(scriptFile)
-    # XXX TODO FIXME: Get ScriptApi
-    scriptServer = OcsScriptServer(scriptApi, sequencerPrefix, sequenceComponentPrefix)
+    sequencerApi: SequencerApi = SequencerClient(sequencerPrefix)
+    seqHttp = SequenceOperatorHttp(sequencerApi)
+    sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: seqHttp
+    obsMode = ObsMode.fromPrefix(sequencerPrefix)
+    evenService = EventService()
+    alarmService = AlarmService()
+    scriptContext = ScriptContext(1, sequencerPrefix, obsMode, sequenceOperatorFactory, evenService, alarmService)
+    scriptWiring = ScriptWiring(scriptContext)
+    script = Script(scriptWiring)
+    module.script(script)
+    scriptServer = OcsScriptServer(script.scriptDsl, sequencerPrefix, sequenceComponentPrefix)
     print(f"Starting script server on port {scriptServer.port}")
     scriptServer.start()
 

@@ -8,7 +8,7 @@ class SequenceOperatorHttp:
     This trait is to help execution of stepList(Sequence)
     """
 
-    def __init(self, seq: SequencerApi):
+    def __init__(self, seq: SequencerApi):
         self.seq = seq
 
     def pullNext(self) -> PullNextResponse:

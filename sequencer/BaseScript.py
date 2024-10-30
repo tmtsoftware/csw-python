@@ -8,9 +8,9 @@
 #  */
 from typing import Callable
 
+from csw.UTCTime import UTCTime
 from sequencer.CswHighLevelDsl import CswHighLevelDsl
 from sequencer.ScriptDsl import ScriptDsl
-from sequencer.ScriptScopes import HandlerScope
 from sequencer.ScriptWiring import ScriptWiring
 
 
@@ -36,22 +36,22 @@ class BaseScript(CswHighLevelDsl):
 #         error("Shutting down: Exception thrown in script with the message: [${exception.message}]")
 #     }
 #
-    def onNewSequence(self, func: Callable[[HandlerScope], None]):
+    def onNewSequence(self, func: Callable[[], None]):
         return self.scriptDsl.onNewSequence(func)
 
-    def onGoOnline(self, func: Callable[[HandlerScope], None]):
+    def onGoOnline(self, func: Callable[[], None]):
         return self.scriptDsl.onGoOnline(func)
 
-    def onGoOffline(self, func: Callable[[HandlerScope], None]):
+    def onGoOffline(self, func: Callable[[], None]):
         return self.scriptDsl.onGoOffline(func)
 
-    def onAbortSequence(self, func: Callable[[HandlerScope], None]):
+    def onAbortSequence(self, func: Callable[[], None]):
         return self.scriptDsl.onAbortSequence(func)
 
-    def onShutdown(self, func: Callable[[HandlerScope], None]):
+    def onShutdown(self, func: Callable[[], None]):
         return self.scriptDsl.onShutdown(func)
 
-    def onDiagnosticMode(self, func: Callable[[HandlerScope, (UTCTime, str)], None]):
+    def onDiagnosticMode(self, func: Callable[[(UTCTime, str)], None]):
         return self.scriptDsl.onDiagnosticMode(func)
 
 #     fun onDiagnosticMode(block: suspend HandlerScope.(UTCTime, String) -> Unit) =
