@@ -1,19 +1,27 @@
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
-from sequencer.ScriptScopes import ScriptScope
+from csw.ParameterSetType import Observe, Setup
+from csw.Prefix import Prefix
+from csw.Subsystem import Subsystem
+from esw.ObsMode import ObsMode
+from sequencer.Script import Script
+from sequencer.ScriptScopes import HandlerScope, CommandHandlerScope
 
 
-def script(ctx: ScriptScope):
-    lgsfSequencer = Sequencer(Subsystem.LGSF, ObsMode("darknight"))
-    testAssembly = Assembly(Prefix(Subsystem.ESW, "test"))
+def script(ctx: Script):
+    lgsfSequencer = ctx.Sequencer(Subsystem.LGSF, ObsMode("darknight"))
+    testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"))
 
     # // ESW-134: Reuse code by ability to import logic from one script into another
     # loadScripts(InitialCommandHandler)
 
-    onSetup("command-2", lambda setup: print(f"XXX onSetup command-2: {setup}"))
+    def _handleCommand2(scope: CommandHandlerScope, setup: Setup):
+        pass
+
+    ctx.onSetup("command-2", _handleCommand2)
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-    def handleExposureStart(observe: Observe):
+    def _handleExposureStart(scope: CommandHandlerScope, observe: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
         print(obsId.programId)
@@ -26,10 +34,10 @@ def script(ctx: ScriptScope):
         # do something with exposureId components
         print(exposureId.subsystem)
         print(exposureId.det)
-        publishEvent(exposureStart(exposureId))
+        ctx.publishEvent(ctx.exposureStart(exposureId))
 
 
-    onObserve("exposure-start", handleExposureStart)
+    ctx.onObserve("exposure-start", _handleExposureStart)
 
 #
 #     onSetup("command-3") {

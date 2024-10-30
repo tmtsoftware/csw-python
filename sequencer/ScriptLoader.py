@@ -21,7 +21,7 @@ class ScriptLoader:
         return module
 
     @classmethod
-    def loadPythonScript(cls, fileName: str):
+    def loadPythonScript(cls, fileName: str) -> ModuleType:
         """
         Loads a Python script
         """

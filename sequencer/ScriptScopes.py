@@ -3,11 +3,11 @@ from typing import Callable
 from csw.ParameterSetType import Setup, Observe
 from csw.UTCTime import UTCTime
 from sequencer.CommandHandler import CommandHandler
-from sequencer.CswHighLevelDsl import CswHighLevelDsl
+from sequencer.CswHighLevelDsl import CswHighLevelDslApi
 from sequencer.ScriptError import ScriptError
 
 # TODO: add BecomeDsl
-HandlerScope = CswHighLevelDsl
+HandlerScope = CswHighLevelDslApi
 
 # TODO:add NextIfDsl
 CommandHandlerScope = HandlerScope
@@ -39,14 +39,14 @@ class CommonHandlers:
         pass
 
 
-class ScriptHandlers():
-    def onSetup(self, name: str, func: Callable[[Setup], None]) -> CommandHandler:
+class ScriptHandlers:
+    def onSetup(self, name: str, func: Callable[[CommandHandlerScope, Setup], None]) -> CommandHandler:
         pass
 
-    def onObserve(self, name: str, func: Callable[[Observe], None]) -> CommandHandler:
+    def onObserve(self, name: str, func: Callable[[CommandHandlerScope, Observe], None]) -> CommandHandler:
         pass
 
-    def onGlobalError(func:  Callable[[HandlerScope, ScriptError], None]) -> CommandHandler:
+    def onGlobalError(self, func:  Callable[[HandlerScope, ScriptError], None]):
         pass
 
 # XXX TODO
@@ -54,4 +54,4 @@ class ScriptHandlers():
 
 
 class ScriptScope(ScriptHandlers, CommonHandlers):
-    pass
+        pass

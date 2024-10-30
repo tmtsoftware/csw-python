@@ -8,6 +8,7 @@ from sequencer.FunctionHandlers import FunctionHandlers
 from sequencer.ScriptApi import ScriptApi
 from typing import Self, Callable
 
+from sequencer.ScriptError import ScriptError
 from sequencer.ScriptScopes import HandlerScope
 from sequencer.SequenceOperatorApi import SequenceOperatorHttp
 
@@ -25,9 +26,9 @@ class ScriptDsl(ScriptApi):
         self.shutdownHandlers = FunctionHandlers[HandlerScope, None]()
         self.abortHandlers = FunctionHandlers[HandlerScope, None]()
         self.stopHandlers = FunctionHandlers[HandlerScope, None]()
-        self.diagnosticHandlers = FunctionHandlers[(UTCTime, str), None]()
+        self.diagnosticHandlers = FunctionHandlers[(HandlerScope, UTCTime, str), None]()
         self.operationsHandlers = FunctionHandlers[HandlerScope, None]()
-        self.exceptionHandlers = FunctionHandlers[Exception, None]()
+        self.exceptionHandlers = FunctionHandlers[ScriptError, None]()
         self.newSequenceHandlers = FunctionHandlers[HandlerScope, None]()
 
     def merge(self, that: Self) -> Self:
@@ -166,11 +167,11 @@ class ScriptDsl(ScriptApi):
     def onGoOffline(self, handler: Callable[[HandlerScope], None]):
         return self.offlineHandlers.add(handler)
 
-    def onDiagnosticMode(self, handler: Callable[[(UTCTime, str)], None]):
+    def onDiagnosticMode(self, handler: Callable[[(HandlerScope, UTCTime, str)], None]):
         return self.diagnosticHandlers.add(handler)
 
     def onOperationsMode(self, handler: Callable[[HandlerScope], None]):
         return self.operationsHandlers.add(handler)
 
-    def onException(self, handler: Callable[[Exception], None]):
+    def onException(self, handler: Callable[[ScriptError], None]):
         return self.exceptionHandlers.add(handler)

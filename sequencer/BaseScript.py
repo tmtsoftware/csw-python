@@ -39,23 +39,21 @@ class BaseScript(CswHighLevelDsl):
     def onNewSequence(self, func: Callable[[HandlerScope], None]):
         return self.scriptDsl.onNewSequence(func)
 
-#     fun onGoOnline(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onGoOnline { block.toCoroutineScope().toJava() }
-#
-#     fun onGoOffline(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onGoOffline { block.toCoroutineScope().toJava() }
-#
-#     fun onAbortSequence(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onAbortSequence { block.toCoroutineScope().toJava() }
-#
-#     fun onShutdown(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onShutdown {
-#                 block.toCoroutineScope().toJava(shutdownHandlerCoroutineScope).whenComplete { _, _ ->
-#                     // cleanup cpu bound dispatcher in case script has used it, as a part of shutdown process
-#                     shutdownCpuBoundDispatcher()
-#                 }
-#             }
-#
+    def onGoOnline(self, func: Callable[[HandlerScope], None]):
+        return self.scriptDsl.onGoOnline(func)
+
+    def onGoOffline(self, func: Callable[[HandlerScope], None]):
+        return self.scriptDsl.onGoOffline(func)
+
+    def onAbortSequence(self, func: Callable[[HandlerScope], None]):
+        return self.scriptDsl.onAbortSequence(func)
+
+    def onShutdown(self, func: Callable[[HandlerScope], None]):
+        return self.scriptDsl.onShutdown(func)
+
+    def onDiagnosticMode(self, func: Callable[[HandlerScope, (UTCTime, str)], None]):
+        return self.scriptDsl.onDiagnosticMode(func)
+
 #     fun onDiagnosticMode(block: suspend HandlerScope.(UTCTime, String) -> Unit) =
 #             scriptDsl.onDiagnosticMode { x: UTCTime, y: String ->
 #                 coroutineScope.launch { block(this.toHandlerScope(), x, y) }.asCompletableFuture().thenAccept { }

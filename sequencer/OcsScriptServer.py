@@ -175,7 +175,8 @@ def main():
     cfg.read('examples.ini')
 
     scriptFile = cfg.get("scripts", str(sequencerPrefix))
-    scriptApi = ScriptLoader.loadPythonScript(scriptFile)
+    module = ScriptLoader.loadPythonScript(scriptFile)
+    # XXX TODO FIXME: Get ScriptApi
     scriptServer = OcsScriptServer(scriptApi, sequencerPrefix, sequenceComponentPrefix)
     print(f"Starting script server on port {scriptServer.port}")
     scriptServer.start()

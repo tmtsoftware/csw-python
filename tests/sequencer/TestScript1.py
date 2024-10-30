@@ -1,5 +1,5 @@
 
-def foo():
-    return 42
+def foo(i: int):
+    return i
 
 
