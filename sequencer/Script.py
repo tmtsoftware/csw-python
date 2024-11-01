@@ -14,13 +14,13 @@ class Script(BaseScript):
 
     def onSetup(self, name: str, func: Callable[[Setup], None]) -> CommandHandler:
         # noinspection PyTypeChecker
-        handler = CommandHandler(self, func)
+        handler = CommandHandler(func)
         self.scriptDsl.onSetupCommand(name, handler)
         return handler
 
     def onObserve(self, name: str, func: Callable[[Observe], None]) -> CommandHandler:
         # noinspection PyTypeChecker
-        handler = CommandHandler(self, func)
+        handler = CommandHandler(func)
         self.scriptDsl.onObserveCommand(name, handler)
         return handler
 

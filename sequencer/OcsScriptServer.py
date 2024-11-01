@@ -45,7 +45,7 @@ class OcsScriptServer:
             self.scriptApi.execute(command)
         except Exception as err:
             raise web.HTTPBadRequest(text=f"execute: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeGoOnline(self, request: Request) -> Response:
         self.log.info(f"Received executeGoOnline sequence command")
@@ -53,7 +53,7 @@ class OcsScriptServer:
             self.scriptApi.executeGoOnline()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeGoOnline: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeGoOffline(self, request: Request) -> Response:
         self.log.info(f"Received executeGoOffline sequence command")
@@ -61,7 +61,7 @@ class OcsScriptServer:
             self.scriptApi.executeGoOffline()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeGoOffline: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeShutdown(self, request: Request) -> Response:
         self.log.info(f"Received executeShutdown sequence command")
@@ -69,7 +69,7 @@ class OcsScriptServer:
             self.scriptApi.executeShutdown()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeShutdown: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeAbort(self, request: Request) -> Response:
         self.log.info(f"Received executeAbort sequence command")
@@ -77,7 +77,7 @@ class OcsScriptServer:
             self.scriptApi.executeAbort()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeAbort: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeNewSequenceHandler(self, request: Request) -> Response:
         self.log.info(f"Received executeNewSequenceHandler sequence command")
@@ -85,7 +85,7 @@ class OcsScriptServer:
             self.scriptApi.executeNewSequenceHandler()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeNewSequenceHandler: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeStop(self, request: Request) -> Response:
         self.log.info(f"Received executeStop sequence command")
@@ -93,7 +93,7 @@ class OcsScriptServer:
             self.scriptApi.executeStop()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeStop: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeDiagnosticMode(self, request: Request) -> Response:
         obj = await request.json()
@@ -106,7 +106,7 @@ class OcsScriptServer:
             self.scriptApi.executeDiagnosticMode(mode.startTime, mode.hint)
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeDiagnosticMode: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeOperationsMode(self, request: Request) -> Response:
         self.log.info(f"Received executeOperationsMode sequence command")
@@ -114,7 +114,7 @@ class OcsScriptServer:
             self.scriptApi.executeOperationsMode()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeOperationsMode: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _executeExceptionHandlers(self, request: Request) -> Response:
         self.log.info(f"Received executeExceptionHandlers sequence command")
@@ -122,7 +122,7 @@ class OcsScriptServer:
             self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeExceptionHandlers: {err=}, {type(err)=}")
-        return web.Response()
+        return web.HTTPOk()
 
     async def _shutdownScript(self, request: Request) -> Response:
         self.log.info(f"Received shutdownScript sequence command")
@@ -130,7 +130,8 @@ class OcsScriptServer:
             self.scriptApi.shutdownScript()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"shutdownScript: {err=}, {type(err)=}")
-        return web.Response()
+        self._app.shutdown()
+        return web.HTTPOk()
 
     @staticmethod
     def _registerWithLocationService(prefix: Prefix, port: int):
@@ -176,28 +177,26 @@ class OcsScriptServer:
 
 
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print("Expected two args: sequencerPrefix and sequenceComponentPrefix")
         sys.exit(1)
 
     sequencerPrefix = Prefix.from_str(sys.argv[1])
     sequenceComponentPrefix = Prefix.from_str(sys.argv[2])
-
-    # XXX TODO FIXME
-    cfg = configparser.ConfigParser()
-    cfg.read('examples.ini')
-
-    scriptFile = cfg.get("scripts", str(sequencerPrefix))
-    module = ScriptLoader.loadPythonScript(scriptFile)
     sequencerApi: SequencerApi = SequencerClient(sequencerPrefix)
-    seqHttp = SequenceOperatorHttp(sequencerApi)
-    sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: seqHttp
+    sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
     obsMode = ObsMode.fromPrefix(sequencerPrefix)
     evenService = EventService()
     alarmService = AlarmService()
     scriptContext = ScriptContext(1, sequencerPrefix, obsMode, sequenceOperatorFactory, evenService, alarmService)
     scriptWiring = ScriptWiring(scriptContext)
     script = Script(scriptWiring)
+    # XXX TODO FIXME
+    cfg = configparser.ConfigParser()
+    # TODO FIXME: how to set this path?
+    cfg.read('/shared/work/tmt/csw/pycsw/sequencer/examples/examples.ini')
+    scriptFile = cfg.get("scripts", str(sequencerPrefix))
+    module = ScriptLoader.loadPythonScript(scriptFile)
     module.script(script)
     scriptServer = OcsScriptServer(script.scriptDsl, sequencerPrefix, sequenceComponentPrefix)
     print(f"Starting script server on port {scriptServer.port}")

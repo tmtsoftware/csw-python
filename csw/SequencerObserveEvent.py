@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from csw.CoordinateSystem import CoordinateSystem
 from csw.Event import ObserveEvent, EventName
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
