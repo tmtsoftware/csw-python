@@ -20,7 +20,7 @@ class TestSequencerClient:
     sequencerPrefix = Prefix(Subsystem.ESW, "IRIS_ImagerOnly")
     seqClient = SequencerClient(sequencerPrefix)
     clientPrefix = Prefix(Subsystem.CSW, "TestClient")
-    maybeObsId = []
+    maybeObsId = None
     param = IntKey.make("testValue").set(42)
     paramSet = [param]
 

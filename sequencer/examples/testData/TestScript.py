@@ -12,7 +12,7 @@ def script(ctx: Script):
     lgsfSequencer = ctx.Sequencer(Subsystem.LGSF, ObsMode("darknight"))
     testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"))
 
-    # // ESW-134: Reuse code by ability to import logic from one script into another
+    # ESW-134: Reuse code by ability to import logic from one script into another
     InitialCommandHandler(ctx)
 
     ctx.onSetup("command-2", lambda setup: print(f"Received a command-2 setup: {setup}"))
@@ -33,23 +33,21 @@ def script(ctx: Script):
         print(exposureId.det)
         ctx.publishEvent(ctx.exposureStart(exposureId))
 
-
     ctx.onObserve("exposure-start", _handleExposureStart)
 
-#
-#     onSetup("command-3") {
-#     }
-#
-#     onSetup("command-4") {
-#         // try sending concrete sequence
-#         val setupCommand = Setup("ESW.test", "command-3")
-#         val sequence = sequenceOf(setupCommand)
-#
-#         // ESW-88, ESW-145, ESW-195
-#         val tcsSequencer = Sequencer(TCS, ObsMode("darknight"), 10.seconds)
-#         tcsSequencer.submitAndWait(sequence, 10.seconds)
-#     }
-#
+    ctx.onSetup("command-3", lambda setup: print(f"Received a command-3 setup: {setup}"))
+
+    def _handleCommand4(setup: Setup):
+        # try sending concrete sequence
+        setupCommand = ctx.Setup("ESW.test", "command-3")
+        sequence = ctx.sequenceOf(setupCommand)
+
+        # ESW-88, ESW-145, ESW-195
+        tcsSequencer = ctx.Sequencer(Subsystem.TCS, ObsMode("darknight"))
+        tcsSequencer.submitAndWait(sequence)
+
+    ctx.onSetup("command-4", _handleCommand4)
+
 #     onSetup("check-config") {
 #         if (existsConfig("/tmt/test/wfos.conf"))
 #             publishEvent(SystemEvent("WFOS.test", "check-config.success"))

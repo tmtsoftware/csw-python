@@ -58,17 +58,16 @@ class TestCommandServiceClientServer:
         # Create a python based command service client
         cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service)
         prefix = Prefix(Subsystem.CSW, "TestClient")
-        maybeObsId = []
-        resp = cs.submit(Setup(prefix, CommandName("SimpleCommand"), maybeObsId, []))
+        resp = cs.submit(Setup(prefix, CommandName("SimpleCommand")))
         assert isinstance(resp, Completed)
-        resp2 = cs.submit(Setup(prefix, CommandName("ResultCommand"), maybeObsId, []))
+        resp2 = cs.submit(Setup(prefix, CommandName("ResultCommand")))
         assert isinstance(resp2, Completed)
         assert len(resp2.result.paramSet) == 1
 
         # LongRunningCommand
         subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
         await asyncio.sleep(1)
-        resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []))
+        resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
         assert isinstance(resp3, Started)
         resp4 = cs.queryFinal(resp3.runId, 5)
         assert isinstance(resp4, Completed)

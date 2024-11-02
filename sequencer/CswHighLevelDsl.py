@@ -13,6 +13,7 @@ from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
+from sequencer.CommandServiceDsl import CommandServiceDsl
 from sequencer.ConfigServiceDsl import ConfigServiceDsl
 from sequencer.CswServices import CswServices
 from sequencer.EventServiceDsl import EventServiceDsl
@@ -256,7 +257,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
                       ConfigServiceDsl,
                       EventServiceDsl,
                       # LoggingDsl,
-                      # CommandServiceDsl,
+                      CommandServiceDsl,
                       # AlarmServiceDsl,
                       # TimeServiceDsl,
                       # DatabaseServiceDsl,

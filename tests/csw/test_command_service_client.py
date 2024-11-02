@@ -11,7 +11,7 @@ from csw.Subsystem import Subsystem
 async def test_command_service_client():
     cs = CommandService(Prefix(Subsystem.CSW, "TestPublisher"), ComponentType.Assembly)
     prefix = Prefix(Subsystem.CSW, "TestClient")
-    maybeObsId = []
+    maybeObsId = None
     param = IntKey.make("testValue").set(42)
     paramSet = [param]
     setup = Setup(prefix, CommandName("Test"), maybeObsId, paramSet)
