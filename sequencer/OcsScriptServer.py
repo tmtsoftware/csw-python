@@ -17,11 +17,9 @@ from csw.LocationService import LocationService, ConnectionInfo, ComponentType, 
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.SequencerRequest import DiagnosticMode
-from sequencer.CswServices import CswServices
 from sequencer.Script import Script
 from sequencer.ScriptApi import ScriptApi
 from sequencer.ScriptContext import ScriptContext
-from sequencer.ScriptDsl import ScriptDsl
 from sequencer.ScriptLoader import ScriptLoader
 from sequencer.ScriptWiring import ScriptWiring
 from sequencer.SequenceOperatorApi import SequenceOperatorHttp
@@ -130,7 +128,7 @@ class OcsScriptServer:
             self.scriptApi.shutdownScript()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"shutdownScript: {err=}, {type(err)=}")
-        self._app.shutdown()
+        await self._app.shutdown()
         return web.HTTPOk()
 
     @staticmethod

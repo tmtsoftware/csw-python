@@ -5,6 +5,7 @@ from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from sequencer.Script import Script
+from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
 
 
 def script(ctx: Script):
@@ -12,7 +13,7 @@ def script(ctx: Script):
     testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"))
 
     # // ESW-134: Reuse code by ability to import logic from one script into another
-    # loadScripts(InitialCommandHandler)
+    InitialCommandHandler(ctx)
 
     ctx.onSetup("command-2", lambda setup: print(f"Received a command-2 setup: {setup}"))
 
