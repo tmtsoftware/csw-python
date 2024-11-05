@@ -123,7 +123,7 @@ class EventServiceDsl:
             *eventKeys: collection of strings representing EventKey
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        return self.eventSubscriber.get(set(keys))
+        return self.eventSubscriber.gets(set(keys))
 
     def getEvent(self, eventKey: str) -> Event:
         """

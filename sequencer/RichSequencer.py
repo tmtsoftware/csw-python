@@ -1,6 +1,6 @@
 from attr import dataclass
 
-from csw.CommandResponse import SubmitResponse
+from csw.CommandResponse import SubmitResponse, CommandError
 from csw.Subsystem import Subsystem
 from csw.UTCTime import UTCTime
 from esw.EswSequencerResponse import GoOnlineResponse, GoOfflineResponse, DiagnosticModeResponse, \
@@ -9,7 +9,6 @@ from esw.ObsMode import ObsMode
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
-from sequencer.ScriptError import CommandError
 from sequencer.SequencerApi import SequencerApi
 
 

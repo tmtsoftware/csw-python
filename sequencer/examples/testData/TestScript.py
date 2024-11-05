@@ -164,9 +164,9 @@ def script(ctx: Script):
 #     }
 
 
-    def _handleOnDiagnosticMode(startTime, hint):
-        # do some actions to go to diagnostic mode based on hint
-        testAssembly.diagnosticMode(startTime, hint)
+    # def _handleOnDiagnosticMode(startTime, hint):
+    #     # do some actions to go to diagnostic mode based on hint
+    #     testAssembly.diagnosticMode(startTime, hint)
 
 #     onOperationsMode {
 #         // do some actions to go to operations mode

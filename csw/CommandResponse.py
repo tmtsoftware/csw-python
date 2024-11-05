@@ -2,14 +2,12 @@ from dataclasses import dataclass, field
 from typing import List, Self, Callable
 
 from csw.Parameter import Parameter
-from sequencer.ScriptError import CommandError
-
 
 # noinspection PyProtectedMember
 @dataclass
 class CommandResponse:
     """
-    Type of a response to a command (submit, oneway or validate).
+    Type of response to a command (submit, oneway or validate).
     Note that oneway and validate responses are limited to Accepted, Invalid or Locked.
     """
     runId: str
@@ -335,3 +333,10 @@ class Invalid(CommandResponse):
 SubmitResponse = Error | Invalid | Locked | Started | Completed | Cancelled
 ValidateResponse = Accepted | Invalid | Locked
 OnewayResponse = Accepted | Invalid | Locked
+
+class CommandError(Exception):
+    def __init__(self, submitResponse: SubmitResponse):
+        super().__init__(submitResponse.message)
+
+
+

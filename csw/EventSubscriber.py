@@ -74,8 +74,7 @@ class EventSubscriber:
     #     """
     #     return self.__redis.pUnsubscribe(eventKeyList)
 
-    @dispatch(Set[EventKey])
-    def get(self, eventKeys: Set[EventKey]) -> Set[Event]:
+    def gets(self, eventKeys: Set[EventKey]) -> Set[Event]:
         """
         Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
         If event is not published for one or more event keys, `invalid event` will be received for those Event Keys.
@@ -90,7 +89,6 @@ class EventSubscriber:
         """
         return set(map(lambda k: self.get(k), eventKeys))
 
-    @dispatch(EventKey)
     def get(self, eventKey: EventKey) -> Event:
         """
         Get an event from the Event Service

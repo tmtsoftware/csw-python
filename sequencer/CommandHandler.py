@@ -1,17 +1,18 @@
 from typing import Callable
 from time import sleep
 
-from csw.ParameterSetType import SequenceCommand, ControlCommand
-from sequencer.ScriptError import ScriptError, OtherError, CommandError
+from csw.CommandResponse import CommandError
+from csw.ParameterSetType import SequenceCommand
+from sequencer.ScriptError import OtherError
 
 
 class CommandHandler:
-    def _defaultErrorHandler(self, err: ScriptError):
+    def _defaultErrorHandler(self, err: Exception):
         pass
 
     def __init__(self, func: Callable[[SequenceCommand], None]):
         self.func = func
-        self._onError: Callable[[ScriptError], None] = self._defaultErrorHandler
+        self._onError: Callable[[Exception], None] = self._defaultErrorHandler
         self._retryCount: int = 0
         self._delayInMillis: int = 0
 

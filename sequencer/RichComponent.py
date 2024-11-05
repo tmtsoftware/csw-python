@@ -100,20 +100,22 @@ class RichComponent:
         """
         return self.commandService().subscribeCurrentState(list(stateNames), callback)
 
-    def diagnosticMode(self, startTime: UTCTime, hint: str):
-        """
-        Send component into a diagnostic data mode based on a hint at the specified startTime.
 
-        Args:
-            startTime represents the time at which the diagnostic mode actions will take effect
-            hint represents supported diagnostic data mode for a component
+    # XXX TODO FIXME: Need to add HTTP API for these?
 
-        Returns:
-
-        """
-        # XXX TODO
-        pass
-        # self.componentRef().tell(DiagnosticDataMessage.DiagnosticMode(startTime, hint))
+    # def diagnosticMode(self, startTime: UTCTime, hint: str):
+    #     """
+    #     Send component into a diagnostic data mode based on a hint at the specified startTime.
+    #
+    #     Args:
+    #         startTime represents the time at which the diagnostic mode actions will take effect
+    #         hint represents supported diagnostic data mode for a component
+    #
+    #     Returns:
+    #
+    #     """
+    #     pass
+    #     # self.componentRef().tell(DiagnosticDataMessage.DiagnosticMode(startTime, hint))
 
     #     /**
     #      * Send component into an operations mode
@@ -163,8 +165,6 @@ class RichComponent:
             func().onFailedTerminate()
         else:
             func()
-
-    #     private fun Duration.toTimeout(): Timeout = Timeout(inWholeNanoseconds, TimeUnit.NANOSECONDS)
 
     def commandService(self) -> CommandService:
         return CommandService(self.prefix, self.componentType)

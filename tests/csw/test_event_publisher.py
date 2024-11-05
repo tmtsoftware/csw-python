@@ -28,14 +28,14 @@ class TestEventPublisher:
         paramSet = [param]
         event = SystemEvent(prefix, eventName, paramSet)
 
-        thread = sub.subscribe([eventKey], self.callback)
+        subscription = sub.subscribe([eventKey], self.callback)
         pub.publish(event)
         time.sleep(1)
         e = sub.get(eventKey)
         assert (e == event)
         assert (self.count == 1)
         sub.unsubscribe([eventKey])
-        thread.stop()
+        subscription.unsubscribe()
 
     def callback(self, systemEvent):
         self.count = self.count + 1
