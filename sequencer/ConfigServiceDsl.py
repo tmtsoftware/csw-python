@@ -18,7 +18,6 @@ class ConfigServiceDsl:
         """
         return self.configService.exists(path, id)
 
-    # XXX TODO
     # def getConfig(self, path: str) -> bool:
     #     """
     #     Retrieves active configuration file contents present at provided path

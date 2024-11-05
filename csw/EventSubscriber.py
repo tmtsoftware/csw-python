@@ -1,4 +1,5 @@
-from typing import Callable
+from idlelib.debugobj import dispatch
+from typing import Callable, Set
 
 import cbor2
 
@@ -6,6 +7,7 @@ from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event
 from csw.EventKey import EventKey
+
 
 class EventSubscriber:
 
@@ -72,15 +74,31 @@ class EventSubscriber:
     #     """
     #     return self.__redis.pUnsubscribe(eventKeyList)
 
-    def get(self, eventKey: EventKey):
+    @dispatch(Set[EventKey])
+    def get(self, eventKeys: Set[EventKey]) -> Set[Event]:
+        """
+        Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
+        If event is not published for one or more event keys, `invalid event` will be received for those Event Keys.
+
+        In case the underlying server is not available, the future fails with [[csw.event.api.exceptions.EventServerNotAvailable]] exception.
+        In all other cases of exception, the future fails with the respective exception
+
+        Args:
+            eventKeys: a set of [[csw.params.events.EventKey]] to subscribe to
+        Returns:
+            a set of latest Event for the provided Event Keys
+        """
+        return set(map(lambda k: self.get(k), eventKeys))
+
+    @dispatch(EventKey)
+    def get(self, eventKey: EventKey) -> Event:
         """
         Get an event from the Event Service
 
         Args:
             eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + "." + event name.
 
-        Returns: Event
-            Event obtained from Event Service, decoded into a Event
+        Returns: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(str(eventKey))
         event = Event._fromDict(cbor2.loads(data))

@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List, Set
 
 from multipledispatch import dispatch
 
@@ -80,13 +80,13 @@ class EventServiceDsl:
     #                 coroutineScope.future { Optional.ofNullable(eventGenerator()) }
     #             }, every.toJavaDuration())
 
-    def onEvent(self, *eventKeys: str, callback: Callable[[Event], None]) -> EventSubscription:
+    def onEvent(self, callback: Callable[[Event], None], *eventKeys: str) -> EventSubscription:
         """
         Subscribes to the `eventKeys` which will execute the given `callback` whenever an event is published on any one of the event keys.
 
         Args:
-            *eventKeys: collection of strings representing EventKey
             callback: callback to be executed whenever event is published on provided keys
+            *eventKeys: collection of strings representing EventKey
 
         Returns:
             object that can be used to cancel the subscription
@@ -96,43 +96,42 @@ class EventServiceDsl:
         # subscription.ready().await()
         return subscription
 
-# XXX TODO
-#     /**
-#      * Subscribes to the given `eventKeys` and will execute the given `callback` on tick of specified `duration` with the latest event available.
-#      * Throws [[csw.event.api.exceptions.EventServerNotAvailable]] when event server is not available.
-#      *
-#      * @param eventKeys collection of strings representing [[csw.params.events.EventKey]]
-#      * @param duration which determines the frequency with which events are received
-#      * @param callback to be executed whenever event is published on provided keys
-#      * @return handle of [[esw.ocs.dsl.highlevel.models.EventSubscription]] which can be used to cancel the subscription
-#      */
-#     suspend fun onEvent(vararg eventKeys: String, duration: Duration, callback: SuspendableConsumer<Event>): EventSubscription {
-#         cb = { event: Event -> coroutineScope.future { callback(event) } }
-#         subscription = eventSubscriber
-#                 .subscribeAsync(eventKeys.toEventKeys(), cb, duration.toJavaDuration(), SubscriptionModes.jRateAdapterMode())
-#         subscription.ready().await()
-#         return EventSubscription { subscription.unsubscribe().await() }
-#     }
-#
-#     /**
-#      * Method to get the latest event of all the provided `eventKeys`. Invalid event will be given if no event is published on one or more keys.
-#      * Throws [[csw.event.api.exceptions.EventServerNotAvailable]] when event server is not available.
-#      *
-#      * @param eventKeys collection of strings representing [[csw.params.events.EventKey]].
-#      * @return a [[kotlin.collections.Set]] of [[csw.params.events.Event]]
-#      */
-#     suspend fun getEvent(vararg eventKeys: String): Set<Event> =
-#             eventSubscriber.get(eventKeys.toEventKeys()).await().toSet()
-#
-#     /**
-#      * Method to get the latest event the provided `eventKey`. Invalid event will be given if no event is published on the key.
-#      * Throws [[csw.event.api.exceptions.EventServerNotAvailable]] when event server is not available.
-#      *
-#      * @param eventKey strings representing [[csw.params.events.EventKey]].
-#      * @return latest [[csw.params.events.Event]] available
-#      */
-#     suspend fun getEvent(eventKey: String): Event = eventSubscriber.get(EventKey(eventKey)).await()
-#
-#     private fun (Array<out String>).toEventKeys(): Set<EventKey> = map { EventKey.apply(it) }.toSet()
-#
-# }
+    # XXX TODO
+    #     /**
+    #      * Subscribes to the given `eventKeys` and will execute the given `callback` on tick of specified `duration` with the latest event available.
+    #      * Throws [[csw.event.api.exceptions.EventServerNotAvailable]] when event server is not available.
+    #      *
+    #      * @param eventKeys collection of strings representing [[csw.params.events.EventKey]]
+    #      * @param duration which determines the frequency with which events are received
+    #      * @param callback to be executed whenever event is published on provided keys
+    #      * @return handle of [[esw.ocs.dsl.highlevel.models.EventSubscription]] which can be used to cancel the subscription
+    #      */
+    #     suspend fun onEvent(vararg eventKeys: String, duration: Duration, callback: SuspendableConsumer<Event>): EventSubscription {
+    #         cb = { event: Event -> coroutineScope.future { callback(event) } }
+    #         subscription = eventSubscriber
+    #                 .subscribeAsync(eventKeys.toEventKeys(), cb, duration.toJavaDuration(), SubscriptionModes.jRateAdapterMode())
+    #         subscription.ready().await()
+    #         return EventSubscription { subscription.unsubscribe().await() }
+    #     }
+
+    def getEvents(self, *eventKeys: str) -> Set[Event]:
+        """
+        Method to get the latest event of all the provided `eventKeys`. Invalid event will be given if no event is published on one or more keys.
+        Throws exception when event server is not available.
+
+        Args:
+            *eventKeys: collection of strings representing EventKey
+        """
+        keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
+        return self.eventSubscriber.get(set(keys))
+
+    def getEvent(self, eventKey: str) -> Event:
+        """
+        Method to get the latest event the provided `eventKey`. Invalid event will be given if no event is published on the key.
+        Throws exception when event server is not available.
+        Args:
+            eventKey: string representing EventKey
+        Returns:
+            latest Event available
+        """
+        return self.eventSubscriber.get(EventKey.from_str(eventKey))

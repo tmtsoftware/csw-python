@@ -11,16 +11,18 @@ from csw.Prefix import Prefix
 from csw.SequencerObserveEvent import SequencerObserveEvent
 from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
-from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
+from sequencer.RichComponent import RichComponent
 from sequencer.CommandServiceDsl import CommandServiceDsl
 from sequencer.ConfigServiceDsl import ConfigServiceDsl
 from sequencer.CswServices import CswServices
 from sequencer.EventServiceDsl import EventServiceDsl
 from sequencer.LocationServiceDsl import LocationServiceDsl
+from sequencer.RichSequencer import RichSequencer
 from sequencer.ScriptContext import ScriptContext
 from sequencer.ScriptDsl import ScriptDsl
 from sequencer.SequencerApi import SequencerApi
+
 
 class CswHighLevelDslApi:
     def presetStart(self, obsId: ObsId) -> ObserveEvent:
@@ -195,13 +197,14 @@ class CswHighLevelDslApi:
         """
         pass
 
-    def Assembly(self, prefix: Prefix) -> CommandService:
+    def Assembly(self, prefix: Prefix, timeoutInSecs: int) -> CommandService:
         pass
 
-    def Hcd(self, prefix: Prefix) -> CommandService:
+    def Hcd(self, prefix: Prefix, timeoutInSecs: int) -> CommandService:
         pass
 
-    def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None) -> SequencerApi:
+    def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None,
+                  timeoutInSecs: int = 100000) -> SequencerApi:
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """
@@ -450,17 +453,18 @@ class CswHighLevelDsl(CswHighLevelDslApi,
         """
         return self.sequencerObserveEvent.inputRequestEnd(obsId)
 
-    def Assembly(self, prefix: Prefix) -> CommandService:
-        return CommandService(prefix, ComponentType.Assembly)
+    def Assembly(self, prefix: Prefix, timeoutInSecs: int) -> RichComponent:
+        return RichComponent(prefix, ComponentType.Assembly, timeoutInSecs)
 
-    def Hcd(self, prefix: Prefix) -> CommandService:
-        return CommandService(prefix, ComponentType.HCD)
+    def Hcd(self, prefix: Prefix, timeoutInSecs: int) -> RichComponent:
+        return RichComponent(prefix, ComponentType.HCD, timeoutInSecs)
 
-    def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None) -> SequencerApi:
+    def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None,
+                  timeoutInSecs: int = 100000) -> RichSequencer:
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """
-        return SequencerClient(Variation.prefix(subsystem, obsMode, variation))
+        return RichSequencer(subsystem, obsMode, variation, timeoutInSecs)
 
     # --- XXX TODO ---
 

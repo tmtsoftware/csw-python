@@ -2,7 +2,6 @@ import asyncio
 import uuid
 from asyncio import Task
 from typing import List, Callable
-import traceback
 
 import requests
 import websockets
@@ -16,6 +15,8 @@ from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
+
+from esw.SequencerRequest import Query
 
 
 @dataclass
@@ -143,6 +144,26 @@ class CommandService:
                 return await self.queryFinalAsync(runId, timeoutInSeconds)
             case _:
                 return resp
+
+    def query(self, runId: str) -> SubmitResponse:
+        """
+        Query for the result of a long running command which was sent as Submit to get a SubmitResponse.
+        Query allows checking to see if a long-running command is completed without waiting as with queryFinal.
+
+        Args:
+           runId (str): runId for the command
+
+        Returns: SubmitResponse
+           a subclass of SubmitResponse
+        """
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        wsUri = f"{baseUri}websocket-endpoint"
+        msgDict = Query(runId)._asDict()
+        jsonStr = json.dumps(msgDict)
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
+        return CommandResponse._fromDict(json.loads(jsonResp))
 
     def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
         """

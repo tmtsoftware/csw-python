@@ -267,7 +267,7 @@ class SequencerClient(SequencerApi):
             return Error(runId, response.text)
         return CommandResponse._fromDict(response.json())
 
-    def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+    def queryFinal(self, runId: str, timeoutInSeconds: int = 10) -> SubmitResponse:
         """
         Query for the final result of a long-running sequence which was sent through submit().
 

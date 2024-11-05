@@ -29,7 +29,7 @@ class Event:
     """
     source: Prefix
     eventName: EventName
-    paramSet: List[Parameter]
+    paramSet: List[Parameter] = field(default_factory=lambda: [])
     eventTime: EventTime = field(default_factory=lambda: EventTime.now())
     eventId: str = field(default_factory=lambda: str(uuid.uuid4()))
 

@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Self, Callable
 
 from csw.Parameter import Parameter
+from sequencer.ScriptError import CommandError
 
 
 # noinspection PyProtectedMember
@@ -39,6 +40,45 @@ class CommandResponse:
                 return Accepted._fromDict(obj)
             case "Invalid":
                 return Invalid._fromDict(obj)
+
+    def isPositive(self) -> bool:
+        return isinstance(self, Completed) or isinstance(self, Accepted)
+
+    def isCompleted(self) -> bool:
+        return isinstance(self, Completed)
+
+    def isIntermediate(self) -> bool:
+        return isinstance(self, Started)
+
+    def isStarted(self) -> bool:
+        return isinstance(self, Started)
+
+    def isFinal(self) -> bool:
+        return not isinstance(self, Started)
+
+    def isNegative(self) -> bool:
+        return not (self.isPositive() or self.isIntermediate())
+
+    def isFailed(self) -> bool:
+        return self.isNegative()
+
+    def onFailedTerminate(self) -> Self:
+        if self.isFailed():
+            # noinspection PyTypeChecker
+            raise CommandError(self)
+        return self
+
+    def onStarted(self, func: Callable[[Self], None]):
+        if isinstance(self, Started):
+            func(self)
+
+    def onCompleted(self, func: Callable[[Self], None]):
+        if isinstance(self, Completed):
+            func(self)
+
+    def onFailed(self, func: Callable[[Self], None]):
+        if self.isFailed():
+            func(self)
 
 
 @dataclass
