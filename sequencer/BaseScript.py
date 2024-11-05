@@ -54,21 +54,9 @@ class BaseScript(CswHighLevelDsl):
     def onDiagnosticMode(self, func: Callable[[(UTCTime, str)], None]):
         return self.scriptDsl.onDiagnosticMode(func)
 
-#     fun onDiagnosticMode(block: suspend HandlerScope.(UTCTime, String) -> Unit) =
-#             scriptDsl.onDiagnosticMode { x: UTCTime, y: String ->
-#                 coroutineScope.launch { block(this.toHandlerScope(), x, y) }.asCompletableFuture().thenAccept { }
-#             }
-#
-#     fun onOperationsMode(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onOperationsMode { block.toCoroutineScope().toJava() }
-#
-#     fun onStop(block: suspend HandlerScope.() -> Unit) =
-#             scriptDsl.onStop { block.toCoroutineScope().toJava() }
-#
-#     internal fun CoroutineScope.toHandlerScope(): HandlerScope = object : HandlerScope by this@BaseScript {
-#         override val coroutineContext: CoroutineContext = this@toHandlerScope.coroutineContext
-#     }
-#
-#     private fun (suspend HandlerScope.() -> Unit).toCoroutineScope(): suspend (CoroutineScope) -> Unit =
-#             { this(it.toHandlerScope()) }
-# }
+    def onOperationsMode(self, func: Callable[[], None]):
+        return self.scriptDsl.onOperationsMode(func)
+
+    def onStop(self, func: Callable[[], None]):
+        return self.scriptDsl.onStop(func)
+

@@ -1,5 +1,4 @@
 from time import sleep
-from typing import List
 
 from csw.CommandResponse import Started, Completed
 from csw.Event import Event
@@ -23,7 +22,7 @@ def script(ctx: Script):
     ctx.onSetup("command-2", lambda setup: print(f"Received a command-2 setup: {setup}"))
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-    def _handleExposureStart(_: Observe):
+    def handleExposureStart(_: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
         print(obsId.programId)
@@ -38,11 +37,11 @@ def script(ctx: Script):
         print(exposureId.det)
         ctx.publishEvent(ctx.exposureStart(exposureId))
 
-    ctx.onObserve("exposure-start", _handleExposureStart)
+    ctx.onObserve("exposure-start", handleExposureStart)
 
     ctx.onSetup("command-3", lambda setup: print(f"Received a command-3 setup: {setup}"))
 
-    def _handleCommand4(_: Setup):
+    def handleCommand4(_: Setup):
         # try sending concrete sequence
         setupCommand = ctx.Setup("ESW.test", "command-3")
         sequence = ctx.sequenceOf(setupCommand)
@@ -51,16 +50,16 @@ def script(ctx: Script):
         tcsSequencer = ctx.Sequencer(Subsystem.TCS, ObsMode("darknight"))
         tcsSequencer.submitAndWait(sequence, 10)
 
-    ctx.onSetup("command-4", _handleCommand4)
+    ctx.onSetup("command-4", handleCommand4)
 
-    def _handleCheckConfig(_: Setup):
+    def handleCheckConfig(_: Setup):
         if ctx.existsConfig("/tmt/test/wfos.conf"):
             ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
 
-    ctx.onSetup("check-config", _handleCheckConfig)
+    ctx.onSetup("check-config", handleCheckConfig)
 
     # XXX TODO
-    # def _handleGetConfigData(setup: Setup):
+    # def handleGetConfigData(setup: Setup):
     #     configValue = "component = wfos"
     #     configData = ctx.getConfig("/tmt/test/wfos.conf")
     #
@@ -73,16 +72,16 @@ def script(ctx: Script):
     #         }
     #     }
 
-    def _handleGetEvent(_: Setup):
+    def handleGetEvent(_: Setup):
         # ESW-88
         event = ctx.getEvent("ESW.test.get.event")
         successEvent = ctx.SystemEvent("ESW.test", "get.success")
         if not event.isInvalid():
             ctx.publishEvent(successEvent)
 
-    ctx.onSetup("get-event", _handleGetEvent)
+    ctx.onSetup("get-event", handleGetEvent)
 
-    def _handleOnEvent(_: Setup):
+    def handleOnEvent(_: Setup):
         def handleEvent(event: Event):
             successEvent = ctx.SystemEvent("ESW.test", "onevent.success")
             if not event.isInvalid():
@@ -90,9 +89,9 @@ def script(ctx: Script):
 
         ctx.onEvent(handleEvent, "ESW.test.get.event")
 
-    ctx.onSetup("on-event", _handleOnEvent)
+    ctx.onSetup("on-event", handleOnEvent)
 
-    def _handleCommandForAssembly(command: Setup):
+    def handleCommandForAssembly(command: Setup):
         submitResponse = testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
         if isinstance(testAssembly.query(submitResponse.runId()), Started):
             ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
@@ -106,15 +105,15 @@ def script(ctx: Script):
                                                f"publish-{currentState.stateName().name()}")))
         testAssembly.oneway(command)
 
-    ctx.onSetup("command-for-assembly", _handleCommandForAssembly)
+    ctx.onSetup("command-for-assembly", handleCommandForAssembly)
 
 
     ctx.onSetup("test-sequencer-hierarchy", lambda _: sleep(5))
 
-    def _handleCheckException(_: Setup):
+    def handleCheckException(_: Setup):
         raise Exception("boom")
 
-    ctx.onSetup("check-exception-1", _handleCheckException)
+    ctx.onSetup("check-exception-1", handleCheckException)
     ctx.onSetup("check-exception-2", lambda _: sleep(0))
 
 # XXX TODO
@@ -124,17 +123,17 @@ def script(ctx: Script):
 #         delay(500)
 #     }
 
-    def _handleCommandLgsf(_: Setup):
+    def handleCommandLgsf(_: Setup):
         # NOT update command response to avoid a sequencer to finish immediately
         # so that others Add, Append command gets time
         setupCommand = ctx.Setup("LGSF.test", "command-lgsf")
         sequence = ctx.sequenceOf(setupCommand)
         lgsfSequencer.submitAndWait(sequence, 10)
 
-    ctx.onSetup("command-lgsf", _handleCommandLgsf)
+    ctx.onSetup("command-lgsf", handleCommandLgsf)
 
 # XXX TODO
-#    def _handleScheduleOnceFromNow(_: Setup):
+#    def handleScheduleOnceFromNow(_: Setup):
 #        currentTime = ctx.utcTimeNow()
 #        ctx.scheduleOnceFromNow(1.seconds) {
 #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
@@ -164,7 +163,7 @@ def script(ctx: Script):
 #     }
 
 
-    # def _handleOnDiagnosticMode(startTime, hint):
+    # def handleOnDiagnosticMode(startTime, hint):
     #     # do some actions to go to diagnostic mode based on hint
     #     testAssembly.diagnosticMode(startTime, hint)
 

@@ -379,3 +379,12 @@ class DoubleMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -> Key[List[List[float]]]:
         return Key(name, KeyTypes.DoubleMatrixKey, units)
+
+
+# For use in scripts
+def stringKey(name: str, units: Units = Units.NoUnits) -> Key[str]:
+    return StringKey().make(name, units)
+
+# XXX TODO: rest of key functions
+
+
