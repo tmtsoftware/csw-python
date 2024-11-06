@@ -7,7 +7,7 @@ from esw.Sequence import Sequence
 class CommandServiceDsl:
 
     # todo: can the prefix be defaulted by the prefix of the sequencer? or a prefix dsl property can be provided?
-    def Setup(sourcePrefix: str, commandName: str, obsId: str | None = None) -> Setup:
+    def Setup(self, sourcePrefix: str, commandName: str, obsId: str | None = None) -> Setup:
         """
         Method to create an instance of Setup
 
@@ -19,7 +19,7 @@ class CommandServiceDsl:
         maybeObsId = ObsId.make(obsId) if obsId else None
         return Setup(Prefix.from_str(sourcePrefix), CommandName(commandName), maybeObsId)
 
-    def Observe(sourcePrefix: str, commandName: str, obsId: str | None = None) -> Observe:
+    def Observe(self, sourcePrefix: str, commandName: str, obsId: str | None = None) -> Observe:
         """
         Method to create an instance of [[csw.params.commands.Observe]]
 
@@ -31,7 +31,7 @@ class CommandServiceDsl:
         maybeObsId = ObsId.make(obsId) if obsId else None
         return Observe(Prefix.from_str(sourcePrefix), CommandName(commandName), maybeObsId)
 
-    def sequenceOf(*sequenceCommand: SequenceCommand) -> Sequence:
+    def sequenceOf(self, *sequenceCommand: SequenceCommand) -> Sequence:
         """
         Method to create an instance of [[csw.params.commands.Sequence]]
 

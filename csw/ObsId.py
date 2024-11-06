@@ -30,4 +30,4 @@ class ObsId:
                 return ObsId(ProgramId.make(Separator.hyphenate(semesterId, programNumber)), int(obsNumber))
             case _:
                 raise ValueError(
-                    f"An ObsId must consist of a semesterId, programNumber, and observationNumber separated by '{Separator.Hyphen}', ex: 2020A-001-123")
+                    f"{obsId}: An ObsId must consist of a semesterId, programNumber, and observationNumber separated by '{Separator.Hyphen}', ex: 2020A-001-123")

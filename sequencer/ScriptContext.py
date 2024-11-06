@@ -6,7 +6,6 @@ from csw.EventService import EventService
 from csw.Prefix import Prefix
 from esw.ObsMode import ObsMode
 from sequencer.SequenceOperatorApi import SequenceOperatorHttp
-from sequencer.SequencerApi import SequencerApi
 
 
 @dataclass
