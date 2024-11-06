@@ -27,6 +27,7 @@ class UTCTime:
         """
         Returns a UTCTime given a string in ISO format (ex: "2021-09-20T18:44:12.419084072Z").
         """
+        print(f"XXX UTCTime.from_str({timeStr})")
         t = parser.isoparse(timeStr).timestamp()
         seconds = int(t)
         nanos = int((t - seconds) * 1e9)

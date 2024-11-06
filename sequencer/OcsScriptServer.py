@@ -13,7 +13,8 @@ from csw.CommandResponseManager import CommandResponseManager
 from csw.EventService import EventService
 from csw.ParameterSetType import SequenceCommand
 from csw.Prefix import Prefix
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+    RegistrationResult
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.SequencerRequest import DiagnosticMode
@@ -65,6 +66,7 @@ class OcsScriptServer:
         self.log.info(f"Received executeShutdown sequence command")
         try:
             self.scriptApi.executeShutdown()
+            self._regResult.unregister()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeShutdown: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -132,11 +134,11 @@ class OcsScriptServer:
         return web.HTTPOk()
 
     @staticmethod
-    def _registerWithLocationService(prefix: Prefix, port: int):
+    def _registerWithLocationService(prefix: Prefix, port: int) -> RegistrationResult:
         locationService = LocationService()
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        locationService.register(HttpRegistration(connection, port))
+        return locationService.register(HttpRegistration(connection, port))
 
     def __init__(self, scriptApi: ScriptApi, sequencerPrefix: Prefix, sequenceComponentPrefix: Prefix, port: int = 0):
         """
@@ -165,7 +167,7 @@ class OcsScriptServer:
             web.post('/executeExceptionHandlers', self._executeExceptionHandlers),
             web.post('/shutdownScript', self._shutdownScript)
         ])
-        OcsScriptServer._registerWithLocationService(sequencerPrefix, self.port)
+        self._regResult =  OcsScriptServer._registerWithLocationService(sequencerPrefix, self.port)
 
     def start(self):
         """

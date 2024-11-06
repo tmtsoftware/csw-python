@@ -351,7 +351,8 @@ class DiagnosticMode(SequencerRequest):
         """
         Returns a DiagnosticMode object for the given dict.
         """
-        startTime = UTCTime.from_str(obj['startTime'])
+        print(f"XXX DiagnosticMode.from_dict({obj})")
+        startTime = UTCTime.from_str(obj['startTime']['value'])
         hint = obj['hint']
         return cls(startTime, hint)
 
