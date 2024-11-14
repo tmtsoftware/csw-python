@@ -160,3 +160,25 @@ class ExecuteOperationsMode:
         return {
             "_type": self.__class__.__name__,
         }
+
+class GoOnline:
+
+    @staticmethod
+    def _fromDict(obj):
+        return GoOnline()
+
+    def _asDict(self):
+        return {
+            "_type": self.__class__.__name__,
+        }
+
+class GoOffline:
+
+    @staticmethod
+    def _fromDict(obj):
+        return GoOffline()
+
+    def _asDict(self):
+        return {
+            "_type": self.__class__.__name__,
+        }

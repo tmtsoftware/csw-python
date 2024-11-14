@@ -167,30 +167,11 @@ def script(ctx: Script):
 #     }
 
 
-    def handleOnDiagnosticMode(startTime: UTCTime, hint: str):
-        # do some actions to go to diagnostic mode based on hint
-        log.info(f"XXX TestScript1: handleOnDiagnosticMode")
-        testAssembly.diagnosticMode(startTime, hint)
+    ctx.onDiagnosticMode(lambda startTime, hint: testAssembly.diagnosticMode(startTime, hint))
+    ctx.onOperationsMode(lambda: testAssembly.operationsMode())
+    ctx.onGoOffline(lambda: testAssembly.goOffline())
+    ctx.onGoOnline(lambda: testAssembly.goOnline())
 
-    ctx.onDiagnosticMode(handleOnDiagnosticMode)
-
-    def handleOperationsMode():
-        # do some actions to go to operations mode
-        log.info(f"XXX TestScript1: handleOperationsMode")
-        testAssembly.operationsMode()
-
-    ctx.onOperationsMode(handleOperationsMode)
-
-#     onGoOffline {
-#         // do some actions to go offline
-#         testAssembly.goOffline()
-#     }
-#
-#     onGoOnline {
-#         // do some actions to go online
-#         testAssembly.goOnline()
-#     }
-#
 #     onAbortSequence {
 #         //do some actions to abort sequence
 #

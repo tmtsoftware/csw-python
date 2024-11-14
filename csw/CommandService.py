@@ -10,7 +10,7 @@ from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
 from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState, \
-    ExecuteDiagnosticMode, ExecuteOperationsMode
+    ExecuteDiagnosticMode, ExecuteOperationsMode, GoOnline, GoOffline
 from csw.CurrentState import CurrentState
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
@@ -253,14 +253,31 @@ class CommandService:
         """
         On receiving a operations mode command, the current diagnostic data mode is halted.
         """
-        print(f"XXX executeOperationsMode")
         baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = ExecuteOperationsMode()._asDict()
         jsonData = json.loads(json.dumps(data))
-        print(f"XXX executeOperationsMode: post {jsonData}")
         response = requests.post(postUri, headers=headers, json=jsonData)
-        print(f"XXX executeOperationsMode: response: {response}")
         if not response.ok:
             raise Exception(f"CommandService: executeOperationsMode failed: {response.text}")
+
+    def goOnline(self):
+        baseUri = self._getBaseUri()
+        postUri = f"{baseUri}post-endpoint"
+        headers = {'Content-type': 'application/json'}
+        data = GoOnline()._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = requests.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f"CommandService: goOnline failed: {response.text}")
+
+    def goOffline(self):
+        baseUri = self._getBaseUri()
+        postUri = f"{baseUri}post-endpoint"
+        headers = {'Content-type': 'application/json'}
+        data = GoOffline()._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = requests.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f"CommandService: goOffline failed: {response.text}")

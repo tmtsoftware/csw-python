@@ -128,16 +128,18 @@ class RichComponent:
         """
         self.commandService().executeOperationsMode()
 
-        #     /**
-        #      * Send component into online mode
-        #      */
-        #     suspend fun goOnline(): Unit = componentRef().tell(RunningMessage.Lifecycle(ToComponentLifecycleMessage.jGoOnline()))
-        #
-        #     /**
-        #      * Send component into offline mode
-        #      */
-        #     suspend fun goOffline(): Unit = componentRef().tell(RunningMessage.Lifecycle(ToComponentLifecycleMessage.jGoOffline()))
-        #
+    def goOnline(self):
+        """
+        Send component into online mode
+        """
+        self.commandService().goOnline()
+
+    def goOffline(self):
+        """
+        Send component into offline mode
+        """
+        self.commandService().goOnline()
+
         #     /**
         #      * Lock component for specified duration. Returns [[csw.command.client.models.framework.LockingResponse.LockAcquired]]
         #      * or [[csw.command.client.models.framework.LockingResponse.AcquiringLockFailed]]
