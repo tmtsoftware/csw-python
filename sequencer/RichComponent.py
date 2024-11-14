@@ -138,7 +138,7 @@ class RichComponent:
         """
         Send component into offline mode
         """
-        self.commandService().goOnline()
+        self.commandService().goOffline()
 
         #     /**
         #      * Lock component for specified duration. Returns [[csw.command.client.models.framework.LockingResponse.LockAcquired]]

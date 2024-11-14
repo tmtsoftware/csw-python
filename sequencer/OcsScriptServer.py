@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 
 import structlog
@@ -194,10 +195,9 @@ def main():
     scriptContext = ScriptContext(1, sequencerPrefix, obsMode, sequenceOperatorFactory, evenService, alarmService)
     scriptWiring = ScriptWiring(scriptContext)
     script = Script(scriptWiring)
-    # XXX TODO FIXME
     cfg = configparser.ConfigParser()
-    # TODO FIXME: how to set this path?
-    cfg.read('/shared/work/tmt/csw/pycsw/sequencer/examples/examples.ini')
+    thisDir = os.path.dirname(os.path.abspath(__file__))
+    cfg.read(f'{thisDir}/examples/examples.ini')
     scriptFile = cfg.get("scripts", str(sequencerPrefix))
     module = ScriptLoader.loadPythonScript(scriptFile)
     module.script(script)
