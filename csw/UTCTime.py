@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 from dataclasses import dataclass, asdict
+from typing import Self
+
 from dateutil import parser
 
 @dataclass
@@ -15,12 +17,14 @@ class UTCTime:
         dt = datetime.fromtimestamp(secs, timezone.utc)
         return dt.strftime('%Y-%m-%dT%H:%M:%S.%f') + "Z"
 
+    # --- For CBOR format ---
     def _asDict(self):
         return asdict(self)
 
-    @staticmethod
-    def _fromDict(obj: dict):
-        return UTCTime(**obj)
+    @classmethod
+    def _fromDict(cls, obj: dict) -> Self:
+        print(f"XXX UTCTime._fromDict({obj})")
+        return cls(**obj)
 
     @staticmethod
     def from_str(timeStr: str):

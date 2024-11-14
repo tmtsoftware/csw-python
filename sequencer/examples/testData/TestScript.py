@@ -1,5 +1,7 @@
 from time import sleep
 
+import structlog
+
 from csw.CommandResponse import Started, Completed
 from csw.Event import Event
 from csw.ExposureId import ExposureId
@@ -7,39 +9,41 @@ from csw.ObsId import ObsId
 from csw.ParameterSetType import Observe, Setup
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
+from csw.UTCTime import UTCTime
 from esw.ObsMode import ObsMode
 from sequencer.Script import Script
 from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
 
 
 def script(ctx: Script):
+    log = structlog.get_logger()
     lgsfSequencer = ctx.Sequencer(Subsystem.LGSF, ObsMode("darknight"))
     testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"), 10)
 
     # ESW-134: Reuse code by ability to import logic from one script into another
     InitialCommandHandler(ctx)
 
-    ctx.onSetup("command-2", lambda setup: print(f"Received a command-2 setup: {setup}"))
+    ctx.onSetup("command-2", lambda setup: log.info(f"Received a command-2 setup: {setup}"))
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
     def handleExposureStart(_: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
-        print(obsId.programId)
-        print(obsId.programId.semesterId)
-        print(obsId.programId.semesterId.semester)
+        log.info(obsId.programId)
+        log.info(obsId.programId.semesterId)
+        log.info(obsId.programId.semesterId.semester)
 
         # create exposureId
         exposureIdStr = f"{obsId}-TCS-DET-SCI0-0001"
         exposureId = ExposureId.make(exposureIdStr)
         # do something with exposureId components
-        print(exposureId.subsystem)
-        print(exposureId.det)
+        log.info(exposureId.subsystem)
+        log.info(exposureId.det)
         ctx.publishEvent(ctx.exposureStart(exposureId))
 
     ctx.onObserve("exposure-start", handleExposureStart)
 
-    ctx.onSetup("command-3", lambda setup: print(f"Received a command-3 setup: {setup}"))
+    ctx.onSetup("command-3", lambda setup: log.info(f"Received a command-3 setup: {setup}"))
 
     def handleCommand4(_: Setup):
         # try sending concrete sequence
@@ -163,15 +167,20 @@ def script(ctx: Script):
 #     }
 
 
-    # def handleOnDiagnosticMode(startTime, hint):
-    #     # do some actions to go to diagnostic mode based on hint
-    #     testAssembly.diagnosticMode(startTime, hint)
+    def handleOnDiagnosticMode(startTime: UTCTime, hint: str):
+        # do some actions to go to diagnostic mode based on hint
+        log.info(f"XXX TestScript1: handleOnDiagnosticMode")
+        testAssembly.diagnosticMode(startTime, hint)
 
-#     onOperationsMode {
-#         // do some actions to go to operations mode
-#         testAssembly.operationsMode()
-#     }
-#
+    ctx.onDiagnosticMode(handleOnDiagnosticMode)
+
+    def handleOperationsMode():
+        # do some actions to go to operations mode
+        log.info(f"XXX TestScript1: handleOperationsMode")
+        testAssembly.operationsMode()
+
+    ctx.onOperationsMode(handleOperationsMode)
+
 #     onGoOffline {
 #         // do some actions to go offline
 #         testAssembly.goOffline()

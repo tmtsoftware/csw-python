@@ -1,6 +1,7 @@
 import asyncio
 import uuid
 from asyncio import Task
+from http.client import responses
 from typing import List, Callable
 
 import requests
@@ -8,7 +9,8 @@ import websockets
 from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState
+from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState, \
+    ExecuteDiagnosticMode, ExecuteOperationsMode
 from csw.CurrentState import CurrentState
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.ParameterSetType import ControlCommand
@@ -16,6 +18,7 @@ from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
 
+from csw.UTCTime import UTCTime
 from esw.SequencerRequest import Query
 
 
@@ -227,3 +230,37 @@ class CommandService:
         """
         task = asyncio.create_task(self._subscribeCurrentState(names, callback))
         return Subscription(task)
+
+    def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+        """
+        On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
+        Validation of supported hints need to be handled by the component writer.
+
+        Args:
+            startTime: represents the time at which the diagnostic mode actions will take effect
+            hint: represents supported diagnostic data mode for a component
+        """
+        baseUri = self._getBaseUri()
+        postUri = f"{baseUri}post-endpoint"
+        headers = {'Content-type': 'application/json'}
+        data = ExecuteDiagnosticMode(startTime, hint)._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = requests.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f"CommandService: executeDiagnosticMode failed: {response.text}")
+
+    def executeOperationsMode(self):
+        """
+        On receiving a operations mode command, the current diagnostic data mode is halted.
+        """
+        print(f"XXX executeOperationsMode")
+        baseUri = self._getBaseUri()
+        postUri = f"{baseUri}post-endpoint"
+        headers = {'Content-type': 'application/json'}
+        data = ExecuteOperationsMode()._asDict()
+        jsonData = json.loads(json.dumps(data))
+        print(f"XXX executeOperationsMode: post {jsonData}")
+        response = requests.post(postUri, headers=headers, json=jsonData)
+        print(f"XXX executeOperationsMode: response: {response}")
+        if not response.ok:
+            raise Exception(f"CommandService: executeOperationsMode failed: {response.text}")

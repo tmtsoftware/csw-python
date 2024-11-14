@@ -165,7 +165,7 @@ class TcpRegistration(Registration):
 
 @dataclass
 class RegistrationResult:
-    unregister: Callable[[], None]
+    unregister: Callable
     location: Location
 
     @classmethod

@@ -19,6 +19,15 @@ class RichComponent:
     # commandUtil: CommandUtil
     defaultTimeoutInSeconds: int
 
+    def commandService(self) -> CommandService:
+        return CommandService(self.prefix, self.componentType)
+
+    def actionOnResponse(self, func: Callable[[], SubmitResponse], resumeOnError: bool = False) -> SubmitResponse:
+        if not resumeOnError:
+            func().onFailedTerminate()
+        else:
+            func()
+
     def validate(self, command: ControlCommand) -> ValidateResponse:
         """
         Sends validate command to component. Returns the ValidateResponse can be of type Accepted, Invalid
@@ -74,7 +83,8 @@ class RichComponent:
         """
         self.actionOnResponse(lambda: self.commandService().queryFinal(commandRunId, timeoutInSecs), resumeOnError)
 
-    def submitAndWait(self, command: ControlCommand, timeoutInSecs: int = 10, resumeOnError: bool = False) -> SubmitResponse:
+    def submitAndWait(self, command: ControlCommand, timeoutInSecs: int = 10,
+                      resumeOnError: bool = False) -> SubmitResponse:
         """
         Submit a command and wait for the final result if it was successfully validated as `Started` to get a
         final [[csw.params.commands.CommandResponse.SubmitResponse]]
@@ -100,71 +110,58 @@ class RichComponent:
         """
         return self.commandService().subscribeCurrentState(list(stateNames), callback)
 
-
     # XXX TODO FIXME: Need to add HTTP API for these?
 
-    # def diagnosticMode(self, startTime: UTCTime, hint: str):
-    #     """
-    #     Send component into a diagnostic data mode based on a hint at the specified startTime.
-    #
-    #     Args:
-    #         startTime represents the time at which the diagnostic mode actions will take effect
-    #         hint represents supported diagnostic data mode for a component
-    #
-    #     Returns:
-    #
-    #     """
-    #     pass
-    #     # self.componentRef().tell(DiagnosticDataMessage.DiagnosticMode(startTime, hint))
+    def diagnosticMode(self, startTime: UTCTime, hint: str):
+        """
+        Send component into a diagnostic data mode based on a hint at the specified startTime.
 
-    #     /**
-    #      * Send component into an operations mode
-    #      */
-    #     suspend fun operationsMode(): Unit = componentRef().tell(DiagnosticDataMessage.`OperationsMode$`.`MODULE$`)
-    #
-    #     /**
-    #      * Send component into online mode
-    #      */
-    #     suspend fun goOnline(): Unit = componentRef().tell(RunningMessage.Lifecycle(ToComponentLifecycleMessage.jGoOnline()))
-    #
-    #     /**
-    #      * Send component into offline mode
-    #      */
-    #     suspend fun goOffline(): Unit = componentRef().tell(RunningMessage.Lifecycle(ToComponentLifecycleMessage.jGoOffline()))
-    #
-    #     /**
-    #      * Lock component for specified duration. Returns [[csw.command.client.models.framework.LockingResponse.LockAcquired]]
-    #      * or [[csw.command.client.models.framework.LockingResponse.AcquiringLockFailed]]
-    #      * @param leaseDuration duration for which component needs to be locked
-    #      * @param onLockAboutToExpire callback which will be executed when Lock is about to expire
-    #      * @param onLockExpired callback which will be executed when Lock is about to expire
-    #      * @return return LockingResponse
-    #      */
-    #     suspend fun lock(
-    #             leaseDuration: Duration,
-    #             onLockAboutToExpire: SuspendableCallback = {},
-    #             onLockExpired: SuspendableCallback = {}
-    #     ): LockingResponse =
-    #             lockUnlockUtil.lock(
-    #                     componentRef(),
-    #                     leaseDuration.toJavaDuration(),
-    #                     { onLockAboutToExpire.toJava() },
-    #                     { onLockExpired.toJava() }
-    #             ).await()
-    #
-    #     /**
-    #      * Unlocks component. Returns [[csw.command.client.models.framework.LockingResponse.LockReleased]]
-    #      * or [[csw.command.client.models.framework.LockingResponse.LockAlreadyReleased]] or [[csw.command.client.models.framework.LockingResponse.ReleasingLockFailed]]
-    #      *
-    #      * @return LockingResponse
-    #      */
-    #     suspend fun unlock(): LockingResponse = lockUnlockUtil.unlock(componentRef()).await()
+        Args:
+            startTime represents the time at which the diagnostic mode actions will take effect
+            hint represents supported diagnostic data mode for a component
+        """
+        self.commandService().executeDiagnosticMode(startTime, hint)
 
-    def actionOnResponse(self, func: Callable[[], SubmitResponse], resumeOnError: bool = False) -> SubmitResponse:
-        if not resumeOnError:
-            func().onFailedTerminate()
-        else:
-            func()
+    def operationsMode(self):
+        """
+        Send component into an operations mode
+        """
+        self.commandService().executeOperationsMode()
 
-    def commandService(self) -> CommandService:
-        return CommandService(self.prefix, self.componentType)
+        #     /**
+        #      * Send component into online mode
+        #      */
+        #     suspend fun goOnline(): Unit = componentRef().tell(RunningMessage.Lifecycle(ToComponentLifecycleMessage.jGoOnline()))
+        #
+        #     /**
+        #      * Send component into offline mode
+        #      */
+        #     suspend fun goOffline(): Unit = componentRef().tell(RunningMessage.Lifecycle(ToComponentLifecycleMessage.jGoOffline()))
+        #
+        #     /**
+        #      * Lock component for specified duration. Returns [[csw.command.client.models.framework.LockingResponse.LockAcquired]]
+        #      * or [[csw.command.client.models.framework.LockingResponse.AcquiringLockFailed]]
+        #      * @param leaseDuration duration for which component needs to be locked
+        #      * @param onLockAboutToExpire callback which will be executed when Lock is about to expire
+        #      * @param onLockExpired callback which will be executed when Lock is about to expire
+        #      * @return return LockingResponse
+        #      */
+        #     suspend fun lock(
+        #             leaseDuration: Duration,
+        #             onLockAboutToExpire: SuspendableCallback = {},
+        #             onLockExpired: SuspendableCallback = {}
+        #     ): LockingResponse =
+        #             lockUnlockUtil.lock(
+        #                     componentRef(),
+        #                     leaseDuration.toJavaDuration(),
+        #                     { onLockAboutToExpire.toJava() },
+        #                     { onLockExpired.toJava() }
+        #             ).await()
+        #
+        #     /**
+        #      * Unlocks component. Returns [[csw.command.client.models.framework.LockingResponse.LockReleased]]
+        #      * or [[csw.command.client.models.framework.LockingResponse.LockAlreadyReleased]] or [[csw.command.client.models.framework.LockingResponse.ReleasingLockFailed]]
+        #      *
+        #      * @return LockingResponse
+        #      */
+        #     suspend fun unlock(): LockingResponse = lockUnlockUtil.unlock(componentRef()).await()

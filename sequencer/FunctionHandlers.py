@@ -1,23 +1,32 @@
 from typing import Callable, Self, List
 
+import structlog
 
-class FunctionHandlers[I, O]:
+
+class FunctionHandlers:
     """
     A builder class for a set of common functions
-
-    Generic types:
-    I - Type of the input param of the Function
-    O - Type of the output result of the Function
    """
 
     def __init__(self):
-        self.handlers: List[Callable[[I], O]] = []
+        self.log = structlog.get_logger()
+        self.handlers: List[Callable] = []
 
-    def add(self, handler: Callable[[I], O]):
+    def add(self, handler: Callable):
         self.handlers.append(handler)
 
-    def execute(self, input: I) -> List[O]:
-        return list(map(lambda f: f(input), self.handlers))
+    def execute(self, *args):
+        def call(f: Callable):
+            self.log.info(f"XXX call {f}({args})")
+            try:
+                if len(args):
+                    f(*args)
+                else:
+                    f()
+            except Exception as ex:
+                self.log.error(f"Error calling {f}({args}): {ex}")
+
+        return list(map(lambda f: call(f), self.handlers))
 
     def merge(self, that: Self) -> Self:
         self.handlers += that.handlers

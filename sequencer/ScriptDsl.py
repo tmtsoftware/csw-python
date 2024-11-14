@@ -1,3 +1,7 @@
+from types import NoneType
+
+import structlog
+
 from csw.ParameterSetType import Setup, Observe, SequenceCommand
 from csw.UTCTime import UTCTime
 from esw.EswSequencerResponse import PullNextResult, Unhandled
@@ -15,20 +19,21 @@ from sequencer.SequenceOperatorApi import SequenceOperatorHttp
 class ScriptDsl(ScriptApi):
 
     def __init__(self, sequenceOperatorFactory: Callable[[], SequenceOperatorHttp]):
+        self.log = structlog.get_logger()
         self.sequenceOperatorFactory = sequenceOperatorFactory
         self.isOnline = True
         self.setupCommandHandler = FunctionBuilder[str, Setup, None]()
         self.observerCommandHandler = FunctionBuilder[str, Observe, None]()
 
-        self.onlineHandlers = FunctionHandlers[None, None]()
-        self.offlineHandlers = FunctionHandlers[None, None]()
-        self.shutdownHandlers = FunctionHandlers[None, None]()
-        self.abortHandlers = FunctionHandlers[None, None]()
-        self.stopHandlers = FunctionHandlers[None, None]()
-        self.diagnosticHandlers = FunctionHandlers[(UTCTime, str), None]()
-        self.operationsHandlers = FunctionHandlers[None, None]()
-        self.exceptionHandlers = FunctionHandlers[ScriptError, None]()
-        self.newSequenceHandlers = FunctionHandlers[None, None]()
+        self.onlineHandlers = FunctionHandlers()
+        self.offlineHandlers = FunctionHandlers()
+        self.shutdownHandlers = FunctionHandlers()
+        self.abortHandlers = FunctionHandlers()
+        self.stopHandlers = FunctionHandlers()
+        self.diagnosticHandlers = FunctionHandlers()
+        self.operationsHandlers = FunctionHandlers()
+        self.exceptionHandlers = FunctionHandlers()
+        self.newSequenceHandlers = FunctionHandlers()
 
     def merge(self, that: Self) -> Self:
         self.setupCommandHandler.merge(that.setupCommandHandler)
@@ -59,59 +64,61 @@ class ScriptDsl(ScriptApi):
         else:
             self._defaultCommandHandler(command)
 
-    def _executeHandler[T](self, f: FunctionHandlers[T, None], arg: T):
-        return f.execute(arg)
+    def _executeHandler[T](self, f: FunctionHandlers, *args):
+        return f.execute(*args)
 
     def executeGoOnline(self):
         """
         Executes the script's onGoOnline handler
         """
-        self._executeHandler(self.onlineHandlers, None)
+        self._executeHandler(self.onlineHandlers)
         self.isOnline = True
 
     def executeGoOffline(self):
         """
         Executes the script's onGoOffline handler
         """
-        self._executeHandler(self.offlineHandlers, None)
+        self._executeHandler(self.offlineHandlers)
         self.isOnline = False
 
     def executeShutdown(self):
         """
         Executes the script's onShutdown handler
         """
-        self._executeHandler(self.shutdownHandlers, None)
+        self._executeHandler(self.shutdownHandlers)
         # self.shutdownTask.run
 
     def executeNewSequenceHandler(self):
         """
         Executes the script's onNewSequence handler
         """
-        self._executeHandler(self.newSequenceHandlers, None)
+        self._executeHandler(self.newSequenceHandlers)
 
     def executeAbort(self):
         """
         Executes the script's onAbortSequence handler
         """
-        self._executeHandler(self.abortHandlers, None)
+        self._executeHandler(self.abortHandlers)
 
     def executeStop(self):
         """
         Executes the script's onStop handler
         """
-        self._executeHandler(self.stopHandlers, None)
+        self._executeHandler(self.stopHandlers)
 
     def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
         """
         Executes the script's onDiagnosticMode handler
         """
-        self.diagnosticHandlers.execute((startTime, hint))
+        self.log.info(f"XXX ScriptDsl.executeDiagnosticMode({startTime}, {hint})")
+        self.diagnosticHandlers.execute(startTime, hint)
 
     def executeOperationsMode(self):
         """
         Executes the script's onOperationsMode handler
         """
-        self._executeHandler(self.operationsHandlers, None)
+        self.log.info("XXX ScriptDsl.executeOperationsMode()")
+        self._executeHandler(self.operationsHandlers)
 
     def executeExceptionHandlers(self, ex: Exception):
         """
@@ -148,34 +155,35 @@ class ScriptDsl(ScriptApi):
     def onObserveCommand(self, name: str, handler: CommandHandler):
         return self.observerCommandHandler.add(name, handler.execute)
 
-    def onGoOnline(self, handler: Callable[[], None]):
+    def onGoOnline(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.onlineHandlers.add(handler)
 
-    def onNewSequence(self, handler: Callable[[], None]):
+    def onNewSequence(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.newSequenceHandlers.add(handler)
 
-    def onAbortSequence(self, handler: Callable[[], None]):
+    def onAbortSequence(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.abortHandlers.add(handler)
 
-    def onStop(self, handler: Callable[[], None]):
+    def onStop(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.stopHandlers.add(handler)
 
-    def onShutdown(self, handler: Callable[[], None]):
+    def onShutdown(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.shutdownHandlers.add(handler)
 
-    def onGoOffline(self, handler: Callable[[], None]):
+    def onGoOffline(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.offlineHandlers.add(handler)
 
-    def onDiagnosticMode(self, handler: Callable[[(UTCTime, str)], None]):
+    def onDiagnosticMode(self, handler: Callable[[UTCTime, str], None]):
         return self.diagnosticHandlers.add(handler)
 
-    def onOperationsMode(self, handler: Callable[[], None]):
+    def onOperationsMode(self, handler: Callable):
+        self.log.info("XXX ScriptDsl.onOperationsMode()")
         # noinspection PyTypeChecker
         return self.operationsHandlers.add(handler)
 

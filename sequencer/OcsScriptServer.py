@@ -29,10 +29,6 @@ from sequencer.SequencerApi import SequencerApi
 
 # noinspection PyPep8Naming,PyUnusedLocal
 class OcsScriptServer:
-    _app = web.Application()
-    _crm = CommandResponseManager()
-    log = structlog.get_logger()
-
     async def _execute(self, request: Request) -> Response:
         obj = await request.json()
         try:
@@ -111,9 +107,13 @@ class OcsScriptServer:
     async def _executeOperationsMode(self, request: Request) -> Response:
         self.log.info(f"Received executeOperationsMode sequence command")
         try:
+            self.log.info("XXXX 1")
             self.scriptApi.executeOperationsMode()
+            self.log.info("XXXX 2")
         except Exception as err:
+            self.log.info(f"XXX OcsScriptServer._executeOperationsMode exception: {err=}")
             raise web.HTTPBadRequest(text=f"executeOperationsMode: {err=}, {type(err)=}")
+        self.log.info(f"XXX OcsScriptServer._executeOperationsMode OK")
         return web.HTTPOk()
 
     async def _executeExceptionHandlers(self, request: Request) -> Response:
@@ -150,6 +150,9 @@ class OcsScriptServer:
             sequenceComponentPrefix (str): the ESW sequencer component prefix
             port (int): optional port for HTTP server
         """
+        self._app = web.Application()
+        self._crm = CommandResponseManager()
+        self.log = structlog.get_logger()
         self.sequencerPrefix = sequencerPrefix
         self.sequenceComponentPrefix = sequenceComponentPrefix
         self.port = LocationService.getFreePort(port)

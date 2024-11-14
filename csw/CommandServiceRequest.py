@@ -5,6 +5,7 @@ from typing import List
 from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import ControlCommand
+from csw.UTCTime import UTCTime
 
 
 @dataclass_json
@@ -118,4 +119,44 @@ class SubscribeCurrentState:
         return {
             "_type": self.__class__.__name__,
             'names': self.stateNames
+        }
+
+
+@dataclass
+class ExecuteDiagnosticMode:
+    startTime: UTCTime
+    hint: str
+
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an ExecuteDiagnosticMode for the given dict.
+        """
+        print(f"XXX ExecuteDiagnosticMode _fromDict({obj})")
+        startTime = UTCTime.from_str(obj['startTime'])
+        print(f"XXX ExecuteDiagnosticMode startTime = {str(startTime)}")
+        hint = obj['hint']
+        return ExecuteDiagnosticMode(startTime, hint)
+
+    def _asDict(self):
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "startTime": str(self.startTime),
+            "hint": self.hint
+        }
+
+
+class ExecuteOperationsMode:
+
+    @staticmethod
+    def _fromDict(obj):
+        return ExecuteOperationsMode()
+
+    def _asDict(self):
+        return {
+            "_type": self.__class__.__name__,
         }

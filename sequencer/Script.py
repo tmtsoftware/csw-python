@@ -1,6 +1,6 @@
 from typing import Callable
 
-from csw.ParameterSetType import Setup, Observe, SequenceCommand
+from csw.ParameterSetType import Setup, Observe
 from sequencer.BaseScript import BaseScript
 from sequencer.CommandHandler import CommandHandler
 from sequencer.ScriptError import ScriptError

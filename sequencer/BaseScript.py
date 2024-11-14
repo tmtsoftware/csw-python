@@ -36,27 +36,28 @@ class BaseScript(CswHighLevelDsl):
 #         error("Shutting down: Exception thrown in script with the message: [${exception.message}]")
 #     }
 #
-    def onNewSequence(self, func: Callable[[], None]):
+    def onNewSequence(self, func: Callable):
         return self.scriptDsl.onNewSequence(func)
 
-    def onGoOnline(self, func: Callable[[], None]):
+    def onGoOnline(self, func: Callable):
         return self.scriptDsl.onGoOnline(func)
 
-    def onGoOffline(self, func: Callable[[], None]):
+    def onGoOffline(self, func: Callable):
         return self.scriptDsl.onGoOffline(func)
 
-    def onAbortSequence(self, func: Callable[[], None]):
+    def onAbortSequence(self, func: Callable):
         return self.scriptDsl.onAbortSequence(func)
 
-    def onShutdown(self, func: Callable[[], None]):
+    def onShutdown(self, func: Callable):
         return self.scriptDsl.onShutdown(func)
 
-    def onDiagnosticMode(self, func: Callable[[(UTCTime, str)], None]):
+    def onDiagnosticMode(self, func: Callable[[UTCTime, str], None]):
         return self.scriptDsl.onDiagnosticMode(func)
 
-    def onOperationsMode(self, func: Callable[[], None]):
+    def onOperationsMode(self, func: Callable):
+        print("XXX BaseScript.onOperationsMode()")
         return self.scriptDsl.onOperationsMode(func)
 
-    def onStop(self, func: Callable[[], None]):
+    def onStop(self, func: Callable):
         return self.scriptDsl.onStop(func)
 
