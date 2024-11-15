@@ -1,3 +1,5 @@
+import structlog
+
 from csw.Parameter import stringKey
 from csw.ParameterSetType import Setup
 from sequencer.Script import Script
@@ -5,6 +7,7 @@ from time import sleep
 
 
 def script(ctx: Script):
+    log = structlog.get_logger()
 
     def handleNewSequence():
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")
@@ -30,6 +33,7 @@ def script(ctx: Script):
 
     def handleAbortSequence():
         # do some actions to abort sequence
+        log.info("XXX TestScript4: handleAbortSequence")
         successEvent = ctx.SystemEvent("TCS.test", "abort.success")
         ctx.publishEvent(successEvent)
 

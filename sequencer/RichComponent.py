@@ -110,8 +110,6 @@ class RichComponent:
         """
         return self.commandService().subscribeCurrentState(list(stateNames), callback)
 
-    # XXX TODO FIXME: Need to add HTTP API for these?
-
     def diagnosticMode(self, startTime: UTCTime, hint: str):
         """
         Send component into a diagnostic data mode based on a hint at the specified startTime.

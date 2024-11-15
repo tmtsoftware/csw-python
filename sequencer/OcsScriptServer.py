@@ -108,17 +108,14 @@ class OcsScriptServer:
     async def _executeOperationsMode(self, request: Request) -> Response:
         self.log.info(f"Received executeOperationsMode sequence command")
         try:
-            self.log.info("XXXX 1")
             self.scriptApi.executeOperationsMode()
-            self.log.info("XXXX 2")
         except Exception as err:
-            self.log.info(f"XXX OcsScriptServer._executeOperationsMode exception: {err=}")
             raise web.HTTPBadRequest(text=f"executeOperationsMode: {err=}, {type(err)=}")
-        self.log.info(f"XXX OcsScriptServer._executeOperationsMode OK")
         return web.HTTPOk()
 
     async def _executeExceptionHandlers(self, request: Request) -> Response:
-        self.log.info(f"Received executeExceptionHandlers sequence command")
+        self.log.info("Received executeExceptionHandlers sequence command")
+        self.log.info(f"XXX Received executeExceptionHandlers sequence command: {request.json()}")
         try:
             self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
         except Exception as err:
@@ -197,8 +194,13 @@ def main():
     script = Script(scriptWiring)
     cfg = configparser.ConfigParser()
     thisDir = os.path.dirname(os.path.abspath(__file__))
+    # XXX TODO FIXME: pass the location of the config file as an argument? Or use environment variable?
     cfg.read(f'{thisDir}/examples/examples.ini')
-    scriptFile = cfg.get("scripts", str(sequencerPrefix))
+    scriptPath = cfg.get("scripts", str(sequencerPrefix))
+    # Environment variable CSW_PYTHON_SCRIPT_DIR can override directory containing scripts
+    # (the config file contains the relative paths)
+    scriptDir = os.environ.get('CSW_PYTHON_SCRIPT_DIR', thisDir)
+    scriptFile = f"{scriptDir}/{scriptPath}"
     module = ScriptLoader.loadPythonScript(scriptFile)
     module.script(script)
     scriptServer = OcsScriptServer(script.scriptDsl, sequencerPrefix, sequenceComponentPrefix)

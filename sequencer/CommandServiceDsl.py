@@ -6,6 +6,9 @@ from esw.Sequence import Sequence
 
 class CommandServiceDsl:
 
+    def __init__(self):
+        super(CommandServiceDsl, self).__init__()
+
     # todo: can the prefix be defaulted by the prefix of the sequencer? or a prefix dsl property can be provided?
     def Setup(self, sourcePrefix: str, commandName: str, obsId: str | None = None) -> Setup:
         """

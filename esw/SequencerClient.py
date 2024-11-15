@@ -1,6 +1,7 @@
 import json
 import uuid
 
+import structlog
 from websocket import create_connection
 from dataclasses import dataclass
 

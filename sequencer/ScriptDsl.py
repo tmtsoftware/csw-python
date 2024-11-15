@@ -110,14 +110,12 @@ class ScriptDsl(ScriptApi):
         """
         Executes the script's onDiagnosticMode handler
         """
-        self.log.info(f"XXX ScriptDsl.executeDiagnosticMode({startTime}, {hint})")
         self.diagnosticHandlers.execute(startTime, hint)
 
     def executeOperationsMode(self):
         """
         Executes the script's onOperationsMode handler
         """
-        self.log.info("XXX ScriptDsl.executeOperationsMode()")
         self._executeHandler(self.operationsHandlers)
 
     def executeExceptionHandlers(self, ex: Exception):
@@ -183,7 +181,6 @@ class ScriptDsl(ScriptApi):
         return self.diagnosticHandlers.add(handler)
 
     def onOperationsMode(self, handler: Callable):
-        self.log.info("XXX ScriptDsl.onOperationsMode()")
         # noinspection PyTypeChecker
         return self.operationsHandlers.add(handler)
 

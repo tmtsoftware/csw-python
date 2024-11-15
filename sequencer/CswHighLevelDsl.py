@@ -272,7 +272,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
     """
 
     def __init__(self, cswServices: CswServices, scriptContext: ScriptContext):
-        super().__init__()
+        super(CswHighLevelDsl, self).__init__()
         self.cswServices = cswServices
         self.scriptContext = scriptContext
         self.scriptDsl = ScriptDsl(scriptContext.sequenceOperatorFactory)

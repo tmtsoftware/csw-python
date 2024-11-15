@@ -9,7 +9,6 @@ from csw.ObsId import ObsId
 from csw.ParameterSetType import Observe, Setup
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
-from csw.UTCTime import UTCTime
 from esw.ObsMode import ObsMode
 from sequencer.Script import Script
 from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
@@ -111,7 +110,6 @@ def script(ctx: Script):
 
     ctx.onSetup("command-for-assembly", handleCommandForAssembly)
 
-
     ctx.onSetup("test-sequencer-hierarchy", lambda _: sleep(5))
 
     def handleCheckException(_: Setup):
@@ -120,12 +118,12 @@ def script(ctx: Script):
     ctx.onSetup("check-exception-1", handleCheckException)
     ctx.onSetup("check-exception-2", lambda _: sleep(0))
 
-# XXX TODO
-#     onSetup("set-alarm-severity") {
-#         val alarmKey = AlarmKey(Prefix("NFIRAOS.trombone"), "tromboneAxisHighLimitAlarm")
-#         setSeverity(alarmKey, Major)
-#         delay(500)
-#     }
+    # XXX TODO
+    #     onSetup("set-alarm-severity") {
+    #         val alarmKey = AlarmKey(Prefix("NFIRAOS.trombone"), "tromboneAxisHighLimitAlarm")
+    #         setSeverity(alarmKey, Major)
+    #         delay(500)
+    #     }
 
     def handleCommandLgsf(_: Setup):
         # NOT update command response to avoid a sequencer to finish immediately
@@ -136,54 +134,52 @@ def script(ctx: Script):
 
     ctx.onSetup("command-lgsf", handleCommandLgsf)
 
-# XXX TODO
-#    def handleScheduleOnceFromNow(_: Setup):
-#        currentTime = ctx.utcTimeNow()
-#        ctx.scheduleOnceFromNow(1.seconds) {
-#             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
-#             publishEvent(SystemEvent("ESW.schedule.once", "offset", param))
-#       }
+    # XXX TODO
+    #    def handleScheduleOnceFromNow(_: Setup):
+    #        currentTime = ctx.utcTimeNow()
+    #        ctx.scheduleOnceFromNow(1.seconds) {
+    #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
+    #             publishEvent(SystemEvent("ESW.schedule.once", "offset", param))
+    #       }
 
-#     onSetup("schedule-once-from-now") {
-#         val currentTime = utcTimeNow()
-#         scheduleOnceFromNow(1.seconds) {
-#             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
-#             publishEvent(SystemEvent("ESW.schedule.once", "offset", param))
-#         }
-#     }
-#
-#     onSetup("schedule-periodically-from-now") {
-#         val currentTime = utcTimeNow()
-#         var counter = 0
-#         val a = schedulePeriodicallyFromNow(1.seconds, 1.seconds) {
-#             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
-#             publishEvent(SystemEvent("ESW.schedule.periodically", "offset", param))
-#             counter += 1
-#         }
-#         loop {
-#             stopWhen(counter > 1)
-#         }
-#         a.cancel()
-#     }
-
+    #     onSetup("schedule-once-from-now") {
+    #         val currentTime = utcTimeNow()
+    #         scheduleOnceFromNow(1.seconds) {
+    #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
+    #             publishEvent(SystemEvent("ESW.schedule.once", "offset", param))
+    #         }
+    #     }
+    #
+    #     onSetup("schedule-periodically-from-now") {
+    #         val currentTime = utcTimeNow()
+    #         var counter = 0
+    #         val a = schedulePeriodicallyFromNow(1.seconds, 1.seconds) {
+    #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
+    #             publishEvent(SystemEvent("ESW.schedule.periodically", "offset", param))
+    #             counter += 1
+    #         }
+    #         loop {
+    #             stopWhen(counter > 1)
+    #         }
+    #         a.cancel()
+    #     }
 
     ctx.onDiagnosticMode(lambda startTime, hint: testAssembly.diagnosticMode(startTime, hint))
     ctx.onOperationsMode(lambda: testAssembly.operationsMode())
     ctx.onGoOffline(lambda: testAssembly.goOffline())
     ctx.onGoOnline(lambda: testAssembly.goOnline())
 
-#     onAbortSequence {
-#         //do some actions to abort sequence
-#
-#         //send abortSequence command to downstream sequencer
-#         lgsfSequencer.abortSequence()
-#     }
-#
-#     onStop {
-#         //do some actions to stop
-#
-#         //send stop command to downstream sequencer
-#         lgsfSequencer.stop()
-#     }
-#
-# }
+    def handleAbortSequence():
+        log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer = {lgsfSequencer}")
+        xxx = lgsfSequencer.abortSequence()
+        log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer resp = {xxx}")
+
+
+    # do some actions to abort sequence
+    # send abortSequence command to downstream sequencer
+    # ctx.onAbortSequence(lambda: lgsfSequencer.abortSequence())
+    ctx.onAbortSequence(handleAbortSequence)
+
+    # do some actions to stop
+    # send stop command to downstream sequencer
+    ctx.onStop(lambda: lgsfSequencer.stop())

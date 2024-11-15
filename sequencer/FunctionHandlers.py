@@ -17,7 +17,6 @@ class FunctionHandlers:
 
     def execute(self, *args):
         def call(f: Callable):
-            self.log.info(f"XXX call {f}({args})")
             try:
                 if len(args):
                     f(*args)

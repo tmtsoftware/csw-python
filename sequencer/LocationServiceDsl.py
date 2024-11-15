@@ -6,6 +6,7 @@ from csw.LocationService import LocationService, Registration, RegistrationResul
 
 class LocationServiceDsl:
     def __init__(self):
+        super(LocationServiceDsl, self).__init__()
         self.locationService = LocationService()
 
     def register(self, registration: Registration) -> RegistrationResult:

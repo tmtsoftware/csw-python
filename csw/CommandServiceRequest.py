@@ -132,9 +132,7 @@ class ExecuteDiagnosticMode:
         """
         Returns an ExecuteDiagnosticMode for the given dict.
         """
-        print(f"XXX ExecuteDiagnosticMode _fromDict({obj})")
         startTime = UTCTime.from_str(obj['startTime'])
-        print(f"XXX ExecuteDiagnosticMode startTime = {str(startTime)}")
         hint = obj['hint']
         return ExecuteDiagnosticMode(startTime, hint)
 

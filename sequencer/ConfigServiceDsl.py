@@ -3,6 +3,7 @@ from csw.ConfigService import ConfigService
 
 class ConfigServiceDsl:
     def __init__(self):
+        super(ConfigServiceDsl, self).__init__()
         self.configService = ConfigService()
 
     def existsConfig(self, path: str, id: str = None) -> bool:

@@ -55,7 +55,6 @@ class BaseScript(CswHighLevelDsl):
         return self.scriptDsl.onDiagnosticMode(func)
 
     def onOperationsMode(self, func: Callable):
-        print("XXX BaseScript.onOperationsMode()")
         return self.scriptDsl.onOperationsMode(func)
 
     def onStop(self, func: Callable):

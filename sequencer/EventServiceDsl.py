@@ -14,6 +14,7 @@ from csw.Prefix import Prefix
 class EventServiceDsl:
 
     def __init__(self):
+        super(EventServiceDsl, self).__init__()
         self.eventPublisher = EventPublisher()
         self.eventSubscriber = EventSubscriber()
 
