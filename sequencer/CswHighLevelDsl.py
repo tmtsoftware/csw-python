@@ -464,7 +464,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """
-        return RichSequencer(subsystem, obsMode, variation, timeoutInSecs)
+        return RichSequencer(subsystem, obsMode, variation, timeoutInSecs, self.scriptContext.clientSession)
 
     # --- XXX TODO ---
 

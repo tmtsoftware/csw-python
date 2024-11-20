@@ -1,9 +1,10 @@
 import json
 import uuid
 
+from websocket import create_connection
 import aiohttp
 
-from aiohttp import ClientResponse
+from aiohttp import ClientResponse, ClientSession
 
 from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
@@ -21,16 +22,9 @@ from sequencer.SequencerApi import SequencerApi
 # noinspection DuplicatedCode,PyShadowingBuiltins
 class SequencerClient(SequencerApi):
 
-    def __init__(self, prefix: Prefix):
+    def __init__(self, prefix: Prefix, clientSession: ClientSession):
         self.prefix = prefix
-
-    async def __aenter__(self):
-        self._session = aiohttp.ClientSession()
-        return self
-
-    async def __aexit__(self, *err):
-        await self._session.close()
-        self._session = None
+        self._session = clientSession
 
     async def post(self, url: str, headers: dict, jsonData: str) -> ClientResponse:
         return await self._session.post(url, headers=headers, json=jsonData)
@@ -293,9 +287,12 @@ class SequencerClient(SequencerApi):
         # noinspection PyUnresolvedReferences
         respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
         jsonStr = json.dumps(respDict)
-        with self._session.ws_connect(wsUri) as ws:
-            await ws.send(jsonStr)
-            jsonResp = await ws.recv()
+        # with self._session.ws_connect(wsUri) as ws:
+        #     await ws.send(jsonStr)
+        #     jsonResp = await ws.recv()
+        ws = create_connection(wsUri)
+        ws.send(jsonStr)
+        jsonResp = ws.recv()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
     async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:
@@ -365,7 +362,8 @@ class SequencerClient(SequencerApi):
         response = await self._postCommand(GetSequencerState()._asDict())
         if not response.ok:
             return SequencerState.Offline
-        match response.json()["_type"]:
+        jsonData = await response.json()
+        match jsonData["_type"]:
             case "Idle":
                 return SequencerState.Idle
             case "Processing":
@@ -395,4 +393,4 @@ class SequencerClient(SequencerApi):
         await self._postCommandGetResponse(StepSuccess())
 
     async def stepFailure(self, message: str):
-        await self._postCommandGetResponse(StepFailure())
+        await self._postCommandGetResponse(StepFailure(message))

@@ -23,7 +23,10 @@ def script(ctx: Script):
     # ESW-134: Reuse code by ability to import logic from one script into another
     InitialCommandHandler(ctx)
 
-    ctx.onSetup("command-2", lambda setup: log.info(f"Received a command-2 setup: {setup}"))
+    async def handleCommand2(setup: Setup):
+        log.info(f"Received a command-2 setup: {setup}")
+
+    ctx.onSetup("command-2", handleCommand2)
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
     async def handleExposureStart(_: Observe):
@@ -43,7 +46,10 @@ def script(ctx: Script):
 
     ctx.onObserve("exposure-start", handleExposureStart)
 
-    ctx.onSetup("command-3", lambda setup: log.info(f"Received a command-3 setup: {setup}"))
+    async def handleCommand3(setup: Setup):
+        log.info(f"Received a command-3 setup: {setup}")
+
+    ctx.onSetup("command-3", handleCommand3)
 
     async def handleCommand4(_: Setup):
         # try sending concrete sequence
@@ -78,11 +84,9 @@ def script(ctx: Script):
 
     async def handleGetEvent(s: Setup):
         # ESW-88
-        log.info(f"XXX handleGetEvent({s})")
         event = ctx.getEvent("ESW.test.get.event")
         successEvent = ctx.SystemEvent("ESW.test", "get.success")
         if not event.isInvalid():
-            log.info(f"XXX handleGetEvent(): event valid: {event}")
             ctx.publishEvent(successEvent)
 
     ctx.onSetup("get-event", handleGetEvent)
@@ -181,7 +185,7 @@ def script(ctx: Script):
 
     async def handleAbortSequence():
         log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer = {lgsfSequencer}")
-        xxx = lgsfSequencer.abortSequence()
+        xxx = await lgsfSequencer.abortSequence()
         log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer resp = {xxx}")
 
 
@@ -192,4 +196,7 @@ def script(ctx: Script):
 
     # do some actions to stop
     # send stop command to downstream sequencer
-    ctx.onStop(lambda: lgsfSequencer.stop())
+    async def handleStop():
+        lgsfSequencer.stop()
+
+    ctx.onStop(handleStop)

@@ -1,3 +1,4 @@
+from aiohttp import ClientSession
 from attr import dataclass
 
 from csw.CommandResponse import SubmitResponse, CommandError
@@ -18,12 +19,11 @@ class RichSequencer:
     obsMode: ObsMode
     variation: Variation | None
     defaultTimeoutInSeconds: int
-
-    def _sequencerApiFactory(self) -> SequencerApi:
-        return SequencerClient(Variation.prefix(self.subsystem, self.obsMode, self.variation))
+    clientSession: ClientSession
 
     def _sequencerService(self):
-        return self._sequencerApiFactory()
+        prefix = Variation.prefix(self.subsystem, self.obsMode, self.variation)
+        return SequencerClient(prefix, self.clientSession)
 
     async def submit(self, sequence: Sequence, resumeOnError: bool = False) -> SubmitResponse:
         """

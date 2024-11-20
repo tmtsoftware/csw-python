@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Callable
 
+from aiohttp import ClientSession
+
 from csw.AlarmService import AlarmService
 from csw.EventService import EventService
 from csw.Prefix import Prefix
@@ -17,6 +19,7 @@ class ScriptContext:
         heartbeatIntervalSecs: heart beat for health check
         prefix: prefix of the sequencer
         obsMode: obsMode of the sequencer
+        clientSession: used for HTTP client actions
         logger: for logging
         XXX? sequenceOperatorFactory: sequenceOperatorFactory
         eventService: an instance of EventService
@@ -27,6 +30,7 @@ class ScriptContext:
     heartbeatIntervalSecs: int
     prefix: Prefix
     obsMode: ObsMode
+    clientSession: ClientSession
     sequenceOperatorFactory: Callable[[], SequenceOperatorHttp]
     eventService: EventService
     alarmService: AlarmService

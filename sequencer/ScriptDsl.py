@@ -1,3 +1,4 @@
+import traceback
 from types import NoneType
 
 import structlog
@@ -53,16 +54,20 @@ class ScriptDsl(ScriptApi):
         raise TypeError
 
     async def execute(self, command: SequenceCommand):
-        if isinstance(command, Setup):
-            s: Setup = command
-            if self.setupCommandHandler.contains(s.commandName.name):
-                await self.setupCommandHandler.execute(s.commandName.name, s)
-        elif isinstance(command, Observe):
-            o: Observe = command
-            if self.observerCommandHandler.contains(o.commandName.name):
-                await self.observerCommandHandler.execute(o.commandName.name, o)
-        else:
-            self._defaultCommandHandler(command)
+        try:
+            if isinstance(command, Setup):
+                s: Setup = command
+                if self.setupCommandHandler.contains(s.commandName.name):
+                    await self.setupCommandHandler.execute(s.commandName.name, s)
+            elif isinstance(command, Observe):
+                o: Observe = command
+                if self.observerCommandHandler.contains(o.commandName.name):
+                    await self.observerCommandHandler.execute(o.commandName.name, o)
+            else:
+                self._defaultCommandHandler(command)
+        except Exception as err:
+            self.log.error(f"ScriptDsl.execute(): {err=}, {type(err)=}, command = {command}")
+            traceback.print_exc()
 
     async def _executeHandler[T](self, f: FunctionHandlers, *args):
         return await f.execute(*args)

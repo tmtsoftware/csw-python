@@ -1,17 +1,20 @@
 import os
 import traceback
-from typing import Callable, List
+from typing import Callable
 
+import aiohttp
 # import hunter
 # hunter.trace(stdlib=False, action=hunter.CallPrinter)
 
 import structlog
-from aiohttp import web
+from aiohttp import web, ClientSession
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 import atexit
 import sys
 import configparser
+
+from aiohttp.web_runner import GracefulExit
 
 from csw.AlarmService import AlarmService
 from csw.CommandResponseManager import CommandResponseManager
@@ -133,8 +136,9 @@ class OcsScriptServer:
         try:
             await self.scriptApi.shutdownScript()
         except Exception as err:
+            self.log.error(f"shutdownScript: {err=}, {type(err)=}")
             raise web.HTTPBadRequest(text=f"shutdownScript: {err=}, {type(err)=}")
-        await self._app.shutdown()
+        await self.app.shutdown()
         return web.HTTPOk()
 
     @staticmethod
@@ -144,24 +148,48 @@ class OcsScriptServer:
         atexit.register(locationService.unregister, connection)
         return locationService.register(HttpRegistration(connection, port))
 
-    def __init__(self, scriptApi: ScriptApi, sequencerPrefix: Prefix, sequenceComponentPrefix: Prefix, port: int = 0):
-        """
-        Creates an HTTP server that can dynamically load python sequencer scripts
-
-        Args:
-            scriptApi (ScriptApi): implements the script API
-            sequencerPrefix (str): a CSW Prefix for the sequencer in the format $subsystem.name
-            sequenceComponentPrefix (str): the ESW sequencer component prefix
-            port (int): optional port for HTTP server
-        """
-        self._app = web.Application()
+    def __init__(self):
         self._crm = CommandResponseManager()
         self.log = structlog.get_logger()
-        self.sequencerPrefix = sequencerPrefix
-        self.sequenceComponentPrefix = sequenceComponentPrefix
-        self.port = LocationService.getFreePort(port)
-        self.scriptApi = scriptApi
-        self._app.add_routes([
+        self.sequencerPrefix = Prefix.from_str(sys.argv[1])
+        self.sequenceComponentPrefix = Prefix.from_str(sys.argv[2])
+        self.port = LocationService.getFreePort(0)
+        self._regResult = OcsScriptServer._registerWithLocationService(self.sequencerPrefix, self.port)
+
+    # We have to do all this initialization here, in order to be able have ClientSession share the event loop
+    # with the server
+    # See https://stackoverflow.com/questions/55963155/what-is-the-proper-way-to-use-clientsession-inside-aiohttp-web-server
+    async def _clientSessionCtx(self, app: web.Application):
+        clientSession = ClientSession()
+        sequencerApi: SequencerApi = SequencerClient(self.sequencerPrefix, clientSession)
+        sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
+        obsMode = ObsMode.fromPrefix(self.sequencerPrefix)
+        evenService = EventService()
+        alarmService = AlarmService()
+        scriptContext = ScriptContext(1, self.sequencerPrefix, obsMode, clientSession, sequenceOperatorFactory,
+                                      evenService,
+                                      alarmService)
+        scriptWiring = ScriptWiring(scriptContext)
+        script = Script(scriptWiring)
+        self.scriptApi: ScriptApi = script.scriptDsl
+        cfg = configparser.ConfigParser()
+        thisDir = os.path.dirname(os.path.abspath(__file__))
+        # XXX TODO FIXME: pass the location of the config file as an argument? Or use environment variable?
+        cfg.read(f'{thisDir}/examples/examples.ini')
+        scriptPath = cfg.get("scripts", str(self.sequencerPrefix))
+        # Environment variable CSW_PYTHON_SCRIPT_DIR can override directory containing scripts
+        # (the config file contains the relative paths)
+        scriptDir = os.environ.get('CSW_PYTHON_SCRIPT_DIR', thisDir)
+        scriptFile = f"{scriptDir}/{scriptPath}"
+        module = ScriptLoader.loadPythonScript(scriptFile)
+        module.script(script)
+        print(f"Starting script server on port {self.port}")
+        yield
+        await clientSession.close()
+
+    async def _appFactory(self) -> web.Application:
+        self.app = web.Application()
+        self.app.add_routes([
             web.post('/execute', self._execute),
             web.post('/executeGoOnline', self._executeGoOnline),
             web.post('/executeGoOffline', self._executeGoOffline),
@@ -174,45 +202,19 @@ class OcsScriptServer:
             web.post('/executeExceptionHandlers', self._executeExceptionHandlers),
             web.post('/shutdownScript', self._shutdownScript)
         ])
-        self._regResult =  OcsScriptServer._registerWithLocationService(sequencerPrefix, self.port)
+        # Needed to have ClientSession and server share the asyncio event loop
+        self.app.cleanup_ctx.append(self._clientSessionCtx)
+        return self.app
 
     def start(self):
         """
         Starts the command http server in a thread
         """
-        web.run_app(self._app, port=self.port)
-
-    @staticmethod
-    def main(argv: List[str]):
-        if len(argv) != 3:
-            print("Expected two args: sequencerPrefix and sequenceComponentPrefix")
-            sys.exit(1)
-
-        sequencerPrefix = Prefix.from_str(argv[1])
-        sequenceComponentPrefix = Prefix.from_str(argv[2])
-        sequencerApi: SequencerApi = SequencerClient(sequencerPrefix)
-        sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
-        obsMode = ObsMode.fromPrefix(sequencerPrefix)
-        evenService = EventService()
-        alarmService = AlarmService()
-        scriptContext = ScriptContext(1, sequencerPrefix, obsMode, sequenceOperatorFactory, evenService, alarmService)
-        scriptWiring = ScriptWiring(scriptContext)
-        script = Script(scriptWiring)
-        cfg = configparser.ConfigParser()
-        thisDir = os.path.dirname(os.path.abspath(__file__))
-        # XXX TODO FIXME: pass the location of the config file as an argument? Or use environment variable?
-        cfg.read(f'{thisDir}/examples/examples.ini')
-        scriptPath = cfg.get("scripts", str(sequencerPrefix))
-        # Environment variable CSW_PYTHON_SCRIPT_DIR can override directory containing scripts
-        # (the config file contains the relative paths)
-        scriptDir = os.environ.get('CSW_PYTHON_SCRIPT_DIR', thisDir)
-        scriptFile = f"{scriptDir}/{scriptPath}"
-        module = ScriptLoader.loadPythonScript(scriptFile)
-        module.script(script)
-        scriptServer = OcsScriptServer(script.scriptDsl, sequencerPrefix, sequenceComponentPrefix)
-        print(f"Starting script server on port {scriptServer.port}")
-        scriptServer.start()
+        web.run_app(self._appFactory(), port=self.port)
 
 
 if __name__ == "__main__":
-    OcsScriptServer.main(sys.argv)
+    if len(sys.argv) != 3:
+        print("Expected two args: sequencerPrefix and sequenceComponentPrefix")
+        sys.exit(1)
+    OcsScriptServer().start()
