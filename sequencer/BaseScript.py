@@ -6,7 +6,7 @@
 #  *
 #  * @param wiring - An instance of script wiring
 #  */
-from typing import Callable
+from typing import Callable, Awaitable
 
 from csw.UTCTime import UTCTime
 from sequencer.CswHighLevelDsl import CswHighLevelDsl
@@ -36,27 +36,27 @@ class BaseScript(CswHighLevelDsl):
 #         error("Shutting down: Exception thrown in script with the message: [${exception.message}]")
 #     }
 #
-    def onNewSequence(self, func: Callable):
+    def onNewSequence(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onNewSequence(func)
 
-    def onGoOnline(self, func: Callable):
+    def onGoOnline(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onGoOnline(func)
 
-    def onGoOffline(self, func: Callable):
+    def onGoOffline(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onGoOffline(func)
 
-    def onAbortSequence(self, func: Callable):
+    def onAbortSequence(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onAbortSequence(func)
 
-    def onShutdown(self, func: Callable):
+    def onShutdown(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onShutdown(func)
 
-    def onDiagnosticMode(self, func: Callable[[UTCTime, str], None]):
+    def onDiagnosticMode(self, func: Callable[[UTCTime, str], Awaitable]):
         return self.scriptDsl.onDiagnosticMode(func)
 
-    def onOperationsMode(self, func: Callable):
+    def onOperationsMode(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onOperationsMode(func)
 
-    def onStop(self, func: Callable):
+    def onStop(self, func: Callable[[], Awaitable]):
         return self.scriptDsl.onStop(func)
 

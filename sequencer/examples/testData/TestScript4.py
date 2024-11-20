@@ -9,7 +9,7 @@ from time import sleep
 def script(ctx: Script):
     log = structlog.get_logger()
 
-    def handleNewSequence():
+    async def handleNewSequence():
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "NewSequenceHandler", newSequenceHandlerParam)
         ctx.publishEvent(event)
@@ -17,21 +17,21 @@ def script(ctx: Script):
 
     ctx.onNewSequence(handleNewSequence)
 
-    def handleCommand1(_: Setup):
+    async def handleCommand1(_: Setup):
         newSequenceParam = stringKey("sequence-command-1").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "command1", newSequenceParam)
         ctx.publishEvent(event)
 
     ctx.onSetup("command-1", handleCommand1)
 
-    def handleCommandLgsf(_: Setup):
+    async def handleCommandLgsf(_: Setup):
         # NOT update command response To avoid sequencer to
         # finish so that other commands gets time
         sleep(1)
 
     ctx.onSetup("command-lgsf", handleCommandLgsf)
 
-    def handleAbortSequence():
+    async def handleAbortSequence():
         # do some actions to abort sequence
         log.info("XXX TestScript4: handleAbortSequence")
         successEvent = ctx.SystemEvent("TCS.test", "abort.success")
@@ -39,7 +39,7 @@ def script(ctx: Script):
 
     ctx.onAbortSequence(handleAbortSequence)
 
-    def handleStop():
+    async def handleStop():
         # do some actions to stop
         successEvent = ctx.SystemEvent("TCS.test", "stop.success")
         ctx.publishEvent(successEvent)

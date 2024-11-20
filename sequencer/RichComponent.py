@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, List
 
 from csw.CommandResponse import ValidateResponse, OnewayResponse, SubmitResponse
 from csw.CommandService import CommandService, Subscription
@@ -97,7 +97,7 @@ class RichComponent:
         """
         return self.actionOnResponse(lambda: self.commandService().submitAndWait(command, timeoutInSecs), resumeOnError)
 
-    def subscribeCurrentState(self, *stateNames: str, callback: Callable[[CurrentState], None]) -> Subscription:
+    def subscribeCurrentState(self, stateNames: List[str], callback: Callable[[CurrentState], None]) -> Subscription:
         """
         Subscribe to the current state of a component
 
@@ -108,7 +108,7 @@ class RichComponent:
         Returns:
             a Subscription to stop the subscription
         """
-        return self.commandService().subscribeCurrentState(list(stateNames), callback)
+        return self.commandService().subscribeCurrentState(stateNames, callback)
 
     def diagnosticMode(self, startTime: UTCTime, hint: str):
         """

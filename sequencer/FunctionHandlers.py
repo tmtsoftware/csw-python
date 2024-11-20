@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable, Self, List
 
 import structlog
@@ -15,17 +16,18 @@ class FunctionHandlers:
     def add(self, handler: Callable):
         self.handlers.append(handler)
 
-    def execute(self, *args):
-        def call(f: Callable):
+    async def execute(self, *args):
+        async def call(f: Callable):
             try:
                 if len(args):
-                    f(*args)
+                    await f(*args)
                 else:
-                    f()
+                    await f()
             except Exception as ex:
                 self.log.error(f"Error calling {f}({args}): {ex}")
 
-        return list(map(lambda f: call(f), self.handlers))
+        listOfF = list(map(lambda f: call(f), self.handlers))
+        return await asyncio.gather(*listOfF)
 
     def merge(self, that: Self) -> Self:
         self.handlers += that.handlers

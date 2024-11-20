@@ -7,7 +7,7 @@ class ScriptApi:
     This is the API for a sequencer script
     """
 
-    def execute(self, command: SequenceCommand):
+    async def execute(self, command: SequenceCommand):
         """
         Executes the script's handler (handler with the same name as Command) with the command
 
@@ -16,61 +16,61 @@ class ScriptApi:
         """
         pass
 
-    def executeGoOnline(self):
+    async def executeGoOnline(self):
         """
         Executes the script's onGoOnline handler
         """
         pass
 
-    def executeGoOffline(self):
+    async def executeGoOffline(self):
         """
         Executes the script's onGoOffline handler
         """
         pass
 
-    def executeShutdown(self):
+    async def executeShutdown(self):
         """
         Executes the script's onShutdown handler
         """
         pass
 
-    def executeAbort(self):
+    async def executeAbort(self):
         """
         Executes the script's onAbortSequence handler
         """
         pass
 
-    def executeNewSequenceHandler(self):
+    async def executeNewSequenceHandler(self):
         """
         Executes the script's onNewSequence handler
         """
         pass
 
-    def executeStop(self):
+    async def executeStop(self):
         """
         Executes the script's onStop handler
         """
         pass
 
-    def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+    async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
         """
         Executes the script's onDiagnosticMode handler
         """
         pass
 
-    def executeOperationsMode(self):
+    async def executeOperationsMode(self):
         """
         Executes the script's onOperationsMode handler
         """
         pass
 
-    def executeExceptionHandlers(self, ex: Exception):
+    async def executeExceptionHandlers(self, ex: Exception):
         """
         Executes the script's onException handler
         """
         pass
 
-    def shutdownScript(self):
+    async def shutdownScript(self):
         """
         Runs the shutdown runnable(some extra tasks while unloading the script)
         """

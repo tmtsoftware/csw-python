@@ -1,5 +1,7 @@
 from typing import Callable, Self
 
+import structlog
+
 
 class FunctionBuilder[K, I, O]:
     """
@@ -15,6 +17,7 @@ class FunctionBuilder[K, I, O]:
 
     def __init__(self):
         self.handlers = {}
+        self.log = structlog.get_logger()
 
     def add(self, key: K, handler: Callable[[I], O]):
         self.handlers[key] = handler
@@ -22,8 +25,9 @@ class FunctionBuilder[K, I, O]:
     def contains(self, key: K) -> bool:
         return key in self.handlers
 
-    def execute(self, key: K, input: I) -> O:
-        return self.handlers[key](input)
+    async def execute(self, key: K, input: I) -> O:
+        self.log.info(f"XXX execute key = {key}")
+        return await self.handlers[key](input)
 
     def merge(self, that: Self) -> Self:
         self.handlers |= that.handlers

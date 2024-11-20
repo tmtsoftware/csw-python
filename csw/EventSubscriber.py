@@ -5,7 +5,7 @@ import cbor2
 
 from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
-from csw.Event import Event
+from csw.Event import Event, SystemEvent
 from csw.EventKey import EventKey
 
 
@@ -99,5 +99,7 @@ class EventSubscriber:
         Returns: Event obtained from Event Service, decoded into a Event
         """
         data = self.__redis.get(str(eventKey))
-        event = Event._fromDict(cbor2.loads(data))
-        return event
+        if data:
+            event = Event._fromDict(cbor2.loads(data))
+            return event
+        return SystemEvent.invalidEvent(eventKey)

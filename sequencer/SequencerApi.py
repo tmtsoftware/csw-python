@@ -5,22 +5,22 @@ from esw.EswSequencerResponse import OkOrUnhandledResponse, PullNextResponse, Ma
 
 
 class SequencerApi(SequencerCommandService):
-    def pullNext(self) -> PullNextResponse:
+    async def pullNext(self) -> PullNextResponse:
         pass
 
-    def maybeNext(self) -> MaybeNextResponse:
+    async def maybeNext(self) -> MaybeNextResponse:
         pass
 
-    def readyToExecuteNext(self) -> OkOrUnhandledResponse:
+    async def readyToExecuteNext(self) -> OkOrUnhandledResponse:
         pass
 
-    def stepSuccess(self):
+    async def stepSuccess(self):
         pass
 
-    def stepFailure(self, message: str):
+    async def stepFailure(self, message: str):
         pass
-    
-    def diagnosticMode(self, startTime: UTCTime, hint: str) -> DiagnosticModeResponse:
+
+    async def diagnosticMode(self, startTime: UTCTime, hint: str) -> DiagnosticModeResponse:
         """
         Sends command to the sequencer to call the diagnostic mode handler of the sequencer's script
         Args:
@@ -29,31 +29,31 @@ class SequencerApi(SequencerCommandService):
         """
         pass
 
-    def operationsMode(self) -> OperationsModeResponse:
+    async def operationsMode(self) -> OperationsModeResponse:
         """
         Sends command to the sequencer to call the operations mode handler of the sequencer's script
         """
         pass
 
-    def goOnline(self) -> GoOnlineResponse:
+    async def goOnline(self) -> GoOnlineResponse:
         """
         sends command to the sequencer to go in Online state if it is in Offline state
         """
         pass
 
-    def goOffline(self) -> GoOfflineResponse:
+    async def goOffline(self) -> GoOfflineResponse:
         """
         sends command to the sequencer to go in Offline state if it is in Online state
         """
         pass
 
-    def abortSequence(self) -> OkOrUnhandledResponse:
+    async def abortSequence(self) -> OkOrUnhandledResponse:
         """
         Discards all the pending steps of the sequence and call the abort handler of the sequencer's script
         """
         pass
 
-    def stop(self) -> OkOrUnhandledResponse:
+    async def stop(self) -> OkOrUnhandledResponse:
         """
         Discards all the pending steps of the sequence and call the stop handler of the sequencer's script
         """

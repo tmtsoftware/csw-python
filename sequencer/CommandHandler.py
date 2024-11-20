@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Awaitable
 from time import sleep
 
 from csw.CommandResponse import CommandError
@@ -10,16 +10,16 @@ class CommandHandler:
     def _defaultErrorHandler(self, err: Exception):
         pass
 
-    def __init__(self, func: Callable[[SequenceCommand], None]):
-        self.func = func
+    def __init__(self, func: Callable[[SequenceCommand], Awaitable]):
+        self.func: Callable[[SequenceCommand], Awaitable] = func
         self._onError: Callable[[Exception], None] = self._defaultErrorHandler
         self._retryCount: int = 0
         self._delayInMillis: int = 0
 
-    def execute(self, sequenceCommand: SequenceCommand):
+    async def execute(self, sequenceCommand: SequenceCommand):
         localRetryCount = self._retryCount
         try:
-            self.func(sequenceCommand)
+            await self.func(sequenceCommand)
         except Exception as e:
             if isinstance(e, CommandError):
                 self._onError(e)
@@ -28,6 +28,6 @@ class CommandHandler:
             if localRetryCount > 0:
                 localRetryCount -= 1
                 sleep(self._delayInMillis/1000.0)
-                self.execute(sequenceCommand)
+                await self.execute(sequenceCommand)
             else:
                 raise e

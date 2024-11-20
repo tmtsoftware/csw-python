@@ -1,3 +1,4 @@
+import traceback
 from time import sleep
 
 import structlog
@@ -25,7 +26,7 @@ def script(ctx: Script):
     ctx.onSetup("command-2", lambda setup: log.info(f"Received a command-2 setup: {setup}"))
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-    def handleExposureStart(_: Observe):
+    async def handleExposureStart(_: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
         log.info(obsId.programId)
@@ -44,18 +45,18 @@ def script(ctx: Script):
 
     ctx.onSetup("command-3", lambda setup: log.info(f"Received a command-3 setup: {setup}"))
 
-    def handleCommand4(_: Setup):
+    async def handleCommand4(_: Setup):
         # try sending concrete sequence
         setupCommand = ctx.Setup("ESW.test", "command-3")
         sequence = ctx.sequenceOf(setupCommand)
 
         # ESW-88, ESW-145, ESW-195
         tcsSequencer = ctx.Sequencer(Subsystem.TCS, ObsMode("darknight"))
-        tcsSequencer.submitAndWait(sequence, 10)
+        await tcsSequencer.submitAndWait(sequence, 10)
 
     ctx.onSetup("command-4", handleCommand4)
 
-    def handleCheckConfig(_: Setup):
+    async def handleCheckConfig(_: Setup):
         if ctx.existsConfig("/tmt/test/wfos.conf"):
             ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
 
@@ -75,16 +76,18 @@ def script(ctx: Script):
     #         }
     #     }
 
-    def handleGetEvent(_: Setup):
+    async def handleGetEvent(s: Setup):
         # ESW-88
+        log.info(f"XXX handleGetEvent({s})")
         event = ctx.getEvent("ESW.test.get.event")
         successEvent = ctx.SystemEvent("ESW.test", "get.success")
         if not event.isInvalid():
+            log.info(f"XXX handleGetEvent(): event valid: {event}")
             ctx.publishEvent(successEvent)
 
     ctx.onSetup("get-event", handleGetEvent)
 
-    def handleOnEvent(_: Setup):
+    async def handleOnEvent(_: Setup):
         def handleEvent(event: Event):
             successEvent = ctx.SystemEvent("ESW.test", "onevent.success")
             if not event.isInvalid():
@@ -94,7 +97,7 @@ def script(ctx: Script):
 
     ctx.onSetup("on-event", handleOnEvent)
 
-    def handleCommandForAssembly(command: Setup):
+    async def handleCommandForAssembly(command: Setup):
         submitResponse = testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
         if isinstance(testAssembly.query(submitResponse.runId()), Started):
             ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
@@ -110,13 +113,20 @@ def script(ctx: Script):
 
     ctx.onSetup("command-for-assembly", handleCommandForAssembly)
 
-    ctx.onSetup("test-sequencer-hierarchy", lambda _: sleep(5))
+    async def handleTestSequencerHierarchy(_: Setup):
+        sleep(5)
 
-    def handleCheckException(_: Setup):
+    ctx.onSetup("test-sequencer-hierarchy", handleTestSequencerHierarchy)
+
+    async def handleCheckException1(_: Setup):
         raise Exception("boom")
 
-    ctx.onSetup("check-exception-1", handleCheckException)
-    ctx.onSetup("check-exception-2", lambda _: sleep(0))
+    async def handleCheckException2(_: Setup):
+        # XXX TODO FIXME
+        raise sleep(8)
+
+    ctx.onSetup("check-exception-1", handleCheckException1)
+    ctx.onSetup("check-exception-2", handleCheckException2)
 
     # XXX TODO
     #     onSetup("set-alarm-severity") {
@@ -125,12 +135,12 @@ def script(ctx: Script):
     #         delay(500)
     #     }
 
-    def handleCommandLgsf(_: Setup):
+    async def handleCommandLgsf(_: Setup):
         # NOT update command response to avoid a sequencer to finish immediately
         # so that others Add, Append command gets time
         setupCommand = ctx.Setup("LGSF.test", "command-lgsf")
         sequence = ctx.sequenceOf(setupCommand)
-        lgsfSequencer.submitAndWait(sequence, 10)
+        await lgsfSequencer.submitAndWait(sequence, 10)
 
     ctx.onSetup("command-lgsf", handleCommandLgsf)
 
@@ -169,7 +179,7 @@ def script(ctx: Script):
     ctx.onGoOffline(lambda: testAssembly.goOffline())
     ctx.onGoOnline(lambda: testAssembly.goOnline())
 
-    def handleAbortSequence():
+    async def handleAbortSequence():
         log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer = {lgsfSequencer}")
         xxx = lgsfSequencer.abortSequence()
         log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer resp = {xxx}")

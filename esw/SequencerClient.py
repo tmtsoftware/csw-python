@@ -1,12 +1,9 @@
 import json
 import uuid
 
-import structlog
-from websocket import create_connection
-from dataclasses import dataclass
+import aiohttp
 
-import requests
-from requests import Response
+from aiohttp import ClientResponse
 
 from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
@@ -22,9 +19,21 @@ from sequencer.SequencerApi import SequencerApi
 
 
 # noinspection DuplicatedCode,PyShadowingBuiltins
-@dataclass
 class SequencerClient(SequencerApi):
-    prefix: Prefix
+
+    def __init__(self, prefix: Prefix):
+        self.prefix = prefix
+
+    async def __aenter__(self):
+        self._session = aiohttp.ClientSession()
+        return self
+
+    async def __aexit__(self, *err):
+        await self._session.close()
+        self._session = None
+
+    async def post(self, url: str, headers: dict, jsonData: str) -> ClientResponse:
+        return await self._session.post(url, headers=headers, json=jsonData)
 
     def _getBaseUri(self) -> str:
         locationService = LocationService()
@@ -35,20 +44,20 @@ class SequencerClient(SequencerApi):
             return location.uri
         raise RuntimeError
 
-    def _postCommand(self, data: dict) -> Response:
+    async def _postCommand(self, data: dict) -> ClientResponse:
         baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         jsonData = json.loads(json.dumps(data))
-        return requests.post(postUri, headers=headers, json=jsonData)
+        return await self.post(postUri, headers=headers, jsonData=jsonData)
 
-    def _postCommandGetResponse(self, request: SequencerRequest) -> EswSequencerResponse:
-        response = self._postCommand(request._asDict())
+    async def _postCommandGetResponse(self, request: SequencerRequest) -> EswSequencerResponse:
+        response = await self._postCommand(request._asDict())
         if not response.ok:
             return Unhandled("Unknown", request.__class__.__name__, f"Error: {response.text}")
-        return EswSequencerResponse._fromDict(response.json())
+        return EswSequencerResponse._fromDict(await response.json())
 
-    def getSequence(self) -> StepList | None:
+    async def getSequence(self) -> StepList | None:
         """
         Get the sequence in sequencer - current or last.
         If there is no sequence
@@ -58,36 +67,36 @@ class SequencerClient(SequencerApi):
         Returns: StepList
             a list of steps in the sequence
        """
-        response = self._postCommand(GetSequence()._asDict())
+        response = await self._postCommand(GetSequence()._asDict())
         if not response.ok:
             return None
-        return StepList._fromDict(response.json())
+        return StepList._fromDict(await response.json())
 
-    def isAvailable(self) -> bool:
+    async def isAvailable(self) -> bool:
         """
         Checks if sequencer is in Idle state.
 
         Returns: bool
             true if the sequencer is available
        """
-        response = self._postCommand(IsAvailable()._asDict())
+        response = await self._postCommand(IsAvailable()._asDict())
         if not response.ok:
             return False
-        return response.json()
+        return await response.json()
 
-    def isOnline(self) -> bool:
+    async def isOnline(self) -> bool:
         """
         Checks if sequencer is in Online(any state except Offline) state
 
         Returns: bool
             true if the sequencer is online
        """
-        response = self._postCommand(IsOnline()._asDict())
+        response = await self._postCommand(IsOnline()._asDict())
         if not response.ok:
             return False
-        return response.json()
+        return await response.json()
 
-    def add(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
+    async def add(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
         """
         Adds the given list of sequence commands at the end of the sequencee
 
@@ -96,9 +105,9 @@ class SequencerClient(SequencerApi):
 
         Returns: OkOrUnhandledResponse
        """
-        return self._postCommandGetResponse(Add(commands))
+        return await self._postCommandGetResponse(Add(commands))
 
-    def prepend(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
+    async def prepend(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
         """
         Prepends the given list of sequence commands in the sequence
 
@@ -107,9 +116,9 @@ class SequencerClient(SequencerApi):
 
         Returns: OkOrUnhandledResponse
        """
-        return self._postCommandGetResponse(Prepend(commands))
+        return await self._postCommandGetResponse(Prepend(commands))
 
-    def replace(self, id: str, commands: List[SequenceCommand]) -> GenericResponse:
+    async def replace(self, id: str, commands: List[SequenceCommand]) -> GenericResponse:
         """
         Replaces the command of the given id with the given list of sequence commands in the sequence
 
@@ -119,9 +128,9 @@ class SequencerClient(SequencerApi):
 
         Returns: GenericResponse
        """
-        return self._postCommandGetResponse(Replace(id, commands))
+        return await self._postCommandGetResponse(Replace(id, commands))
 
-    def insertAfter(self, id: str, commands: List[SequenceCommand]) -> GenericResponse:
+    async def insertAfter(self, id: str, commands: List[SequenceCommand]) -> GenericResponse:
         """
         Inserts the given list of sequence commands after the command of given id in the sequence
 
@@ -131,9 +140,9 @@ class SequencerClient(SequencerApi):
 
         Returns: GenericResponse
        """
-        return self._postCommandGetResponse(InsertAfter(id, commands))
+        return await self._postCommandGetResponse(InsertAfter(id, commands))
 
-    def delete(self, id: str) -> GenericResponse:
+    async def delete(self, id: str) -> GenericResponse:
         """
         Deletes the command of the given id in the sequence
 
@@ -142,25 +151,25 @@ class SequencerClient(SequencerApi):
 
         Returns: GenericResponse
        """
-        return self._postCommandGetResponse(Delete(id))
+        return await self._postCommandGetResponse(Delete(id))
 
-    def pause(self) -> PauseResponse:
+    async def pause(self) -> PauseResponse:
         """
         Pauses the running sequence
 
         Returns: PauseResponse
        """
-        return self._postCommandGetResponse(Pause())
+        return await self._postCommandGetResponse(Pause())
 
-    def resume(self) -> OkOrUnhandledResponse:
+    async def resume(self) -> OkOrUnhandledResponse:
         """
         Resumes the paused sequence
 
         Returns: OkOrUnhandledResponse
        """
-        return self._postCommandGetResponse(Resume())
+        return await self._postCommandGetResponse(Resume())
 
-    def addBreakpoint(self, id: str) -> GenericResponse:
+    async def addBreakpoint(self, id: str) -> GenericResponse:
         """
         Adds a breakpoint at the command of the given id in the sequence
 
@@ -169,9 +178,9 @@ class SequencerClient(SequencerApi):
 
         Returns: GenericResponse
        """
-        return self._postCommandGetResponse(AddBreakpoint(id))
+        return await self._postCommandGetResponse(AddBreakpoint(id))
 
-    def removeBreakpoint(self, id: str) -> GenericResponse:
+    async def removeBreakpoint(self, id: str) -> GenericResponse:
         """
        Removes a breakpoint from the command of the given id in the sequence
 
@@ -180,35 +189,35 @@ class SequencerClient(SequencerApi):
 
        Returns: GenericResponse
       """
-        return self._postCommandGetResponse(RemoveBreakpoint(id))
+        return await self._postCommandGetResponse(RemoveBreakpoint(id))
 
-    def reset(self) -> OkOrUnhandledResponse:
+    async def reset(self) -> OkOrUnhandledResponse:
         """
         Resets the sequence by discarding all the pending steps of the sequence
 
         Returns: OkOrUnhandledResponse
        """
-        return self._postCommandGetResponse(Reset())
+        return await self._postCommandGetResponse(Reset())
 
-    def abortSequence(self) -> OkOrUnhandledResponse:
+    async def abortSequence(self) -> OkOrUnhandledResponse:
         """
         Discards all the pending steps of the sequence and call the abort handler of the sequencer's script
 
         Returns: OkOrUnhandledResponse
        """
-        return self._postCommandGetResponse(AbortSequence())
+        return await self._postCommandGetResponse(AbortSequence())
 
-    def stop(self) -> OkOrUnhandledResponse:
+    async def stop(self) -> OkOrUnhandledResponse:
         """
         Discards all the pending steps of the sequence and call the stop handler of the sequencer's script
 
         Returns: OkOrUnhandledResponse
        """
-        return self._postCommandGetResponse(Stop())
+        return await self._postCommandGetResponse(Stop())
 
     # --- commandApi ---
 
-    def loadSequence(self, sequence: Sequence) -> OkOrUnhandledResponse:
+    async def loadSequence(self, sequence: Sequence) -> OkOrUnhandledResponse:
         """
         Loads the given sequence to the sequencer.
         If the sequencer is in Idle or Loaded state
@@ -220,9 +229,9 @@ class SequencerClient(SequencerApi):
 
         Returns: OkOrUnhandledResponse
       """
-        return self._postCommandGetResponse(LoadSequence(sequence.commands))
+        return await self._postCommandGetResponse(LoadSequence(sequence.commands))
 
-    def startSequence(self) -> SubmitResponse:
+    async def startSequence(self) -> SubmitResponse:
         """
         Starts the loaded sequence in the sequencer.
         If the sequencer is loaded then a Started response is returned.
@@ -231,9 +240,9 @@ class SequencerClient(SequencerApi):
         Returns: SubmitResponse
             an initial SubmitResponse
        """
-        return self._postCommandGetResponse(StartSequence())
+        return await self._postCommandGetResponse(StartSequence())
 
-    def submit(self, sequence: Sequence) -> SubmitResponse:
+    async def submit(self, sequence: Sequence) -> SubmitResponse:
         """
         Submits the given sequence to the sequencer.
         If the sequencer is idle, the provided sequence is loaded in the sequencer and execution of the sequence
@@ -246,13 +255,13 @@ class SequencerClient(SequencerApi):
         Returns: SubmitResponse
             initial response
       """
-        response = self._postCommand(Submit(sequence.commands)._asDict())
+        response = await self._postCommand(Submit(sequence.commands)._asDict())
         if not response.ok:
             runId = str(uuid.uuid4())
-            return Error(runId, response.text)
-        return CommandResponse._fromDict(response.json())
+            return Error(runId, await response.text())
+        return CommandResponse._fromDict(await response.json())
 
-    def query(self, id: str) -> SubmitResponse:
+    async def query(self, id: str) -> SubmitResponse:
         """
         Query for the result of the sequence which was submitted to get a SubmitResponse.
         Query allows checking to see if the long-running sequence is completed without waiting as with queryFinal.
@@ -262,13 +271,13 @@ class SequencerClient(SequencerApi):
 
         Returns: SubmitResponse
       """
-        response = self._postCommand(Query(id)._asDict())
+        response = await self._postCommand(Query(id)._asDict())
         if not response.ok:
             runId = str(uuid.uuid4())
-            return Error(runId, response.text)
-        return CommandResponse._fromDict(response.json())
+            return Error(runId, await response.text())
+        return CommandResponse._fromDict(await response.json())
 
-    def queryFinal(self, runId: str, timeoutInSeconds: int = 10) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeoutInSeconds: int = 10) -> SubmitResponse:
         """
         Query for the final result of a long-running sequence which was sent through submit().
 
@@ -284,12 +293,12 @@ class SequencerClient(SequencerApi):
         # noinspection PyUnresolvedReferences
         respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
         jsonStr = json.dumps(respDict)
-        ws = create_connection(wsUri)
-        ws.send(jsonStr)
-        jsonResp = ws.recv()
+        with self._session.ws_connect(wsUri) as ws:
+            await ws.send(jsonStr)
+            jsonResp = await ws.recv()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:
         """
         Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
         'Started'.
@@ -304,30 +313,30 @@ class SequencerClient(SequencerApi):
         Returns: SubmitResponse
             The final submit response
       """
-        resp = self.submit(sequence)
+        resp = await self.submit(sequence)
         match resp:
             case Started(runId):
-                return self.queryFinal(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeoutInSeconds)
             case _:
                 return resp
 
-    def goOnline(self) -> GoOnlineResponse:
+    async def goOnline(self) -> GoOnlineResponse:
         """
         sends command to the sequencer to go in Online state if it is in Offline state
 
         Returns: GoOnlineResponse
        """
-        return self._postCommandGetResponse(GoOnline())
+        return await self._postCommandGetResponse(GoOnline())
 
-    def goOffline(self) -> GoOfflineResponse:
+    async def goOffline(self) -> GoOfflineResponse:
         """
         sends command to the sequencer to go in Offline state if it is in Online state
 
         Returns: GoOfflineResponse
        """
-        return self._postCommandGetResponse(GoOffline())
+        return await self._postCommandGetResponse(GoOffline())
 
-    def diagnosticMode(self, startTime: UTCTime, hint: str) -> DiagnosticModeResponse:
+    async def diagnosticMode(self, startTime: UTCTime, hint: str) -> DiagnosticModeResponse:
         """
         Sends command to the sequencer to call the diagnostic mode handler of the sequencer's script
 
@@ -337,23 +346,23 @@ class SequencerClient(SequencerApi):
 
         Returns: DiagnosticModeResponse
       """
-        return self._postCommandGetResponse(DiagnosticMode(startTime, hint))
+        return await self._postCommandGetResponse(DiagnosticMode(startTime, hint))
 
-    def operationsMode(self) -> OperationsModeResponse:
+    async def operationsMode(self) -> OperationsModeResponse:
         """
         Sends command to the sequencer to call the operations mode handler of the sequencer's script
 
         Returns: OperationsModeResponse
         """
-        return self._postCommandGetResponse(OperationsMode())
+        return await self._postCommandGetResponse(OperationsMode())
 
-    def getSequencerState(self) -> SequencerState:
+    async def getSequencerState(self) -> SequencerState:
         """
         Returns the current state of the sequencer (Idle, Loaded, Offline, Running, Processing)
 
         Returns: SequencerState
         """
-        response = self._postCommand(GetSequencerState()._asDict())
+        response = await self._postCommand(GetSequencerState()._asDict())
         if not response.ok:
             return SequencerState.Offline
         match response.json()["_type"]:
@@ -373,17 +382,17 @@ class SequencerClient(SequencerApi):
 
     # --- For script use ---
 
-    def pullNext(self) -> PullNextResponse:
-        return self._postCommandGetResponse(PullNext())
+    async def pullNext(self) -> PullNextResponse:
+        return await self._postCommandGetResponse(PullNext())
 
-    def maybeNext(self) -> MaybeNextResponse:
-        return self._postCommandGetResponse(MaybeNext())
+    async def maybeNext(self) -> MaybeNextResponse:
+        return await self._postCommandGetResponse(MaybeNext())
 
-    def readyToExecuteNext(self) -> OkOrUnhandledResponse:
-        return self._postCommandGetResponse(ReadyToExecuteNext())
+    async def readyToExecuteNext(self) -> OkOrUnhandledResponse:
+        return await self._postCommandGetResponse(ReadyToExecuteNext())
 
-    def stepSuccess(self):
-        self._postCommandGetResponse(StepSuccess())
+    async def stepSuccess(self):
+        await self._postCommandGetResponse(StepSuccess())
 
-    def stepFailure(self, message: str):
-        self._postCommandGetResponse(StepFailure())
+    async def stepFailure(self, message: str):
+        await self._postCommandGetResponse(StepFailure())

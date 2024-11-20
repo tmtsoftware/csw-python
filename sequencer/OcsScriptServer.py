@@ -1,5 +1,9 @@
 import os
-from typing import Callable
+import traceback
+from typing import Callable, List
+
+# import hunter
+# hunter.trace(stdlib=False, action=hunter.CallPrinter)
 
 import structlog
 from aiohttp import web
@@ -38,7 +42,7 @@ class OcsScriptServer:
             raise web.HTTPBadRequest(text='Bad request')
         self.log.info(f"Received execute sequence command: {command}")
         try:
-            self.scriptApi.execute(command)
+            await self.scriptApi.execute(command)
         except Exception as err:
             raise web.HTTPBadRequest(text=f"execute: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -46,7 +50,7 @@ class OcsScriptServer:
     async def _executeGoOnline(self, request: Request) -> Response:
         self.log.info(f"Received executeGoOnline sequence command")
         try:
-            self.scriptApi.executeGoOnline()
+            await self.scriptApi.executeGoOnline()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeGoOnline: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -54,7 +58,7 @@ class OcsScriptServer:
     async def _executeGoOffline(self, request: Request) -> Response:
         self.log.info(f"Received executeGoOffline sequence command")
         try:
-            self.scriptApi.executeGoOffline()
+            await self.scriptApi.executeGoOffline()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeGoOffline: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -62,7 +66,7 @@ class OcsScriptServer:
     async def _executeShutdown(self, request: Request) -> Response:
         self.log.info(f"Received executeShutdown sequence command")
         try:
-            self.scriptApi.executeShutdown()
+            await self.scriptApi.executeShutdown()
             self._regResult.unregister()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeShutdown: {err=}, {type(err)=}")
@@ -71,7 +75,7 @@ class OcsScriptServer:
     async def _executeAbort(self, request: Request) -> Response:
         self.log.info(f"Received executeAbort sequence command")
         try:
-            self.scriptApi.executeAbort()
+            await self.scriptApi.executeAbort()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeAbort: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -79,15 +83,17 @@ class OcsScriptServer:
     async def _executeNewSequenceHandler(self, request: Request) -> Response:
         self.log.info(f"Received executeNewSequenceHandler sequence command")
         try:
-            self.scriptApi.executeNewSequenceHandler()
+            await self.scriptApi.executeNewSequenceHandler()
         except Exception as err:
+            self.log.error(f"executeNewSequenceHandler: {err=}, {type(err)=}")
+            traceback.print_exc()
             raise web.HTTPBadRequest(text=f"executeNewSequenceHandler: {err=}, {type(err)=}")
         return web.HTTPOk()
 
     async def _executeStop(self, request: Request) -> Response:
         self.log.info(f"Received executeStop sequence command")
         try:
-            self.scriptApi.executeStop()
+            await self.scriptApi.executeStop()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeStop: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -100,7 +106,7 @@ class OcsScriptServer:
             raise web.HTTPBadRequest(text='Bad request')
         self.log.info(f"Received executeDiagnosticMode sequence command: {mode}")
         try:
-            self.scriptApi.executeDiagnosticMode(mode.startTime, mode.hint)
+            await self.scriptApi.executeDiagnosticMode(mode.startTime, mode.hint)
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeDiagnosticMode: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -108,7 +114,7 @@ class OcsScriptServer:
     async def _executeOperationsMode(self, request: Request) -> Response:
         self.log.info(f"Received executeOperationsMode sequence command")
         try:
-            self.scriptApi.executeOperationsMode()
+            await self.scriptApi.executeOperationsMode()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeOperationsMode: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -117,7 +123,7 @@ class OcsScriptServer:
         self.log.info("Received executeExceptionHandlers sequence command")
         self.log.info(f"XXX Received executeExceptionHandlers sequence command: {request.json()}")
         try:
-            self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
+            await self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeExceptionHandlers: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -125,7 +131,7 @@ class OcsScriptServer:
     async def _shutdownScript(self, request: Request) -> Response:
         self.log.info(f"Received shutdownScript sequence command")
         try:
-            self.scriptApi.shutdownScript()
+            await self.scriptApi.shutdownScript()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"shutdownScript: {err=}, {type(err)=}")
         await self._app.shutdown()
@@ -176,37 +182,37 @@ class OcsScriptServer:
         """
         web.run_app(self._app, port=self.port)
 
+    @staticmethod
+    def main(argv: List[str]):
+        if len(argv) != 3:
+            print("Expected two args: sequencerPrefix and sequenceComponentPrefix")
+            sys.exit(1)
 
-def main():
-    if len(sys.argv) != 3:
-        print("Expected two args: sequencerPrefix and sequenceComponentPrefix")
-        sys.exit(1)
-
-    sequencerPrefix = Prefix.from_str(sys.argv[1])
-    sequenceComponentPrefix = Prefix.from_str(sys.argv[2])
-    sequencerApi: SequencerApi = SequencerClient(sequencerPrefix)
-    sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
-    obsMode = ObsMode.fromPrefix(sequencerPrefix)
-    evenService = EventService()
-    alarmService = AlarmService()
-    scriptContext = ScriptContext(1, sequencerPrefix, obsMode, sequenceOperatorFactory, evenService, alarmService)
-    scriptWiring = ScriptWiring(scriptContext)
-    script = Script(scriptWiring)
-    cfg = configparser.ConfigParser()
-    thisDir = os.path.dirname(os.path.abspath(__file__))
-    # XXX TODO FIXME: pass the location of the config file as an argument? Or use environment variable?
-    cfg.read(f'{thisDir}/examples/examples.ini')
-    scriptPath = cfg.get("scripts", str(sequencerPrefix))
-    # Environment variable CSW_PYTHON_SCRIPT_DIR can override directory containing scripts
-    # (the config file contains the relative paths)
-    scriptDir = os.environ.get('CSW_PYTHON_SCRIPT_DIR', thisDir)
-    scriptFile = f"{scriptDir}/{scriptPath}"
-    module = ScriptLoader.loadPythonScript(scriptFile)
-    module.script(script)
-    scriptServer = OcsScriptServer(script.scriptDsl, sequencerPrefix, sequenceComponentPrefix)
-    print(f"Starting script server on port {scriptServer.port}")
-    scriptServer.start()
+        sequencerPrefix = Prefix.from_str(argv[1])
+        sequenceComponentPrefix = Prefix.from_str(argv[2])
+        sequencerApi: SequencerApi = SequencerClient(sequencerPrefix)
+        sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
+        obsMode = ObsMode.fromPrefix(sequencerPrefix)
+        evenService = EventService()
+        alarmService = AlarmService()
+        scriptContext = ScriptContext(1, sequencerPrefix, obsMode, sequenceOperatorFactory, evenService, alarmService)
+        scriptWiring = ScriptWiring(scriptContext)
+        script = Script(scriptWiring)
+        cfg = configparser.ConfigParser()
+        thisDir = os.path.dirname(os.path.abspath(__file__))
+        # XXX TODO FIXME: pass the location of the config file as an argument? Or use environment variable?
+        cfg.read(f'{thisDir}/examples/examples.ini')
+        scriptPath = cfg.get("scripts", str(sequencerPrefix))
+        # Environment variable CSW_PYTHON_SCRIPT_DIR can override directory containing scripts
+        # (the config file contains the relative paths)
+        scriptDir = os.environ.get('CSW_PYTHON_SCRIPT_DIR', thisDir)
+        scriptFile = f"{scriptDir}/{scriptPath}"
+        module = ScriptLoader.loadPythonScript(scriptFile)
+        module.script(script)
+        scriptServer = OcsScriptServer(script.scriptDsl, sequencerPrefix, sequenceComponentPrefix)
+        print(f"Starting script server on port {scriptServer.port}")
+        scriptServer.start()
 
 
 if __name__ == "__main__":
-    main()
+    OcsScriptServer.main(sys.argv)

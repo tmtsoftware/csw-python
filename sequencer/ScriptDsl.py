@@ -10,7 +10,7 @@ from sequencer.CommandHandler import CommandHandler
 from sequencer.FunctionBuilder import FunctionBuilder
 from sequencer.FunctionHandlers import FunctionHandlers
 from sequencer.ScriptApi import ScriptApi
-from typing import Self, Callable
+from typing import Self, Callable, Awaitable
 
 from sequencer.ScriptError import ScriptError
 from sequencer.SequenceOperatorApi import SequenceOperatorHttp
@@ -22,8 +22,8 @@ class ScriptDsl(ScriptApi):
         self.log = structlog.get_logger()
         self.sequenceOperatorFactory = sequenceOperatorFactory
         self.isOnline = True
-        self.setupCommandHandler = FunctionBuilder[str, Setup, None]()
-        self.observerCommandHandler = FunctionBuilder[str, Observe, None]()
+        self.setupCommandHandler = FunctionBuilder[str, Setup, Awaitable]()
+        self.observerCommandHandler = FunctionBuilder[str, Observe, Awaitable]()
 
         self.onlineHandlers = FunctionHandlers()
         self.offlineHandlers = FunctionHandlers()
@@ -52,89 +52,88 @@ class ScriptDsl(ScriptApi):
         print(f"Error: Command with: ${input.commandName.name} is not handled by the loaded sequencer script")
         raise TypeError
 
-    def execute(self, command: SequenceCommand):
+    async def execute(self, command: SequenceCommand):
         if isinstance(command, Setup):
             s: Setup = command
             if self.setupCommandHandler.contains(s.commandName.name):
-                self.setupCommandHandler.execute(s.commandName.name, s)
+                await self.setupCommandHandler.execute(s.commandName.name, s)
         elif isinstance(command, Observe):
             o: Observe = command
             if self.observerCommandHandler.contains(o.commandName.name):
-                self.observerCommandHandler.execute(o.commandName.name, o)
+                await self.observerCommandHandler.execute(o.commandName.name, o)
         else:
             self._defaultCommandHandler(command)
 
-    def _executeHandler[T](self, f: FunctionHandlers, *args):
-        return f.execute(*args)
+    async def _executeHandler[T](self, f: FunctionHandlers, *args):
+        return await f.execute(*args)
 
-    def executeGoOnline(self):
+    async def executeGoOnline(self):
         """
         Executes the script's onGoOnline handler
         """
-        self._executeHandler(self.onlineHandlers)
+        await self._executeHandler(self.onlineHandlers)
         self.isOnline = True
 
-    def executeGoOffline(self):
+    async def executeGoOffline(self):
         """
         Executes the script's onGoOffline handler
         """
-        self._executeHandler(self.offlineHandlers)
+        await self._executeHandler(self.offlineHandlers)
         self.isOnline = False
 
-    def executeShutdown(self):
+    async def executeShutdown(self):
         """
         Executes the script's onShutdown handler
         """
-        self._executeHandler(self.shutdownHandlers)
+        await self._executeHandler(self.shutdownHandlers)
         # self.shutdownTask.run
 
-    def executeNewSequenceHandler(self):
+    async def executeNewSequenceHandler(self):
         """
         Executes the script's onNewSequence handler
         """
-        self._executeHandler(self.newSequenceHandlers)
+        await self._executeHandler(self.newSequenceHandlers)
 
-    def executeAbort(self):
+    async def executeAbort(self):
         """
         Executes the script's onAbortSequence handler
         """
-        self._executeHandler(self.abortHandlers)
+        await self._executeHandler(self.abortHandlers)
 
-    def executeStop(self):
+    async def executeStop(self):
         """
         Executes the script's onStop handler
         """
-        self._executeHandler(self.stopHandlers)
+        await self._executeHandler(self.stopHandlers)
 
-    def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+    async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
         """
         Executes the script's onDiagnosticMode handler
         """
-        self.diagnosticHandlers.execute(startTime, hint)
+        await self.diagnosticHandlers.execute(startTime, hint)
 
-    def executeOperationsMode(self):
+    async def executeOperationsMode(self):
         """
         Executes the script's onOperationsMode handler
         """
-        self._executeHandler(self.operationsHandlers)
+        await self._executeHandler(self.operationsHandlers)
 
-    def executeExceptionHandlers(self, ex: Exception):
+    async def executeExceptionHandlers(self, ex: Exception):
         """
         Executes the script's onException handler
         """
-        self._executeHandler(self.exceptionHandlers, ex)
+        await self._executeHandler(self.exceptionHandlers, ex)
 
-    def shutdownScript(self):
+    async def shutdownScript(self):
         """
         Runs the shutdown runnable(some extra tasks while unloading the script)
         """
         # shutdownTask.run
         pass
 
-    # XXX TODO: Use async
-    def _nextIf(self, f: Callable[[SequenceCommand], bool]) -> SequenceCommand | None:
+    async def _nextIf(self, f: Callable[[SequenceCommand], bool]) -> SequenceCommand | None:
         operator = self.sequenceOperatorFactory()
-        mayBeNext = operator.maybeNext()
+        mayBeNext = await(operator.maybeNext())
         match mayBeNext:
             case Step() if f(mayBeNext.command):
                 nextStep = operator.pullNext()
@@ -177,12 +176,12 @@ class ScriptDsl(ScriptApi):
         # noinspection PyTypeChecker
         return self.offlineHandlers.add(handler)
 
-    def onDiagnosticMode(self, handler: Callable[[UTCTime, str], None]):
+    def onDiagnosticMode(self, handler: Callable[[UTCTime, str], Awaitable]):
         return self.diagnosticHandlers.add(handler)
 
     def onOperationsMode(self, handler: Callable):
         # noinspection PyTypeChecker
         return self.operationsHandlers.add(handler)
 
-    def onException(self, handler: Callable[[ScriptError], None]):
+    def onException(self, handler: Callable[[ScriptError], Awaitable]):
         return self.exceptionHandlers.add(handler)

@@ -11,17 +11,17 @@ class SequenceOperatorHttp:
     def __init__(self, seq: SequencerApi):
         self.seq = seq
 
-    def pullNext(self) -> PullNextResponse:
+    async def pullNext(self) -> PullNextResponse:
         """
         This method sends a PullNext message to sequencer if successful it returns the pending step which is to be executed next
         """
-        return self.seq.pullNext()
+        return await self.seq.pullNext()
 
-    def maybeNext(self) -> Step | None:
+    async def maybeNext(self) -> Step | None:
         """
         This method returns the next step Pending step if sequencer is in Running state otherwise returns None
         """
-        x = self.seq.maybeNext()
+        x = await self.seq.maybeNext()
         match x:
             case MaybeNextResult():
                 r: MaybeNextResult = x
