@@ -1,3 +1,4 @@
+import asyncio
 import traceback
 from time import sleep
 
@@ -24,7 +25,7 @@ def script(ctx: Script):
     InitialCommandHandler(ctx)
 
     async def handleCommand2(setup: Setup):
-        log.info(f"Received a command-2 setup: {setup}")
+        log.info(f"XXX TestScript: Received a command-2 setup: {setup}")
 
     ctx.onSetup("command-2", handleCommand2)
 
@@ -47,7 +48,7 @@ def script(ctx: Script):
     ctx.onObserve("exposure-start", handleExposureStart)
 
     async def handleCommand3(setup: Setup):
-        log.info(f"Received a command-3 setup: {setup}")
+        log.info(f"XXX Received a command-3 setup: {setup}")
 
     ctx.onSetup("command-3", handleCommand3)
 
@@ -118,7 +119,7 @@ def script(ctx: Script):
     ctx.onSetup("command-for-assembly", handleCommandForAssembly)
 
     async def handleTestSequencerHierarchy(_: Setup):
-        sleep(5)
+        await asyncio.sleep(5)
 
     ctx.onSetup("test-sequencer-hierarchy", handleTestSequencerHierarchy)
 
@@ -126,8 +127,7 @@ def script(ctx: Script):
         raise Exception("boom")
 
     async def handleCheckException2(_: Setup):
-        # XXX TODO FIXME
-        raise sleep(8)
+        pass
 
     ctx.onSetup("check-exception-1", handleCheckException1)
     ctx.onSetup("check-exception-2", handleCheckException2)
@@ -142,6 +142,7 @@ def script(ctx: Script):
     async def handleCommandLgsf(_: Setup):
         # NOT update command response to avoid a sequencer to finish immediately
         # so that others Add, Append command gets time
+        log.info("XXX TestScript received command-lgsf")
         setupCommand = ctx.Setup("LGSF.test", "command-lgsf")
         sequence = ctx.sequenceOf(setupCommand)
         await lgsfSequencer.submitAndWait(sequence, 10)
