@@ -11,6 +11,7 @@ def script(ctx: Script):
     log = structlog.get_logger()
 
     async def handleNewSequence():
+        log.info("XXX TestScript4: handleNewSequence")
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "NewSequenceHandler", newSequenceHandlerParam)
         ctx.publishEvent(event)
@@ -44,6 +45,7 @@ def script(ctx: Script):
 
     async def handleStop():
         # do some actions to stop
+        log.info("XXX TestScript4: handleStop")
         successEvent = ctx.SystemEvent("TCS.test", "stop.success")
         ctx.publishEvent(successEvent)
 

@@ -11,6 +11,7 @@ from csw.ObsId import ObsId
 from csw.ParameterSetType import Observe, Setup
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
+from csw.UTCTime import UTCTime
 from esw.ObsMode import ObsMode
 from sequencer.Script import Script
 from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
@@ -179,20 +180,35 @@ def script(ctx: Script):
     #         a.cancel()
     #     }
 
-    ctx.onDiagnosticMode(lambda startTime, hint: testAssembly.diagnosticMode(startTime, hint))
-    ctx.onOperationsMode(lambda: testAssembly.operationsMode())
-    ctx.onGoOffline(lambda: testAssembly.goOffline())
-    ctx.onGoOnline(lambda: testAssembly.goOnline())
+    async def handleDiagnosticMode(startTime: UTCTime, hint: str):
+        testAssembly.diagnosticMode(startTime, hint)
+
+    ctx.onDiagnosticMode(handleDiagnosticMode)
+
+    async def handleOperationsMode():
+        testAssembly.operationsMode()
+
+    ctx.onOperationsMode(handleOperationsMode)
+
+    async def handleGoOffline():
+        log.info("XXX TestScript goOffline")
+        testAssembly.goOffline()
+
+    ctx.onGoOffline(handleGoOffline)
+
+    async def handleGoOnline():
+        log.info("XXX TestScript goOnline")
+        testAssembly.goOnline()
+
+    ctx.onGoOnline(handleGoOnline)
 
     async def handleAbortSequence():
         log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer = {lgsfSequencer}")
         xxx = await lgsfSequencer.abortSequence()
         log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer resp = {xxx}")
 
-
     # do some actions to abort sequence
     # send abortSequence command to downstream sequencer
-    # ctx.onAbortSequence(lambda: lgsfSequencer.abortSequence())
     ctx.onAbortSequence(handleAbortSequence)
 
     # do some actions to stop
