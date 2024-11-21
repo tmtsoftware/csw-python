@@ -198,6 +198,7 @@ def script(ctx: Script):
     # do some actions to stop
     # send stop command to downstream sequencer
     async def handleStop():
-        lgsfSequencer.stop()
+        xxx = await lgsfSequencer.stop()
+        log.info(f"XXX TestScript1: handleStop: lgsfSequencer resp = {xxx}")
 
     ctx.onStop(handleStop)
