@@ -124,7 +124,7 @@ class OcsScriptServer:
 
     async def _executeExceptionHandlers(self, request: Request) -> Response:
         self.log.info("Received executeExceptionHandlers sequence command")
-        self.log.info(f"XXX Received executeExceptionHandlers sequence command: {request.json()}")
+        self.log.info(f"XXX {id(self)}:  Received executeExceptionHandlers sequence command: {request.json()}")
         try:
             await self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
         except Exception as err:
@@ -183,7 +183,7 @@ class OcsScriptServer:
         scriptFile = f"{scriptDir}/{scriptPath}"
         module = ScriptLoader.loadPythonScript(scriptFile)
         module.script(script)
-        print(f"Starting script server on port {self.port}")
+        print(f"Starting script server for {self.sequencerPrefix} ({scriptFile}) on port {self.port}")
         yield
         await clientSession.close()
 

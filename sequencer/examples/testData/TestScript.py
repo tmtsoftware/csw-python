@@ -1,6 +1,5 @@
 import asyncio
 import traceback
-from time import sleep
 
 import structlog
 

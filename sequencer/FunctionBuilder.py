@@ -26,7 +26,7 @@ class FunctionBuilder[K, I, O]:
         return key in self.handlers
 
     async def execute(self, key: K, input: I) -> O:
-        self.log.info(f"XXX execute key = {key}")
+        self.log.info(f"XXX {id(self)}:  execute key = {key}")
         return await self.handlers[key](input)
 
     def merge(self, that: Self) -> Self:
