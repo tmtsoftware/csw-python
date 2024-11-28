@@ -70,7 +70,7 @@ class OcsScriptServer:
         self.log.info(f"Received executeShutdown sequence command")
         try:
             await self.scriptApi.executeShutdown()
-            self._regResult.unregister()
+            # self._regResult.unregister()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeShutdown: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -123,8 +123,6 @@ class OcsScriptServer:
         return web.HTTPOk()
 
     async def _executeExceptionHandlers(self, request: Request) -> Response:
-        self.log.info("Received executeExceptionHandlers sequence command")
-        self.log.info(f"XXX {id(self)}:  Received executeExceptionHandlers sequence command: {request.json()}")
         try:
             await self.scriptApi.executeExceptionHandlers(Exception("XXX TODO"))
         except Exception as err:

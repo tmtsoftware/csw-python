@@ -1,9 +1,6 @@
 import json
 import uuid
 
-from websocket import create_connection
-import aiohttp
-
 from aiohttp import ClientResponse, ClientSession
 
 from csw.CommandResponse import SubmitResponse, CommandResponse, Started, Error
@@ -48,7 +45,7 @@ class SequencerClient(SequencerApi):
     async def _postCommandGetResponse(self, request: SequencerRequest) -> EswSequencerResponse:
         response = await self._postCommand(request._asDict())
         if not response.ok:
-            return Unhandled("Unknown", request.__class__.__name__, f"Error: {response.text}")
+            return Unhandled("Unknown", request.__class__.__name__, f"Error: {response.text()}")
         return EswSequencerResponse._fromDict(await response.json())
 
     async def getSequence(self) -> StepList | None:
@@ -276,7 +273,7 @@ class SequencerClient(SequencerApi):
         Query for the final result of a long-running sequence which was sent through submit().
 
         Args:
-           id (str): runId of the sequence under execution
+           runId (str): runId of the sequence under execution
            timeoutInSeconds (int): max-time in secs to wait for a final response
 
         Returns: SubmitResponse
@@ -287,12 +284,10 @@ class SequencerClient(SequencerApi):
         # noinspection PyUnresolvedReferences
         respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
         jsonStr = json.dumps(respDict)
-        # with self._session.ws_connect(wsUri) as ws:
-        #     await ws.send(jsonStr)
-        #     jsonResp = await ws.recv()
-        ws = create_connection(wsUri)
-        ws.send(jsonStr)
-        jsonResp = ws.recv()
+        ws = await self._session.ws_connect(wsUri)
+        await ws.send_str(jsonStr)
+        jsonResp = await ws.receive_str()
+        await ws.close()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
     async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:

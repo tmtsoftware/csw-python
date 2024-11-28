@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable, Awaitable
 from time import sleep
 
@@ -27,7 +28,7 @@ class CommandHandler:
                 self._onError(OtherError(e))
             if localRetryCount > 0:
                 localRetryCount -= 1
-                sleep(self._delayInMillis/1000.0)
+                await asyncio.sleep(self._delayInMillis/1000.0)
                 await self.execute(sequenceCommand)
             else:
                 raise e

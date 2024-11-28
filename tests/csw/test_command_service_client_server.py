@@ -13,6 +13,7 @@ from csw.Parameter import IntKey
 from csw.ParameterSetType import CommandName, Setup
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
+from aiohttp import ClientSession
 
 
 # Start a local python based command service (defined in TestComponentHandlers.py) for testing
@@ -56,22 +57,23 @@ class TestCommandServiceClientServer:
 
     async def test_command_client_server(self):
         # Create a python based command service client
-        cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service)
+        clientSession = ClientSession()
+        cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service, clientSession)
         prefix = Prefix(Subsystem.CSW, "TestClient")
-        resp = cs.submit(Setup(prefix, CommandName("SimpleCommand")))
+        resp = await cs.submit(Setup(prefix, CommandName("SimpleCommand")))
         assert isinstance(resp, Completed)
-        resp2 = cs.submit(Setup(prefix, CommandName("ResultCommand")))
+        resp2 = await cs.submit(Setup(prefix, CommandName("ResultCommand")))
         assert isinstance(resp2, Completed)
         assert len(resp2.result.paramSet) == 1
 
         # LongRunningCommand
         subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
         await asyncio.sleep(1)
-        resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
+        resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
         assert isinstance(resp3, Started)
-        resp4 = cs.queryFinal(resp3.runId, 5)
+        resp4 = await cs.queryFinal(resp3.runId, 5)
         assert isinstance(resp4, Completed)
-        resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4
@@ -79,7 +81,7 @@ class TestCommandServiceClientServer:
         assert self._currentState(IntKey.make("IntValue", Units.arcsec)).values[0] == 42
         subscription.cancel()
         await asyncio.sleep(1)
-        resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4

@@ -49,8 +49,8 @@ class ScriptDsl(ScriptApi):
         self.exceptionHandlers.merge(that.exceptionHandlers)
         return self
 
-    def _defaultCommandHandler(self, input: SequenceCommand):
-        print(f"Error: Command with: ${input.commandName.name} is not handled by the loaded sequencer script")
+    async def _defaultCommandHandler(self, input: SequenceCommand):
+        self.log.error(f"Command with: ${input.commandName} is handled by the loaded sequencer script")
         raise TypeError
 
     async def execute(self, command: SequenceCommand):
@@ -58,13 +58,14 @@ class ScriptDsl(ScriptApi):
             if isinstance(command, Setup):
                 s: Setup = command
                 if self.setupCommandHandler.contains(s.commandName.name):
-                    await self.setupCommandHandler.execute(s.commandName.name, s)
+                    return await self.setupCommandHandler.execute(s.commandName.name, s)
             elif isinstance(command, Observe):
                 o: Observe = command
                 if self.observerCommandHandler.contains(o.commandName.name):
-                    await self.observerCommandHandler.execute(o.commandName.name, o)
+                    return await self.observerCommandHandler.execute(o.commandName.name, o)
             else:
-                self._defaultCommandHandler(command)
+                self.log.error(f"Error: Command with: ${command.commandName.name} is not handled by the loaded sequencer script")
+                return await self._defaultCommandHandler(command)
         except Exception as err:
             self.log.error(f"ScriptDsl.execute(): {err=}, {type(err)=}, command = {command}")
             traceback.print_exc()
@@ -134,7 +135,7 @@ class ScriptDsl(ScriptApi):
         Runs the shutdown runnable(some extra tasks while unloading the script)
         """
         # shutdownTask.run
-        pass
+        await self._executeHandler(self.shutdownHandlers)
 
     async def _nextIf(self, f: Callable[[SequenceCommand], bool]) -> SequenceCommand | None:
         operator = self.sequenceOperatorFactory()
@@ -152,41 +153,41 @@ class ScriptDsl(ScriptApi):
                 return None
 
     def onSetupCommand(self, name: str, handler: CommandHandler):
-        return self.setupCommandHandler.add(name, handler.execute)
+        self.setupCommandHandler.add(name, handler.execute)
 
     def onObserveCommand(self, name: str, handler: CommandHandler):
-        return self.observerCommandHandler.add(name, handler.execute)
+        self.observerCommandHandler.add(name, handler.execute)
 
     def onGoOnline(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.onlineHandlers.add(handler)
+        self.onlineHandlers.add(handler)
 
     def onNewSequence(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.newSequenceHandlers.add(handler)
+        self.newSequenceHandlers.add(handler)
 
     def onAbortSequence(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.abortHandlers.add(handler)
+        self.abortHandlers.add(handler)
 
     def onStop(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.stopHandlers.add(handler)
+        self.stopHandlers.add(handler)
 
     def onShutdown(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.shutdownHandlers.add(handler)
+        self.shutdownHandlers.add(handler)
 
     def onGoOffline(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.offlineHandlers.add(handler)
+        self.offlineHandlers.add(handler)
 
     def onDiagnosticMode(self, handler: Callable[[UTCTime, str], Awaitable]):
-        return self.diagnosticHandlers.add(handler)
+        self.diagnosticHandlers.add(handler)
 
     def onOperationsMode(self, handler: Callable):
         # noinspection PyTypeChecker
-        return self.operationsHandlers.add(handler)
+        self.operationsHandlers.add(handler)
 
     def onException(self, handler: Callable[[ScriptError], Awaitable]):
-        return self.exceptionHandlers.add(handler)
+        self.exceptionHandlers.add(handler)

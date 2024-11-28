@@ -11,7 +11,6 @@ def script(ctx: Script):
     log = structlog.get_logger()
 
     async def handleNewSequence():
-        log.info("XXX TestScript4: handleNewSequence")
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "NewSequenceHandler", newSequenceHandlerParam)
         ctx.publishEvent(event)
@@ -20,7 +19,6 @@ def script(ctx: Script):
     ctx.onNewSequence(handleNewSequence)
 
     async def handleCommand1(_: Setup):
-        log.info("XXX TestScript4 received command-1")
         newSequenceParam = stringKey("sequence-command-1").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "command1", newSequenceParam)
         ctx.publishEvent(event)
@@ -30,14 +28,12 @@ def script(ctx: Script):
     async def handleCommandLgsf(_: Setup):
         # NOT update command response To avoid sequencer to
         # finish so that other commands gets time
-        log.info("XXX TestScript4 Received command-lgsf")
         await asyncio.sleep(1.0)
 
     ctx.onSetup("command-lgsf", handleCommandLgsf)
 
     async def handleAbortSequence():
         # do some actions to abort sequence
-        log.info("XXX TestScript4: handleAbortSequence")
         successEvent = ctx.SystemEvent("TCS.test", "abort.success")
         ctx.publishEvent(successEvent)
 
@@ -45,7 +41,6 @@ def script(ctx: Script):
 
     async def handleStop():
         # do some actions to stop
-        log.info("XXX TestScript4: handleStop")
         successEvent = ctx.SystemEvent("TCS.test", "stop.success")
         ctx.publishEvent(successEvent)
 

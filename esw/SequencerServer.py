@@ -100,7 +100,6 @@ class SequencerServer:
                     await ws.close()
                 else:
                     obj = json.loads(msg.data)
-                    self.log.debug(f"XXX {id(self)}: received sequencer ws message: {str(obj)}")
                     method = obj['_type']
                     if method == "QueryFinal":
                         queryFinal = QueryFinal._fromDict(obj)

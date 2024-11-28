@@ -22,7 +22,7 @@ def script(ctx: Script):
     testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"), 10)
 
     # ESW-134: Reuse code by ability to import logic from one script into another
-    InitialCommandHandler(ctx)
+    InitialCommandHandler(ctx, log)
 
     async def handleCommand2(setup: Setup):
         log.info(f"XXX TestScript: Received a command-2 setup: {setup}")
@@ -103,18 +103,18 @@ def script(ctx: Script):
     ctx.onSetup("on-event", handleOnEvent)
 
     async def handleCommandForAssembly(command: Setup):
-        submitResponse = testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
-        if isinstance(testAssembly.query(submitResponse.runId()), Started):
+        submitResponse = await testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
+        if isinstance(await testAssembly.query(submitResponse.runId()), Started):
             ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
 
-        if isinstance(testAssembly.queryFinal(submitResponse.runId(), 100), Completed):
+        if isinstance(await testAssembly.queryFinal(submitResponse.runId(), 100), Completed):
             ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
 
         testAssembly.subscribeCurrentState(["stateName1", "stateName2"],
                                            lambda currentState: ctx.publishEvent(ctx.SystemEvent(
                                                "tcs.filter.wheel",
                                                f"publish-{currentState.stateName().name()}")))
-        testAssembly.oneway(command)
+        await testAssembly.oneway(command)
 
     ctx.onSetup("command-for-assembly", handleCommandForAssembly)
 
@@ -142,7 +142,6 @@ def script(ctx: Script):
     async def handleCommandLgsf(_: Setup):
         # NOT update command response to avoid a sequencer to finish immediately
         # so that others Add, Append command gets time
-        log.info("XXX TestScript received command-lgsf")
         setupCommand = ctx.Setup("LGSF.test", "command-lgsf")
         sequence = ctx.sequenceOf(setupCommand)
         await lgsfSequencer.submitAndWait(sequence, 10)
@@ -180,31 +179,27 @@ def script(ctx: Script):
     #     }
 
     async def handleDiagnosticMode(startTime: UTCTime, hint: str):
-        testAssembly.diagnosticMode(startTime, hint)
+        await testAssembly.diagnosticMode(startTime, hint)
 
     ctx.onDiagnosticMode(handleDiagnosticMode)
 
     async def handleOperationsMode():
-        testAssembly.operationsMode()
+        await testAssembly.operationsMode()
 
     ctx.onOperationsMode(handleOperationsMode)
 
     async def handleGoOffline():
-        log.info("XXX TestScript goOffline")
-        testAssembly.goOffline()
+        await testAssembly.goOffline()
 
     ctx.onGoOffline(handleGoOffline)
 
     async def handleGoOnline():
-        log.info("XXX TestScript goOnline")
-        testAssembly.goOnline()
+        await testAssembly.goOnline()
 
     ctx.onGoOnline(handleGoOnline)
 
     async def handleAbortSequence():
-        log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer = {lgsfSequencer}")
-        xxx = await lgsfSequencer.abortSequence()
-        log.info(f"XXX TestScript1: handleAbortSequence: lgsfSequencer resp = {xxx}")
+        await lgsfSequencer.abortSequence()
 
     # do some actions to abort sequence
     # send abortSequence command to downstream sequencer
@@ -213,7 +208,6 @@ def script(ctx: Script):
     # do some actions to stop
     # send stop command to downstream sequencer
     async def handleStop():
-        xxx = await lgsfSequencer.stop()
-        log.info(f"XXX TestScript1: handleStop: lgsfSequencer resp = {xxx}")
+        await lgsfSequencer.stop()
 
     ctx.onStop(handleStop)

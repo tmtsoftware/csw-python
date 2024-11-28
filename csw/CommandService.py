@@ -1,11 +1,12 @@
 import asyncio
 import uuid
 from asyncio import Task
-from http.client import responses
 from typing import List, Callable
 
 import requests
+import structlog
 import websockets
+from aiohttp import ClientSession
 from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
@@ -32,12 +33,16 @@ class Subscription:
 
 # A CSW command service client
 # noinspection PyProtectedMember
-@dataclass
 class CommandService:
-    prefix: Prefix
-    componentType: ComponentType
 
-    def _getBaseUri(self) -> str:
+    def __init__(self, prefix: Prefix, componentType: ComponentType, clientSession: ClientSession):
+        self.prefix = prefix
+        self.componentType = componentType
+        self._session = clientSession
+        self.log = structlog.get_logger()
+
+
+    async def _getBaseUri(self) -> str:
         locationService = LocationService()
         connection = ConnectionInfo.make(self.prefix, self.componentType, ConnectionType.HttpType)
         location = locationService.resolve(connection)
@@ -46,8 +51,8 @@ class CommandService:
             return location.uri
         raise RuntimeError
 
-    def _postCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
-        baseUri = self._getBaseUri()
+    async def _postCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
+        baseUri = await self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         match command:
@@ -58,18 +63,18 @@ class CommandService:
             case _:
                 data = Oneway(controlCommand)._asDict()
         jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
             runId = str(uuid.uuid4())
-            return Error(runId, response.text)
-        resp = CommandResponse._fromDict(response.json())
+            return Error(runId, await response.text())
+        resp = CommandResponse._fromDict(await response.json())
         return resp
 
     # def _wsCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
     #     baseUri = self._getBaseUri().replace('http:', 'ws:')
     #     wsUri = f"{baseUri}websocket-endpoint"
 
-    def submit(self, controlCommand: ControlCommand) -> SubmitResponse:
+    async def submit(self, controlCommand: ControlCommand) -> SubmitResponse:
         """
         Submits a command to the command service
 
@@ -79,9 +84,9 @@ class CommandService:
         Returns: SubmitResponse
             a subclass of SubmitResponse
        """
-        return self._postCommand("Submit", controlCommand)
+        return await self._postCommand("Submit", controlCommand)
 
-    def validate(self, controlCommand: ControlCommand) -> ValidateResponse:
+    async def validate(self, controlCommand: ControlCommand) -> ValidateResponse:
         """
         Validates a command to be sent to the command service.
 
@@ -91,9 +96,9 @@ class CommandService:
         Returns: SubmitResponse
             a subclass of SubmitResponse (only Accepted, Invalid or Locked)
        """
-        return self._postCommand("Validate", controlCommand)
+        return await self._postCommand("Validate", controlCommand)
 
-    def oneway(self, controlCommand: ControlCommand) -> OnewayResponse:
+    async def oneway(self, controlCommand: ControlCommand) -> OnewayResponse:
         """
        Sends a command to the command service without expecting a reply.
 
@@ -103,7 +108,7 @@ class CommandService:
        Returns: SubmitResponse
            a subclass of SubmitResponse (only Accepted, Invalid or Locked)
       """
-        return self._postCommand("Oneway", controlCommand)
+        return await self._postCommand("Oneway", controlCommand)
 
     async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
         """
@@ -119,7 +124,7 @@ class CommandService:
        Returns: SubmitResponse
            a subclass of SubmitResponse
       """
-        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
         jsonStr = json.dumps(msgDict)
@@ -148,7 +153,7 @@ class CommandService:
             case _:
                 return resp
 
-    def query(self, runId: str) -> SubmitResponse:
+    async def query(self, runId: str) -> SubmitResponse:
         """
         Query for the result of a long running command which was sent as Submit to get a SubmitResponse.
         Query allows checking to see if a long-running command is completed without waiting as with queryFinal.
@@ -159,7 +164,7 @@ class CommandService:
         Returns: SubmitResponse
            a subclass of SubmitResponse
         """
-        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = Query(runId)._asDict()
         jsonStr = json.dumps(msgDict)
@@ -168,7 +173,7 @@ class CommandService:
         jsonResp = ws.recv()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
         """
         If the command for runId returned Started (long-running command), this will
         return the final result.
@@ -180,7 +185,7 @@ class CommandService:
        Returns: SubmitResponse
            a subclass of SubmitResponse
       """
-        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
         jsonStr = json.dumps(msgDict)
@@ -189,7 +194,7 @@ class CommandService:
         jsonResp = ws.recv()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
         """
         Submits a command to the command service and waits for the final response.
 
@@ -200,15 +205,15 @@ class CommandService:
         Returns: SubmitResponse
             a subclass of SubmitResponse
        """
-        resp = self.submit(controlCommand)
+        resp = await self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return self.queryFinal(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeoutInSeconds)
             case _:
                 return resp
 
     async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], None]):
-        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
@@ -231,7 +236,7 @@ class CommandService:
         task = asyncio.create_task(self._subscribeCurrentState(names, callback))
         return Subscription(task)
 
-    def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+    async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
         """
         On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
         Validation of supported hints need to be handled by the component writer.
@@ -240,7 +245,7 @@ class CommandService:
             startTime: represents the time at which the diagnostic mode actions will take effect
             hint: represents supported diagnostic data mode for a component
         """
-        baseUri = self._getBaseUri()
+        baseUri = await self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = ExecuteDiagnosticMode(startTime, hint)._asDict()
@@ -249,11 +254,11 @@ class CommandService:
         if not response.ok:
             raise Exception(f"CommandService: executeDiagnosticMode failed: {response.text}")
 
-    def executeOperationsMode(self):
+    async def executeOperationsMode(self):
         """
         On receiving a operations mode command, the current diagnostic data mode is halted.
         """
-        baseUri = self._getBaseUri()
+        baseUri = await self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = ExecuteOperationsMode()._asDict()
@@ -262,8 +267,8 @@ class CommandService:
         if not response.ok:
             raise Exception(f"CommandService: executeOperationsMode failed: {response.text}")
 
-    def goOnline(self):
-        baseUri = self._getBaseUri()
+    async def goOnline(self):
+        baseUri = await self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = GoOnline()._asDict()
@@ -272,8 +277,8 @@ class CommandService:
         if not response.ok:
             raise Exception(f"CommandService: goOnline failed: {response.text}")
 
-    def goOffline(self):
-        baseUri = self._getBaseUri()
+    async def goOffline(self):
+        baseUri = await self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = GoOffline()._asDict()

@@ -18,13 +18,10 @@ class FunctionHandlers:
 
     async def execute(self, *args):
         async def call(f: Callable):
-            try:
-                if len(args):
-                    await f(*args)
-                else:
-                    await f()
-            except Exception as ex:
-                self.log.error(f"Error calling {f}({args}): {ex}")
+            if len(args):
+                return await f(*args)
+            else:
+                return await f()
 
         listOfF = list(map(lambda f: call(f), self.handlers))
         return await asyncio.gather(*listOfF)
