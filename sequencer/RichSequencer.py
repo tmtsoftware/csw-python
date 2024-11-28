@@ -95,6 +95,12 @@ class RichSequencer:
         """
         return await self._sequencerService().goOffline()
 
+    async def isOnline(self) -> bool:
+        return await self._sequencerService().isOnline()
+
+    async def isAvailable(self) -> bool:
+        return await self._sequencerService().isAvailable()
+
     async def diagnosticMode(self, startTime: UTCTime, hint: str) -> DiagnosticModeResponse:
         """
         Runs the onDiagnosticMode handler of script

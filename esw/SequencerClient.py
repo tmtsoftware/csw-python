@@ -45,7 +45,7 @@ class SequencerClient(SequencerApi):
     async def _postCommandGetResponse(self, request: SequencerRequest) -> EswSequencerResponse:
         response = await self._postCommand(request._asDict())
         if not response.ok:
-            return Unhandled("Unknown", request.__class__.__name__, f"Error: {response.text()}")
+            return Unhandled("Unknown", request.__class__.__name__, f"Error: {await response.text()}")
         return EswSequencerResponse._fromDict(await response.json())
 
     async def getSequence(self) -> StepList | None:

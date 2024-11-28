@@ -3,11 +3,9 @@ import uuid
 from asyncio import Task
 from typing import List, Callable
 
-import requests
+import aiohttp
 import structlog
-import websockets
 from aiohttp import ClientSession
-from websocket import create_connection
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
 from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState, \
@@ -70,10 +68,6 @@ class CommandService:
         resp = CommandResponse._fromDict(await response.json())
         return resp
 
-    # def _wsCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
-    #     baseUri = self._getBaseUri().replace('http:', 'ws:')
-    #     wsUri = f"{baseUri}websocket-endpoint"
-
     async def submit(self, controlCommand: ControlCommand) -> SubmitResponse:
         """
         Submits a command to the command service
@@ -110,12 +104,11 @@ class CommandService:
       """
         return await self._postCommand("Oneway", controlCommand)
 
-    async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+    # noinspection DuplicatedCode
+    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
         """
         If the command for runId returned Started (long running command), this will
         return the final result.
-        This version returns a future response (async).
-        See queryFinal() for a blocking version.
 
        Args:
            runId (str): runId for the command
@@ -128,10 +121,11 @@ class CommandService:
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
         jsonStr = json.dumps(msgDict)
-        async with websockets.connect(wsUri) as websocket:
-            await websocket.send(jsonStr)
-            jsonResp = await websocket.recv()
-            return CommandResponse._fromDict(json.loads(jsonResp))
+        ws = await self._session.ws_connect(wsUri)
+        await ws.send_str(jsonStr)
+        jsonResp = await ws.receive_str()
+        await ws.close()
+        return CommandResponse._fromDict(json.loads(jsonResp))
 
     async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
         """
@@ -149,10 +143,11 @@ class CommandService:
         resp = self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return await self.queryFinalAsync(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeoutInSeconds)
             case _:
                 return resp
 
+    # noinspection DuplicatedCode
     async def query(self, runId: str) -> SubmitResponse:
         """
         Query for the result of a long running command which was sent as Submit to get a SubmitResponse.
@@ -168,30 +163,10 @@ class CommandService:
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = Query(runId)._asDict()
         jsonStr = json.dumps(msgDict)
-        ws = create_connection(wsUri)
-        ws.send(jsonStr)
-        jsonResp = ws.recv()
-        return CommandResponse._fromDict(json.loads(jsonResp))
-
-    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
-        """
-        If the command for runId returned Started (long-running command), this will
-        return the final result.
-
-       Args:
-           runId (str): runId for the command
-           timeoutInSeconds (int): seconds to wait before returning an error
-
-       Returns: SubmitResponse
-           a subclass of SubmitResponse
-      """
-        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
-        wsUri = f"{baseUri}websocket-endpoint"
-        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(msgDict)
-        ws = create_connection(wsUri)
-        ws.send(jsonStr)
-        jsonResp = ws.recv()
+        ws = await self._session.ws_connect(wsUri)
+        await ws.send_str(jsonStr)
+        jsonResp = await ws.receive_str()
+        await ws.close()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
     async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
@@ -217,10 +192,17 @@ class CommandService:
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
-        async for websocket in websockets.connect(wsUri):
-            await websocket.send(jsonStr)
-            async for message in websocket:
-                callback(CurrentState._fromDict(json.loads(message)))
+        async with self._session.ws_connect(wsUri) as ws:
+            await ws.send_str(jsonStr)
+            async for msgF in ws:
+                msg = await msgF
+                match msg.type:
+                    case aiohttp.WSMsgType.TEXT:
+                        callback(CurrentState._fromDict(json.loads(msg.data)))
+                    case aiohttp.WSMsgType.CLOSED:
+                        break
+                    case aiohttp.WSMsgType.ERROR:
+                        break
 
     def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], None]) -> Subscription:
         """
@@ -250,9 +232,9 @@ class CommandService:
         headers = {'Content-type': 'application/json'}
         data = ExecuteDiagnosticMode(startTime, hint)._asDict()
         jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
-            raise Exception(f"CommandService: executeDiagnosticMode failed: {response.text}")
+            raise Exception(f"CommandService: executeDiagnosticMode failed: {await response.text()}")
 
     async def executeOperationsMode(self):
         """
@@ -263,9 +245,9 @@ class CommandService:
         headers = {'Content-type': 'application/json'}
         data = ExecuteOperationsMode()._asDict()
         jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
-            raise Exception(f"CommandService: executeOperationsMode failed: {response.text}")
+            raise Exception(f"CommandService: executeOperationsMode failed: {await response.text()}")
 
     async def goOnline(self):
         baseUri = await self._getBaseUri()
@@ -273,9 +255,9 @@ class CommandService:
         headers = {'Content-type': 'application/json'}
         data = GoOnline()._asDict()
         jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
-            raise Exception(f"CommandService: goOnline failed: {response.text}")
+            raise Exception(f"CommandService: goOnline failed: {await response.text()}")
 
     async def goOffline(self):
         baseUri = await self._getBaseUri()
@@ -283,6 +265,6 @@ class CommandService:
         headers = {'Content-type': 'application/json'}
         data = GoOffline()._asDict()
         jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
-            raise Exception(f"CommandService: goOffline failed: {response.text}")
+            raise Exception(f"CommandService: goOffline failed: {await response.text()}")
