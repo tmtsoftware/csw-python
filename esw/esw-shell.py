@@ -27,19 +27,20 @@ from esw.StepList import StepList
 from esw.Step import Step
 from esw.StepStatus import *
 
+clientSession = ClientSession()
 
 def hcdCommandService(prefix: str) -> CommandService:
-    return CommandService(Prefix.from_str(prefix), ComponentType.HCD)
+    return CommandService(Prefix.from_str(prefix), ComponentType.HCD, clientSession)
 
 
 def assemblyCommandService(prefix: str) -> CommandService:
-    return CommandService(Prefix.from_str(prefix), ComponentType.Assembly)
+    return CommandService(Prefix.from_str(prefix), ComponentType.Assembly, clientSession)
 
 
 def sequencerCommandService(prefix: str) -> CommandService:
-    return CommandService(Prefix.from_str(prefix), ComponentType.Sequencer)
+    return CommandService(Prefix.from_str(prefix), ComponentType.Sequencer, clientSession)
 
 
-locationService = LocationService()
+locationService = LocationService(clientSession)
 
 print("Wellcome to ESW Shell")

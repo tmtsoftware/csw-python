@@ -12,6 +12,7 @@ from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
+from sequencer.CswServices import CswServices
 from sequencer.Script import Script
 from sequencer.ScriptContext import ScriptContext
 from sequencer.ScriptLoader import ScriptLoader
@@ -30,7 +31,8 @@ async def main():
         evenService = EventService()
         alarmService = AlarmService()
         scriptContext = ScriptContext(1, sequencerPrefix, obsMode, clientSession, sequenceOperatorFactory, evenService, alarmService)
-        scriptWiring = ScriptWiring(scriptContext)
+        cswServices = await CswServices.create(clientSession, scriptContext)
+        scriptWiring = ScriptWiring(scriptContext, cswServices)
         script = Script(scriptWiring)
         cfg = configparser.ConfigParser()
         thisDir = os.path.dirname(os.path.abspath(__file__))
@@ -43,7 +45,8 @@ async def main():
         module.script(script)
 
         # test the script
-        scriptContext.eventService.defaultPublisher.publish(SystemEvent(Prefix.from_str("esw.test"), EventName("get.event")))
+        publisher = await scriptContext.eventService.defaultPublisher(clientSession)
+        publisher.publish(SystemEvent(Prefix.from_str("esw.test"), EventName("get.event")))
         setup  = Setup(Prefix.from_str("esw.test"), CommandName("get-event"))
         await script.scriptDsl.execute(setup)
 

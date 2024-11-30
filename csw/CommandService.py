@@ -41,9 +41,9 @@ class CommandService:
 
 
     async def _getBaseUri(self) -> str:
-        locationService = LocationService()
+        locationService = LocationService(self._session)
         connection = ConnectionInfo.make(self.prefix, self.componentType, ConnectionType.HttpType)
-        location = locationService.resolve(connection)
+        location = await locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri

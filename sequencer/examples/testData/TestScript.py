@@ -42,7 +42,7 @@ def script(ctx: Script):
         # do something with exposureId components
         log.info(exposureId.subsystem)
         log.info(exposureId.det)
-        ctx.publishEvent(ctx.exposureStart(exposureId))
+        await ctx.publishEvent(ctx.exposureStart(exposureId))
 
     ctx.onObserve("exposure-start", handleExposureStart)
 
@@ -64,7 +64,7 @@ def script(ctx: Script):
 
     async def handleCheckConfig(_: Setup):
         if ctx.existsConfig("/tmt/test/wfos.conf"):
-            ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
+            await ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
 
     ctx.onSetup("check-config", handleCheckConfig)
 
@@ -87,15 +87,15 @@ def script(ctx: Script):
         event = ctx.getEvent("ESW.test.get.event")
         successEvent = ctx.SystemEvent("ESW.test", "get.success")
         if not event.isInvalid():
-            ctx.publishEvent(successEvent)
+            await ctx.publishEvent(successEvent)
 
     ctx.onSetup("get-event", handleGetEvent)
 
     async def handleOnEvent(_: Setup):
-        def handleEvent(event: Event):
+        async def handleEvent(event: Event):
             successEvent = ctx.SystemEvent("ESW.test", "onevent.success")
             if not event.isInvalid():
-                ctx.publishEvent(successEvent)
+                await ctx.publishEvent(successEvent)
 
         ctx.onEvent(handleEvent, "ESW.test.get.event")
 
@@ -104,10 +104,10 @@ def script(ctx: Script):
     async def handleCommandForAssembly(command: Setup):
         submitResponse = await testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
         if isinstance(await testAssembly.query(submitResponse.runId()), Started):
-            ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
+            await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
 
         if isinstance(await testAssembly.queryFinal(submitResponse.runId(), 100), Completed):
-            ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
+            await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
 
         testAssembly.subscribeCurrentState(["stateName1", "stateName2"],
                                            lambda currentState: ctx.publishEvent(ctx.SystemEvent(

@@ -2,10 +2,10 @@ import json
 import uuid
 
 import aiohttp
-from aiohttp import web, WSMessage
+import asyncio_atexit
+from aiohttp import web, WSMessage, ClientSession
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
-import atexit
 
 from aiohttp.web_ws import WebSocketResponse
 
@@ -18,12 +18,13 @@ import structlog
 from esw.SequencerRequest import *
 from esw.SequencerRequest import SequencerRequest
 
-# XXX This class is in progress, not implemented yet
+# XXX This class is in progress, not implemented yet (Not sure if it is needed here)
 
 # noinspection PyProtectedMember,PyShadowingBuiltins
 class SequencerServer:
     _app = web.Application()
     _crm = CommandResponseManager()
+    _session = ClientSession()
 
     log = structlog.get_logger()
 
@@ -142,12 +143,14 @@ class SequencerServer:
         if ws in self._sequencerStateSubscribers:
             self._sequencerStateSubscribers.remove(ws)
 
-    def _registerWithLocationService(self, prefix: Prefix, port: int):
+    async def _registerWithLocationService(self, prefix: Prefix, port: int):
         self.log.debug("Registering with location service using port " + str(port))
-        locationService = LocationService()
+        locationService = LocationService(self._session)
         connection = ConnectionInfo.make(prefix, ComponentType.SequenceComponent, ConnectionType.HttpType)
-        atexit.register(locationService.unregister, connection)
-        locationService.register(HttpRegistration(connection, port))
+        async def unreg():
+            await locationService.unregister(connection)
+        asyncio_atexit.register(unreg)
+        await locationService.register(HttpRegistration(connection, port))
 
     # XXXXXXXXXXXX ? handler? port? args?
     def __init__(self, prefix: Prefix, port: int = 8082):
@@ -165,6 +168,7 @@ class SequencerServer:
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
+        # XXX TODO FIXME: Need to use await here
         self._registerWithLocationService(prefix, self.port)
 
     def start(self):

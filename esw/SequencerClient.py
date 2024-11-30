@@ -26,17 +26,17 @@ class SequencerClient(SequencerApi):
     async def post(self, url: str, headers: dict, jsonData: str) -> ClientResponse:
         return await self._session.post(url, headers=headers, json=jsonData)
 
-    def _getBaseUri(self) -> str:
-        locationService = LocationService()
+    async def _getBaseUri(self) -> str:
+        locationService = LocationService(self._session)
         connection = ConnectionInfo.make(self.prefix, ComponentType.Sequencer, ConnectionType.HttpType)
-        location = locationService.resolve(connection)
+        location = await locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError
 
     async def _postCommand(self, data: dict) -> ClientResponse:
-        baseUri = self._getBaseUri()
+        baseUri = await self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         jsonData = json.loads(json.dumps(data))
@@ -279,7 +279,7 @@ class SequencerClient(SequencerApi):
         Returns: SubmitResponse
             The final submit response
       """
-        baseUri = self._getBaseUri().replace('http:', 'ws:')
+        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         # noinspection PyUnresolvedReferences
         respDict = QueryFinal(runId, timeoutInSeconds).to_dict()

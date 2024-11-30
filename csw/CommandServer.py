@@ -2,10 +2,10 @@ import json
 
 import aiohttp
 import structlog
-from aiohttp import web, WSMessage
+from aiohttp import web, WSMessage, ClientSession
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
-import atexit
+import asyncio_atexit
 import uuid
 
 from aiohttp.web_ws import WebSocketResponse
@@ -21,9 +21,6 @@ from csw.LocationService import LocationService, ConnectionInfo, ComponentType, 
 
 # noinspection PyProtectedMember
 class CommandServer:
-    _app = web.Application()
-    _crm = CommandResponseManager()
-    log = structlog.get_logger()
 
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
@@ -47,7 +44,7 @@ class CommandServer:
                 commandResponse = self.handler.onOneway(runId, command)
             case 'Validate':
                 commandResponse = self.handler.validateCommand(runId, command)
-            case x:  # should not happe
+            case _:  # should not happe
                 commandResponse = Error(runId, "Invalid command")
         return web.json_response(commandResponse._asDict())
 
@@ -89,13 +86,15 @@ class CommandServer:
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    def _registerWithLocationService(self, prefix: Prefix, port: int):
-        locationService = LocationService()
+    async def _registerWithLocationService(self, prefix: Prefix, port: int):
+        locationService = LocationService(self._session)
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        atexit.register(locationService.unregister, connection)
-        locationService.register(HttpRegistration(connection, port))
+        async def unreg():
+            await locationService.unregister(connection)
+        asyncio_atexit.register(unreg)
+        await locationService.register(HttpRegistration(connection, port))
 
-    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 0):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, clientSession: ClientSession, port: int = 0):
         """
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given
         prefix, so that CSW components can locate it and send commands to it.
@@ -106,8 +105,13 @@ class CommandServer:
             handler (ComponentHandlers): command handler notified when commands are received
             port (int): optional port for HTTP server
         """
+        self.log = None
+        self._session = clientSession
         self.handler = handler
         self.port = LocationService.getFreePort(port)
+        self._app = web.Application()
+        self._crm = CommandResponseManager()
+        self._log = structlog.get_logger()
         self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)

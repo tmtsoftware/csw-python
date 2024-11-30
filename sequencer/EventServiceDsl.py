@@ -1,5 +1,7 @@
-from typing import Callable, List, Set
+from collections.abc import Awaitable
+from typing import Callable, List, Set, Self
 
+from aiohttp import ClientSession
 from multipledispatch import dispatch
 
 from csw.Event import EventName, SystemEvent, Event
@@ -13,10 +15,21 @@ from csw.Prefix import Prefix
 
 class EventServiceDsl:
 
-    def __init__(self):
+    def __init__(self, clientSession: ClientSession):
         super(EventServiceDsl, self).__init__()
-        self.eventPublisher = EventPublisher()
-        self.eventSubscriber = EventSubscriber()
+        self._session = clientSession
+        self._eventPublisher: EventPublisher | None = None
+        self._eventSubscriber: EventSubscriber | None = None
+
+    async def eventPublisher(self) -> EventPublisher:
+        if (self._eventPublisher == None):
+            self._eventPublisher = await EventPublisher.make(self._session)
+        return self._eventPublisher
+
+    async def eventSubscriber(self) -> EventSubscriber:
+        if (self._eventSubscriber == None):
+            self._eventSubscriber = await EventSubscriber.make(self._session)
+        return self._eventSubscriber
 
     @dispatch(str, str)
     def EventKey(self, prefix: str, eventName: str) -> EventKey:
@@ -57,14 +70,14 @@ class EventServiceDsl:
         return SystemEvent(Prefix.from_str(sourcePrefix), EventName(eventName), list(parameters))
 
     @dispatch(Event)
-    def publishEvent(self, event: Event):
+    async def publishEvent(self, event: Event):
         """
         Publishes the given `event`.
 
         Args:
             event: event to publish
         """
-        self.eventPublisher.publish(event)
+        (await self.eventPublisher()).publish(event)
 
     # XXX TODO
     #     /**
@@ -81,7 +94,7 @@ class EventServiceDsl:
     #                 coroutineScope.future { Optional.ofNullable(eventGenerator()) }
     #             }, every.toJavaDuration())
 
-    def onEvent(self, callback: Callable[[Event], None], *eventKeys: str) -> EventSubscription:
+    async def onEvent(self, callback: Callable[[Event], Awaitable], *eventKeys: str) -> EventSubscription:
         """
         Subscribes to the `eventKeys` which will execute the given `callback` whenever an event is published on any one of the event keys.
 
@@ -93,7 +106,7 @@ class EventServiceDsl:
             object that can be used to cancel the subscription
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        subscription = self.eventSubscriber.subscribe(keys, callback)
+        subscription = (await self.eventSubscriber()).subscribe(keys, callback)
         # subscription.ready().await()
         return subscription
 
@@ -115,7 +128,7 @@ class EventServiceDsl:
     #         return EventSubscription { subscription.unsubscribe().await() }
     #     }
 
-    def getEvents(self, *eventKeys: str) -> Set[Event]:
+    async def getEvents(self, *eventKeys: str) -> Set[Event]:
         """
         Method to get the latest event of all the provided `eventKeys`. Invalid event will be given if no event is published on one or more keys.
         Throws exception when event server is not available.
@@ -124,9 +137,9 @@ class EventServiceDsl:
             *eventKeys: collection of strings representing EventKey
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        return self.eventSubscriber.gets(set(keys))
+        return (await self.eventSubscriber()).gets(set(keys))
 
-    def getEvent(self, eventKey: str) -> Event:
+    async def getEvent(self, eventKey: str) -> Event:
         """
         Method to get the latest event the provided `eventKey`. Invalid event will be given if no event is published on the key.
         Throws exception when event server is not available.
@@ -135,4 +148,4 @@ class EventServiceDsl:
         Returns:
             latest Event available
         """
-        return self.eventSubscriber.get(EventKey.from_str(eventKey))
+        return (await self.eventSubscriber()).get(EventKey.from_str(eventKey))

@@ -1,3 +1,7 @@
+import asyncio
+
+from aiohttp import ClientSession
+
 from csw.Parameter import *
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
@@ -8,9 +12,8 @@ from csw.Units import Units
 
 # Test publishing events
 class TestPublisher3:
-    pub = EventPublisher()
 
-    def __init__(self):
+    def __init__(self, pub: EventPublisher):
         intParam = IntKey.make("IntValue", Units.arcsec).set(42)
         floatParam = FloatKey.make("floatValue", Units.arcsec).set(42.1)
         longParam = LongKey.make("longValue", Units.arcsec).set(42)
@@ -39,12 +42,13 @@ class TestPublisher3:
         prefix = Prefix(Subsystem.CSW, "testassembly")
         eventName = EventName("myAssemblyEvent")
         event = SystemEvent(prefix, eventName, paramSet)
-        self.pub.publish(event)
+        pub.publish(event)
 
 
-def main():
-    TestPublisher3()
+async def main():
+    clientSession = ClientSession()
+    pub = await EventPublisher.make(clientSession)
+    TestPublisher3(pub)
 
 
-if __name__ == "__main__":
-    main()
+asyncio.run(main())

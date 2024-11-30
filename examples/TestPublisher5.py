@@ -1,3 +1,7 @@
+import asyncio
+
+from aiohttp import ClientSession
+
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Parameter import TAITimeKey
@@ -7,12 +11,16 @@ from csw.Subsystem import Subsystem
 # Test publishing events
 from csw.TAITime import TAITime
 
-prefix = Prefix(Subsystem.CSW, "testassembly")
-eventName = EventName("myAssemblyEvent")
+async def main():
+    clientSession = ClientSession()
+    prefix = Prefix(Subsystem.CSW, "testassembly")
+    eventName = EventName("myAssemblyEvent")
 
-param = TAITimeKey.make("assemblyEventValue").set(TAITime.now())
-paramSet = [param]
+    param = TAITimeKey.make("assemblyEventValue").set(TAITime.now())
+    paramSet = [param]
 
-event = SystemEvent(prefix, eventName, paramSet)
-pub = EventPublisher()
-pub.publish(event)
+    event = SystemEvent(prefix, eventName, paramSet)
+    pub = await EventPublisher.make(clientSession)
+    pub.publish(event)
+
+asyncio.run(main())

@@ -1,12 +1,14 @@
+from aiohttp import ClientSession
+
 from csw.ConfigService import ConfigService
 
 
 class ConfigServiceDsl:
-    def __init__(self):
+    def __init__(self, clientSession: ClientSession):
         super(ConfigServiceDsl, self).__init__()
-        self.configService = ConfigService()
+        self.configService = ConfigService(clientSession)
 
-    def existsConfig(self, path: str, id: str = None) -> bool:
+    async def existsConfig(self, path: str, id: str = None) -> bool:
         """
         Checks if configuration file exists at provided path
 
@@ -17,8 +19,9 @@ class ConfigServiceDsl:
         Returns:
             true if the file exists, false otherwise
         """
-        return self.configService.exists(path, id)
+        return await self.configService.exists(path, id)
 
+    # XXX TODO FIXME: Needs HOCON support in python?
     # def getConfig(self, path: str) -> bool:
     #     """
     #     Retrieves active configuration file contents present at provided path

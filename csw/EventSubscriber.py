@@ -1,26 +1,31 @@
-from idlelib.debugobj import dispatch
-from typing import Callable, Set
+from typing import Callable, Set, Self, Awaitable
 
 import cbor2
+from aiohttp import ClientSession
 
 from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event, SystemEvent
 from csw.EventKey import EventKey
 
+# XXX TODO FIXME: Use async redis
 
 class EventSubscriber:
 
-    def __init__(self):
-        self.__redis = RedisConnector()
+    def __init__(self, redis: RedisConnector):
+        self._redis = redis
+
+    @classmethod
+    async def make(cls, clientSession: ClientSession) -> Self:
+        return cls(await RedisConnector.make(clientSession))
 
     @staticmethod
-    def __handleCallback(message: dict, callback: Callable[[Event], None]):
+    async def _handleCallback(message: dict, callback: Callable[[Event], Awaitable]):
         data = message['data']
         event = Event._fromDict(cbor2.loads(data))
-        callback(event)
+        await callback(event)
 
-    def subscribe(self, eventKeyList: list[EventKey], callback: Callable[[Event], None]) -> EventSubscription:
+    def subscribe(self, eventKeyList: list[EventKey], callback: Callable[[Event], Awaitable]) -> EventSubscription:
         """
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
@@ -33,7 +38,7 @@ class EventSubscriber:
             an object that can be used to unsubscribe
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        t = self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
+        t = self._redis.subscribe(keyList, lambda message: self._handleCallback(message, callback))
         return EventSubscription(t)
 
     def unsubscribe(self, eventKeyList: list[EventKey]):
@@ -44,7 +49,7 @@ class EventSubscriber:
             eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.unsubscribe(keyList)
+        return self._redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -63,7 +68,7 @@ class EventSubscriber:
     #     Returns: PubSubWorkerThread
     #         subscription thread. Use .stop() method to stop subscription.
     #     """
-    #     return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+    #     return self._redis.pSubscribe(eventKeyList, lambda message: self._handleCallback(message, callback))
 
     # def pUnsubscribe(self, eventKeyList: list):
     #     """
@@ -72,7 +77,7 @@ class EventSubscriber:
     #     Args:
     #         eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
     #     """
-    #     return self.__redis.pUnsubscribe(eventKeyList)
+    #     return self._redis.pUnsubscribe(eventKeyList)
 
     def gets(self, eventKeys: Set[EventKey]) -> Set[Event]:
         """
@@ -98,7 +103,7 @@ class EventSubscriber:
 
         Returns: Event obtained from Event Service, decoded into a Event
         """
-        data = self.__redis.get(str(eventKey))
+        data = self._redis.get(str(eventKey))
         if data:
             event = Event._fromDict(cbor2.loads(data))
             return event

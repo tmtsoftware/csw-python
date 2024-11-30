@@ -255,6 +255,10 @@ class CswHighLevelDslApi:
         pass
 
 
+# XXXXXXXXX TODO FIXME: Fix multiple inheritance constructor calling
+# See https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 class CswHighLevelDsl(CswHighLevelDslApi,
                       LocationServiceDsl,
                       ConfigServiceDsl,
@@ -272,7 +276,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
     """
 
     def __init__(self, cswServices: CswServices, scriptContext: ScriptContext):
-        super(CswHighLevelDsl, self).__init__()
+        super(CswHighLevelDsl, self).__init__(clientSession = scriptContext.clientSession)
         self.cswServices = cswServices
         self.scriptContext = scriptContext
         self.scriptDsl = ScriptDsl(scriptContext.sequenceOperatorFactory)

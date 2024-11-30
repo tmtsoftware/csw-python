@@ -2,19 +2,14 @@ import os
 import traceback
 from typing import Callable
 
-import aiohttp
-# import hunter
-# hunter.trace(stdlib=False, action=hunter.CallPrinter)
+import asyncio_atexit
 
 import structlog
 from aiohttp import web, ClientSession
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
-import atexit
 import sys
 import configparser
-
-from aiohttp.web_runner import GracefulExit
 
 from csw.AlarmService import AlarmService
 from csw.CommandResponseManager import CommandResponseManager
@@ -26,6 +21,7 @@ from csw.LocationService import LocationService, ConnectionInfo, ComponentType, 
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.SequencerRequest import DiagnosticMode
+from sequencer.CswServices import CswServices
 from sequencer.Script import Script
 from sequencer.ScriptApi import ScriptApi
 from sequencer.ScriptContext import ScriptContext
@@ -70,7 +66,7 @@ class OcsScriptServer:
         self.log.info(f"Received executeShutdown sequence command")
         try:
             await self.scriptApi.executeShutdown()
-            # self._regResult.unregister()
+            self._regResult.unregister()
         except Exception as err:
             raise web.HTTPBadRequest(text=f"executeShutdown: {err=}, {type(err)=}")
         return web.HTTPOk()
@@ -139,35 +135,36 @@ class OcsScriptServer:
         await self.app.shutdown()
         return web.HTTPOk()
 
-    @staticmethod
-    def _registerWithLocationService(prefix: Prefix, port: int) -> RegistrationResult:
-        locationService = LocationService()
-        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        atexit.register(locationService.unregister, connection)
-        return locationService.register(HttpRegistration(connection, port))
+    async def _registerWithLocationService(self) -> RegistrationResult:
+        locationService = LocationService(self.clientSession)
+        connection = ConnectionInfo.make(self.sequencerPrefix, ComponentType.Service, ConnectionType.HttpType)
+        async def unreg():
+            await locationService.unregister(connection)
+        asyncio_atexit.register(unreg)
+        return await locationService.register(HttpRegistration(connection, self.port))
 
     def __init__(self):
+        self.clientSession = ClientSession()
         self._crm = CommandResponseManager()
         self.log = structlog.get_logger()
         self.sequencerPrefix = Prefix.from_str(sys.argv[1])
         self.sequenceComponentPrefix = Prefix.from_str(sys.argv[2])
         self.port = LocationService.getFreePort(0)
-        self._regResult = OcsScriptServer._registerWithLocationService(self.sequencerPrefix, self.port)
 
     # We have to do all this initialization here, in order to be able have ClientSession share the event loop
     # with the server
     # See https://stackoverflow.com/questions/55963155/what-is-the-proper-way-to-use-clientsession-inside-aiohttp-web-server
     async def _clientSessionCtx(self, app: web.Application):
-        clientSession = ClientSession()
-        sequencerApi: SequencerApi = SequencerClient(self.sequencerPrefix, clientSession)
+        sequencerApi: SequencerApi = SequencerClient(self.sequencerPrefix, self.clientSession)
         sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
         obsMode = ObsMode.fromPrefix(self.sequencerPrefix)
         evenService = EventService()
         alarmService = AlarmService()
-        scriptContext = ScriptContext(1, self.sequencerPrefix, obsMode, clientSession, sequenceOperatorFactory,
+        scriptContext = ScriptContext(1, self.sequencerPrefix, obsMode, self.clientSession, sequenceOperatorFactory,
                                       evenService,
                                       alarmService)
-        scriptWiring = ScriptWiring(scriptContext)
+        cswServices = await CswServices.create(self.clientSession, scriptContext)
+        scriptWiring = ScriptWiring(scriptContext, cswServices)
         script = Script(scriptWiring)
         self.scriptApi: ScriptApi = script.scriptDsl
         cfg = configparser.ConfigParser()
@@ -183,9 +180,10 @@ class OcsScriptServer:
         module.script(script)
         print(f"Starting script server for {self.sequencerPrefix} ({scriptFile}) on port {self.port}")
         yield
-        await clientSession.close()
+        await self.clientSession.close()
 
     async def _appFactory(self) -> web.Application:
+        self._regResult = await self._registerWithLocationService()
         self.app = web.Application()
         self.app.add_routes([
             web.post('/execute', self._execute),

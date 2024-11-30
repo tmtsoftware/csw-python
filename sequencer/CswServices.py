@@ -1,5 +1,6 @@
 from typing import Self
 
+from aiohttp import ClientSession
 from attr import dataclass
 
 from csw.AlarmService import AlarmService
@@ -27,11 +28,11 @@ class CswServices:
     # databaseServiceFactory: DatabaseServiceFactory
 
     @classmethod
-    def create(cls, ctx: ScriptContext) -> Self:
+    async def create(cls, clientSession: ClientSession, ctx: ScriptContext) -> Self:
         alarmService = ctx.alarmService
         eventService = ctx.eventService
-        eventPublisher = eventService.defaultPublisher
-        eventSubscriber = eventService.defaultSubscriber
-        locationService = LocationService()
-        configService = ConfigService()
+        eventPublisher = await eventService.defaultPublisher(clientSession)
+        eventSubscriber = await eventService.defaultSubscriber(clientSession)
+        locationService = LocationService(clientSession)
+        configService = ConfigService(clientSession)
         return CswServices(alarmService, eventService, eventPublisher, eventSubscriber, locationService, configService)

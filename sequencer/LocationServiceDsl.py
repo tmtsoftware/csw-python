@@ -1,15 +1,17 @@
 from typing import List
 
+from aiohttp import ClientSession
+
 from csw.LocationService import LocationService, Registration, RegistrationResult, ConnectionInfo, Location, \
     ComponentType
 
 
 class LocationServiceDsl:
-    def __init__(self):
+    def __init__(self, clientSession: ClientSession):
         super(LocationServiceDsl, self).__init__()
-        self.locationService = LocationService()
+        self.locationService = LocationService(clientSession)
 
-    def register(self, registration: Registration) -> RegistrationResult:
+    async def register(self, registration: Registration) -> RegistrationResult:
         """
         Registers registration details
 
@@ -19,49 +21,49 @@ class LocationServiceDsl:
         Returns:
             RegistrationResult which contains registered location and handle for un-registration
         """
-        return self.locationService.register(registration)
+        return await self.locationService.register(registration)
 
-    def unregister(self, connection: ConnectionInfo):
+    async def unregister(self, connection: ConnectionInfo):
         """
         Unregisters the connection
         """
-        self.locationService.unregister(connection)
+        await self.locationService.unregister(connection)
 
-    def findLocation(self, connection: ConnectionInfo) -> Location:
+    async def findLocation(self, connection: ConnectionInfo) -> Location:
         """
         Look up for the location registered against provided connection
         """
-        return self.locationService.find(connection)
+        return await self.locationService.find(connection)
 
-    def resolveLocation(self, connection: ConnectionInfo, withinSecs: int = "5") -> Location:
+    async def resolveLocation(self, connection: ConnectionInfo, withinSecs: int = "5") -> Location:
         """
         Resolve the location registered against provided connection
         """
-        return self.locationService.resolve(connection, withinSecs)
+        return await self.locationService.resolve(connection, withinSecs)
 
-    def listLocations(self) -> List[Location]:
+    async def listLocations(self) -> List[Location]:
         """
         Lists all the registered locations
         """
-        return self.locationService.list()
+        return await self.locationService.list()
 
-    def listLocationsBy(self, compType: ComponentType) -> List[Location]:
+    async def listLocationsBy(self, compType: ComponentType) -> List[Location]:
         """
         Lists all the registered locations matching against provided component type
         """
-        return self.locationService.list(compType)
+        return await self.locationService.list(compType)
 
-    def listLocationsByHostname(self, hostname: str) -> List[Location]:
+    async def listLocationsByHostname(self, hostname: str) -> List[Location]:
         """
         Lists all the registered locations matching against provided host name
         """
-        return self.locationService.list(hostname)
+        return await self.locationService.list(hostname)
 
-    def listLocationsByPrefix(self, prefixStartsWith: str) -> List[Location]:
+    async def listLocationsByPrefix(self, prefixStartsWith: str) -> List[Location]:
         """
         Lists all the registered locations that start with the provided prefix string
         """
-        return self.locationService.listByPrefix(prefixStartsWith)
+        return await self.locationService.listByPrefix(prefixStartsWith)
 
     # XXX TODO
     # /**

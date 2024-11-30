@@ -1,3 +1,7 @@
+import asyncio
+
+from aiohttp import ClientSession
+
 from csw.EventSubscriber import EventSubscriber
 from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
@@ -8,12 +12,11 @@ from csw.EventKey import EventKey
 # Test subscribing to events
 class TestSubscriber3:
 
-    def __init__(self):
+    def __init__(self, eventSubscriber: EventSubscriber):
         self.eventKey = EventKey(Prefix(Subsystem.CSW, "testassembly"), EventName("myAssemblyEvent"))
-        EventSubscriber().subscribe([self.eventKey], self.callback)
+        self.subscription = eventSubscriber.subscribe([self.eventKey], self.callback)
 
-    @staticmethod
-    def callback(systemEvent):
+    def callback(self, systemEvent):
         print(f"Received system event '{systemEvent.eventName.name}' with event time: '{systemEvent.eventTime}'")
         for i in systemEvent.paramSet:
             print(f"    with values: {i.keyName}({i.keyType.name}): {i.values}")
@@ -23,11 +26,13 @@ class TestSubscriber3:
             p = systemEvent.get("assemblyEventValue")
             if p is not None:
                 print(f"Found: {p.keyName}")
+        self.subscription.unsubscribe()
 
 
-def main():
-    TestSubscriber3()
+async def main():
+    clientSession = ClientSession()
+    eventSubscriber = await EventSubscriber.make(clientSession)
+    TestSubscriber3(eventSubscriber)
 
 
-if __name__ == "__main__":
-    main()
+asyncio.run(main())
