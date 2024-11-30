@@ -3,6 +3,7 @@ import asyncio
 import structlog
 
 from csw.CommandResponse import Started, Completed
+from csw.CurrentState import CurrentState
 from csw.Event import Event
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
@@ -84,7 +85,7 @@ def script(ctx: Script):
 
     async def handleGetEvent(s: Setup):
         # ESW-88
-        event = ctx.getEvent("ESW.test.get.event")
+        event = await ctx.getEvent("ESW.test.get.event")
         successEvent = ctx.SystemEvent("ESW.test", "get.success")
         if not event.isInvalid():
             await ctx.publishEvent(successEvent)
@@ -97,7 +98,7 @@ def script(ctx: Script):
             if not event.isInvalid():
                 await ctx.publishEvent(successEvent)
 
-        ctx.onEvent(handleEvent, "ESW.test.get.event")
+        await ctx.onEvent(handleEvent, "ESW.test.get.event")
 
     ctx.onSetup("on-event", handleOnEvent)
 
@@ -109,10 +110,12 @@ def script(ctx: Script):
         if isinstance(await testAssembly.queryFinal(submitResponse.runId(), 100), Completed):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
 
-        testAssembly.subscribeCurrentState(["stateName1", "stateName2"],
-                                           lambda currentState: ctx.publishEvent(ctx.SystemEvent(
-                                               "tcs.filter.wheel",
-                                               f"publish-{currentState.stateName().name()}")))
+        async def handleCurrentState(currentState: CurrentState):
+            await ctx.publishEvent(ctx.SystemEvent(
+                "tcs.filter.wheel",
+                f"publish-{currentState.stateName}"))
+
+        testAssembly.subscribeCurrentState(["stateName1", "stateName2"], handleCurrentState)
         await testAssembly.oneway(command)
 
     ctx.onSetup("command-for-assembly", handleCommandForAssembly)

@@ -13,7 +13,7 @@ def script(ctx: Script):
     async def handleNewSequence():
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "NewSequenceHandler", newSequenceHandlerParam)
-        ctx.publishEvent(event)
+        await ctx.publishEvent(event)
         await asyncio.sleep(0.5)
 
     ctx.onNewSequence(handleNewSequence)
@@ -21,7 +21,7 @@ def script(ctx: Script):
     async def handleCommand1(_: Setup):
         newSequenceParam = stringKey("sequence-command-1").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "command1", newSequenceParam)
-        ctx.publishEvent(event)
+        await ctx.publishEvent(event)
 
     ctx.onSetup("command-1", handleCommand1)
 
@@ -35,14 +35,14 @@ def script(ctx: Script):
     async def handleAbortSequence():
         # do some actions to abort sequence
         successEvent = ctx.SystemEvent("TCS.test", "abort.success")
-        ctx.publishEvent(successEvent)
+        await ctx.publishEvent(successEvent)
 
     ctx.onAbortSequence(handleAbortSequence)
 
     async def handleStop():
         # do some actions to stop
         successEvent = ctx.SystemEvent("TCS.test", "stop.success")
-        ctx.publishEvent(successEvent)
+        await ctx.publishEvent(successEvent)
 
     ctx.onStop(handleStop)
 

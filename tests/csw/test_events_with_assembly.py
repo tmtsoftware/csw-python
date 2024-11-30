@@ -2,9 +2,9 @@ import filecmp
 import os
 import time
 
-import pytest
 import structlog
 from _pytest import pathlib
+from aiohttp import ClientSession
 
 from csw.EventSubscriber import EventSubscriber
 from csw.EventTime import EventTime
@@ -27,6 +27,7 @@ from csw.EventKey import EventKey
 # generated from the received events here.
 #@pytest.mark.skip(reason="Test passes when run alone, but not together with all others")
 class TestEventsWithAssembly:
+    clientSession = ClientSession()
     log = structlog.get_logger()
     dir = pathlib.Path(__file__).parent.absolute()
     inFileName = "PyTestAssemblyEventHandlers.in"
@@ -35,8 +36,6 @@ class TestEventsWithAssembly:
     tmpOutFile = f"/tmp/{outFileName}"
     inFile = f"{dir}/{inFileName}"
     outFile = f"{dir}/{outFileName}"
-    pub = EventPublisher()
-    sub = EventSubscriber()
     prefix = Prefix(Subsystem.CSW, "TestPublisher")
 
     def setup_method(self):
@@ -51,19 +50,21 @@ class TestEventsWithAssembly:
         if os.path.exists(self.tmpOutFile):
             os.remove(self.tmpOutFile)
 
-    def test_pub_sub(self):
+    async def test_pub_sub(self):
+        pub = await EventPublisher.make(self.clientSession)
+        sub = await EventSubscriber.make(self.clientSession)
         time.sleep(1.0)
         self.log.debug("Starting test...")
-        thread = self.sub.subscribe(
+        subscription = await sub.subscribe(
             [EventKey(self.prefix, EventName("testEvent1")),
              EventKey(self.prefix, EventName("testEvent2")),
              EventKey(self.prefix, EventName("testEvent3"))],
             self.callback)
         try:
-            self.publishEvent1()
-            self.publishEvent2()
-            self.publishEvent3()
-            self.publishEvent4()
+            await self.publishEvent1(pub)
+            await self.publishEvent2(pub)
+            await self.publishEvent3(pub)
+            await self.publishEvent4(pub)
             self.log.debug("Published three events...")
             # make sure assembly has time to write the file
             time.sleep(3)
@@ -74,16 +75,16 @@ class TestEventsWithAssembly:
             self.log.info("Event pub/sub tests passed")
         finally:
             self.log.debug("Stopping subscriber...")
-            thread.stop()
+            subscription.unsubscribe()
 
-    def publishEvent1(self):
+    async def publishEvent1(self, pub: EventPublisher):
         param = DoubleKey.make("assemblyEventValue").set(42.0)
         paramSet = [param]
         event = SystemEvent(self.prefix, EventName("testEvent1"), paramSet)
         self.log.debug(f"Publishing event {event}")
-        self.pub.publish(event)
+        await pub.publish(event)
 
-    def publishEvent2(self):
+    async def publishEvent2(self, pub: EventPublisher):
         intParam = IntKey.make("IntValue", Units.arcsec).set(42)
         intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
         floatArrayParam = FloatArrayKey.make("FloatArrayValue", Units.mas).set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
@@ -91,9 +92,9 @@ class TestEventsWithAssembly:
                                                                               [[-1, -2, -3, -4], [-5, -6, -7, -8]])
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
         event = SystemEvent(self.prefix, EventName("testEvent2"), paramSet)
-        self.pub.publish(event)
+        await pub.publish(event)
 
-    def publishEvent3(self):
+    async def publishEvent3(self, pub: EventPublisher):
         intParam = IntKey.make("IntValue", Units.arcsec).set(42)
         floatParam = FloatKey.make("floatValue", Units.arcsec).set(42.1)
         longParam = LongKey.make("longValue", Units.arcsec).set(42)
@@ -119,18 +120,18 @@ class TestEventsWithAssembly:
         paramSet = [coordsParam, byteParam, intParam, floatParam, longParam, shortParam, booleanParam, byteArrayParam,
                     intArrayParam, floatArrayParam, doubleArrayParam, intMatrixParam]
         event = SystemEvent(self.prefix, EventName("testEvent3"), paramSet)
-        self.pub.publish(event)
+        await pub.publish(event)
 
-    def publishEvent4(self):
+    async def publishEvent4(self, pub: EventPublisher):
         param = UTCTimeKey.make("assemblyEventValue").set(UTCTime.from_str("2021-09-20T20:43:35.419053077Z"))
         param2 = TAITimeKey.make("assemblyEventValue2").set(TAITime.from_str("2021-09-20T18:44:12.419084072Z"))
         paramSet = [param, param2]
         event = SystemEvent(self.prefix, EventName("testEvent4"), paramSet)
         self.log.debug(f"Publishing event {event}")
-        self.pub.publish(event)
+        await pub.publish(event)
 
     # Event subscriber callback
-    def callback(self, systemEvent):
+    async def callback(self, systemEvent):
         self.log.debug(f"Received system event '{systemEvent}'")
         # Save event to file as JSON like dict (Not JSON, since byte arrays are not serializable in python),
         # but change the date and id for comparison

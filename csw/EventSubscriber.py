@@ -1,4 +1,5 @@
-from typing import Callable, Set, Self, Awaitable
+import asyncio
+from typing import Callable, Set, Self, Awaitable, List
 
 import cbor2
 from aiohttp import ClientSession
@@ -7,6 +8,7 @@ from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
 from csw.Event import Event, SystemEvent
 from csw.EventKey import EventKey
+
 
 # XXX TODO FIXME: Use async redis
 
@@ -25,7 +27,8 @@ class EventSubscriber:
         event = Event._fromDict(cbor2.loads(data))
         await callback(event)
 
-    def subscribe(self, eventKeyList: list[EventKey], callback: Callable[[Event], Awaitable]) -> EventSubscription:
+    async def subscribe(self, eventKeyList: list[EventKey],
+                        callback: Callable[[Event], Awaitable]) -> EventSubscription:
         """
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
@@ -38,10 +41,14 @@ class EventSubscriber:
             an object that can be used to unsubscribe
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        t = self._redis.subscribe(keyList, lambda message: self._handleCallback(message, callback))
+
+        async def f(message):
+            await self._handleCallback(message, callback)
+
+        t = await self._redis.subscribe(keyList, f)
         return EventSubscription(t)
 
-    def unsubscribe(self, eventKeyList: list[EventKey]):
+    async def unsubscribe(self, eventKeyList: list[EventKey]):
         """
         Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
@@ -49,7 +56,7 @@ class EventSubscriber:
             eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self._redis.unsubscribe(keyList)
+        return await self._redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -79,7 +86,7 @@ class EventSubscriber:
     #     """
     #     return self._redis.pUnsubscribe(eventKeyList)
 
-    def gets(self, eventKeys: Set[EventKey]) -> Set[Event]:
+    async def gets(self, eventKeys: Set[EventKey]) -> Set[Event]:
         """
         Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
         If event is not published for one or more event keys, `invalid event` will be received for those Event Keys.
@@ -92,9 +99,11 @@ class EventSubscriber:
         Returns:
             a set of latest Event for the provided Event Keys
         """
-        return set(map(lambda k: self.get(k), eventKeys))
+        fList = list(map(lambda k: self.get(k), eventKeys))
+        events: List[Event] = await asyncio.gather(*fList)
+        return set(events)
 
-    def get(self, eventKey: EventKey) -> Event:
+    async def get(self, eventKey: EventKey) -> Event:
         """
         Get an event from the Event Service
 
@@ -103,7 +112,7 @@ class EventSubscriber:
 
         Returns: Event obtained from Event Service, decoded into a Event
         """
-        data = self._redis.get(str(eventKey))
+        data = await self._redis.get(str(eventKey))
         if data:
             event = Event._fromDict(cbor2.loads(data))
             return event

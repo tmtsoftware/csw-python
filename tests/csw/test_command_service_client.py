@@ -34,7 +34,7 @@ async def test_command_service_client():
 
     resp4a = await cs.submit(setup2)
     assert isinstance(resp4a, Started)
-    resp5a = await cs.queryFinalAsync(resp4a.runId, 5)
+    resp5a = await cs.queryFinal(resp4a.runId, 5)
     assert isinstance(resp5a, Completed)
     resp6a = await cs.submitAndWaitAsync(setup2, 5)
     assert isinstance(resp6a, Completed)

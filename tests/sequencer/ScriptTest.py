@@ -46,7 +46,7 @@ async def main():
 
         # test the script
         publisher = await scriptContext.eventService.defaultPublisher(clientSession)
-        publisher.publish(SystemEvent(Prefix.from_str("esw.test"), EventName("get.event")))
+        await publisher.publish(SystemEvent(Prefix.from_str("esw.test"), EventName("get.event")))
         setup  = Setup(Prefix.from_str("esw.test"), CommandName("get-event"))
         await script.scriptDsl.execute(setup)
 

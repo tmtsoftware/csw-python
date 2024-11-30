@@ -122,7 +122,7 @@ class RichComponent:
 
         return self.actionOnResponse(f, resumeOnError)
 
-    def subscribeCurrentState(self, stateNames: List[str], callback: Callable[[CurrentState], None]) -> Subscription:
+    def subscribeCurrentState(self, stateNames: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
         """
         Subscribe to the current state of a component
 

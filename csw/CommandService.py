@@ -1,7 +1,7 @@
 import asyncio
 import uuid
 from asyncio import Task
-from typing import List, Callable
+from typing import List, Callable, Awaitable
 
 import aiohttp
 import structlog
@@ -187,7 +187,7 @@ class CommandService:
             case _:
                 return resp
 
-    async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], None]):
+    async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]):
         baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
@@ -198,13 +198,13 @@ class CommandService:
                 msg = await msgF
                 match msg.type:
                     case aiohttp.WSMsgType.TEXT:
-                        callback(CurrentState._fromDict(json.loads(msg.data)))
+                        await callback(CurrentState._fromDict(json.loads(msg.data)))
                     case aiohttp.WSMsgType.CLOSED:
                         break
                     case aiohttp.WSMsgType.ERROR:
                         break
 
-    def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], None]) -> Subscription:
+    def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
         """
         Subscribe to the current state of a component
 

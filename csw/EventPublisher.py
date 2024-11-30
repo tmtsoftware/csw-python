@@ -17,7 +17,7 @@ class EventPublisher:
     async def make(cls, clientSession: ClientSession) -> Self:
         return cls(await RedisConnector.make(clientSession))
 
-    def publish(self, event: Event):
+    async def publish(self, event: Event):
         """
         Publish an event to the Event Service
 
@@ -26,4 +26,4 @@ class EventPublisher:
         """
         event_key = str(event.source) + "." + event.eventName.name
         obj = cbor2.dumps(event._asDict())
-        self._redis.publish(event_key, obj)
+        await self._redis.publish(event_key, obj)

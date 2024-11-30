@@ -1,5 +1,5 @@
 from collections.abc import Awaitable
-from typing import Callable, List, Set, Self
+from typing import Callable, Set
 
 from aiohttp import ClientSession
 from multipledispatch import dispatch
@@ -22,12 +22,12 @@ class EventServiceDsl:
         self._eventSubscriber: EventSubscriber | None = None
 
     async def eventPublisher(self) -> EventPublisher:
-        if (self._eventPublisher == None):
+        if self._eventPublisher == None:
             self._eventPublisher = await EventPublisher.make(self._session)
         return self._eventPublisher
 
     async def eventSubscriber(self) -> EventSubscriber:
-        if (self._eventSubscriber == None):
+        if self._eventSubscriber == None:
             self._eventSubscriber = await EventSubscriber.make(self._session)
         return self._eventSubscriber
 
@@ -77,7 +77,7 @@ class EventServiceDsl:
         Args:
             event: event to publish
         """
-        (await self.eventPublisher()).publish(event)
+        await (await self.eventPublisher()).publish(event)
 
     # XXX TODO
     #     /**
@@ -106,8 +106,7 @@ class EventServiceDsl:
             object that can be used to cancel the subscription
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        subscription = (await self.eventSubscriber()).subscribe(keys, callback)
-        # subscription.ready().await()
+        subscription = await (await self.eventSubscriber()).subscribe(keys, callback)
         return subscription
 
     # XXX TODO
@@ -137,7 +136,7 @@ class EventServiceDsl:
             *eventKeys: collection of strings representing EventKey
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        return (await self.eventSubscriber()).gets(set(keys))
+        return await (await self.eventSubscriber()).gets(set(keys))
 
     async def getEvent(self, eventKey: str) -> Event:
         """
@@ -148,4 +147,4 @@ class EventServiceDsl:
         Returns:
             latest Event available
         """
-        return (await self.eventSubscriber()).get(EventKey.from_str(eventKey))
+        return await (await self.eventSubscriber()).get(EventKey.from_str(eventKey))

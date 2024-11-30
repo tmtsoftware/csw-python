@@ -1,6 +1,7 @@
 import time
 
 import structlog
+from aiohttp import ClientSession
 
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
@@ -14,12 +15,13 @@ from csw.EventKey import EventKey
 class TestEventPublisher:
     log = structlog.get_logger()
     count = 0
+    clientSession = ClientSession()
 
     # Simple test that publishes an event and subscribes to it
     # Requires that CSW services are running.
-    def test_pub_sub(self):
-        pub = EventPublisher()
-        sub = EventSubscriber()
+    async def test_pub_sub(self):
+        pub = await EventPublisher.make(self.clientSession)
+        sub = await EventSubscriber.make(self.clientSession)
 
         prefix = Prefix(Subsystem.CSW, "assembly")
         eventName = EventName("test_event")
@@ -28,16 +30,16 @@ class TestEventPublisher:
         paramSet = [param]
         event = SystemEvent(prefix, eventName, paramSet)
 
-        subscription = sub.subscribe([eventKey], self.callback)
-        pub.publish(event)
+        subscription = await sub.subscribe([eventKey], self.callback)
+        await pub.publish(event)
         time.sleep(1)
-        e = sub.get(eventKey)
+        e = await sub.get(eventKey)
         assert (e == event)
         assert (self.count == 1)
-        sub.unsubscribe([eventKey])
-        subscription.unsubscribe()
+        await sub.unsubscribe([eventKey])
+        await subscription.unsubscribe()
 
-    def callback(self, systemEvent):
+    async def callback(self, systemEvent):
         self.count = self.count + 1
         self.log.debug(f"Received system event '{systemEvent.eventName.name}'")
         for i in systemEvent.paramSet:
