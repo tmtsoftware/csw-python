@@ -4,6 +4,7 @@ import sys
 
 import py
 import pytest
+import pytest_asyncio
 from xprocess import ProcessStarter
 from csw.CommandResponse import Completed, Started
 from csw.CommandService import CommandService
@@ -19,33 +20,33 @@ from aiohttp import ClientSession
 # Start a local python based command service (defined in TestComponentHandlers.py) for testing
 from csw.Units import Units
 
-clientSession = ClientSession()
-
-@pytest.fixture(autouse=True)
-async def start_server(xprocess):
-    # Remove any leftover reg from loc service
-    locationService = LocationService(clientSession)
-    prefix = Prefix(Subsystem.CSW, "pycswTest2")
-    connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-    await locationService.unregister(connection)
-
-    python_executable_full_path = sys.executable
-    python_server_script_full_path = py.path.local(__file__).dirpath("TestComponentHandlers.py")
-    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-
-    class Starter(ProcessStarter):
-        pattern = '======== Running on'
-        # See https://pytest-xprocess.readthedocs.io/en/latest/starter.html
-        env = {"PYTHONPATH": str(path), "PYTHONUNBUFFERED": "1"}
-        terminate_on_interrupt = True
-        args = [python_executable_full_path, python_server_script_full_path]
-
-    xprocess.ensure("TestComponentHandlers", Starter)
-    yield
-    xprocess.getinfo("TestComponentHandlers").terminate()
+# @pytest_asyncio.fixture(autouse=True)
+# async def start_server(xprocess):
+#     clientSession = ClientSession()
+#     # Remove any leftover reg from loc service
+#     locationService = LocationService(clientSession)
+#     prefix = Prefix(Subsystem.CSW, "pycswTest2")
+#     connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+#     await locationService.unregister(connection)
+#
+#     python_executable_full_path = sys.executable
+#     python_server_script_full_path = py.path.local(__file__).dirpath("TestComponentHandlers.py")
+#     path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+#
+#     class Starter(ProcessStarter):
+#         pattern = '======== Running on'
+#         # See https://pytest-xprocess.readthedocs.io/en/latest/starter.html
+#         env = {"PYTHONPATH": str(path), "PYTHONUNBUFFERED": "1"}
+#         terminate_on_interrupt = True
+#         args = [python_executable_full_path, python_server_script_full_path]
+#
+#     xprocess.ensure("TestComponentHandlers", Starter)
+#     yield
+#     xprocess.getinfo("TestComponentHandlers").terminate()
 
 
 # noinspection DuplicatedCode,PyPep8Naming
+@pytest.mark.asyncio
 class TestCommandServiceClientServer:
     _csCount = 0
     _currentState: CurrentState = None
@@ -58,6 +59,7 @@ class TestCommandServiceClientServer:
 
     async def test_command_client_server(self):
         # Create a python based command service client
+        clientSession = ClientSession()
         cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service, clientSession)
         prefix = Prefix(Subsystem.CSW, "TestClient")
         resp = await cs.submit(Setup(prefix, CommandName("SimpleCommand")))

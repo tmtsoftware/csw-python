@@ -93,28 +93,28 @@ class ConfigService:
     def _formatTime(time: datetime):
         return time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    def _getBaseUri(self) -> str:
+    async def _getBaseUri(self) -> str:
         prefix = Prefix(Subsystem.CSW, "ConfigServer")
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        location = self._locationService.resolve(connection)
+        location = await self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError("Can't locate CSW Config Service")
 
-    def _endPoint(self, path: str) -> str:
-        return f'{self._getBaseUri()}{path}'
+    async def _endPoint(self, path: str) -> str:
+        return f'{await self._getBaseUri()}{path}'
 
-    def _locateAuthService(self) -> str:
+    async def _locateAuthService(self) -> str:
         connection = ConnectionInfo.make(Prefix(Subsystem.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
-        location = self._locationService.resolve(connection)
+        location = await self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError("Can't locate CSW Auth Service")
 
-    def _getToken(self):
-        uri = self._locateAuthService()
+    async def _getToken(self):
+        uri = await self._locateAuthService()
         keycloak_openid = KeycloakOpenID(server_url=f'{uri}/',
                                          client_id=self.client_id,
                                          realm_name='TMT')
@@ -133,9 +133,9 @@ class ConfigService:
     async def _createOrUpdate(self, create: bool, path: str, configData: ConfigData,
                         annex: bool = False, comment: str = "Created") -> ConfigId:
         self._validatePath(path)
-        token = self._getToken()
+        token = await self._getToken()
         params = urlencode({'annex': annex, 'comment': comment})
-        baseUri = self._endPoint(f'config/{path}')
+        baseUri = await self._endPoint(f'config/{path}')
         uri = f'{baseUri}?{params}'
         headers = {'Content-type': 'application/octet-stream', 'Authorization': f'Bearer {token}'}
         if create:
@@ -182,9 +182,9 @@ class ConfigService:
             path: the file path relative to the repository root
             comment: comment to associate with this operation
         """
-        token = self._getToken()
+        token = await self._getToken()
         params = urlencode({'comment': comment})
-        baseUri = self._endPoint(f'config/{path}')
+        baseUri = await self._endPoint(f'config/{path}')
         uri = f'{baseUri}?{params}'
         headers = {'Authorization': f'Bearer {token}'}
         response = await self._session.delete(uri, headers=headers)
@@ -208,7 +208,7 @@ class ConfigService:
             params.update({'type': fileType.name})
         if pattern:
             params.update({'pattern': pattern})
-        uri = f"{self._endPoint('list')}?{urlencode(params)}"
+        uri = f"{await self._endPoint('list')}?{urlencode(params)}"
         response = await self._session.get(uri)
         return list(map(lambda p: ConfigFileInfo.from_dict(p), await response.json()))
 
@@ -225,7 +225,7 @@ class ConfigService:
         params = {}
         if configId:
             params.update({'id': configId.id})
-        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint('config')}/{path}?{urlencode(params)}"
         response = await self._session.head(uri)
         return response.ok
 
@@ -238,7 +238,7 @@ class ConfigService:
 
         Returns: file contents
         """
-        uri = f"{self._endPoint('config')}/{path}"
+        uri = f"{await self._endPoint('config')}/{path}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -255,7 +255,7 @@ class ConfigService:
         Returns: file contents
         """
         params = {'id': configId.id}
-        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint('config')}/{path}?{urlencode(params)}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -274,7 +274,7 @@ class ConfigService:
         Returns: file contents
         """
         params = {'date': self._formatTime(time)}
-        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint('config')}/{path}?{urlencode(params)}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -290,7 +290,7 @@ class ConfigService:
         Returns: file contents
 
         """
-        uri = f"{self._endPoint('active-config')}/{path}"
+        uri = f"{await self._endPoint('active-config')}/{path}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -308,7 +308,7 @@ class ConfigService:
 
         """
         params = {'date': self._formatTime(time)}
-        uri = f"{self._endPoint('active-config')}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint('active-config')}/{path}?{urlencode(params)}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -324,7 +324,7 @@ class ConfigService:
         Returns: ConfigId indicating the id of the active version
 
         """
-        uri = f"{self._endPoint('active-version')}/{path}"
+        uri = f"{await self._endPoint('active-version')}/{path}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -337,7 +337,7 @@ class ConfigService:
         Returns: a ConfigMetadata object
 
         """
-        uri = f"{self._endPoint('metadata')}"
+        uri = f"{await self._endPoint('metadata')}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -354,7 +354,7 @@ class ConfigService:
             params.update({'to': self._formatTime(toTime)})
         if maxResults:
             params.update({'maxResults': maxResults})
-        uri = f"{self._endPoint(key)}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint(key)}/{path}?{urlencode(params)}"
         response = await self._session.get(uri)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -409,10 +409,10 @@ class ConfigService:
             comment: comment to associate with this operation
 
         """
-        token = self._getToken()
+        token = await self._getToken()
         params = {'id': configId.id, 'comment': comment}
         headers = {'Authorization': f'Bearer {token}'}
-        uri = f"{self._endPoint('active-version')}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint('active-version')}/{path}?{urlencode(params)}"
         response = await self._session.put(uri, headers=headers)
         if not response.ok:
             raise RuntimeError(await response.text())
@@ -426,10 +426,10 @@ class ConfigService:
             comment: comment to associate with this operation
 
         """
-        token = self._getToken()
+        token = await self._getToken()
         params = {'comment': comment}
         headers = {'Authorization': f'Bearer {token}'}
-        uri = f"{self._endPoint('active-version')}/{path}?{urlencode(params)}"
+        uri = f"{await self._endPoint('active-version')}/{path}?{urlencode(params)}"
         response = await self._session.put(uri, headers=headers)
         if not response.ok:
             raise RuntimeError(await response.text())

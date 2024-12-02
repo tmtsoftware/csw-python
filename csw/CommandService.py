@@ -140,7 +140,7 @@ class CommandService:
         Returns: SubmitResponse
             a subclass of SubmitResponse
        """
-        resp = self.submit(controlCommand)
+        resp = await self.submit(controlCommand)
         match resp:
             case Started(runId):
                 return await self.queryFinal(runId, timeoutInSeconds)

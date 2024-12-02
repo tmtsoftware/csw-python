@@ -174,6 +174,16 @@ class RegistrationResult:
     def make(cls, _location: Location, _unregister: Callable[[ConnectionInfo], Awaitable]) -> Self:
         return cls(lambda: _unregister(_location.connection), _location)
 
+class LocationServiceUtil:
+    # If port is 0, return a random free port, otherwise the given port
+    @staticmethod
+    def getFreePort(port: int = 0) -> int:
+        if port != 0:
+            return port
+        with socket() as s:
+            s.bind(('', 0))
+            return s.getsockname()[1]
+
 
 # noinspection PyProtectedMember
 class LocationService:
@@ -183,15 +193,6 @@ class LocationService:
 
     def __init__(self, clientSession: ClientSession):
         self._session = clientSession
-
-    # If port is 0, return a random free port, otherwise the given port
-    @staticmethod
-    def getFreePort(port: int = 0) -> int:
-        if port != 0:
-            return port
-        with socket() as s:
-            s.bind(('', 0))
-            return s.getsockname()[1]
 
     async def register(self, registration: Registration) -> RegistrationResult:
         """
@@ -339,3 +340,4 @@ class LocationService:
         """
         jsonBody = f'{{"_type": "ListByPrefix", "prefix": "{prefix}"}}'
         return await self._list(jsonBody)
+

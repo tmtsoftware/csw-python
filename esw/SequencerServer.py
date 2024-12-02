@@ -13,7 +13,8 @@ from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
 from csw.CommandServiceRequest import QueryFinal
 from csw.Prefix import Prefix
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+    LocationServiceUtil
 import structlog
 from esw.SequencerRequest import *
 from esw.SequencerRequest import SequencerRequest
@@ -163,7 +164,7 @@ class SequencerServer:
                           subsystem names and name is the name of the sequencer
             port (int): optional port for HTTP server
         """
-        self.port = LocationService.getFreePort(port)
+        self.port = LocationServiceUtil.getFreePort(port)
         self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)

@@ -16,7 +16,8 @@ from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+    LocationServiceUtil
 
 
 # noinspection PyProtectedMember
@@ -86,13 +87,13 @@ class CommandServer:
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    async def _registerWithLocationService(self, prefix: Prefix, port: int):
+    async def registerWithLocationService(self):
         locationService = LocationService(self._session)
-        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+        connection = ConnectionInfo.make(self.prefix, ComponentType.Service, ConnectionType.HttpType)
         async def unreg():
             await locationService.unregister(connection)
         asyncio_atexit.register(unreg)
-        await locationService.register(HttpRegistration(connection, port))
+        await locationService.register(HttpRegistration(connection, self.port))
 
     def __init__(self, prefix: Prefix, handler: ComponentHandlers, clientSession: ClientSession, port: int = 0):
         """
@@ -105,10 +106,11 @@ class CommandServer:
             handler (ComponentHandlers): command handler notified when commands are received
             port (int): optional port for HTTP server
         """
-        self.log = None
+        self.log = structlog.get_logger()
+        self.prefix = prefix
         self._session = clientSession
         self.handler = handler
-        self.port = LocationService.getFreePort(port)
+        self.port = LocationServiceUtil.getFreePort(port)
         self._app = web.Application()
         self._crm = CommandResponseManager()
         self._log = structlog.get_logger()
@@ -116,7 +118,6 @@ class CommandServer:
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
-        self._registerWithLocationService(prefix, self.port)
 
     def start(self):
         """

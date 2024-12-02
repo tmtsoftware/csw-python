@@ -6,6 +6,9 @@ from asyncio import Task
 
 import pathlib
 
+import pytest
+from aiohttp import ClientSession
+from aiohttp.test_utils import AioHTTPTestCase
 from aiohttp.web_runner import GracefulExit
 from termcolor import colored
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
@@ -152,9 +155,11 @@ class MyComponentHandlers(ComponentHandlers):
         return [CurrentState(self.prefix, "PyCswState", params)]
 
 
-def test_command_server():
+@pytest.mark.asyncio
+async def test_command_server():
+    clientSession = ClientSession()
     handlers = MyComponentHandlers()
-    commandServer = CommandServer(handlers.prefix, handlers)
+    commandServer = CommandServer(handlers.prefix, handlers, clientSession)
     print(f"Starting test command server on port {commandServer.port}")
     try:
         commandServer.start()

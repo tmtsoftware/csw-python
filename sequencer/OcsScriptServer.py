@@ -17,7 +17,7 @@ from csw.EventService import EventService
 from csw.ParameterSetType import SequenceCommand
 from csw.Prefix import Prefix
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
-    RegistrationResult
+    RegistrationResult, LocationServiceUtil
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
 from esw.SequencerRequest import DiagnosticMode
@@ -149,7 +149,7 @@ class OcsScriptServer:
         self.log = structlog.get_logger()
         self.sequencerPrefix = Prefix.from_str(sys.argv[1])
         self.sequenceComponentPrefix = Prefix.from_str(sys.argv[2])
-        self.port = LocationService.getFreePort(0)
+        self.port = LocationServiceUtil.getFreePort(0)
 
     # We have to do all this initialization here, in order to be able have ClientSession share the event loop
     # with the server

@@ -1,6 +1,9 @@
 import asyncio
 from asyncio import Task
 import pathlib
+
+import aiohttp
+from aiohttp import ClientSession
 from aiohttp.web_runner import GracefulExit
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
@@ -105,11 +108,18 @@ class TestComponentHandlers(ComponentHandlers):
         return [CurrentState(self.prefix, "PyCswState", params)]
 
 
-# Start a local python based command service
-handlers = TestComponentHandlers()
-commandServer = CommandServer(handlers.prefix, handlers)
-try:
-    asyncio.set_event_loop(asyncio.new_event_loop())
-    commandServer.start()
-except GracefulExit:
-    pass
+async def main():
+    clientSession = ClientSession()
+    handlers = TestComponentHandlers()
+    commandServer = CommandServer(handlers.prefix, handlers, clientSession)
+    await commandServer.registerWithLocationService()
+    runner = aiohttp.web.AppRunner(commandServer._app)
+    await runner.setup()
+    site = aiohttp.web.TCPSite(runner)
+    await site.start()
+    # wait forever
+    await asyncio.Event().wait()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
