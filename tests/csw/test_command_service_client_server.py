@@ -20,30 +20,28 @@ from csw.Subsystem import Subsystem
 # Start a local python based command service (defined in TestComponentHandlers.py) for testing
 from csw.Units import Units
 
-# XXX TODO FIXME (Problems after change to async)
+@pytest.fixture(autouse=True)
+def start_server(xprocess):
+    # Remove any leftover reg from loc service
+    locationService = LocationServiceSync()
+    prefix = Prefix(Subsystem.CSW, "pycswTest2")
+    connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+    locationService.unregister(connection)
 
-# @pytest.fixture(autouse=True)
-# def start_server(xprocess):
-#     # Remove any leftover reg from loc service
-#     locationService = LocationServiceSync()
-#     prefix = Prefix(Subsystem.CSW, "pycswTest2")
-#     connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-#     locationService.unregister(connection)
-#
-#     python_executable_full_path = sys.executable
-#     python_server_script_full_path = py.path.local(__file__).dirpath("TestComponentHandlers.py")
-#     path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-#
-#     class Starter(ProcessStarter):
-#         pattern = '======== Running on'
-#         # See https://pytest-xprocess.readthedocs.io/en/latest/starter.html
-#         env = {"PYTHONPATH": str(path), "PYTHONUNBUFFERED": "1"}
-#         terminate_on_interrupt = True
-#         args = [python_executable_full_path, python_server_script_full_path]
-#
-#     xprocess.ensure("TestComponentHandlers", Starter)
-#     yield
-#     xprocess.getinfo("TestComponentHandlers").terminate()
+    python_executable_full_path = sys.executable
+    python_server_script_full_path = py.path.local(__file__).dirpath("TestComponentHandlers.py")
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+
+    class Starter(ProcessStarter):
+        pattern = '======== Running on'
+        # See https://pytest-xprocess.readthedocs.io/en/latest/starter.html
+        env = {"PYTHONPATH": str(path), "PYTHONUNBUFFERED": "1"}
+        terminate_on_interrupt = True
+        args = [python_executable_full_path, python_server_script_full_path]
+
+    xprocess.ensure("TestComponentHandlers", Starter)
+    yield
+    xprocess.getinfo("TestComponentHandlers").terminate()
 
 
 @pytest.mark.asyncio
@@ -70,17 +68,13 @@ class TestCommandServiceClientServer:
 
             # LongRunningCommand
             subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
-            print(f"XXX subscribeCurrentState -> {subscription}")
             await asyncio.sleep(1)
             resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
             assert isinstance(resp3, Started)
-            print("XXX 1")
             resp4 = await cs.queryFinal(resp3.runId, 5)
             assert isinstance(resp4, Completed)
-            print("XXX 2")
             resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
             assert isinstance(resp5, Completed)
-            print("XXX 3")
             await asyncio.sleep(1)
             assert self._csCount == 4
             assert self._currentState.stateName == "PyCswState"
@@ -91,4 +85,3 @@ class TestCommandServiceClientServer:
             assert isinstance(resp5, Completed)
             await asyncio.sleep(1)
             assert self._csCount == 4
-            asyncio.get_event_loop().stop()

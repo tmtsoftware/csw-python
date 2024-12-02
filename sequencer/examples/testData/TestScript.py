@@ -69,19 +69,16 @@ def script(ctx: Script):
 
     ctx.onSetup("check-config", handleCheckConfig)
 
-    # XXX TODO
-    # def handleGetConfigData(setup: Setup):
+
+    # XXX TODO FIXME: Implement ctx.getConfig
+    # async def handleGetConfigData(setup: Setup):
     #     configValue = "component = wfos"
     #     configData = ctx.getConfig("/tmt/test/wfos.conf")
+    #     # configData?.let {
+    #     # if (it == ConfigFactory.parseString(configValue))
+    #     # publishEvent(SystemEvent("WFOS.test", "get-config.success"))
     #
-    #     onSetup("get-config-data") {
-    #         val configValue = "component = wfos"
-    #         val configData = getConfig("/tmt/test/wfos.conf")
-    #         configData?.let {
-    #             if (it == ConfigFactory.parseString(configValue))
-    #                 publishEvent(SystemEvent("WFOS.test", "get-config.success"))
-    #         }
-    #     }
+    # ctx.onSetup("get-config-data", handleGetConfigData)
 
     async def handleGetEvent(s: Setup):
         # ESW-88

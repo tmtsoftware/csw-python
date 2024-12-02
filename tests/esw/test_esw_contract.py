@@ -29,7 +29,7 @@ class TestEswContract:
             assert wait.__class__.__name__ == 'Wait'
             assert wait.commandName.name == 'move'
             #
-            startSequence: StartSequence = SequencerRequest._fromDict(requests['StartSequence'][0])
+            startSequence = SequencerRequest._fromDict(requests['StartSequence'][0])
             match startSequence:
                 case StartSequence():
                     print("XXX OK")
