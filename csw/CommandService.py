@@ -3,15 +3,16 @@ import uuid
 from asyncio import Task
 from typing import List, Callable, Awaitable
 
-import aiohttp
 import structlog
+import websockets
 from aiohttp import ClientSession
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
 from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState, \
     ExecuteDiagnosticMode, ExecuteOperationsMode, GoOnline, GoOffline
 from csw.CurrentState import CurrentState
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, HttpLocation
+from csw.LocationServiceSync import LocationServiceSync
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
 import json
@@ -40,17 +41,17 @@ class CommandService:
         self.log = structlog.get_logger()
 
 
-    async def _getBaseUri(self) -> str:
-        locationService = LocationService(self._session)
+    def _getBaseUri(self) -> str:
+        locationService = LocationServiceSync()
         connection = ConnectionInfo.make(self.prefix, self.componentType, ConnectionType.HttpType)
-        location = await locationService.resolve(connection)
+        location = locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError
 
     async def _postCommand(self, command: str, controlCommand: ControlCommand) -> SubmitResponse:
-        baseUri = await self._getBaseUri()
+        baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         match command:
@@ -117,7 +118,7 @@ class CommandService:
        Returns: SubmitResponse
            a subclass of SubmitResponse
       """
-        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
+        baseUri = (self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
         jsonStr = json.dumps(msgDict)
@@ -159,7 +160,7 @@ class CommandService:
         Returns: SubmitResponse
            a subclass of SubmitResponse
         """
-        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
+        baseUri = (self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = Query(runId)._asDict()
         jsonStr = json.dumps(msgDict)
@@ -188,21 +189,32 @@ class CommandService:
                 return resp
 
     async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]):
-        baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
+        baseUri = self._getBaseUri().replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
-        async with self._session.ws_connect(wsUri) as ws:
-            await ws.send_str(jsonStr)
-            async for msgF in ws:
-                msg = await msgF
-                match msg.type:
-                    case aiohttp.WSMsgType.TEXT:
-                        await callback(CurrentState._fromDict(json.loads(msg.data)))
-                    case aiohttp.WSMsgType.CLOSED:
-                        break
-                    case aiohttp.WSMsgType.ERROR:
-                        break
+        async for websocket in websockets.connect(wsUri):
+            await websocket.send(jsonStr)
+            async for message in websocket:
+                await callback(CurrentState._fromDict(json.loads(message)))
+
+
+    # async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]):
+    #     baseUri = (self._getBaseUri()).replace('http:', 'ws:')
+    #     wsUri = f"{baseUri}websocket-endpoint"
+    #     msgDict = SubscribeCurrentState(names)._asDict()
+    #     jsonStr = json.dumps(msgDict)
+    #     async with self._session.ws_connect(wsUri) as ws:
+    #         await ws.send_str(jsonStr)
+    #         async for msgF in ws:
+    #             msg = await msgF
+    #             match msg.type:
+    #                 case aiohttp.WSMsgType.TEXT:
+    #                     await callback(CurrentState._fromDict(json.loads(msg.data)))
+    #                 case aiohttp.WSMsgType.CLOSED:
+    #                     break
+    #                 case aiohttp.WSMsgType.ERROR:
+    #                     break
 
     def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
         """
@@ -227,7 +239,7 @@ class CommandService:
             startTime: represents the time at which the diagnostic mode actions will take effect
             hint: represents supported diagnostic data mode for a component
         """
-        baseUri = await self._getBaseUri()
+        baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = ExecuteDiagnosticMode(startTime, hint)._asDict()
@@ -240,7 +252,7 @@ class CommandService:
         """
         On receiving a operations mode command, the current diagnostic data mode is halted.
         """
-        baseUri = await self._getBaseUri()
+        baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = ExecuteOperationsMode()._asDict()
@@ -250,7 +262,7 @@ class CommandService:
             raise Exception(f"CommandService: executeOperationsMode failed: {await response.text()}")
 
     async def goOnline(self):
-        baseUri = await self._getBaseUri()
+        baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = GoOnline()._asDict()
@@ -260,7 +272,7 @@ class CommandService:
             raise Exception(f"CommandService: goOnline failed: {await response.text()}")
 
     async def goOffline(self):
-        baseUri = await self._getBaseUri()
+        baseUri = self._getBaseUri()
         postUri = f"{baseUri}post-endpoint"
         headers = {'Content-type': 'application/json'}
         data = GoOffline()._asDict()

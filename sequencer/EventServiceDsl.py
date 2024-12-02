@@ -16,7 +16,6 @@ from csw.Prefix import Prefix
 class EventServiceDsl:
 
     def __init__(self, clientSession: ClientSession):
-        super(EventServiceDsl, self).__init__()
         self._session = clientSession
         self._eventPublisher: EventPublisher | None = None
         self._eventSubscriber: EventSubscriber | None = None

@@ -1,5 +1,6 @@
 import time
 
+import pytest
 import structlog
 from aiohttp import ClientSession
 
@@ -12,16 +13,17 @@ from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
 
 
+@pytest.mark.asyncio
 class TestEventPublisher:
     log = structlog.get_logger()
     count = 0
-    clientSession = ClientSession()
 
     # Simple test that publishes an event and subscribes to it
     # Requires that CSW services are running.
     async def test_pub_sub(self):
-        pub = await EventPublisher.make(self.clientSession)
-        sub = await EventSubscriber.make(self.clientSession)
+        clientSession = ClientSession()
+        pub = await EventPublisher.make(clientSession)
+        sub = await EventSubscriber.make(clientSession)
 
         prefix = Prefix(Subsystem.CSW, "assembly")
         eventName = EventName("test_event")
@@ -37,7 +39,7 @@ class TestEventPublisher:
         assert (e == event)
         assert (self.count == 1)
         await sub.unsubscribe([eventKey])
-        await subscription.unsubscribe()
+        subscription.unsubscribe()
 
     async def callback(self, systemEvent):
         self.count = self.count + 1

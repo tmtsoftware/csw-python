@@ -23,7 +23,7 @@ class BaseScript(CswHighLevelDsl):
     def __init__(self, wiring: ScriptWiring):
         self.wiring = wiring
         # self.shutdownTask = wiring.shutdown
-        CswHighLevelDsl.__init__(self, wiring.cswServices, wiring.scriptContext)
+        CswHighLevelDsl.__init__(self, cswServices = wiring.cswServices, scriptContext = wiring.scriptContext)
         self.scriptDsl = ScriptDsl(wiring.scriptContext.sequenceOperatorFactory)
 
 #

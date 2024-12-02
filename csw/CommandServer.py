@@ -1,11 +1,11 @@
+import atexit
 import json
 
 import aiohttp
 import structlog
-from aiohttp import web, WSMessage, ClientSession
+from aiohttp import web, WSMessage
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
-import asyncio_atexit
 import uuid
 
 from aiohttp.web_ws import WebSocketResponse
@@ -14,9 +14,10 @@ from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
 from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
+from csw.LocationServiceSync import LocationServiceSync
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
     LocationServiceUtil
 
 
@@ -87,15 +88,13 @@ class CommandServer:
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    async def registerWithLocationService(self):
-        locationService = LocationService(self._session)
+    def registerWithLocationService(self):
+        locationService = LocationServiceSync()
         connection = ConnectionInfo.make(self.prefix, ComponentType.Service, ConnectionType.HttpType)
-        async def unreg():
-            await locationService.unregister(connection)
-        asyncio_atexit.register(unreg)
-        await locationService.register(HttpRegistration(connection, self.port))
+        atexit.register(locationService.unregister, connection)
+        locationService.register(HttpRegistration(connection, self.port))
 
-    def __init__(self, prefix: Prefix, handler: ComponentHandlers, clientSession: ClientSession, port: int = 0):
+    def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 0):
         """
         Creates an HTTP server that can receive CSW commands and registers it with the Location Service using the given
         prefix, so that CSW components can locate it and send commands to it.
@@ -108,7 +107,6 @@ class CommandServer:
         """
         self.log = structlog.get_logger()
         self.prefix = prefix
-        self._session = clientSession
         self.handler = handler
         self.port = LocationServiceUtil.getFreePort(port)
         self._app = web.Application()
@@ -118,6 +116,7 @@ class CommandServer:
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
+        self.registerWithLocationService()
 
     def start(self):
         """

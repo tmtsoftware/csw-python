@@ -1,3 +1,4 @@
+import atexit
 import os
 import traceback
 from typing import Callable
@@ -14,9 +15,10 @@ import configparser
 from csw.AlarmService import AlarmService
 from csw.CommandResponseManager import CommandResponseManager
 from csw.EventService import EventService
+from csw.LocationServiceSync import LocationServiceSync
 from csw.ParameterSetType import SequenceCommand
 from csw.Prefix import Prefix
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
     RegistrationResult, LocationServiceUtil
 from esw.ObsMode import ObsMode
 from esw.SequencerClient import SequencerClient
@@ -135,16 +137,14 @@ class OcsScriptServer:
         await self.app.shutdown()
         return web.HTTPOk()
 
-    async def _registerWithLocationService(self) -> RegistrationResult:
-        locationService = LocationService(self.clientSession)
+    def _registerWithLocationService(self) -> RegistrationResult:
+        locationService = LocationServiceSync()
         connection = ConnectionInfo.make(self.sequencerPrefix, ComponentType.Service, ConnectionType.HttpType)
-        async def unreg():
-            await locationService.unregister(connection)
-        asyncio_atexit.register(unreg)
-        return await locationService.register(HttpRegistration(connection, self.port))
+        reg = locationService.register(HttpRegistration(connection, self.port))
+        atexit.register(lambda: reg.unregister())
+        return reg
 
     def __init__(self):
-        self.clientSession = ClientSession()
         self._crm = CommandResponseManager()
         self.log = structlog.get_logger()
         self.sequencerPrefix = Prefix.from_str(sys.argv[1])
@@ -155,6 +155,7 @@ class OcsScriptServer:
     # with the server
     # See https://stackoverflow.com/questions/55963155/what-is-the-proper-way-to-use-clientsession-inside-aiohttp-web-server
     async def _clientSessionCtx(self, app: web.Application):
+        self.clientSession = ClientSession()
         sequencerApi: SequencerApi = SequencerClient(self.sequencerPrefix, self.clientSession)
         sequenceOperatorFactory: Callable[[], SequenceOperatorHttp] = lambda: SequenceOperatorHttp(sequencerApi)
         obsMode = ObsMode.fromPrefix(self.sequencerPrefix)
@@ -183,7 +184,7 @@ class OcsScriptServer:
         await self.clientSession.close()
 
     async def _appFactory(self) -> web.Application:
-        self._regResult = await self._registerWithLocationService()
+        self._regResult = self._registerWithLocationService()
         self.app = web.Application()
         self.app.add_routes([
             web.post('/execute', self._execute),

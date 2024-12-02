@@ -5,7 +5,6 @@ from csw.ConfigService import ConfigService
 
 class ConfigServiceDsl:
     def __init__(self, clientSession: ClientSession):
-        super(ConfigServiceDsl, self).__init__()
         self.configService = ConfigService(clientSession)
 
     async def existsConfig(self, path: str, id: str = None) -> bool:

@@ -2,6 +2,7 @@ import filecmp
 import os
 import time
 
+import pytest
 import structlog
 from _pytest import pathlib
 from aiohttp import ClientSession
@@ -26,8 +27,8 @@ from csw.EventKey import EventKey
 # a known, valid copy. To test the subscriber API, another file "/tmp/PyTestAssemblyEventHandlers.in" is
 # generated from the received events here.
 #@pytest.mark.skip(reason="Test passes when run alone, but not together with all others")
+@pytest.mark.asyncio
 class TestEventsWithAssembly:
-    clientSession = ClientSession()
     log = structlog.get_logger()
     dir = pathlib.Path(__file__).parent.absolute()
     inFileName = "PyTestAssemblyEventHandlers.in"
@@ -51,8 +52,9 @@ class TestEventsWithAssembly:
             os.remove(self.tmpOutFile)
 
     async def test_pub_sub(self):
-        pub = await EventPublisher.make(self.clientSession)
-        sub = await EventSubscriber.make(self.clientSession)
+        clientSession = ClientSession()
+        pub = await EventPublisher.make(clientSession)
+        sub = await EventSubscriber.make(clientSession)
         time.sleep(1.0)
         self.log.debug("Starting test...")
         subscription = await sub.subscribe(
@@ -76,6 +78,7 @@ class TestEventsWithAssembly:
         finally:
             self.log.debug("Stopping subscriber...")
             subscription.unsubscribe()
+            await clientSession.close()
 
     async def publishEvent1(self, pub: EventPublisher):
         param = DoubleKey.make("assemblyEventValue").set(42.0)

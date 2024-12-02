@@ -8,7 +8,6 @@ from csw.LocationService import LocationService, Registration, RegistrationResul
 
 class LocationServiceDsl:
     def __init__(self, clientSession: ClientSession):
-        super(LocationServiceDsl, self).__init__()
         self.locationService = LocationService(clientSession)
 
     async def register(self, registration: Registration) -> RegistrationResult:
