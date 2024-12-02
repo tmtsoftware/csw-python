@@ -23,6 +23,7 @@ pytest-asyncio = "*"
 pytest-aiohttp = "*"
 pytest = "*"
 pytest-xprocess = "*"
+pyhocon = "*"
 python-keycloak = "*"
 extended_configparser = "*"
 

@@ -1,4 +1,5 @@
 from aiohttp import ClientSession
+from pyhocon import ConfigFactory, ConfigTree
 
 from csw.ConfigService import ConfigService
 
@@ -20,18 +21,18 @@ class ConfigServiceDsl:
         """
         return await self.configService.exists(path, id)
 
-    # XXX TODO FIXME: Needs HOCON support in python?
-    # def getConfig(self, path: str) -> bool:
-    #     """
-    #     Retrieves active configuration file contents present at provided path
-    #
-    #     Args:
-    #         path: relative configuration file path
-    #
-    #     Returns:
-    #         file content as [Config] object if file exists, otherwise returns null
-    #     """
-    #     configData = self.configService.getActive(path)
-    #     if configData:
-    #         return configData.toJConfigObject(actorSystem)?.await()
+    async def getConfig(self, path: str) -> ConfigTree | None:
+        """
+        Retrieves active configuration file contents present at provided path
+
+        Args:
+            path: relative configuration file path
+
+        Returns:
+            file content as [Config] object if file exists, otherwise returns null
+        """
+        configData = await self.configService.getActive(path)
+        if configData:
+            return ConfigFactory.parse_string(str(configData))
+        return None
 

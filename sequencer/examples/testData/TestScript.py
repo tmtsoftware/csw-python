@@ -1,10 +1,11 @@
 import asyncio
 
 import structlog
+from pyhocon import ConfigFactory
 
 from csw.CommandResponse import Started, Completed
 from csw.CurrentState import CurrentState
-from csw.Event import Event
+from csw.Event import Event, SystemEvent, EventName
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
 from csw.ParameterSetType import Observe, Setup
@@ -69,16 +70,14 @@ def script(ctx: Script):
 
     ctx.onSetup("check-config", handleCheckConfig)
 
+    async def handleGetConfigData(setup: Setup):
+        configValue = "component = wfos"
+        configData = ctx.getConfig("/tmt/test/wfos.conf")
+        if configData:
+            if str(configData) == str(ConfigFactory.parse_string(configValue)):
+                await ctx.publishEvent(SystemEvent(Prefix.from_str("WFOS.test"), EventName("get-config.success")))
 
-    # XXX TODO FIXME: Implement ctx.getConfig
-    # async def handleGetConfigData(setup: Setup):
-    #     configValue = "component = wfos"
-    #     configData = ctx.getConfig("/tmt/test/wfos.conf")
-    #     # configData?.let {
-    #     # if (it == ConfigFactory.parseString(configValue))
-    #     # publishEvent(SystemEvent("WFOS.test", "get-config.success"))
-    #
-    # ctx.onSetup("get-config-data", handleGetConfigData)
+    ctx.onSetup("get-config-data", handleGetConfigData)
 
     async def handleGetEvent(s: Setup):
         # ESW-88

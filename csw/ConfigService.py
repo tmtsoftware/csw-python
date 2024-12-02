@@ -22,6 +22,8 @@ class ConfigData:
     """
     content: bytes
 
+    def __str__(self):
+        return self.content.decode('utf-8')
 
 @dataclass_json
 @dataclass
