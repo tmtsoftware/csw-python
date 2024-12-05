@@ -255,10 +255,6 @@ class CswHighLevelDslApi:
         pass
 
 
-# XXXXXXXXX TODO FIXME: Fix multiple inheritance constructor calling
-# See https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 class CswHighLevelDsl(CswHighLevelDslApi,
                       LocationServiceDsl,
                       ConfigServiceDsl,

@@ -20,6 +20,8 @@ from sequencer.ScriptWiring import ScriptWiring
 from sequencer.SequenceOperatorApi import SequenceOperatorHttp
 from sequencer.SequencerApi import SequencerApi
 
+# XXX TODO: In progress
+
 # Standalone test of scripting using example TestScript.py
 # This requires that csw-services and esw-services are running.
 async def main():
