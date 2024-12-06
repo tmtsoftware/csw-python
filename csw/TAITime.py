@@ -49,6 +49,16 @@ class TAITime(TMTTime):
         nanos = int((t - seconds) * 1e9)
         return cls(seconds, nanos)
 
+    @classmethod
+    def after(cls, duration: timedelta) -> Self:
+        """
+        Returns a UTCTime with the current time plus the given duration.
+        """
+        t = Time.now().tai.value.timestamp() + duration.total_seconds()
+        seconds = int(t)
+        nanos = int((t - seconds) * 1e9)
+        return cls(seconds, nanos)
+
     def value(self) -> datetime:
         secs = self.seconds + self.nanos / 1e9
         return datetime.fromtimestamp(secs, timezone.utc)
@@ -57,4 +67,4 @@ class TAITime(TMTTime):
         return Time.now().tai.value
 
     def durationFromNow(self) -> timedelta:
-        return self.currentInstant() - self.value()
+        return abs(self.currentInstant() - self.value())

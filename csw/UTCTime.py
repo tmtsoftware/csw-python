@@ -49,6 +49,16 @@ class UTCTime(TMTTime):
         nanos = int((t - seconds) * 1e9)
         return cls(seconds, nanos)
 
+    @classmethod
+    def after(cls, duration: timedelta) -> Self:
+        """
+        Returns a UTCTime with the current time plus the given duration.
+        """
+        t = datetime.now(timezone.utc).timestamp() + duration.total_seconds()
+        seconds = int(t)
+        nanos = int((t - seconds) * 1e9)
+        return cls(seconds, nanos)
+
     def value(self) -> datetime:
         secs = self.seconds + self.nanos / 1e9
         return datetime.fromtimestamp(secs, timezone.utc)
@@ -58,5 +68,5 @@ class UTCTime(TMTTime):
         return datetime.now(timezone.utc)
 
     def durationFromNow(self) -> timedelta:
-        return self.currentInstant() - self.value()
+        return abs(self.currentInstant() - self.value())
 

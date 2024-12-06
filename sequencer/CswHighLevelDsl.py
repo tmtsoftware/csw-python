@@ -273,6 +273,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
 
     def __init__(self, cswServices: CswServices, scriptContext: ScriptContext):
         # super(CswHighLevelDsl, self).__init__(clientSession = scriptContext.clientSession)
+        CommandServiceDsl.__init__(self)
         LocationServiceDsl.__init__(self, scriptContext.clientSession)
         ConfigServiceDsl.__init__(self, scriptContext.clientSession)
         EventServiceDsl.__init__(self, scriptContext.clientSession)
