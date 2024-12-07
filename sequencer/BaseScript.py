@@ -6,6 +6,7 @@
 #  *
 #  * @param wiring - An instance of script wiring
 #  */
+from functools import wraps
 from typing import Callable, Awaitable
 
 from csw.UTCTime import UTCTime
@@ -37,26 +38,51 @@ class BaseScript(CswHighLevelDsl):
 #     }
 #
     def onNewSequence(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onNewSequence(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onNewSequence(func)
+        return wrapper
 
     def onGoOnline(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onGoOnline(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onGoOnline(func)
+        return wrapper
 
     def onGoOffline(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onGoOffline(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onGoOffline(func)
+        return wrapper
 
     def onAbortSequence(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onAbortSequence(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onAbortSequence(func)
+        return wrapper
 
     def onShutdown(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onShutdown(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onShutdown(func)
+        return wrapper
 
     def onDiagnosticMode(self, func: Callable[[UTCTime, str], Awaitable]):
-        return self.scriptDsl.onDiagnosticMode(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onDiagnosticMode(func)
+        return wrapper
 
     def onOperationsMode(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onOperationsMode(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onOperationsMode(func)
+        return wrapper
 
     def onStop(self, func: Callable[[], Awaitable]):
-        return self.scriptDsl.onStop(func)
+        @wraps(func)
+        def wrapper():
+            self.scriptDsl.onStop(func)
+        return wrapper
+
 

@@ -12,14 +12,6 @@ from csw.EventSubscription import EventSubscription
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
-def onEvent(*eventKeys: str):
-    def decorator(func: Callable[[Event], Awaitable]):
-        @wraps(func)
-        def wrapper(self):
-            return self.onEvent(*eventKeys, func)
-        return wrapper
-    return decorator
-
 
 class EventServiceDsl:
 
@@ -100,20 +92,31 @@ class EventServiceDsl:
     #                 coroutineScope.future { Optional.ofNullable(eventGenerator()) }
     #             }, every.toJavaDuration())
 
-    async def onEvent(self, callback: Callable[[Event], Awaitable], *eventKeys: str) -> EventSubscription:
-        """
-        Subscribes to the `eventKeys` which will execute the given `callback` whenever an event is published on any one of the event keys.
+    # async def onEvent(self, callback: Callable[[Event], Awaitable], *eventKeys: str) -> EventSubscription:
+    #     """
+    #     Subscribes to the `eventKeys` which will execute the given `callback` whenever an event is published on any one of the event keys.
+    #
+    #     Args:
+    #         callback: callback to be executed whenever event is published on provided keys
+    #         *eventKeys: collection of strings representing EventKey
+    #
+    #     Returns:
+    #         object that can be used to cancel the subscription
+    #     """
+    #     keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
+    #     subscription = await self.eventSubscriber().subscribe(keys, callback)
+    #     return subscription
 
-        Args:
-            callback: callback to be executed whenever event is published on provided keys
-            *eventKeys: collection of strings representing EventKey
+    def onEvent(self, *eventKeys: str):
+        def decorator(func: Callable[[Event], Awaitable]):
+            @wraps(func)
+            async def wrapper():
+                keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
+                return await self.eventSubscriber().subscribe(keys, func)
 
-        Returns:
-            object that can be used to cancel the subscription
-        """
-        keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        subscription = await self.eventSubscriber().subscribe(keys, callback)
-        return subscription
+            return wrapper
+
+        return decorator
 
     # XXX TODO
     #     /**

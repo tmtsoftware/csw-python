@@ -153,6 +153,7 @@ class ScriptDsl(ScriptApi):
                 return None
 
     def onSetupCommand(self, name: str, handler: CommandHandler):
+        print(f"XXX onSetupCommand: {name}")
         self.setupCommandHandler.add(name, handler.execute)
 
     def onObserveCommand(self, name: str, handler: CommandHandler):

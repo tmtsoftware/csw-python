@@ -14,9 +14,9 @@ from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 from csw.UTCTime import UTCTime
 from esw.ObsMode import ObsMode
-from sequencer.EventServiceDsl import onEvent
 from sequencer.Keys import longKey
-from sequencer.Script import Script, onSetup, onObserve
+from sequencer.LoopDsl import loop, stopWhen
+from sequencer.Script import Script
 from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
 
 
@@ -28,13 +28,12 @@ def script(ctx: Script):
     # ESW-134: Reuse code by ability to import logic from one script into another
     InitialCommandHandler(ctx, log)
 
-    @onSetup("command-2")
+    @ctx.onSetup("command-2")
     async def handleCommand2(setup: Setup):
         log.info(f"XXX TestScript: Received a command-2 setup: {setup}")
 
-
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
-    @onObserve("exposure-start")
+    @ctx.onObserve("exposure-start")
     async def handleExposureStart(_: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
@@ -50,15 +49,14 @@ def script(ctx: Script):
         log.info(exposureId.det)
         await ctx.publishEvent(ctx.exposureStart(exposureId))
 
-
-    @onSetup("command-3")
+    @ctx.onSetup("command-3")
     async def handleCommand3(setup: Setup):
         log.info(f"XXX Received a command-3 setup: {setup}")
 
-
-    @onSetup("command-4")
+    @ctx.onSetup("command-4")
     async def handleCommand4(_: Setup):
         # try sending concrete sequence
+        log.info("XXX in handleCommand4")
         setupCommand = ctx.Setup("ESW.test", "command-3")
         sequence = ctx.sequenceOf(setupCommand)
 
@@ -66,14 +64,13 @@ def script(ctx: Script):
         tcsSequencer = ctx.Sequencer(Subsystem.TCS, ObsMode("darknight"))
         await tcsSequencer.submitAndWait(sequence, 10)
 
-
-    @onSetup("check-config")
-    async def handleCheckConfig(_: Setup):
+    @ctx.onSetup("check-config")
+    async def handleCheckConfig(setup: Setup):
+        log.info(f"XXX in setup handleCheckConfig {setup}")
         if ctx.existsConfig("/tmt/test/wfos.conf"):
             await ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
 
-
-    @onSetup("get-config-data")
+    @ctx.onSetup("get-config-data")
     async def handleGetConfigData(setup: Setup):
         configValue = "component = wfos"
         configData = ctx.getConfig("/tmt/test/wfos.conf")
@@ -81,7 +78,7 @@ def script(ctx: Script):
             if str(configData) == str(ConfigFactory.parse_string(configValue)):
                 await ctx.publishEvent(SystemEvent(Prefix.from_str("WFOS.test"), EventName("get-config.success")))
 
-    @onSetup("get-event")
+    @ctx.onSetup("get-event")
     async def handleGetEvent(s: Setup):
         # ESW-88
         event = await ctx.getEvent("ESW.test.get.event")
@@ -89,18 +86,15 @@ def script(ctx: Script):
         if not event.isInvalid():
             await ctx.publishEvent(successEvent)
 
-
-    @onSetup("on-event")
+    @ctx.onSetup("on-event")
     async def handleOnEvent(_: Setup):
-        @onEvent("ESW.test.get.event")
+        @ctx.onEvent("ESW.test.get.event")
         async def handleEvent(event: Event):
             successEvent = ctx.SystemEvent("ESW.test", "onevent.success")
             if not event.isInvalid():
                 await ctx.publishEvent(successEvent)
 
-
-
-    @onSetup("command-for-assembly")
+    @ctx.onSetup("command-for-assembly")
     async def handleCommandForAssembly(command: Setup):
         submitResponse = await testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
         if isinstance(await testAssembly.query(submitResponse.runId()), Started):
@@ -117,20 +111,19 @@ def script(ctx: Script):
         testAssembly.subscribeCurrentState(["stateName1", "stateName2"], handleCurrentState)
         await testAssembly.oneway(command)
 
-
+    @ctx.onSetup("test-sequencer-hierarchy")
     async def handleTestSequencerHierarchy(_: Setup):
         await asyncio.sleep(5)
 
-    ctx.onSetup("test-sequencer-hierarchy", handleTestSequencerHierarchy)
 
+    @ctx.onSetup("check-exception-1")
     async def handleCheckException1(_: Setup):
         raise Exception("boom")
 
+    @ctx.onSetup("check-exception-2")
     async def handleCheckException2(_: Setup):
         pass
 
-    ctx.onSetup("check-exception-1", handleCheckException1)
-    ctx.onSetup("check-exception-2", handleCheckException2)
 
     # XXX TODO implement alarm service DSL
     #     onSetup("set-alarm-severity") {
@@ -139,6 +132,7 @@ def script(ctx: Script):
     #         delay(500)
     #     }
 
+    @ctx.onSetup("command-lgsf")
     async def handleCommandLgsf(_: Setup):
         # NOT update command response to avoid a sequencer to finish immediately
         # so that others Add, Append command gets time
@@ -146,69 +140,70 @@ def script(ctx: Script):
         sequence = ctx.sequenceOf(setupCommand)
         await lgsfSequencer.submitAndWait(sequence, 10)
 
-    ctx.onSetup("command-lgsf", handleCommandLgsf)
 
-
+    @ctx.onSetup("schedule-once-from-now")
     async def handleScheduleOnceFromNow(_: Setup):
+        print("XXX handleScheduleOnceFromNow: called onSetup")
         currentTime = ctx.utcTimeNow()
 
         async def func():
+            print("XXX handleScheduleOnceFromNow: called func")
             param = longKey("offset").set(int(currentTime.offsetFromNow().total_seconds() * 1_000_000_000))
             await ctx.publishEvent(ctx.SystemEvent("ESW.schedule.once", "offset", param))
 
         ctx.scheduleOnceFromNow(timedelta(seconds=1), func)
 
-    ctx.onSetup("schedule-once-from-now", handleScheduleOnceFromNow)
 
-    # XXX TODO: implement loop
-    # async def handleSchedulePeriodicallyFromNow(_: Setup):
-    #     currentTime = ctx.utcTimeNow()
-    #     counter = 0
-    #
-    #     async def func():
-    #         param = longKey("offset").set(int(currentTime.offsetFromNow().total_seconds() * 1_000_000_000))
-    #         await ctx.publishEvent(ctx.SystemEvent("ESW.schedule.periodically", "offset", param))
-    #         nonlocal counter
-    #         counter = counter + 1
-    #
-    #     a = ctx.schedulePeriodicallyFromNow(timedelta(seconds=1), timedelta(seconds=1), func)
-    #     #         loop {
-    #     #             stopWhen(counter > 1)
-    #     #         }
-    #     #         a.cancel()
-    #
-    # ctx.onSetup("schedule-periodically-from-now", handleSchedulePeriodicallyFromNow)
+    @ctx.onSetup("schedule-periodically-from-now")
+    async def handleSchedulePeriodicallyFromNow(_: Setup):
+        currentTime = ctx.utcTimeNow()
+        counter = 0
 
+        async def publishEvents():
+            param = longKey("offset").set(int(currentTime.offsetFromNow().total_seconds() * 1_000_000_000))
+            await ctx.publishEvent(ctx.SystemEvent("ESW.schedule.periodically", "offset", param))
+            nonlocal counter
+            counter = counter + 1
+
+        a = ctx.schedulePeriodicallyFromNow(timedelta(seconds=1), timedelta(seconds=1), publishEvents)
+
+        @loop
+        def countEvents():
+            stopWhen(counter > 1)
+
+        a.cancel()
+
+
+    @ctx.onDiagnosticMode
     async def handleDiagnosticMode(startTime: UTCTime, hint: str):
         await testAssembly.diagnosticMode(startTime, hint)
 
-    ctx.onDiagnosticMode(handleDiagnosticMode)
 
+    @ctx.onOperationsMode
     async def handleOperationsMode():
         await testAssembly.operationsMode()
 
-    ctx.onOperationsMode(handleOperationsMode)
 
+    @ctx.onGoOffline
     async def handleGoOffline():
         await testAssembly.goOffline()
 
-    ctx.onGoOffline(handleGoOffline)
 
+    @ctx.onGoOnline
     async def handleGoOnline():
         await testAssembly.goOnline()
 
-    ctx.onGoOnline(handleGoOnline)
-
-    async def handleAbortSequence():
-        await lgsfSequencer.abortSequence()
 
     # do some actions to abort sequence
     # send abortSequence command to downstream sequencer
-    ctx.onAbortSequence(handleAbortSequence)
+    @ctx.onAbortSequence
+    async def handleAbortSequence():
+        await lgsfSequencer.abortSequence()
+
 
     # do some actions to stop
     # send stop command to downstream sequencer
+    @ctx.onStop
     async def handleStop():
         await lgsfSequencer.stop()
 
-    ctx.onStop(handleStop)
