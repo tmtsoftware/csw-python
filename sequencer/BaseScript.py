@@ -37,51 +37,44 @@ class BaseScript(CswHighLevelDsl):
 #         error("Shutting down: Exception thrown in script with the message: [${exception.message}]")
 #     }
 #
-    def onNewSequence(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+
+    def onNewSequence(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onNewSequence(func)
         return wrapper
 
-    def onGoOnline(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onGoOnline(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onGoOnline(func)
         return wrapper
 
-    def onGoOffline(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onGoOffline(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onGoOffline(func)
         return wrapper
 
-    def onAbortSequence(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onAbortSequence(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onAbortSequence(func)
         return wrapper
 
-    def onShutdown(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onShutdown(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onShutdown(func)
         return wrapper
 
-    def onDiagnosticMode(self, func: Callable[[UTCTime, str], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onDiagnosticMode(self):
+        def wrapper(func: Callable[[UTCTime, str], Awaitable]):
             self.scriptDsl.onDiagnosticMode(func)
         return wrapper
 
-    def onOperationsMode(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onOperationsMode(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onOperationsMode(func)
         return wrapper
 
-    def onStop(self, func: Callable[[], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onStop(self):
+        def wrapper(func: Callable[[], Awaitable]):
             self.scriptDsl.onStop(func)
         return wrapper
 

@@ -10,7 +10,7 @@ from sequencer.Script import Script
 def script(ctx: Script):
     log = structlog.get_logger()
 
-    @ctx.onNewSequence
+    @ctx.onNewSequence()
     async def handleNewSequence():
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")
         event = ctx.SystemEvent("LGSF.darknight", "NewSequenceHandler", newSequenceHandlerParam)
@@ -32,14 +32,14 @@ def script(ctx: Script):
         await asyncio.sleep(1.0)
 
 
-    @ctx.onAbortSequence
+    @ctx.onAbortSequence()
     async def handleAbortSequence():
         # do some actions to abort sequence
         successEvent = ctx.SystemEvent("TCS.test", "abort.success")
         await ctx.publishEvent(successEvent)
 
 
-    @ctx.onStop
+    @ctx.onStop()
     async def handleStop():
         # do some actions to stop
         successEvent = ctx.SystemEvent("TCS.test", "stop.success")

@@ -15,29 +15,21 @@ class Script(BaseScript):
 
     def onSetup(self, name: str):
         def decorator(func: Callable[[Setup], Awaitable]):
-            @wraps(func)
-            def wrapper():
-                # noinspection PyTypeChecker
-                self.scriptDsl.onSetupCommand(name, CommandHandler(func))
-
-            return wrapper
+            # noinspection PyTypeChecker
+            self.scriptDsl.onSetupCommand(name, CommandHandler(func))
 
         return decorator
 
     def onObserve(self, name: str):
         def decorator(func: Callable[[Setup], Awaitable]):
-            @wraps(func)
-            def wrapper():
-                # noinspection PyTypeChecker
-                self.scriptDsl.onObserveCommand(name, CommandHandler(func))
-
-            return wrapper
+            # noinspection PyTypeChecker
+            self.scriptDsl.onObserveCommand(name, CommandHandler(func))
 
         return decorator
 
-    def onGlobalError(self, func: Callable[[ScriptError], Awaitable]):
-        @wraps(func)
-        def wrapper():
+    def onGlobalError(self):
+        def decorator(func: Callable[[ScriptError], Awaitable]):
+            # noinspection PyTypeChecker
             self.scriptDsl.onException(func)
 
-        return wrapper
+        return decorator

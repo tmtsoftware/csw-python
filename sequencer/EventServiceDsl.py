@@ -1,5 +1,4 @@
 from collections.abc import Awaitable
-from functools import wraps
 from typing import Callable, Set
 
 from multipledispatch import dispatch
@@ -8,7 +7,6 @@ from csw.Event import EventName, SystemEvent, Event
 from csw.EventKey import EventKey
 from csw.EventPublisher import EventPublisher
 from csw.EventSubscriber import EventSubscriber
-from csw.EventSubscription import EventSubscription
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
@@ -108,13 +106,9 @@ class EventServiceDsl:
     #     return subscription
 
     def onEvent(self, *eventKeys: str):
-        def decorator(func: Callable[[Event], Awaitable]):
-            @wraps(func)
-            async def wrapper():
-                keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-                return await self.eventSubscriber().subscribe(keys, func)
-
-            return wrapper
+        async def decorator(func: Callable[[Event], Awaitable]):
+            keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
+            return await self.eventSubscriber().subscribe(keys, func)
 
         return decorator
 

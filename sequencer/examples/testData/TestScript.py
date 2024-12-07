@@ -174,36 +174,36 @@ def script(ctx: Script):
         a.cancel()
 
 
-    @ctx.onDiagnosticMode
+    @ctx.onDiagnosticMode()
     async def handleDiagnosticMode(startTime: UTCTime, hint: str):
         await testAssembly.diagnosticMode(startTime, hint)
 
 
-    @ctx.onOperationsMode
+    @ctx.onOperationsMode()
     async def handleOperationsMode():
         await testAssembly.operationsMode()
 
 
-    @ctx.onGoOffline
+    @ctx.onGoOffline()
     async def handleGoOffline():
         await testAssembly.goOffline()
 
 
-    @ctx.onGoOnline
+    @ctx.onGoOnline()
     async def handleGoOnline():
         await testAssembly.goOnline()
 
 
     # do some actions to abort sequence
     # send abortSequence command to downstream sequencer
-    @ctx.onAbortSequence
+    @ctx.onAbortSequence()
     async def handleAbortSequence():
         await lgsfSequencer.abortSequence()
 
 
     # do some actions to stop
     # send stop command to downstream sequencer
-    @ctx.onStop
+    @ctx.onStop()
     async def handleStop():
         await lgsfSequencer.stop()
 
