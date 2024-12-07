@@ -9,6 +9,7 @@ from csw.EventPublisher import EventPublisher
 from csw.EventService import EventService
 from csw.EventSubscriber import EventSubscriber
 from csw.LocationService import LocationService
+from csw.TimeServiceScheduler import TimeServiceScheduler
 from sequencer.ScriptContext import ScriptContext
 
 
@@ -22,17 +23,18 @@ class CswServices:
     eventSubscriber: EventSubscriber
     locationService: LocationService
     configService: ConfigService
+    timeService: TimeServiceScheduler
 
     # XXX TODO
-    # timeService: TimeServiceScheduler
     # databaseServiceFactory: DatabaseServiceFactory
 
     @classmethod
-    async def create(cls, clientSession: ClientSession, ctx: ScriptContext) -> Self:
+    def create(cls, clientSession: ClientSession, ctx: ScriptContext) -> Self:
         alarmService = ctx.alarmService
         eventService = ctx.eventService
-        eventPublisher = await eventService.defaultPublisher(clientSession)
-        eventSubscriber = await eventService.defaultSubscriber(clientSession)
+        eventPublisher = eventService.defaultPublisher()
+        eventSubscriber = eventService.defaultSubscriber()
         locationService = LocationService(clientSession)
         configService = ConfigService(clientSession)
-        return CswServices(alarmService, eventService, eventPublisher, eventSubscriber, locationService, configService)
+        timeService = TimeServiceScheduler()
+        return CswServices(alarmService, eventService, eventPublisher, eventSubscriber, locationService, configService, timeService)

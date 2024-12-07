@@ -5,7 +5,6 @@ import time
 import pytest
 import structlog
 from _pytest import pathlib
-from aiohttp import ClientSession
 
 from csw.EventSubscriber import EventSubscriber
 from csw.EventTime import EventTime
@@ -52,9 +51,8 @@ class TestEventsWithAssembly:
             os.remove(self.tmpOutFile)
 
     async def test_pub_sub(self):
-        clientSession = ClientSession()
-        pub = await EventPublisher.make(clientSession)
-        sub = await EventSubscriber.make(clientSession)
+        pub = EventPublisher.make()
+        sub = EventSubscriber.make()
         time.sleep(1.0)
         self.log.debug("Starting test...")
         subscription = await sub.subscribe(
@@ -78,7 +76,6 @@ class TestEventsWithAssembly:
         finally:
             self.log.debug("Stopping subscriber...")
             subscription.unsubscribe()
-            await clientSession.close()
 
     async def publishEvent1(self, pub: EventPublisher):
         param = DoubleKey.make("assemblyEventValue").set(42.0)

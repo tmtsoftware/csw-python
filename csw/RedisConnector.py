@@ -4,10 +4,10 @@ from urllib.parse import urlparse
 
 from typing import List, Self, Awaitable, Callable
 
-from aiohttp import ClientSession
 from redis.asyncio.sentinel import Sentinel
 
-from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, LocationService, Location
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, Location
+from csw.LocationServiceSync import LocationServiceSync
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 
@@ -31,10 +31,10 @@ class RedisConnector:
         self._pubsub = self._redis.pubsub()
 
     @classmethod
-    async def make(cls, clientSession: ClientSession) -> Self:
+    def make(cls) -> Self:
         prefix = Prefix(Subsystem.CSW, "EventServer")
         conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
-        loc = await LocationService(clientSession).find(conn)
+        loc = LocationServiceSync().find(conn)
         return RedisConnector(loc)
 
 

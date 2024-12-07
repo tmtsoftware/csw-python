@@ -14,8 +14,9 @@ from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 from csw.UTCTime import UTCTime
 from esw.ObsMode import ObsMode
+from sequencer.EventServiceDsl import onEvent
 from sequencer.Keys import longKey
-from sequencer.Script import Script
+from sequencer.Script import Script, onSetup, onObserve
 from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
 
 
@@ -27,12 +28,13 @@ def script(ctx: Script):
     # ESW-134: Reuse code by ability to import logic from one script into another
     InitialCommandHandler(ctx, log)
 
+    @onSetup("command-2")
     async def handleCommand2(setup: Setup):
         log.info(f"XXX TestScript: Received a command-2 setup: {setup}")
 
-    ctx.onSetup("command-2", handleCommand2)
 
     # ESW-421 demonstrate creating exposureId and obsId. Getting components from exposureId and ObsId
+    @onObserve("exposure-start")
     async def handleExposureStart(_: Observe):
         obsId = ObsId.make("2021A-011-153")
         # do something with ObsId components
@@ -48,13 +50,13 @@ def script(ctx: Script):
         log.info(exposureId.det)
         await ctx.publishEvent(ctx.exposureStart(exposureId))
 
-    ctx.onObserve("exposure-start", handleExposureStart)
 
+    @onSetup("command-3")
     async def handleCommand3(setup: Setup):
         log.info(f"XXX Received a command-3 setup: {setup}")
 
-    ctx.onSetup("command-3", handleCommand3)
 
+    @onSetup("command-4")
     async def handleCommand4(_: Setup):
         # try sending concrete sequence
         setupCommand = ctx.Setup("ESW.test", "command-3")
@@ -64,14 +66,14 @@ def script(ctx: Script):
         tcsSequencer = ctx.Sequencer(Subsystem.TCS, ObsMode("darknight"))
         await tcsSequencer.submitAndWait(sequence, 10)
 
-    ctx.onSetup("command-4", handleCommand4)
 
+    @onSetup("check-config")
     async def handleCheckConfig(_: Setup):
         if ctx.existsConfig("/tmt/test/wfos.conf"):
             await ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
 
-    ctx.onSetup("check-config", handleCheckConfig)
 
+    @onSetup("get-config-data")
     async def handleGetConfigData(setup: Setup):
         configValue = "component = wfos"
         configData = ctx.getConfig("/tmt/test/wfos.conf")
@@ -79,8 +81,7 @@ def script(ctx: Script):
             if str(configData) == str(ConfigFactory.parse_string(configValue)):
                 await ctx.publishEvent(SystemEvent(Prefix.from_str("WFOS.test"), EventName("get-config.success")))
 
-    ctx.onSetup("get-config-data", handleGetConfigData)
-
+    @onSetup("get-event")
     async def handleGetEvent(s: Setup):
         # ESW-88
         event = await ctx.getEvent("ESW.test.get.event")
@@ -88,18 +89,18 @@ def script(ctx: Script):
         if not event.isInvalid():
             await ctx.publishEvent(successEvent)
 
-    ctx.onSetup("get-event", handleGetEvent)
 
+    @onSetup("on-event")
     async def handleOnEvent(_: Setup):
+        @onEvent("ESW.test.get.event")
         async def handleEvent(event: Event):
             successEvent = ctx.SystemEvent("ESW.test", "onevent.success")
             if not event.isInvalid():
                 await ctx.publishEvent(successEvent)
 
-        await ctx.onEvent(handleEvent, "ESW.test.get.event")
 
-    ctx.onSetup("on-event", handleOnEvent)
 
+    @onSetup("command-for-assembly")
     async def handleCommandForAssembly(command: Setup):
         submitResponse = await testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
         if isinstance(await testAssembly.query(submitResponse.runId()), Started):
@@ -116,7 +117,6 @@ def script(ctx: Script):
         testAssembly.subscribeCurrentState(["stateName1", "stateName2"], handleCurrentState)
         await testAssembly.oneway(command)
 
-    ctx.onSetup("command-for-assembly", handleCommandForAssembly)
 
     async def handleTestSequencerHierarchy(_: Setup):
         await asyncio.sleep(5)

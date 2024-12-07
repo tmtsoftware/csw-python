@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-from typing import Callable
 
 from csw.CommandService import CommandService
 from csw.CoordinateSystem import CoordinateSystem
@@ -252,7 +250,7 @@ class CswHighLevelDslApi:
     # suspend def EventVariable(eventKeyStr: str, duration: Duration? = null): EventVariable =
     #         EventVariable.make(EventKey.apply(eventKeyStr), this, duration)
 
-    def finishWithError(message: str = ""):
+    def finishWithError(self, message: str = ""):
         pass
 
 
@@ -276,7 +274,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
         # super(CswHighLevelDsl, self).__init__(clientSession = scriptContext.clientSession)
         LocationServiceDsl.__init__(self, scriptContext.clientSession)
         ConfigServiceDsl.__init__(self, scriptContext.clientSession)
-        EventServiceDsl.__init__(self, scriptContext.clientSession)
+        EventServiceDsl.__init__(self)
         CommandServiceDsl.__init__(self)
         TimeServiceDsl.__init__(self)
 

@@ -1,7 +1,6 @@
 from typing import Self
 
 import cbor2
-from aiohttp import ClientSession
 
 from csw.Event import Event
 from csw.RedisConnector import RedisConnector
@@ -14,8 +13,8 @@ class EventPublisher:
         self._redis = redis
 
     @classmethod
-    async def make(cls, clientSession: ClientSession) -> Self:
-        return cls(await RedisConnector.make(clientSession))
+    def make(cls) -> Self:
+        return cls(RedisConnector.make())
 
     async def publish(self, event: Event):
         """

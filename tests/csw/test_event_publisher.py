@@ -2,7 +2,6 @@ import time
 
 import pytest
 import structlog
-from aiohttp import ClientSession
 
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
@@ -21,9 +20,8 @@ class TestEventPublisher:
     # Simple test that publishes an event and subscribes to it
     # Requires that CSW services are running.
     async def test_pub_sub(self):
-        clientSession = ClientSession()
-        pub = await EventPublisher.make(clientSession)
-        sub = await EventSubscriber.make(clientSession)
+        pub = EventPublisher.make()
+        sub = EventSubscriber.make()
 
         prefix = Prefix(Subsystem.CSW, "assembly")
         eventName = EventName("test_event")

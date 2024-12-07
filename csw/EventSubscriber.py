@@ -2,7 +2,6 @@ import asyncio
 from typing import Callable, Set, Self, Awaitable, List
 
 import cbor2
-from aiohttp import ClientSession
 
 from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
@@ -18,8 +17,8 @@ class EventSubscriber:
         self._redis = redis
 
     @classmethod
-    async def make(cls, clientSession: ClientSession) -> Self:
-        return cls(await RedisConnector.make(clientSession))
+    def make(cls) -> Self:
+        return cls(RedisConnector.make())
 
     @staticmethod
     async def _handleCallback(message: dict, callback: Callable[[Event], Awaitable]):

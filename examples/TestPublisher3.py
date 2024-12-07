@@ -13,7 +13,7 @@ from csw.Units import Units
 # Test publishing events
 class TestPublisher3:
 
-    def __init__(self, pub: EventPublisher):
+    async def publish(self):
         intParam = IntKey.make("IntValue", Units.arcsec).set(42)
         floatParam = FloatKey.make("floatValue", Units.arcsec).set(42.1)
         longParam = LongKey.make("longValue", Units.arcsec).set(42)
@@ -42,13 +42,12 @@ class TestPublisher3:
         prefix = Prefix(Subsystem.CSW, "testassembly")
         eventName = EventName("myAssemblyEvent")
         event = SystemEvent(prefix, eventName, paramSet)
-        pub.publish(event)
+        pub = EventPublisher.make()
+        await pub.publish(event)
 
 
 async def main():
-    clientSession = ClientSession()
-    pub = await EventPublisher.make(clientSession)
-    TestPublisher3(pub)
+    await TestPublisher3().publish()
 
 
 asyncio.run(main())

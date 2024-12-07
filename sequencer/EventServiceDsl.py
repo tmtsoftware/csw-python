@@ -1,7 +1,7 @@
 from collections.abc import Awaitable
+from functools import wraps
 from typing import Callable, Set
 
-from aiohttp import ClientSession
 from multipledispatch import dispatch
 
 from csw.Event import EventName, SystemEvent, Event
@@ -12,22 +12,29 @@ from csw.EventSubscription import EventSubscription
 from csw.Parameter import Parameter
 from csw.Prefix import Prefix
 
+def onEvent(*eventKeys: str):
+    def decorator(func: Callable[[Event], Awaitable]):
+        @wraps(func)
+        def wrapper(self):
+            return self.onEvent(*eventKeys, func)
+        return wrapper
+    return decorator
+
 
 class EventServiceDsl:
 
-    def __init__(self, clientSession: ClientSession):
-        self._session = clientSession
+    def __init__(self):
         self._eventPublisher: EventPublisher | None = None
         self._eventSubscriber: EventSubscriber | None = None
 
-    async def eventPublisher(self) -> EventPublisher:
+    def eventPublisher(self) -> EventPublisher:
         if self._eventPublisher == None:
-            self._eventPublisher = await EventPublisher.make(self._session)
+            self._eventPublisher = EventPublisher.make()
         return self._eventPublisher
 
-    async def eventSubscriber(self) -> EventSubscriber:
+    def eventSubscriber(self) -> EventSubscriber:
         if self._eventSubscriber == None:
-            self._eventSubscriber = await EventSubscriber.make(self._session)
+            self._eventSubscriber = EventSubscriber.make()
         return self._eventSubscriber
 
     @dispatch(str, str)
@@ -76,7 +83,7 @@ class EventServiceDsl:
         Args:
             event: event to publish
         """
-        await (await self.eventPublisher()).publish(event)
+        await self.eventPublisher().publish(event)
 
     # XXX TODO
     #     /**
@@ -105,7 +112,7 @@ class EventServiceDsl:
             object that can be used to cancel the subscription
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        subscription = await (await self.eventSubscriber()).subscribe(keys, callback)
+        subscription = await self.eventSubscriber().subscribe(keys, callback)
         return subscription
 
     # XXX TODO
@@ -135,7 +142,7 @@ class EventServiceDsl:
             *eventKeys: collection of strings representing EventKey
         """
         keys = list(map(lambda k: EventKey.from_str(k), eventKeys))
-        return await (await self.eventSubscriber()).gets(set(keys))
+        return await self.eventSubscriber().gets(set(keys))
 
     async def getEvent(self, eventKey: str) -> Event:
         """
@@ -146,4 +153,4 @@ class EventServiceDsl:
         Returns:
             latest Event available
         """
-        return await (await self.eventSubscriber()).get(EventKey.from_str(eventKey))
+        return await self.eventSubscriber().get(EventKey.from_str(eventKey))
