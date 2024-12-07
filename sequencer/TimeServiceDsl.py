@@ -1,115 +1,135 @@
-# /**
-#  * Kotlin Dsl for scheduling periodic/non-periodic tasks at a specified time and/or interval.
-#  * This Dsl provides simplified APIs over csw time service dsl, and some utility methods for scripts.
-#  * It supports scheduling on both [[csw.time.core.models.UTCTime]] and [[csw.time.core.models.TAITime]].
-#  * Each API returns a [[Cancellable]] which allows users to cancel the execution of tasks.
-#  */
-# interface TimeServiceDsl : SuspendToJavaConverter {
-#     val timeService: TimeServiceScheduler
-#
-#     /**
-#      * Schedules task once at specified time. Callbacks like task are thread safe as they are executed on single threaded coroutine scope dispatcher.
-#      *
-#      * @param startTime the time at which the task should start its execution
-#      * @param task the task to be scheduled for execution
-#      * @return a handle to cancel the execution of the task if it hasn't been executed already
-#      */
-#     fun scheduleOnce(startTime: TMTTime, task: SuspendableCallback): Cancellable =
-#             timeService.scheduleOnce(startTime, Runnable { task.toJava() })
-#
-#     /**
-#      * Schedules task once at duration after current utc time. Callbacks like task are thread safe as they are executed on single threaded coroutine scope dispatcher.
-#      *
-#      * @param delayFromNow delay after which task will be scheduled as a Duration
-#      * @param task the task to be scheduled for execution
-#      * @return a handle to cancel the execution of the task if it hasn't been executed already
-#      */
-#     fun scheduleOnceFromNow(delayFromNow: Duration, task: SuspendableCallback): Cancellable =
-#             scheduleOnce(utcTimeAfter(delayFromNow), task)
-#
-#     /**
-#      * Schedules a task to execute periodically at the given interval. The task is executed once at the given start time followed by execution of task at each interval.
-#      * Callbacks like task are thread safe as they are executed on single threaded coroutine scope dispatcher.
-#      *
-#      * @param startTime first time at which task is to be executed
-#      * @param interval the time interval between the execution of tasks
-#      * @param task the task to execute after each interval
-#      * @return a handle to cancel the execution of further tasks
-#      */
-#     fun schedulePeriodically(startTime: TMTTime, interval: Duration, task: SuspendableCallback): Cancellable =
-#             timeService.schedulePeriodically(
-#                     startTime,
-#                     interval.toJavaDuration(),
-#                     Runnable { task.toJava() })
-#
-#     /**
-#      * Schedules a task to execute periodically at the given interval. The task is executed immediately and then after every provided duration.
-#      * Callbacks like task are thread safe as they are executed on single threaded coroutine scope dispatcher.
-#      *
-#      * @param interval the time interval between the execution of tasks
-#      * @param task the task to execute after each interval
-#      * @return a handle to cancel the execution of further tasks
-#      */
-#     fun schedulePeriodically(interval: Duration, task: SuspendableCallback): Cancellable =
-#             timeService.schedulePeriodically(
-#                     interval.toJavaDuration(),
-#                     Runnable { task.toJava() })
-#
-#     /**
-#      * Schedules a task to execute periodically at the given interval. The task is executed once at duration after current utc time
-#      * followed by execution of task at each interval. Callbacks like task are thread safe as they are executed on single threaded coroutine scope dispatcher.
-#      *
-#      * @param delayFromNow delay after which the first task will be scheduled as a Duration
-#      * @param interval the time interval between the execution of tasks
-#      * @param task the task to execute after each interval
-#      * @return a handle to cancel the execution of further tasks
-#      */
-#     fun schedulePeriodicallyFromNow(
-#             delayFromNow: Duration,
-#             interval: Duration,
-#             task: SuspendableCallback
-#     ): Cancellable =
-#             schedulePeriodically(utcTimeAfter(delayFromNow), interval, task)
-#
-#     /**
-#      * Utility to calculate current utc time
-#      *
-#      * @return current utc time
-#      */
-#     fun utcTimeNow(): UTCTime = UTCTime.now()
-#
-#     /**
-#      * Utility to calculate current tai time
-#      *
-#      * @return current tai time
-#      */
-#     fun taiTimeNow(): TAITime = TAITime.now()
-#
-#     /**
-#      * Utility to calculate utc time after specified duration
-#      *
-#      * @param duration time duration
-#      * @return utc time after specified time duration
-#      *
-#      */
-#     fun utcTimeAfter(duration: Duration): UTCTime =
-#             UTCTime.after(FiniteDuration(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS))
-#
-#     /**
-#      * Utility to calculate tai time after specified duration
-#      *
-#      * @param duration time duration
-#      * @return tai time after specified time duration
-#      *
-#      */
-#     fun taiTimeAfter(duration: Duration): TAITime =
-#             TAITime.after(FiniteDuration(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS))
-#
-#     /**
-#      * Extension method on TMT time to calculate offset from it
-#      *
-#      * @return offset from utc/tai time
-#      */
-#     fun TMTTime.offsetFromNow(): Duration = durationFromNow().toNanos().nanoseconds
-#
-# }
+from datetime import timedelta
+from typing import Callable, Awaitable
+
+from csw.Cancellable import Cancellable
+from csw.TAITime import TAITime
+from csw.TMTTime import TMTTime
+from csw.TimeServiceScheduler import TimeServiceScheduler
+from csw.UTCTime import UTCTime
+
+
+class TimeServiceDsl:
+    """
+    Python Dsl for scheduling periodic/non-periodic tasks at a specified time and/or interval.
+    This Dsl provides simplified APIs over csw time service dsl, and some utility methods for scripts.
+    It supports scheduling on both UTCTime and TAITime.
+    Each API returns a Cancellable which allows users to cancel the execution of tasks.
+    """
+
+    def __init__(self):
+        self.timeService = TimeServiceScheduler()
+
+    def scheduleOnce(self, startTime: TMTTime, func: Callable[[], Awaitable]) -> Cancellable:
+        """
+        Schedules an async function to execute once at the given start time.
+
+        Args:
+            startTime: the time at which the task should start its execution
+            func: the async function (coroutine) to be scheduled for execution
+
+        Returns:
+            a handle to cancel the execution of the task if it hasn't been executed already
+        """
+        return self.timeService.scheduleOnce(startTime, func)
+
+    def scheduleOnceFromNow(self, delayFromNow: timedelta, func: Callable[[], Awaitable]) -> Cancellable:
+        """
+        Schedules function once at duration after current utc time.
+
+        Args:
+
+            delayFromNow: delay after which task will be scheduled as a timedelta
+            func: the function to be scheduled for execution
+
+        Returns:
+            a handle to cancel the execution of the function if it hasn't been executed already
+        """
+        return self.scheduleOnce(self.utcTimeAfter(delayFromNow), func)
+
+    def schedulePeriodicallyStarting(self, startTime: TMTTime, interval: timedelta,
+                                     func: Callable[[], Awaitable]) -> Cancellable:
+        """
+        Schedules a task to execute periodically at the given interval. The task is executed once at the given start time followed by execution of task at each interval.
+
+        Args:
+            startTime: first time at which task is to be executed
+            interval: the time interval between the execution of tasks
+            func: the task to execute after each interval
+
+        Returns:
+            a handle to cancel the execution of further tasks
+        """
+        return self.timeService.schedulePeriodicallyStarting(startTime, interval, func)
+
+    def schedulePeriodically(self, interval: timedelta, func: Callable[[], Awaitable]) -> Cancellable:
+        """
+        Schedules a task to execute periodically at the given interval.
+        The task is executed immediately and then after every provided duration.
+
+        Args:
+            interval: the time interval between the execution of tasks
+            func: the task to execute after each interval
+
+        Returns:
+            a handle to cancel the execution of further tasks
+        """
+        return self.timeService.schedulePeriodically(interval, func)
+
+    def schedulePeriodicallyFromNow(self, delayFromNow: timedelta, interval: timedelta,
+                                    func: Callable[[], Awaitable]) -> Cancellable:
+        """
+        Schedules a task to execute periodically at the given interval. The task is executed once at duration after current utc time
+        followed by execution of task at each interval.
+
+        Args:
+            delayFromNow: delay after which the first task will be scheduled as a timedelta
+            interval: the time interval between the execution of tasks
+            func: the task to execute after each interval
+
+        Returns:
+            a handle to cancel the execution of further tasks
+        """
+        return self.timeService.schedulePeriodicallyStarting(self.utcTimeAfter(delayFromNow), interval, func)
+
+    def utcTimeNow(self) -> UTCTime:
+        """
+        Utility to calculate current UTC time
+
+        Returns:
+            current UTC time
+        """
+        return UTCTime.now()
+
+    def taiTimeNow(self) -> TAITime:
+        """
+        Utility to calculate current TAI time
+
+        Returns:
+            current TAI time
+        """
+        return TAITime.now()
+
+    def utcTimeAfter(self, duration: timedelta) -> UTCTime:
+        """
+        Utility to calculate UTC time after specified duration
+
+        Args:
+            duration: time duration
+
+        Returns:
+            UTC time after specified time duration
+        """
+        return UTCTime.after(duration)
+
+    def taiTimeAfter(self, duration: timedelta) -> TAITime:
+        """
+        Utility to calculate TAI time after specified duration
+
+        Args:
+            duration: time duration
+
+        Returns:
+            TAI time after specified time duration
+        """
+        return TAITime.after(duration)
+

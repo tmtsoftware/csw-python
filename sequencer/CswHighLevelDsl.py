@@ -22,6 +22,7 @@ from sequencer.RichSequencer import RichSequencer
 from sequencer.ScriptContext import ScriptContext
 from sequencer.ScriptDsl import ScriptDsl
 from sequencer.SequencerApi import SequencerApi
+from sequencer.TimeServiceDsl import TimeServiceDsl
 
 
 class CswHighLevelDslApi:
@@ -262,7 +263,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
                       # LoggingDsl,
                       CommandServiceDsl,
                       # AlarmServiceDsl,
-                      # TimeServiceDsl,
+                      TimeServiceDsl,
                       # DatabaseServiceDsl,
                       # LoopDsl
                       ):
@@ -273,10 +274,11 @@ class CswHighLevelDsl(CswHighLevelDslApi,
 
     def __init__(self, cswServices: CswServices, scriptContext: ScriptContext):
         # super(CswHighLevelDsl, self).__init__(clientSession = scriptContext.clientSession)
-        CommandServiceDsl.__init__(self)
         LocationServiceDsl.__init__(self, scriptContext.clientSession)
         ConfigServiceDsl.__init__(self, scriptContext.clientSession)
         EventServiceDsl.__init__(self, scriptContext.clientSession)
+        CommandServiceDsl.__init__(self)
+        TimeServiceDsl.__init__(self)
 
         self.cswServices = cswServices
         self.scriptContext = scriptContext

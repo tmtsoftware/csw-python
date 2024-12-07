@@ -346,7 +346,7 @@ class DoubleArrayKey:
 # noinspection DuplicatedCode
 class ByteMatrixKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -> Key[List[List[int]]]:
+    def make(name: str, units: Units = Units.NoUnits) -> Key[List[List[bytes]]]:
         return Key(name, KeyTypes.ByteMatrixKey, units)
 
 

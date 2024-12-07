@@ -1,4 +1,5 @@
 import asyncio
+from datetime import timedelta
 
 import structlog
 from pyhocon import ConfigFactory
@@ -13,6 +14,7 @@ from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 from csw.UTCTime import UTCTime
 from esw.ObsMode import ObsMode
+from sequencer.Keys import longKey
 from sequencer.Script import Script
 from sequencer.examples.testData.InitialCommandHandler import InitialCommandHandler
 
@@ -130,7 +132,7 @@ def script(ctx: Script):
     ctx.onSetup("check-exception-1", handleCheckException1)
     ctx.onSetup("check-exception-2", handleCheckException2)
 
-    # XXX TODO
+    # XXX TODO implement alarm service DSL
     #     onSetup("set-alarm-severity") {
     #         val alarmKey = AlarmKey(Prefix("NFIRAOS.trombone"), "tromboneAxisHighLimitAlarm")
     #         setSeverity(alarmKey, Major)
@@ -146,35 +148,36 @@ def script(ctx: Script):
 
     ctx.onSetup("command-lgsf", handleCommandLgsf)
 
-    # XXX TODO
-    #    def handleScheduleOnceFromNow(_: Setup):
-    #        currentTime = ctx.utcTimeNow()
-    #        ctx.scheduleOnceFromNow(1.seconds) {
-    #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
-    #             publishEvent(SystemEvent("ESW.schedule.once", "offset", param))
-    #       }
 
-    #     onSetup("schedule-once-from-now") {
-    #         val currentTime = utcTimeNow()
-    #         scheduleOnceFromNow(1.seconds) {
-    #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
-    #             publishEvent(SystemEvent("ESW.schedule.once", "offset", param))
-    #         }
-    #     }
+    async def handleScheduleOnceFromNow(_: Setup):
+        currentTime = ctx.utcTimeNow()
+
+        async def func():
+            param = longKey("offset").set(int(currentTime.offsetFromNow().total_seconds() * 1_000_000_000))
+            await ctx.publishEvent(ctx.SystemEvent("ESW.schedule.once", "offset", param))
+
+        ctx.scheduleOnceFromNow(timedelta(seconds=1), func)
+
+    ctx.onSetup("schedule-once-from-now", handleScheduleOnceFromNow)
+
+    # XXX TODO: implement loop
+    # async def handleSchedulePeriodicallyFromNow(_: Setup):
+    #     currentTime = ctx.utcTimeNow()
+    #     counter = 0
     #
-    #     onSetup("schedule-periodically-from-now") {
-    #         val currentTime = utcTimeNow()
-    #         var counter = 0
-    #         val a = schedulePeriodicallyFromNow(1.seconds, 1.seconds) {
-    #             val param = longKey("offset").set(currentTime.offsetFromNow().absoluteValue.inWholeMilliseconds)
-    #             publishEvent(SystemEvent("ESW.schedule.periodically", "offset", param))
-    #             counter += 1
-    #         }
-    #         loop {
-    #             stopWhen(counter > 1)
-    #         }
-    #         a.cancel()
-    #     }
+    #     async def func():
+    #         param = longKey("offset").set(int(currentTime.offsetFromNow().total_seconds() * 1_000_000_000))
+    #         await ctx.publishEvent(ctx.SystemEvent("ESW.schedule.periodically", "offset", param))
+    #         nonlocal counter
+    #         counter = counter + 1
+    #
+    #     a = ctx.schedulePeriodicallyFromNow(timedelta(seconds=1), timedelta(seconds=1), func)
+    #     #         loop {
+    #     #             stopWhen(counter > 1)
+    #     #         }
+    #     #         a.cancel()
+    #
+    # ctx.onSetup("schedule-periodically-from-now", handleSchedulePeriodicallyFromNow)
 
     async def handleDiagnosticMode(startTime: UTCTime, hint: str):
         await testAssembly.diagnosticMode(startTime, hint)
