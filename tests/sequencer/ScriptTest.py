@@ -33,7 +33,7 @@ async def main():
         evenService = EventService()
         alarmService = AlarmService()
         scriptContext = ScriptContext(1, sequencerPrefix, obsMode, clientSession, sequenceOperatorFactory, evenService, alarmService)
-        cswServices = await CswServices.create(clientSession, scriptContext)
+        cswServices = CswServices.create(clientSession, scriptContext)
         scriptWiring = ScriptWiring(scriptContext, cswServices)
         script = Script(scriptWiring)
         cfg = configparser.ConfigParser()

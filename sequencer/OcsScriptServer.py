@@ -3,8 +3,6 @@ import os
 import traceback
 from typing import Callable
 
-import asyncio_atexit
-
 import structlog
 from aiohttp import web, ClientSession
 from aiohttp.web_request import Request
@@ -164,7 +162,7 @@ class OcsScriptServer:
         scriptContext = ScriptContext(1, self.sequencerPrefix, obsMode, self.clientSession, sequenceOperatorFactory,
                                       evenService,
                                       alarmService)
-        cswServices = await CswServices.create(self.clientSession, scriptContext)
+        cswServices = CswServices.create(self.clientSession, scriptContext)
         scriptWiring = ScriptWiring(scriptContext, cswServices)
         script = Script(scriptWiring)
         self.scriptApi: ScriptApi = script.scriptDsl
