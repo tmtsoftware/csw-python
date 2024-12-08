@@ -10,7 +10,6 @@ from esw.ObsMode import ObsMode
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
 from esw.Variation import Variation
-from sequencer.SequencerApi import SequencerApi
 
 
 @dataclass
@@ -59,7 +58,7 @@ class RichSequencer:
         Query for the final result of a long running sequence which was sent as Submit to get a SubmitResponse
         Args:
             runId: the runId of the sequence for which response is required
-            timeout: duration for which api will wait for final response, if command is not completed queryFinal will timeout
+            timeoutInSeconds: duration for which api will wait for final response, if command is not completed queryFinal will timeout
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """

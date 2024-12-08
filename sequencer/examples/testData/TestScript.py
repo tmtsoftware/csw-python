@@ -70,7 +70,7 @@ def script(ctx: Script):
     @ctx.onSetup("get-config-data")
     async def handleGetConfigData(setup: Setup):
         configValue = "component = wfos"
-        configData = ctx.getConfig("/tmt/test/wfos.conf")
+        configData = await ctx.getConfig("/tmt/test/wfos.conf")
         if configData:
             if str(configData) == str(ConfigFactory.parse_string(configValue)):
                 await ctx.publishEvent(SystemEvent(Prefix.from_str("WFOS.test"), EventName("get-config.success")))
@@ -85,11 +85,12 @@ def script(ctx: Script):
 
     @ctx.onSetup("on-event")
     async def handleOnEvent(_: Setup):
-        @ctx.onEvent("ESW.test.get.event")
         async def handleEvent(event: Event):
             successEvent = ctx.SystemEvent("ESW.test", "onevent.success")
             if not event.isInvalid():
                 await ctx.publishEvent(successEvent)
+
+        await ctx.onEvent(handleEvent, "ESW.test.get.event")
 
     @ctx.onSetup("command-for-assembly")
     async def handleCommandForAssembly(command: Setup):

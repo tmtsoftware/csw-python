@@ -45,7 +45,7 @@ def script(ctx: Script):
         successEvent = ctx.SystemEvent("TCS.test", "stop.success")
         await ctx.publishEvent(successEvent)
 
-
+    # XXX setup "time-service-dsl" not referenced anywhere
 #     onSetup("time-service-dsl") {
 #         val offset = utcTimeAfter(2.seconds).offsetFromNow()
 #

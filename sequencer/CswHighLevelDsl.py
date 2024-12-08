@@ -461,10 +461,10 @@ class CswHighLevelDsl(CswHighLevelDslApi,
         return self.sequencerObserveEvent.inputRequestEnd(obsId)
 
     def Assembly(self, prefix: Prefix, timeoutInSecs: int) -> RichComponent:
-        return RichComponent(prefix, ComponentType.Assembly, timeoutInSecs)
+        return RichComponent(prefix, ComponentType.Assembly, self.scriptContext.clientSession, timeoutInSecs)
 
     def Hcd(self, prefix: Prefix, timeoutInSecs: int) -> RichComponent:
-        return RichComponent(prefix, ComponentType.HCD, timeoutInSecs)
+        return RichComponent(prefix, ComponentType.HCD, self.scriptContext.clientSession, timeoutInSecs)
 
     def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None,
                   timeoutInSecs: int = 100000) -> RichSequencer:

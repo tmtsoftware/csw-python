@@ -57,31 +57,31 @@ class TestCommandServiceClientServer:
 
     async def test_command_client_server(self):
         async with ClientSession() as clientSession:
-            # Create a python based command service client
+        # Create a python based command service client
             cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service, clientSession)
-            prefix = Prefix(Subsystem.CSW, "TestClient")
-            resp = await cs.submit(Setup(prefix, CommandName("SimpleCommand")))
-            assert isinstance(resp, Completed)
-            resp2 = await cs.submit(Setup(prefix, CommandName("ResultCommand")))
-            assert isinstance(resp2, Completed)
-            assert len(resp2.result.paramSet) == 1
+        prefix = Prefix(Subsystem.CSW, "TestClient")
+        resp = await cs.submit(Setup(prefix, CommandName("SimpleCommand")))
+        assert isinstance(resp, Completed)
+        resp2 = await cs.submit(Setup(prefix, CommandName("ResultCommand")))
+        assert isinstance(resp2, Completed)
+        assert len(resp2.result.paramSet) == 1
 
-            # LongRunningCommand
-            subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
-            await asyncio.sleep(1)
-            resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
-            assert isinstance(resp3, Started)
-            resp4 = await cs.queryFinal(resp3.runId, 5)
-            assert isinstance(resp4, Completed)
-            resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
-            assert isinstance(resp5, Completed)
-            await asyncio.sleep(1)
-            assert self._csCount == 4
-            assert self._currentState.stateName == "PyCswState"
-            assert self._currentState(IntKey.make("IntValue", Units.arcsec)).values[0] == 42
-            subscription.cancel()
-            await asyncio.sleep(1)
-            resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
-            assert isinstance(resp5, Completed)
-            await asyncio.sleep(1)
-            assert self._csCount == 4
+        # LongRunningCommand
+        subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+        await asyncio.sleep(1)
+        resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
+        assert isinstance(resp3, Started)
+        resp4 = await cs.queryFinal(resp3.runId, 5)
+        assert isinstance(resp4, Completed)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
+        assert isinstance(resp5, Completed)
+        await asyncio.sleep(1)
+        assert self._csCount == 4
+        assert self._currentState.stateName == "PyCswState"
+        assert self._currentState(IntKey.make("IntValue", Units.arcsec)).values[0] == 42
+        subscription.cancel()
+        await asyncio.sleep(1)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
+        assert isinstance(resp5, Completed)
+        await asyncio.sleep(1)
+        assert self._csCount == 4

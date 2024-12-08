@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from typing import Callable, List, Awaitable
 
 import structlog
+from aiohttp import ClientSession
 
 from csw.CommandResponse import ValidateResponse, OnewayResponse, SubmitResponse
 from csw.CommandService import CommandService, Subscription
-from csw.CommandServiceRequest import StateName
 from csw.CurrentState import CurrentState
 from csw.LocationService import ComponentType
 from csw.ParameterSetType import ControlCommand
@@ -18,16 +18,19 @@ class RichComponent:
 
     def __init__(self, prefix: Prefix,
                  componentType: ComponentType,
+                 clientSession: ClientSession,
                  # lockUnlockUtil: LockUnlockUtil
                  # commandUtil: CommandUtil
+
                  defaultTimeoutInSeconds: int):
         self.prefix = prefix
         self.componentType = componentType
+        self.clientSession = clientSession
         self.defaultTimeoutInSeconds = defaultTimeoutInSeconds
         self.log = structlog.get_logger()
 
     def commandService(self) -> CommandService:
-        return CommandService(self.prefix, self.componentType)
+        return CommandService(self.prefix, self.componentType, self.clientSession)
 
     async def actionOnResponse(self, func: Callable[[], Awaitable[SubmitResponse]],
                                resumeOnError: bool = False) -> SubmitResponse:
@@ -94,7 +97,7 @@ class RichComponent:
 
         Args:
             commandRunId: the runId of the command for which response is required
-            timeout: duration for which api will wait for final response, if command is not completed queryFinal will timeout
+            timeoutInSecs: duration for which api will wait for final response, if command is not completed queryFinal will timeout
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """
@@ -112,7 +115,7 @@ class RichComponent:
 
         Args:
             command: the [[csw.params.commands.ControlCommand]] payload
-            timeout: duration for which api will wait for final response, if command is not completed queryFinal will timeout
+            timeoutInSecs: duration for which api will wait for final response, if command is not completed queryFinal will timeout
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """
