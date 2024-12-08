@@ -10,7 +10,7 @@ from csw.CurrentState import CurrentState
 from csw.LocationService import ComponentType
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 @dataclass

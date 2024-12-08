@@ -2,7 +2,7 @@ import asyncio
 from datetime import timedelta
 
 from csw.TimeServiceScheduler import TimeServiceScheduler
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 async def test_schedule_once():

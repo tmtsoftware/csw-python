@@ -9,7 +9,7 @@
 from functools import wraps
 from typing import Callable, Awaitable
 
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from sequencer.CswHighLevelDsl import CswHighLevelDsl
 from sequencer.ScriptDsl import ScriptDsl
 from sequencer.ScriptWiring import ScriptWiring

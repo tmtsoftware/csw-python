@@ -1,5 +1,5 @@
 from csw.ParameterSetType import SequenceCommand
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 class ScriptApi:

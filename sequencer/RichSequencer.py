@@ -3,7 +3,7 @@ from attr import dataclass
 
 from csw.CommandResponse import SubmitResponse, CommandError
 from csw.Subsystem import Subsystem
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from esw.EswSequencerResponse import GoOnlineResponse, GoOfflineResponse, DiagnosticModeResponse, \
     OperationsModeResponse, OkOrUnhandledResponse
 from esw.ObsMode import ObsMode

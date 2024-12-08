@@ -18,7 +18,7 @@ from csw.Prefix import Prefix
 import json
 from dataclasses import dataclass
 
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from esw.SequencerRequest import Query
 
 

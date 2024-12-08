@@ -1,11 +1,13 @@
 from datetime import timedelta
 from typing import Callable, Awaitable
 
+import structlog
+
 from csw.Cancellable import Cancellable
-from csw.TAITime import TAITime
+from csw.TMTTime import TAITime
 from csw.TMTTime import TMTTime
 from csw.TimeServiceScheduler import TimeServiceScheduler
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 class TimeServiceDsl:
@@ -15,6 +17,7 @@ class TimeServiceDsl:
     It supports scheduling on both UTCTime and TAITime.
     Each API returns a Cancellable which allows users to cancel the execution of tasks.
     """
+    log = structlog.get_logger()
 
     def __init__(self):
         self.timeService = TimeServiceScheduler()

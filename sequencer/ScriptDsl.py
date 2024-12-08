@@ -4,7 +4,7 @@ from types import NoneType
 import structlog
 
 from csw.ParameterSetType import Setup, Observe, SequenceCommand
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from esw.EswSequencerResponse import PullNextResult, Unhandled
 from esw.Step import Step
 from sequencer.CommandHandler import CommandHandler
@@ -153,7 +153,6 @@ class ScriptDsl(ScriptApi):
                 return None
 
     def onSetupCommand(self, name: str, handler: CommandHandler):
-        print(f"XXX onSetupCommand: {name}")
         self.setupCommandHandler.add(name, handler.execute)
 
     def onObserveCommand(self, name: str, handler: CommandHandler):

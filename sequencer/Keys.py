@@ -5,8 +5,8 @@ from csw.Parameter import LongKey, Key, ShortKey, ByteKey, CharKey, BooleanKey, 
     GChoiceKey, EqCoordKey, SolarSystemCoordKey, MinorPlanetCoordKey, CometCoordKey, AltAzCoordKey, CoordKey, StringKey, \
     UTCTimeKey, TAITimeKey, ByteArrayKey, ShortArrayKey, LongArrayKey, IntArrayKey, FloatArrayKey, DoubleArrayKey, \
     ByteMatrixKey, ShortMatrixKey, LongMatrixKey, IntMatrixKey, FloatMatrixKey, DoubleMatrixKey
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
+from csw.TMTTime import TAITime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 
 

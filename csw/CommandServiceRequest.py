@@ -5,7 +5,7 @@ from typing import List
 from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import ControlCommand
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 @dataclass_json

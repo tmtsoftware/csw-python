@@ -8,7 +8,7 @@ from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
 
 # Test publishing events
-from csw.TAITime import TAITime
+from csw.TMTTime import TAITime
 
 async def main():
     prefix = Prefix(Subsystem.CSW, "testassembly")

@@ -5,7 +5,7 @@ from csw.ExposureNumber import ExposureNumber
 from csw.ObsId import ObsId
 from csw.Subsystem import Subsystem
 from csw.TYPLevel import TYPLevel
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 # create ExposureId from String and validate members

@@ -13,8 +13,8 @@ from csw.EventPublisher import EventPublisher
 from csw.Event import SystemEvent, EventName
 from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
+from csw.TMTTime import TAITime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 from csw.Coords import *
 from csw.CurrentState import CurrentState

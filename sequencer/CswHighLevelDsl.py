@@ -10,6 +10,7 @@ from csw.SequencerObserveEvent import SequencerObserveEvent
 from csw.Subsystem import Subsystem
 from esw.ObsMode import ObsMode
 from esw.Variation import Variation
+from sequencer.LoopDsl import LoopDsl
 from sequencer.RichComponent import RichComponent
 from sequencer.CommandServiceDsl import CommandServiceDsl
 from sequencer.ConfigServiceDsl import ConfigServiceDsl
@@ -263,7 +264,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
                       # AlarmServiceDsl,
                       TimeServiceDsl,
                       # DatabaseServiceDsl,
-                      # LoopDsl
+                      LoopDsl
                       ):
     """
     Interface which contains methods to create different observe events by delegating to DSL of creating observe events
@@ -277,6 +278,7 @@ class CswHighLevelDsl(CswHighLevelDslApi,
         EventServiceDsl.__init__(self)
         CommandServiceDsl.__init__(self)
         TimeServiceDsl.__init__(self)
+        LoopDsl.__init__(self)
 
         self.cswServices = cswServices
         self.scriptContext = scriptContext

@@ -3,8 +3,10 @@ from asyncio import TimerHandle, Task
 from datetime import timedelta
 from typing import Callable, Awaitable
 
+import structlog
+
 from csw.Cancellable import Cancellable
-from csw.TMTTime import TMTTime
+from csw.TMTTime import TMTTime, UTCTime
 
 
 class TimerCancellable(Cancellable):
@@ -29,6 +31,8 @@ class TimeServiceScheduler:
     Please note that implementation of Scheduler is optimised for high-throughput
     and high-frequency events. It is not to be confused with long-term schedulers such as Quartz.
     """
+
+    log = structlog.get_logger()
 
     def scheduleOnce(self, startTime: TMTTime, func: Callable[[], Awaitable]) -> Cancellable:
         """

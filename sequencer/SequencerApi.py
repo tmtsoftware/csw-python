@@ -1,5 +1,5 @@
 from csw.SequencerCommandService import SequencerCommandService
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from esw.EswSequencerResponse import OkOrUnhandledResponse, PullNextResponse, MaybeNextResponse, DiagnosticModeResponse, \
     OperationsModeResponse, GoOnlineResponse, GoOfflineResponse
 

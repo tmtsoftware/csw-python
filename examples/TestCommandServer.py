@@ -8,8 +8,8 @@ from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import IntKey, UTCTimeKey, TAITimeKey, IntArrayKey, FloatArrayKey, IntMatrixKey, DoubleKey
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
+from csw.TMTTime import TAITime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem

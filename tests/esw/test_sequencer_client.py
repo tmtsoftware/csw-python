@@ -6,7 +6,7 @@ from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
 from esw.EswSequencerResponse import Ok, Unhandled, SequencerState

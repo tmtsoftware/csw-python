@@ -4,7 +4,7 @@ from typing import List, Self
 from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import SequenceCommand
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 
 
 # noinspection PyProtectedMember

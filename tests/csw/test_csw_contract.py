@@ -6,7 +6,7 @@ import structlog
 from csw.CommandResponse import CommandIssue
 from csw.Parameter import Parameter, ChoiceKey
 from csw.CurrentState import CurrentState
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
