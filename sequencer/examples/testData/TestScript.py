@@ -95,10 +95,11 @@ def script(ctx: Script):
     @ctx.onSetup("command-for-assembly")
     async def handleCommandForAssembly(command: Setup):
         submitResponse = await testAssembly.submit(ctx.Setup(str(command.source), "long-running"))
-        if isinstance(await testAssembly.query(submitResponse.runId()), Started):
+
+        if isinstance(await testAssembly.query(submitResponse.runId), Started):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
 
-        if isinstance(await testAssembly.queryFinal(submitResponse.runId(), 100), Completed):
+        if isinstance(await testAssembly.queryFinal(submitResponse.runId, 100), Completed):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
 
         async def handleCurrentState(currentState: CurrentState):

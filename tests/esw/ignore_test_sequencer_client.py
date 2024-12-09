@@ -16,8 +16,8 @@ from esw.EswSequencerResponse import Ok, Unhandled, SequencerState
 
 
 # noinspection PyShadowingBuiltins
-@pytest.mark.skip(reason="Requires running ESW observing simulation from the esw-observing-simulation repo")
 @pytest.mark.asyncio
+@pytest.mark.skip(reason="Requires running ESW observing simulation from the esw-observing-simulation repo")
 class TestSequencerClient:
     # XXX TODO FIXME: Move clientSession to async def
     clientSession = ClientSession()

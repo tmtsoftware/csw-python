@@ -56,9 +56,9 @@ class TestCommandServiceClientServer:
 
 
     async def test_command_client_server(self):
-        async with ClientSession() as clientSession:
+        clientSession = ClientSession()
         # Create a python based command service client
-            cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service, clientSession)
+        cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service, clientSession)
         prefix = Prefix(Subsystem.CSW, "TestClient")
         resp = await cs.submit(Setup(prefix, CommandName("SimpleCommand")))
         assert isinstance(resp, Completed)
@@ -85,3 +85,4 @@ class TestCommandServiceClientServer:
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4
+        await clientSession.close()

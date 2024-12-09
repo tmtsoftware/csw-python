@@ -160,15 +160,17 @@ class CommandService:
         Returns: SubmitResponse
            a subclass of SubmitResponse
         """
-        baseUri = (self._getBaseUri()).replace('http:', 'ws:')
-        wsUri = f"{baseUri}websocket-endpoint"
-        msgDict = Query(runId)._asDict()
-        jsonStr = json.dumps(msgDict)
-        ws = await self._session.ws_connect(wsUri)
-        await ws.send_str(jsonStr)
-        jsonResp = await ws.receive_str()
-        await ws.close()
-        return CommandResponse._fromDict(json.loads(jsonResp))
+        baseUri = self._getBaseUri()
+        postUri = f"{baseUri}post-endpoint"
+        headers = {'Content-type': 'application/json'}
+        data = Query(runId)._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f"CommandService: query failed: {await response.json()}")
+        # return CommandResponse._fromDict(json.loads(await response.json()))
+        return CommandResponse._fromDict(await response.json())
+
 
     async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
         """
@@ -193,9 +195,11 @@ class CommandService:
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
+        print(f"XXX _subscribeCurrentState: json = {jsonStr}")
         async for websocket in websockets.connect(wsUri):
             await websocket.send(jsonStr)
             async for message in websocket:
+                print(f"XXX _subscribeCurrentState: message = {message}")
                 await callback(CurrentState._fromDict(json.loads(message)))
 
 
@@ -204,10 +208,12 @@ class CommandService:
     #     wsUri = f"{baseUri}websocket-endpoint"
     #     msgDict = SubscribeCurrentState(names)._asDict()
     #     jsonStr = json.dumps(msgDict)
+    #     print(f"XXX _subscribeCurrentState: json = {jsonStr}")
     #     async with self._session.ws_connect(wsUri) as ws:
     #         await ws.send_str(jsonStr)
     #         async for msgF in ws:
     #             msg = await msgF
+    #             print(f"XXX _subscribeCurrentState: message = {msg}")
     #             match msg.type:
     #                 case aiohttp.WSMsgType.TEXT:
     #                     await callback(CurrentState._fromDict(json.loads(msg.data)))

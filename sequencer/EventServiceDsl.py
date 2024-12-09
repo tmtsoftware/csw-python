@@ -74,6 +74,7 @@ class EventServiceDsl:
         Args:
             event: event to publish
         """
+        print(f"XXX EventServiceDsl.publishEvent({event.eventName.name})")
         await self.eventPublisher().publish(event)
 
     # XXX TODO

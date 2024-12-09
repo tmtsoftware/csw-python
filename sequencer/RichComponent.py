@@ -13,7 +13,6 @@ from csw.Prefix import Prefix
 from csw.TMTTime import UTCTime
 
 
-@dataclass
 class RichComponent:
 
     def __init__(self, prefix: Prefix,
@@ -35,9 +34,9 @@ class RichComponent:
     async def actionOnResponse(self, func: Callable[[], Awaitable[SubmitResponse]],
                                resumeOnError: bool = False) -> SubmitResponse:
         if not resumeOnError:
-            (await func()).onFailedTerminate()
+            return (await func()).onFailedTerminate()
         else:
-            await func()
+            return await func()
 
     async def validate(self, command: ControlCommand) -> ValidateResponse:
         """
