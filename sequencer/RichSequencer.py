@@ -17,7 +17,7 @@ class RichSequencer:
     subsystem: Subsystem
     obsMode: ObsMode
     variation: Variation | None
-    defaultTimeoutInSeconds: int
+    defaulttimeoutInSeconds: float
     clientSession: ClientSession
 
     def _sequencerService(self):
@@ -53,7 +53,7 @@ class RichSequencer:
             raise CommandError(submitResponse)
         return submitResponse
 
-    async def queryFinal(self, runId: str, timeoutInSeconds: int, resumeOnError: bool = False) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeoutInSeconds: float, resumeOnError: bool = False) -> SubmitResponse:
         """
         Query for the final result of a long running sequence which was sent as Submit to get a SubmitResponse
         Args:
@@ -67,7 +67,7 @@ class RichSequencer:
             raise CommandError(submitResponse)
         return submitResponse
 
-    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int = 10, resumeOnError: bool = False) -> SubmitResponse:
+    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: float = 10, resumeOnError: bool = False) -> SubmitResponse:
         """
         Submit a sequence and wait for the final result to get a final SubmitResponse
 

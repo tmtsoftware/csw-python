@@ -1,3 +1,4 @@
+import asyncio
 import filecmp
 import os
 import time
@@ -53,7 +54,7 @@ class TestEventsWithAssembly:
     async def test_pub_sub(self):
         pub = EventPublisher.make()
         sub = EventSubscriber.make()
-        time.sleep(1.0)
+        await asyncio.sleep(1.0)
         self.log.debug("Starting test...")
         subscription = await sub.subscribe(
             [EventKey(self.prefix, EventName("testEvent1")),
@@ -67,7 +68,7 @@ class TestEventsWithAssembly:
             await self.publishEvent4(pub)
             self.log.debug("Published three events...")
             # make sure assembly has time to write the file
-            time.sleep(3)
+            await asyncio.sleep(3)
             # compare file created from received events below with known good version
             assert filecmp.cmp(self.inFile, self.tmpInFile, False)
             # compare file created by assembly with known good version

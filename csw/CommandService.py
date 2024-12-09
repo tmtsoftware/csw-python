@@ -106,7 +106,7 @@ class CommandService:
         return await self._postCommand("Oneway", controlCommand)
 
     # noinspection DuplicatedCode
-    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeoutInSeconds: float) -> SubmitResponse:
         """
         If the command for runId returned Started (long running command), this will
         return the final result.
@@ -128,7 +128,7 @@ class CommandService:
         await ws.close()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: float) -> SubmitResponse:
         """
         Submits a command to the command service and waits for the final response.
         This version returns a future response (async).
@@ -172,7 +172,7 @@ class CommandService:
         return CommandResponse._fromDict(await response.json())
 
 
-    async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: float) -> SubmitResponse:
         """
         Submits a command to the command service and waits for the final response.
 

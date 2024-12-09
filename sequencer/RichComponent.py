@@ -21,7 +21,7 @@ class RichComponent:
                  # lockUnlockUtil: LockUnlockUtil
                  # commandUtil: CommandUtil
 
-                 defaultTimeoutInSeconds: int):
+                 defaulttimeoutInSeconds: float):
         self.prefix = prefix
         self.componentType = componentType
         self.clientSession = clientSession
@@ -89,7 +89,7 @@ class RichComponent:
 
         return await self.actionOnResponse(f, resumeOnError)
 
-    async def queryFinal(self, commandRunId: str, timeoutInSecs: int = 10,
+    async def queryFinal(self, commandRunId: str, timeoutInSecs: float = 10,
                          resumeOnError: bool = False) -> SubmitResponse:
         """
         Query for the final result of a long running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
@@ -106,7 +106,7 @@ class RichComponent:
 
         return await self.actionOnResponse(f, resumeOnError)
 
-    def submitAndWait(self, command: ControlCommand, timeoutInSecs: int = 10,
+    def submitAndWait(self, command: ControlCommand, timeoutInSecs: float = 10,
                       resumeOnError: bool = False) -> SubmitResponse:
         """
         Submit a command and wait for the final result if it was successfully validated as `Started` to get a

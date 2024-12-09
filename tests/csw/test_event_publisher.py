@@ -1,3 +1,4 @@
+import asyncio
 import time
 
 import pytest
@@ -32,7 +33,7 @@ class TestEventPublisher:
 
         subscription = await sub.subscribe([eventKey], self.callback)
         await pub.publish(event)
-        time.sleep(1)
+        await asyncio.sleep(1)
         e = await sub.get(eventKey)
         assert (e == event)
         assert (self.count == 1)

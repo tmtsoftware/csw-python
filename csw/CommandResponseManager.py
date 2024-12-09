@@ -14,7 +14,7 @@ class CommandResponseManager:
     def addTask(self, runId: str, task: Task):
         self.tasks[runId] = task
 
-    async def waitForTask(self, runId: str, timeoutInSeconds: int) -> CommandResponse:
+    async def waitForTask(self, runId: str, timeoutInSeconds: float) -> CommandResponse:
         if runId in self.tasks:
             task: Task = self.tasks[runId]
             return await asyncio.wait_for(task, timeout=timeoutInSeconds*1.0)
