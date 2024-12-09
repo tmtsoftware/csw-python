@@ -58,7 +58,7 @@ class QueryFinal:
         timeoutInSeconds (int) amount of time to wait
     """
     runId: str
-    timeoutInSeconds: float
+    timeoutInSeconds: int
 
     @staticmethod
     def _fromDict(obj):

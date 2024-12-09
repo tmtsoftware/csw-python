@@ -20,8 +20,7 @@ class RichComponent:
                  clientSession: ClientSession,
                  # lockUnlockUtil: LockUnlockUtil
                  # commandUtil: CommandUtil
-
-                 defaulttimeoutInSeconds: float):
+                 defaultTimeoutInSeconds: int):
         self.prefix = prefix
         self.componentType = componentType
         self.clientSession = clientSession
@@ -89,7 +88,13 @@ class RichComponent:
 
         return await self.actionOnResponse(f, resumeOnError)
 
-    async def queryFinal(self, commandRunId: str, timeoutInSecs: float = 10,
+    def _defaultTimeout(self, t: float | None) -> int:
+        if t:
+            return t
+        else:
+            return self.defaultTimeoutInSeconds
+
+    async def queryFinal(self, commandRunId: str, timeoutInSecs: int | None = None,
                          resumeOnError: bool = False) -> SubmitResponse:
         """
         Query for the final result of a long running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
@@ -102,11 +107,11 @@ class RichComponent:
         """
 
         async def f():
-            return await self.commandService().queryFinal(commandRunId, timeoutInSecs)
+            return await self.commandService().queryFinal(commandRunId, self._defaultTimeout(timeoutInSecs))
 
         return await self.actionOnResponse(f, resumeOnError)
 
-    def submitAndWait(self, command: ControlCommand, timeoutInSecs: float = 10,
+    def submitAndWait(self, command: ControlCommand, timeoutInSecs: int | None = None,
                       resumeOnError: bool = False) -> SubmitResponse:
         """
         Submit a command and wait for the final result if it was successfully validated as `Started` to get a
@@ -120,7 +125,7 @@ class RichComponent:
         """
 
         async def f():
-            return await self.commandService().submitAndWait(command, timeoutInSecs)
+            return await self.commandService().submitAndWait(command, self._defaultTimeout(timeoutInSecs))
 
         return self.actionOnResponse(f, resumeOnError)
 

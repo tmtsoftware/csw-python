@@ -99,7 +99,7 @@ def script(ctx: Script):
         if isinstance(await testAssembly.query(submitResponse.runId), Started):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
 
-        if isinstance(await testAssembly.queryFinal(submitResponse.runId, 0.1), Completed):
+        if isinstance(await testAssembly.queryFinal(submitResponse.runId, 1), Completed):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
 
         async def handleCurrentState(currentState: CurrentState):

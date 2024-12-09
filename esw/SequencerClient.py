@@ -268,7 +268,7 @@ class SequencerClient(SequencerApi):
             return Error(runId, await response.text())
         return CommandResponse._fromDict(await response.json())
 
-    async def queryFinal(self, runId: str, timeoutInSeconds: float = 10) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeoutInSeconds: int = 10) -> SubmitResponse:
         """
         Query for the final result of a long-running sequence which was sent through submit().
 
@@ -290,7 +290,7 @@ class SequencerClient(SequencerApi):
         await ws.close()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: float) -> SubmitResponse:
+    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:
         """
         Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
         'Started'.
