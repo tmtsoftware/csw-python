@@ -67,7 +67,7 @@ class TestCommandServiceClientServer:
         assert len(resp2.result.paramSet) == 1
 
         # LongRunningCommand
-        subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+        subscription = await cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
         await asyncio.sleep(1)
         resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
         assert isinstance(resp3, Started)

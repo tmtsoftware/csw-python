@@ -1,10 +1,11 @@
 import asyncio
+import logging
 import uuid
 from asyncio import Task
 from typing import List, Callable, Awaitable
 
 import structlog
-import websockets
+from websockets.asyncio.client import connect
 from aiohttp import ClientSession
 
 from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
@@ -28,6 +29,12 @@ class Subscription:
 
     def cancel(self):
         self.task.cancel()
+
+
+# logging.basicConfig(
+#     format="%(asctime)s %(message)s",
+#     level=logging.DEBUG,
+# )
 
 
 # A CSW command service client
@@ -195,13 +202,10 @@ class CommandService:
         wsUri = f"{baseUri}websocket-endpoint"
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
-        print(f"XXX _subscribeCurrentState: json = {jsonStr}")
-        async for websocket in websockets.connect(wsUri):
+        async with connect(wsUri) as websocket:
             await websocket.send(jsonStr)
             async for message in websocket:
-                print(f"XXX _subscribeCurrentState: message = {message}")
                 await callback(CurrentState._fromDict(json.loads(message)))
-
 
     # async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]):
     #     baseUri = (self._getBaseUri()).replace('http:', 'ws:')
@@ -216,13 +220,14 @@ class CommandService:
     #             print(f"XXX _subscribeCurrentState: message = {msg}")
     #             match msg.type:
     #                 case aiohttp.WSMsgType.TEXT:
+    #                     print(f"XXX _subscribeCurrentState: callback({CurrentState._fromDict(json.loads(msg.data))})")
     #                     await callback(CurrentState._fromDict(json.loads(msg.data)))
     #                 case aiohttp.WSMsgType.CLOSED:
     #                     break
     #                 case aiohttp.WSMsgType.ERROR:
     #                     break
 
-    def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
+    async def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
         """
         Subscribe to the current state of a component
 
@@ -234,6 +239,7 @@ class CommandService:
         Returns: subscription task
         """
         task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+        await asyncio.sleep(0.1) # XXX TODO FIXME: Need to wait for task to startup
         return Subscription(task)
 
     async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):

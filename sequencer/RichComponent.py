@@ -129,7 +129,7 @@ class RichComponent:
 
         return self.actionOnResponse(f, resumeOnError)
 
-    def subscribeCurrentState(self, stateNames: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
+    async def subscribeCurrentState(self, stateNames: List[str], callback: Callable[[CurrentState], Awaitable]) -> Subscription:
         """
         Subscribe to the current state of a component
 
@@ -140,7 +140,7 @@ class RichComponent:
         Returns:
             a Subscription to stop the subscription
         """
-        return self.commandService().subscribeCurrentState(stateNames, callback)
+        return await self.commandService().subscribeCurrentState(stateNames, callback)
 
     async def diagnosticMode(self, startTime: UTCTime, hint: str):
         """

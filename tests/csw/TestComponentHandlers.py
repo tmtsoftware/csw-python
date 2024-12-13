@@ -22,7 +22,6 @@ class TestComponentHandlers(ComponentHandlers):
 
     # noinspection PyUnusedLocal
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
-        self.log.info(f"XXX longRunningCommand: {command}")
         await asyncio.sleep(1)
         # TODO: Do this in a timer task
         await self.publishCurrentStates()

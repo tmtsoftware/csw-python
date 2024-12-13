@@ -107,8 +107,9 @@ def script(ctx: Script):
                 "tcs.filter.wheel",
                 f"publish-{currentState.stateName}"))
 
-        testAssembly.subscribeCurrentState(["stateName1", "stateName2"], handleCurrentState)
+        await testAssembly.subscribeCurrentState(["stateName1", "stateName2"], handleCurrentState)
         await testAssembly.oneway(command)
+
 
     @ctx.onSetup("test-sequencer-hierarchy")
     async def handleTestSequencerHierarchy(_: Setup):

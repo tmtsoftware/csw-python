@@ -23,7 +23,6 @@ class CommandResponse:
 
     @staticmethod
     def _fromDict(obj: dict):
-        print(f"XXX CommandResponse._fromDict({obj})")
         match obj["_type"]:
             case "Cancelled":
                 return Cancelled._fromDict(obj)
