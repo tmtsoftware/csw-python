@@ -143,7 +143,7 @@ def script(ctx: Script):
         currentTime = ctx.utcTimeNow()
 
         async def func():
-            param = longKey("offset").set(int(currentTime.offsetFromNow().total_seconds() * 1000))
+            param = longKey("offset").set(int(abs(currentTime.offsetFromNow().total_seconds() * 1000)))
             await ctx.publishEvent(ctx.SystemEvent("ESW.schedule.once", "offset", param))
 
         ctx.scheduleOnceFromNow(timedelta(seconds=1), func)

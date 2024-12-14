@@ -54,21 +54,18 @@ class ScriptDsl(ScriptApi):
         raise TypeError
 
     async def execute(self, command: SequenceCommand):
-        try:
-            if isinstance(command, Setup):
-                s: Setup = command
-                if self.setupCommandHandler.contains(s.commandName.name):
-                    return await self.setupCommandHandler.execute(s.commandName.name, s)
-            elif isinstance(command, Observe):
-                o: Observe = command
-                if self.observerCommandHandler.contains(o.commandName.name):
-                    return await self.observerCommandHandler.execute(o.commandName.name, o)
-            else:
-                self.log.error(f"Error: Command with: ${command.commandName.name} is not handled by the loaded sequencer script")
-                return await self._defaultCommandHandler(command)
-        except Exception as err:
-            self.log.error(f"ScriptDsl.execute(): {err=}, {type(err)=}, command = {command}")
-            traceback.print_exc()
+        if isinstance(command, Setup):
+            s: Setup = command
+            if self.setupCommandHandler.contains(s.commandName.name):
+                return await self.setupCommandHandler.execute(s.commandName.name, s)
+        elif isinstance(command, Observe):
+            o: Observe = command
+            if self.observerCommandHandler.contains(o.commandName.name):
+                return await self.observerCommandHandler.execute(o.commandName.name, o)
+        else:
+            self.log.error(
+                f"Error: Command with: ${command.commandName.name} is not handled by the loaded sequencer script")
+            return await self._defaultCommandHandler(command)
 
     async def _executeHandler[T](self, f: FunctionHandlers, *args):
         return await f.execute(*args)
