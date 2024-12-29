@@ -75,7 +75,9 @@ class TestEventsWithAssembly:
             self.log.info("Event pub/sub tests passed")
         finally:
             self.log.debug("Stopping subscriber...")
-            subscription.unsubscribe()
+            await subscription.unsubscribe()
+            await pub.close()
+            await sub.close()
 
     async def publishEvent1(self, pub: EventPublisher):
         param = DoubleKey.make("assemblyEventValue").set(42.0)

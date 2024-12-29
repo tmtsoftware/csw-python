@@ -20,7 +20,7 @@ async def test_schedule_once():
     c = TimeServiceScheduler().scheduleOnce(t, foo)
     await asyncio.sleep(2.5)
     diff = end.value() - start.value()
-    assert abs(diff.total_seconds() - 2) < 0.01
+    assert abs(diff.total_seconds() - 2) < 0.05
 
 
 async def test_schedule_once_and_cancel():

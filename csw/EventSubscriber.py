@@ -20,6 +20,9 @@ class EventSubscriber:
     def make(cls) -> Self:
         return cls(RedisConnector.make())
 
+    async def close(self):
+        await self._redis.close()
+
     @staticmethod
     async def _handleCallback(message: dict, callback: Callable[[Event], Awaitable]):
         data = message['data']
@@ -45,7 +48,9 @@ class EventSubscriber:
             await self._handleCallback(message, callback)
 
         t = await self._redis.subscribe(keyList, f)
-        return EventSubscription(t)
+        async def unsub():
+            await self._redis.unsubscribe(keyList)
+        return EventSubscription(t, unsub)
 
     async def unsubscribe(self, eventKeyList: list[EventKey]):
         """

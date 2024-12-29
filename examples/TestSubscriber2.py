@@ -30,7 +30,7 @@ class TestSubscriber2:
                 print(f"Found: {p.keyName}")
         self.count = self.count + 1
         if (self.count > 4):
-            self.subscription.unsubscribe()
+            await self.subscription.unsubscribe()
 
 
 async def main():

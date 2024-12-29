@@ -38,7 +38,7 @@ class TestEventPublisher:
         assert (e == event)
         assert (self.count == 1)
         await sub.unsubscribe([eventKey])
-        subscription.unsubscribe()
+        await subscription.unsubscribe()
 
     async def callback(self, systemEvent):
         self.count = self.count + 1

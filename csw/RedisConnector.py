@@ -39,7 +39,8 @@ class RedisConnector:
 
 
     async def close(self):
-        await self._pubsub.close()
+        await self._redis.aclose()
+        await self._pubsub.aclose()
 
     async def subscribe(self, keyList: List[str], callback: Callable[[any], Awaitable]) -> Task:
         """

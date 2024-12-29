@@ -27,7 +27,7 @@ class TestSubscriber3:
             p = systemEvent.get("assemblyEventValue")
             if p is not None:
                 print(f"Found: {p.keyName}")
-        self.subscription.unsubscribe()
+        await self.subscription.unsubscribe()
 
 
 async def main():

@@ -26,3 +26,6 @@ class EventPublisher:
         event_key = str(event.source) + "." + event.eventName.name
         obj = cbor2.dumps(event._asDict())
         await self._redis.publish(event_key, obj)
+
+    async def close(self):
+        await self._redis.close()
