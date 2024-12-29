@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from datetime import timedelta
 from typing import Callable, List, Awaitable
 
 import structlog
@@ -20,11 +20,11 @@ class RichComponent:
                  clientSession: ClientSession,
                  # lockUnlockUtil: LockUnlockUtil
                  # commandUtil: CommandUtil
-                 defaultTimeoutInSeconds: int):
+                 defaultTimeout: timedelta):
         self.prefix = prefix
         self.componentType = componentType
         self.clientSession = clientSession
-        self.defaultTimeoutInSeconds = defaultTimeoutInSeconds
+        self.defaultTimeout = defaultTimeout
         self.log = structlog.get_logger()
 
     def commandService(self) -> CommandService:
@@ -75,7 +75,7 @@ class RichComponent:
 
     async def query(self, commandRunId: str, resumeOnError: bool = False) -> SubmitResponse:
         """
-        Query for the result of a long running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
+        Query for the result of a long-running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
 
         Args:
             commandRunId: the runId of the command for which response is required
@@ -88,30 +88,30 @@ class RichComponent:
 
         return await self.actionOnResponse(f, resumeOnError)
 
-    def _defaultTimeout(self, t: float | None) -> int:
+    def _defaultTimeout(self, t: timedelta | None) -> timedelta:
         if t:
             return t
         else:
-            return self.defaultTimeoutInSeconds
+            return self.defaultTimeout
 
-    async def queryFinal(self, commandRunId: str, timeoutInSecs: int | None = None,
+    async def queryFinal(self, commandRunId: str, timeout: timedelta | None = None,
                          resumeOnError: bool = False) -> SubmitResponse:
         """
-        Query for the final result of a long running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
+        Query for the final result of a long-running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
 
         Args:
             commandRunId: the runId of the command for which response is required
-            timeoutInSecs: duration for which api will wait for final response, if command is not completed queryFinal will timeout
+            timeout: duration for which api will wait for final response, if command is not completed queryFinal will timeout
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """
 
         async def f():
-            return await self.commandService().queryFinal(commandRunId, self._defaultTimeout(timeoutInSecs))
+            return await self.commandService().queryFinal(commandRunId, self._defaultTimeout(timeout))
 
         return await self.actionOnResponse(f, resumeOnError)
 
-    def submitAndWait(self, command: ControlCommand, timeoutInSecs: int | None = None,
+    def submitAndWait(self, command: ControlCommand, timeout: timedelta | None = None,
                       resumeOnError: bool = False) -> SubmitResponse:
         """
         Submit a command and wait for the final result if it was successfully validated as `Started` to get a
@@ -119,13 +119,13 @@ class RichComponent:
 
         Args:
             command: the [[csw.params.commands.ControlCommand]] payload
-            timeoutInSecs: duration for which api will wait for final response, if command is not completed queryFinal will timeout
+            timeout: duration for which api will wait for final response, if command is not completed queryFinal will time out
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """
 
         async def f():
-            return await self.commandService().submitAndWait(command, self._defaultTimeout(timeoutInSecs))
+            return await self.commandService().submitAndWait(command, self._defaultTimeout(timeout))
 
         return self.actionOnResponse(f, resumeOnError)
 

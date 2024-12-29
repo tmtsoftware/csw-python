@@ -28,12 +28,12 @@ class ComponentHandlers:
         Handles the given setup command and returns a CommandResponse subclass
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: (CommandResponse, Task)
             a pair: (subclass of CommandResponse, Task), where the task can be None if the command response is final.
-            For long running commands, you can respond with Started(runId, "...") and a task that completes the work
+            For long-running commands, you can respond with Started(runId, "...") and a task that completes the work
             in the background.
         """
         # noinspection PyTypeChecker
@@ -44,7 +44,7 @@ class ComponentHandlers:
         Handles the given setup command and returns an immediate CommandResponse
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: CommandResponse

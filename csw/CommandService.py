@@ -1,7 +1,7 @@
 import asyncio
-import logging
 import uuid
 from asyncio import Task
+from datetime import timedelta
 from typing import List, Callable, Awaitable
 
 import structlog
@@ -113,21 +113,21 @@ class CommandService:
         return await self._postCommand("Oneway", controlCommand)
 
     # noinspection DuplicatedCode
-    async def queryFinal(self, runId: str, timeoutInSeconds: int) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeout: timedelta) -> SubmitResponse:
         """
-        If the command for runId returned Started (long running command), this will
+        If the command for runId returned Started (long-running command), this will
         return the final result.
 
        Args:
            runId (str): runId for the command
-           timeoutInSeconds (int): seconds to wait before returning an error
+           timeout (timedelta): timr to wait before returning an error
 
        Returns: SubmitResponse
            a subclass of SubmitResponse
       """
         baseUri = (self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
-        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        msgDict = QueryFinal(runId, timeout)._asDict()
         jsonStr = json.dumps(msgDict)
         ws = await self._session.ws_connect(wsUri)
         await ws.send_str(jsonStr)
@@ -135,7 +135,7 @@ class CommandService:
         await ws.close()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeout: timedelta) -> SubmitResponse:
         """
         Submits a command to the command service and waits for the final response.
         This version returns a future response (async).
@@ -143,7 +143,7 @@ class CommandService:
 
         Args:
             controlCommand (ControlCommand): command to submit
-            timeoutInSeconds (int): seconds to wait before returning an error
+            timeout (timedelta): time to wait before returning an error
 
         Returns: SubmitResponse
             a subclass of SubmitResponse
@@ -151,14 +151,14 @@ class CommandService:
         resp = await self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return await self.queryFinal(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeout)
             case _:
                 return resp
 
     # noinspection DuplicatedCode
     async def query(self, runId: str) -> SubmitResponse:
         """
-        Query for the result of a long running command which was sent as Submit to get a SubmitResponse.
+        Query for the result of a long-running command which was sent as Submit to get a SubmitResponse.
         Query allows checking to see if a long-running command is completed without waiting as with queryFinal.
 
         Args:
@@ -179,13 +179,13 @@ class CommandService:
         return CommandResponse._fromDict(await response.json())
 
 
-    async def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWait(self, controlCommand: ControlCommand, timeout: timedelta) -> SubmitResponse:
         """
         Submits a command to the command service and waits for the final response.
 
         Args:
             controlCommand (ControlCommand): command to submit
-            timeoutInSeconds (int): seconds to wait before returning an error
+            timeout (timedelta): time to wait before returning an error
 
         Returns: SubmitResponse
             a subclass of SubmitResponse
@@ -193,7 +193,7 @@ class CommandService:
         resp = await self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return await self.queryFinal(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeout)
             case _:
                 return resp
 

@@ -87,7 +87,7 @@ class SequencerServer:
         return web.json_response(commandResponse._asDict())
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
-        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
+        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeout)
         responseDict = commandResponse._asDict()
         return web.json_response(responseDict)
 

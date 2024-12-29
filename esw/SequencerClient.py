@@ -1,5 +1,6 @@
 import json
 import uuid
+from datetime import timedelta
 
 from aiohttp import ClientResponse, ClientSession
 
@@ -89,7 +90,7 @@ class SequencerClient(SequencerApi):
 
     async def add(self, commands: List[SequenceCommand]) -> OkOrUnhandledResponse:
         """
-        Adds the given list of sequence commands at the end of the sequencee
+        Adds the given list of sequence commands at the end of the sequence
 
         Args:
             commands (List[SequenceCommand]): list of SequenceCommand to add in the sequence of sequencer
@@ -268,13 +269,13 @@ class SequencerClient(SequencerApi):
             return Error(runId, await response.text())
         return CommandResponse._fromDict(await response.json())
 
-    async def queryFinal(self, runId: str, timeoutInSeconds: int = 10) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeout: timedelta = timedelta(seconds=10)) -> SubmitResponse:
         """
         Query for the final result of a long-running sequence which was sent through submit().
 
         Args:
            runId (str): runId of the sequence under execution
-           timeoutInSeconds (int): max-time in secs to wait for a final response
+           timeout (timedelta): max-time in secs to wait for a final response
 
         Returns: SubmitResponse
             The final submit response
@@ -282,7 +283,7 @@ class SequencerClient(SequencerApi):
         baseUri = (await self._getBaseUri()).replace('http:', 'ws:')
         wsUri = f"{baseUri}websocket-endpoint"
         # noinspection PyUnresolvedReferences
-        respDict = QueryFinal(runId, timeoutInSeconds).to_dict()
+        respDict = QueryFinal(runId, int(timeout.total_seconds())).to_dict()
         jsonStr = json.dumps(respDict)
         ws = await self._session.ws_connect(wsUri)
         await ws.send_str(jsonStr)
@@ -290,7 +291,7 @@ class SequencerClient(SequencerApi):
         await ws.close()
         return CommandResponse._fromDict(json.loads(jsonResp))
 
-    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int) -> SubmitResponse:
+    async def submitAndWait(self, sequence: Sequence, timeout: timedelta) -> SubmitResponse:
         """
         Submit the given sequence to the sequencer and wait for the final response if the sequence was successfully
         'Started'.
@@ -300,7 +301,7 @@ class SequencerClient(SequencerApi):
 
         Args:
            sequence (Sequence): sequence to run on the sequencer
-           timeoutInSeconds (int): max-time in secs to wait for a final response
+           timeout (timedelta): max-time in secs to wait for a final response
 
         Returns: SubmitResponse
             The final submit response
@@ -308,7 +309,7 @@ class SequencerClient(SequencerApi):
         resp = await self.submit(sequence)
         match resp:
             case Started(runId):
-                return await self.queryFinal(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeout)
             case _:
                 return resp
 

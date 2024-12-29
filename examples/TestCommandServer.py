@@ -20,7 +20,7 @@ class MyComponentHandlers(ComponentHandlers):
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(3)
-        print("Long running task completed")
+        print("long-running task completed")
         # TODO: Do this in a timer task
         await self.publishCurrentStates()
         return Completed(runId)
@@ -30,7 +30,7 @@ class MyComponentHandlers(ComponentHandlers):
         Overrides the base class onSubmit method to handle commands from a CSW component
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the ControlCommand from CSW
 
         Returns: (CommandResponse, Task)
@@ -56,7 +56,7 @@ class MyComponentHandlers(ComponentHandlers):
         Overrides the base class onOneway method to handle commands from a CSW component.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the ControlCommand from CSW
 
         Returns: CommandResponse

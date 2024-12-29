@@ -1,5 +1,6 @@
 import traceback
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import List
 
 from dataclasses_json import dataclass_json
@@ -50,15 +51,15 @@ class Oneway(CommandServiceRequest):
 @dataclass
 class QueryFinal:
     """
-    A message sent to query the final result of a long running command.
+    A message sent to query the final result of a long-running command.
     The response should be a CommandResponse.
 
     Args:
         runId (str): The command's runId
-        timeoutInSeconds (int) amount of time to wait
+        timeout (timedelta) amount of time to wait
     """
     runId: str
-    timeoutInSeconds: int
+    timeout: timedelta
 
     @staticmethod
     def _fromDict(obj):
@@ -67,8 +68,8 @@ class QueryFinal:
         """
         try:
             runId = obj['runId']
-            timeoutInSeconds = obj['timeoutInSeconds']
-            return QueryFinal(runId, timeoutInSeconds)
+            timeout = timedelta(seconds=obj['timeoutInSeconds'])
+            return QueryFinal(runId, timeout)
         except:
             traceback.print_exc()
 
@@ -80,7 +81,7 @@ class QueryFinal:
         return {
             "_type": self.__class__.__name__,
             'runId': self.runId,
-            'timeoutInSeconds': self.timeoutInSeconds
+            'timeoutInSeconds': int(self.timeout.total_seconds())
         }
 
 
@@ -151,7 +152,7 @@ class ExecuteDiagnosticMode:
 class ExecuteOperationsMode:
 
     @staticmethod
-    def _fromDict(obj):
+    def _fromDict(_):
         return ExecuteOperationsMode()
 
     def _asDict(self):
@@ -162,7 +163,7 @@ class ExecuteOperationsMode:
 class GoOnline:
 
     @staticmethod
-    def _fromDict(obj):
+    def _fromDict(_):
         return GoOnline()
 
     def _asDict(self):
@@ -173,7 +174,7 @@ class GoOnline:
 class GoOffline:
 
     @staticmethod
-    def _fromDict(obj):
+    def _fromDict(_):
         return GoOffline()
 
     def _asDict(self):

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from csw.CommandResponse import Completed, Accepted, Started
 from csw.CommandService import CommandService
 from csw.LocationService import ComponentType
@@ -27,14 +29,14 @@ async def test_command_service_client():
 
     resp4 = await cs.submit(setup2)
     assert isinstance(resp4, Started)
-    resp5 = await cs.queryFinal(resp4.runId, 5)
+    resp5 = await cs.queryFinal(resp4.runId, timedelta(seconds=5))
     assert isinstance(resp5, Completed)
-    resp6 = await cs.submitAndWait(setup2, 5)
+    resp6 = await cs.submitAndWait(setup2, timedelta(seconds=5))
     assert isinstance(resp6, Completed)
 
     resp4a = await cs.submit(setup2)
     assert isinstance(resp4a, Started)
-    resp5a = await cs.queryFinal(resp4a.runId, 5)
+    resp5a = await cs.queryFinal(resp4a.runId, timedelta(seconds=5))
     assert isinstance(resp5a, Completed)
-    resp6a = await cs.submitAndWaitAsync(setup2, 5)
+    resp6a = await cs.submitAndWaitAsync(setup2, timedelta(seconds=5))
     assert isinstance(resp6a, Completed)

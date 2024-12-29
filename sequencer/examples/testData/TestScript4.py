@@ -1,15 +1,11 @@
 import asyncio
 
-import structlog
-
 from csw.Parameter import stringKey
 from csw.ParameterSetType import Setup
 from sequencer.Script import Script
 
 
 def script(ctx: Script):
-    log = structlog.get_logger()
-
     @ctx.onNewSequence()
     async def handleNewSequence():
         newSequenceHandlerParam = stringKey("onNewSequence").set("Started")

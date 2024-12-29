@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from aiohttp import ClientSession
 from attr import dataclass
 
@@ -17,7 +19,7 @@ class RichSequencer:
     subsystem: Subsystem
     obsMode: ObsMode
     variation: Variation | None
-    defaultTimeoutInSeconds: int
+    defaultTimeout: timedelta
     clientSession: ClientSession
 
     def _sequencerService(self):
@@ -41,7 +43,7 @@ class RichSequencer:
 
     async def query(self, runId: str, resumeOnError: bool = False) -> SubmitResponse:
         """
-        Query for the result of a long running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
+        Query for the result of a long-running command which was sent as Submit to get a [[csw.params.commands.CommandResponse.SubmitResponse]]
 
         Args:
             runId: the runId of the sequence for which response is required
@@ -53,31 +55,32 @@ class RichSequencer:
             raise CommandError(submitResponse)
         return submitResponse
 
-    async def queryFinal(self, runId: str, timeoutInSeconds: int, resumeOnError: bool = False) -> SubmitResponse:
+    async def queryFinal(self, runId: str, timeout: timedelta, resumeOnError: bool = False) -> SubmitResponse:
         """
-        Query for the final result of a long running sequence which was sent as Submit to get a SubmitResponse
+        Query for the final result of a long-running sequence which was sent as Submit to get a SubmitResponse
         Args:
             runId: the runId of the sequence for which response is required
-            timeoutInSeconds: duration for which api will wait for final response, if command is not completed queryFinal will timeout
+            timeout: duration for which api will wait for final response, if command is not completed queryFinal will time out
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """
-        submitResponse = await self._sequencerService().queryFinal(runId)
+        submitResponse = await self._sequencerService().queryFinal(runId, timeout)
         if not resumeOnError and submitResponse.isFailed:
             raise CommandError(submitResponse)
         return submitResponse
 
-    async def submitAndWait(self, sequence: Sequence, timeoutInSeconds: int = 10, resumeOnError: bool = False) -> SubmitResponse:
+    async def submitAndWait(self, sequence: Sequence, timeout: timedelta = timedelta(seconds=10),
+                            resumeOnError: bool = False) -> SubmitResponse:
         """
         Submit a sequence and wait for the final result to get a final SubmitResponse
 
         Args:
             sequence: the Sequence payload
-            timeoutInSeconds: duration for which api will wait for final response
+            timeout: duration for which api will wait for final response
             resumeOnError: script execution continues if set true. If false, script execution flow breaks and sequence in
             execution completes with failure.
         """
-        submitResponse = await self._sequencerService().submitAndWait(sequence, timeoutInSeconds)
+        submitResponse = await self._sequencerService().submitAndWait(sequence, timeout)
         if not resumeOnError and submitResponse.isFailed():
             raise CommandError(submitResponse)
         return submitResponse

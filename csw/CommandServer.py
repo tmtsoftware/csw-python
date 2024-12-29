@@ -41,7 +41,7 @@ class CommandServer:
                 if task is not None:
                     # noinspection PyTypeChecker
                     self._crm.addTask(runId, task)
-                    self.log.debug("Long running task in progress...")
+                    self.log.debug("long-running task in progress...")
             case 'Oneway':
                 commandResponse = self.handler.onOneway(runId, command)
             case 'Validate':
@@ -51,7 +51,7 @@ class CommandServer:
         return web.json_response(commandResponse._asDict())
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
-        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
+        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeout)
         responseDict = commandResponse._asDict()
         return web.json_response(responseDict)
 

@@ -22,7 +22,7 @@ from sequencer.examples.testData.InitialCommandHandler import InitialCommandHand
 def script(ctx: Script):
     log = structlog.get_logger()
     lgsfSequencer = ctx.Sequencer(Subsystem.LGSF, ObsMode("darknight"))
-    testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"), 10)
+    testAssembly = ctx.Assembly(Prefix(Subsystem.ESW, "test"), timedelta(seconds=10))
 
     # ESW-134: Reuse code by ability to import logic from one script into another
     InitialCommandHandler(ctx, log)
@@ -60,11 +60,11 @@ def script(ctx: Script):
 
         # ESW-88, ESW-145, ESW-195
         tcsSequencer = ctx.Sequencer(Subsystem.TCS, ObsMode("darknight"))
-        await tcsSequencer.submitAndWait(sequence, 10)
+        await tcsSequencer.submitAndWait(sequence, timedelta(seconds=10))
 
     @ctx.onSetup("check-config")
     async def handleCheckConfig(setup: Setup):
-        if ctx.existsConfig("/tmt/test/wfos.conf"):
+        if await ctx.existsConfig("/tmt/test/wfos.conf"):
             await ctx.publishEvent(ctx.SystemEvent("WFOS.test", "check-config.success"))
 
     @ctx.onSetup("get-config-data")
@@ -99,7 +99,7 @@ def script(ctx: Script):
         if isinstance(await testAssembly.query(submitResponse.runId), Started):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-started-command-from-script"))
 
-        if isinstance(await testAssembly.queryFinal(submitResponse.runId, 1), Completed):
+        if isinstance(await testAssembly.queryFinal(submitResponse.runId, timedelta(seconds=1)), Completed):
             await ctx.publishEvent(ctx.SystemEvent("tcs.filter.wheel", "query-completed-command-from-script"))
 
         async def handleCurrentState(currentState: CurrentState):
@@ -136,7 +136,7 @@ def script(ctx: Script):
         # so that others Add, Append command gets time
         setupCommand = ctx.Setup("LGSF.test", "command-lgsf")
         sequence = ctx.sequenceOf(setupCommand)
-        await lgsfSequencer.submitAndWait(sequence, 10)
+        await lgsfSequencer.submitAndWait(sequence, timedelta(seconds=10))
 
     @ctx.onSetup("schedule-once-from-now")
     async def handleScheduleOnceFromNow(_: Setup):

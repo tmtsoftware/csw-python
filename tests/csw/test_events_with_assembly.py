@@ -1,7 +1,6 @@
 import asyncio
 import filecmp
 import os
-import time
 
 import pytest
 import structlog

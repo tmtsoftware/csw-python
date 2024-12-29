@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pytest
 from aiohttp import ClientSession
 
@@ -128,13 +130,13 @@ class TestSequencerClient:
     async def test_query_final(self):
         setup = self._makeSetup("Test")
         resp1 = await self.seqClient.submit(Sequence([setup]))
-        resp2 = await self.seqClient.queryFinal(resp1.runId, 2)
+        resp2 = await self.seqClient.queryFinal(resp1.runId, timedelta(seconds=2))
         assert (isinstance(resp1, Started))
         assert (isinstance(resp2, Error))
 
     async def test_submit_and_wait(self):
         setup = self._makeSetup("Test")
-        resp = await self.seqClient.submitAndWait(Sequence([setup]), 2)
+        resp = await self.seqClient.submitAndWait(Sequence([setup]), timedelta(seconds=2))
         assert (isinstance(resp, Error))
 
     async def test_go_offline(self):

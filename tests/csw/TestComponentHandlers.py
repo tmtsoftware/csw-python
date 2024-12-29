@@ -28,7 +28,7 @@ class TestComponentHandlers(ComponentHandlers):
         await asyncio.sleep(1)
         await self.publishCurrentStates()
         await asyncio.sleep(1)
-        self.log.debug("Long running task completed")
+        self.log.debug("long-running task completed")
         return Completed(runId)
 
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
@@ -39,7 +39,7 @@ class TestComponentHandlers(ComponentHandlers):
         for the contents of the command's parameters.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: (CommandResponse, Task)

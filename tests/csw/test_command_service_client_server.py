@@ -1,6 +1,7 @@
 import asyncio
 import os
 import sys
+from datetime import timedelta
 
 import py
 import pytest
@@ -71,9 +72,9 @@ class TestCommandServiceClientServer:
         await asyncio.sleep(1)
         resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
         assert isinstance(resp3, Started)
-        resp4 = await cs.queryFinal(resp3.runId, 5)
+        resp4 = await cs.queryFinal(resp3.runId, timedelta(seconds=5))
         assert isinstance(resp4, Completed)
-        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), timedelta(seconds=5))
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4
@@ -81,7 +82,7 @@ class TestCommandServiceClientServer:
         assert self._currentState(IntKey.make("IntValue", Units.arcsec)).values[0] == 42
         subscription.cancel()
         await asyncio.sleep(1)
-        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), 5)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), timedelta(seconds=5))
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4

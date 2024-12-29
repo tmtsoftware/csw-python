@@ -1,3 +1,4 @@
+from datetime import timedelta
 
 from csw.CommandService import CommandService
 from csw.CoordinateSystem import CoordinateSystem
@@ -197,14 +198,14 @@ class CswHighLevelDslApi:
         """
         pass
 
-    def Assembly(self, prefix: Prefix, timeoutInSecs: int) -> CommandService:
+    def Assembly(self, prefix: Prefix, timeout: timedelta) -> CommandService:
         pass
 
-    def Hcd(self, prefix: Prefix, timeoutInSecs: int) -> CommandService:
+    def Hcd(self, prefix: Prefix, timeout: timedelta) -> CommandService:
         pass
 
     def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None,
-                  timeoutInSecs: int = 100000) -> SequencerApi:
+                  timeout: timedelta = timedelta(seconds=100000)) -> SequencerApi:
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """
@@ -460,18 +461,18 @@ class CswHighLevelDsl(CswHighLevelDslApi,
         """
         return self.sequencerObserveEvent.inputRequestEnd(obsId)
 
-    def Assembly(self, prefix: Prefix, timeoutInSecs: int) -> RichComponent:
-        return RichComponent(prefix, ComponentType.Assembly, self.scriptContext.clientSession, timeoutInSecs)
+    def Assembly(self, prefix: Prefix, timeout: timedelta) -> RichComponent:
+        return RichComponent(prefix, ComponentType.Assembly, self.scriptContext.clientSession, timeout)
 
-    def Hcd(self, prefix: Prefix, timeoutInSecs: int) -> RichComponent:
-        return RichComponent(prefix, ComponentType.HCD, self.scriptContext.clientSession, timeoutInSecs)
+    def Hcd(self, prefix: Prefix, timeout: timedelta) -> RichComponent:
+        return RichComponent(prefix, ComponentType.HCD, self.scriptContext.clientSession, timeout)
 
     def Sequencer(self, subsystem: Subsystem, obsMode: ObsMode, variation: Variation | None = None,
-                  timeoutInSecs: int = 100000) -> RichSequencer:
+                  timeout: timedelta = timedelta(seconds = 100000)) -> RichSequencer:
         """
         Creates an instance of RichSequencer for Sequencer of given subsystem and obsMode
         """
-        return RichSequencer(subsystem, obsMode, variation, timeoutInSecs, self.scriptContext.clientSession)
+        return RichSequencer(subsystem, obsMode, variation, timeout, self.scriptContext.clientSession)
 
     # --- XXX TODO ---
 
