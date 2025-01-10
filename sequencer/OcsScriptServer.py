@@ -132,7 +132,9 @@ class OcsScriptServer:
         except Exception as err:
             self.log.error(f"shutdownScript: {err=}, {type(err)=}")
             raise web.HTTPBadRequest(text=f"shutdownScript: {err=}, {type(err)=}")
-        await self.app.shutdown()
+        # XXX TODO FIXME: Check this
+        # await self.app.shutdown()
+        # await self.app.cleanup()
         return web.HTTPOk()
 
     def _registerWithLocationService(self) -> RegistrationResult:
