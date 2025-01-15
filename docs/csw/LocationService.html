@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.3">
 <title>csw.LocationService API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
@@ -74,19 +74,19 @@ class ComponentId:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.ComponentId.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ComponentId.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ComponentId.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -95,13 +95,13 @@ class ComponentId:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.ComponentId.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ComponentId.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -110,7 +110,7 @@ class ComponentId:
 </dd>
 <dt id="csw.LocationService.ComponentType"><code class="flex name class">
 <span>class <span class="ident">ComponentType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Enum type: Represents a type of the CSW Component.</p></div>
@@ -205,25 +205,25 @@ class ConnectionInfo:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.ConnectionInfo.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ConnectionInfo.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ConnectionInfo.make"><code class="name flex">
-<span>def <span class="ident">make</span></span>(<span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, componentType: <a title="csw.LocationService.ComponentType" href="#csw.LocationService.ComponentType">ComponentType</a>, connectionType: <a title="csw.LocationService.ConnectionType" href="#csw.LocationService.ConnectionType">ConnectionType</a>)</span>
+<span>def <span class="ident">make</span></span>(<span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>componentType: <a title="csw.LocationService.ComponentType" href="#csw.LocationService.ComponentType">ComponentType</a>,<br>connectionType: <a title="csw.LocationService.ConnectionType" href="#csw.LocationService.ConnectionType">ConnectionType</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ConnectionInfo.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -232,13 +232,13 @@ class ConnectionInfo:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.ConnectionInfo.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ConnectionInfo.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -247,7 +247,7 @@ class ConnectionInfo:
 </dd>
 <dt id="csw.LocationService.ConnectionType"><code class="flex name class">
 <span>class <span class="ident">ConnectionType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Enum type: Represents a type of connection offered by the Component.
@@ -289,7 +289,7 @@ Python applications can only communicate via HTTP or TCP connections.</p></div>
 </dd>
 <dt id="csw.LocationService.HttpLocation"><code class="flex name class">
 <span>class <span class="ident">HttpLocation</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
+<span>(</span><span>_type: str,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>uri: str,<br>metadata: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>HttpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
@@ -309,19 +309,19 @@ class HttpLocation(Location):
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.HttpLocation.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.HttpLocation.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.HttpLocation.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -330,13 +330,13 @@ class HttpLocation(Location):
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.HttpLocation.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.HttpLocation.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -345,7 +345,7 @@ class HttpLocation(Location):
 </dd>
 <dt id="csw.LocationService.HttpRegistration"><code class="flex name class">
 <span>class <span class="ident">HttpRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, path: str = '', networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = NetworkType(_type='Inside'), metadata: dict = &lt;factory&gt;)</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>port: int,<br>path: str = '',<br>networkType: <a title="csw.LocationService.NetworkType" href="#csw.LocationService.NetworkType">NetworkType</a> = &lt;factory&gt;,<br>metadata: dict = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register an http based service with the Location Service.</p></div>
@@ -361,7 +361,7 @@ class HttpRegistration(Registration):
     &#34;&#34;&#34;
     port: int
     path: str = &#34;&#34;
-    networkType: NetworkType = NetworkType(&#34;Inside&#34;)
+    networkType: NetworkType = field(default_factory=lambda: NetworkType(&#34;Inside&#34;))
     metadata: dict = field(default_factory=csw_version)
     _type: str = &#34;HttpRegistration&#34;</code></pre>
 </details>
@@ -391,19 +391,19 @@ class HttpRegistration(Registration):
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.HttpRegistration.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.HttpRegistration.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.HttpRegistration.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -412,13 +412,13 @@ class HttpRegistration(Registration):
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.HttpRegistration.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.HttpRegistration.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -427,7 +427,7 @@ class HttpRegistration(Registration):
 </dd>
 <dt id="csw.LocationService.Location"><code class="flex name class">
 <span>class <span class="ident">Location</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
+<span>(</span><span>_type: str,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>uri: str,<br>metadata: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Location(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
@@ -479,19 +479,19 @@ class Location:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.Location.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.Location.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.Location.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -500,13 +500,13 @@ class Location:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.Location.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.Location.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -515,6 +515,7 @@ class Location:
 </dd>
 <dt id="csw.LocationService.LocationService"><code class="flex name class">
 <span>class <span class="ident">LocationService</span></span>
+<span>(</span><span>clientSession: aiohttp.client.ClientSession)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -527,16 +528,10 @@ class Location:
     baseUri = &#34;http://127.0.0.1:7654/&#34;
     postUri = f&#34;{baseUri}post-endpoint&#34;
 
-    # If port is 0, return a random free port, otherwise the given port
-    @staticmethod
-    def getFreePort(port: int = 0) -&gt; int:
-        if port != 0:
-            return port
-        with socket() as s:
-            s.bind((&#39;&#39;, 0))
-            return s.getsockname()[1]
+    def __init__(self, clientSession: ClientSession):
+        self._session = clientSession
 
-    def register(self, registration: Registration) -&gt; ConnectionInfo:
+    async def register(self, registration: Registration) -&gt; RegistrationResult:
         &#34;&#34;&#34;
         Registers a connection.
 
@@ -547,16 +542,19 @@ class Location:
         Returns: ConnectionInfo
             an object describing the connection
         &#34;&#34;&#34;
-        # regType = registration.__class__.__name__
+        # noinspection PyUnresolvedReferences
         regJson = json.loads(registration.to_json())
         regJson[&#39;_type&#39;] = registration.__class__.__name__
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;Register&#34;, &#34;registration&#34;: {json.dumps(regJson)}}}&#39;
-        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        r = await self._session.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        return registration.connection
+        maybeResult = json.loads(await r.text())
+        if len(maybeResult) != 0:
+            location = Location._makeLocation(maybeResult)
+            return RegistrationResult.make(location, self.unregister)
 
-    def unregister(self, connection: ConnectionInfo):
+    async def unregister(self, connection: ConnectionInfo):
         &#34;&#34;&#34;
         Unregisters a connection.
 
@@ -564,20 +562,21 @@ class Location:
             connection (ConnectionInfo): an already registered connection
         &#34;&#34;&#34;
         self.log.debug(f&#34;Unregistering connection {connection} from the Location Service.&#34;)
+        # noinspection PyUnresolvedReferences
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;Unregister&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;
-        r = requests.post(self.postUri, json=json.loads(jsonBody))
+        r = await self._session.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
-            raise Exception(r.text)
+            raise Exception(await r.text())
 
-    def _postJson(self, jsonBody: str) -&gt; Location:
-        r = requests.post(self.postUri, json=json.loads(jsonBody))
+    async def _postJson(self, jsonBody: str) -&gt; Location:
+        r = await self._session.post(self.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        maybeResult = json.loads(r.text)
+        maybeResult = json.loads(await r.text())
         if len(maybeResult) != 0:
             return Location._makeLocation(maybeResult[0])
 
-    def find(self, connection: ConnectionInfo) -&gt; Location:
+    async def find(self, connection: ConnectionInfo) -&gt; Location:
         &#34;&#34;&#34;
         Resolves the location for a connection from the local cache
 
@@ -587,10 +586,11 @@ class Location:
         Returns: Location
             the Location
         &#34;&#34;&#34;
-        return self._postJson(f&#39;{{&#34;_type&#34;: &#34;Find&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;)
+        # noinspection PyUnresolvedReferences
+        return await self._postJson(f&#39;{{&#34;_type&#34;: &#34;Find&#34;, &#34;connection&#34;: {connection.to_json()}}}&#39;)
 
     # &#34;within&#34;:&#34;2 seconds&#34;}}
-    def resolve(self, connection: ConnectionInfo, withinSecs: int = &#34;5&#34;) -&gt; Location:
+    async def resolve(self, connection: ConnectionInfo, withinSecs: int = &#34;5&#34;) -&gt; Location:
         &#34;&#34;&#34;
         Resolves the location for a connection from the local cache, if not found waits for the event to arrive
         within specified time limit
@@ -603,17 +603,17 @@ class Location:
             the Location
         &#34;&#34;&#34;
         resolveInfo = ResolveInfo(&#34;Resolve&#34;, connection, f&#34;{withinSecs} seconds&#34;)
-        return self._postJson(resolveInfo.to_json())
+        # noinspection PyUnresolvedReferences
+        return await self._postJson(resolveInfo.to_json())
 
-    @staticmethod
-    def _list(jsonBody: str) -&gt; List[Location]:
-        r = requests.post(LocationService.postUri, json=json.loads(jsonBody))
+    async def _list(self, jsonBody: str) -&gt; List[Location]:
+        r = await self._session.post(LocationService.postUri, json=json.loads(jsonBody))
         if not r.ok:
             raise Exception(r.text)
-        return list(map(lambda x: Location._makeLocation(x), json.loads(r.text)))
+        return list(map(lambda x: Location._makeLocation(x), json.loads(await r.text())))
 
     @dispatch()
-    def list(self) -&gt; List[Location]:
+    async def list(self) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists all locations registered.
 
@@ -621,10 +621,10 @@ class Location:
             list of locations
         &#34;&#34;&#34;
         jsonBody = &#39;{&#34;_type&#34;: &#34;ListEntries&#34;}&#39;
-        return self._list(jsonBody)
+        return await self._list(jsonBody)
 
     @dispatch(ComponentType)
-    def list(self, componentType: ComponentType) -&gt; List[Location]:
+    async def list(self, componentType: ComponentType) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists components of the given component type
 
@@ -635,10 +635,10 @@ class Location:
             list of locations
         &#34;&#34;&#34;
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByComponentType&#34;, &#34;componentType&#34;: &#34;{componentType.value}&#34;}}&#39;
-        return self._list(jsonBody)
+        return await self._list(jsonBody)
 
     @dispatch(str)
-    def list(self, hostname: str) -&gt; List[Location]:
+    async def list(self, hostname: str) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists all locations registered on the given hostname
 
@@ -649,10 +649,10 @@ class Location:
             list of locations
         &#34;&#34;&#34;
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByHostname&#34;, &#34;hostname&#34;: &#34;{hostname}&#34;}}&#39;
-        return self._list(jsonBody)
+        return await self._list(jsonBody)
 
     @dispatch(ConnectionType)
-    def list(self, connectionType: ConnectionType) -&gt; List[Location]:
+    async def list(self, connectionType: ConnectionType) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists all locations registered with the given connection type
 
@@ -663,20 +663,20 @@ class Location:
             list of locations
         &#34;&#34;&#34;
         jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByConnectionType&#34;, &#34;connectionType&#34;: &#34;{connectionType.value}&#34;}}&#39;
-        return self._list(jsonBody)
+        return await self._list(jsonBody)
 
-    def listByPrefix(self, prefix: Prefix) -&gt; List[Location]:
+    async def listByPrefix(self, prefix: str) -&gt; List[Location]:
         &#34;&#34;&#34;
         Lists all locations with the given prefix
 
         Args:
-            prefix (Prefix): restrict result to this prefix
+            prefix (str): restrict result to those starting with prefix
 
         Returns: List[Location]
             list of locations
         &#34;&#34;&#34;
-        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByPrefix&#34;, &#34;prefix&#34;: &#34;{str(prefix)}&#34;}}&#39;
-        return self._list(jsonBody)</code></pre>
+        jsonBody = f&#39;{{&#34;_type&#34;: &#34;ListByPrefix&#34;, &#34;prefix&#34;: &#34;{prefix}&#34;}}&#39;
+        return await self._list(jsonBody)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -693,19 +693,10 @@ class Location:
 <div class="desc"></div>
 </dd>
 </dl>
-<h3>Static methods</h3>
-<dl>
-<dt id="csw.LocationService.LocationService.getFreePort"><code class="name flex">
-<span>def <span class="ident">getFreePort</span></span>(<span>port: int = 0) ‑> int</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.LocationService.find"><code class="name flex">
-<span>def <span class="ident">find</span></span>(<span>self, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>) ‑> <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></span>
+<span>async def <span class="ident">find</span></span>(<span>self,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>) ‑> <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Resolves the location for a connection from the local cache</p>
@@ -735,20 +726,20 @@ Dispatcher</p></div>
 </details>
 </dd>
 <dt id="csw.LocationService.LocationService.listByPrefix"><code class="name flex">
-<span>def <span class="ident">listByPrefix</span></span>(<span>self, prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>) ‑> List[<a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>]</span>
+<span>async def <span class="ident">listByPrefix</span></span>(<span>self, prefix: str) ‑> List[<a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Lists all locations with the given prefix</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>prefix</code></strong> :&ensp;<code>Prefix</code></dt>
-<dd>restrict result to this prefix</dd>
+<dt><strong><code>prefix</code></strong> :&ensp;<code>str</code></dt>
+<dd>restrict result to those starting with prefix</dd>
 </dl>
 <p>Returns: List[Location]
 list of locations</p></div>
 </dd>
 <dt id="csw.LocationService.LocationService.register"><code class="name flex">
-<span>def <span class="ident">register</span></span>(<span>self, registration: <a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a>) ‑> <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></span>
+<span>async def <span class="ident">register</span></span>(<span>self,<br>registration: <a title="csw.LocationService.Registration" href="#csw.LocationService.Registration">Registration</a>) ‑> <a title="csw.LocationService.RegistrationResult" href="#csw.LocationService.RegistrationResult">RegistrationResult</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Registers a connection.</p>
@@ -762,7 +753,7 @@ Returns: ConnectionInfo
 an object describing the connection</p></div>
 </dd>
 <dt id="csw.LocationService.LocationService.resolve"><code class="name flex">
-<span>def <span class="ident">resolve</span></span>(<span>self, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, withinSecs: int = '5') ‑> <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></span>
+<span>async def <span class="ident">resolve</span></span>(<span>self,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>withinSecs: int = '5') ‑> <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Resolves the location for a connection from the local cache, if not found waits for the event to arrive
@@ -778,7 +769,7 @@ within specified time limit</p>
 the Location</p></div>
 </dd>
 <dt id="csw.LocationService.LocationService.unregister"><code class="name flex">
-<span>def <span class="ident">unregister</span></span>(<span>self, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>)</span>
+<span>async def <span class="ident">unregister</span></span>(<span>self,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Unregisters a connection.</p>
@@ -787,6 +778,35 @@ the Location</p></div>
 <dt><strong><code>connection</code></strong> :&ensp;<code><a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a></code></dt>
 <dd>an already registered connection</dd>
 </dl></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.LocationService.LocationServiceUtil"><code class="flex name class">
+<span>class <span class="ident">LocationServiceUtil</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LocationServiceUtil:
+    # If port is 0, return a random free port, otherwise the given port
+    @staticmethod
+    def getFreePort(port: int = 0) -&gt; int:
+        if port != 0:
+            return port
+        with socket() as s:
+            s.bind((&#39;&#39;, 0))
+            return s.getsockname()[1]</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.LocationService.LocationServiceUtil.getFreePort"><code class="name flex">
+<span>def <span class="ident">getFreePort</span></span>(<span>port: int = 0) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -811,19 +831,19 @@ class NetworkType:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.NetworkType.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.NetworkType.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.NetworkType.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -832,13 +852,13 @@ class NetworkType:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.NetworkType.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.NetworkType.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -847,7 +867,7 @@ class NetworkType:
 </dd>
 <dt id="csw.LocationService.PekkoLocation"><code class="flex name class">
 <span>class <span class="ident">PekkoLocation</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
+<span>(</span><span>_type: str,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>uri: str,<br>metadata: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>PekkoLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
@@ -867,19 +887,19 @@ class PekkoLocation(Location):
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.PekkoLocation.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.PekkoLocation.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.PekkoLocation.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -888,13 +908,13 @@ class PekkoLocation(Location):
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.PekkoLocation.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.PekkoLocation.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -903,7 +923,7 @@ class PekkoLocation(Location):
 </dd>
 <dt id="csw.LocationService.PekkoRegistration"><code class="flex name class">
 <span>class <span class="ident">PekkoRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, actorRefURI: str, metadata: dict = &lt;factory&gt;)</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>actorRefURI: str,<br>metadata: dict = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register an http based service with the Location Service.</p></div>
@@ -939,19 +959,19 @@ class PekkoRegistration(Registration):
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.PekkoRegistration.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.PekkoRegistration.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.PekkoRegistration.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -960,13 +980,13 @@ class PekkoRegistration(Registration):
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.PekkoRegistration.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.PekkoRegistration.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1007,19 +1027,19 @@ class Registration:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.Registration.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.Registration.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.Registration.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1028,13 +1048,53 @@ class Registration:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.Registration.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.Registration.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.LocationService.RegistrationResult"><code class="flex name class">
+<span>class <span class="ident">RegistrationResult</span></span>
+<span>(</span><span>unregister: Callable,<br>location: <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>RegistrationResult(unregister: Callable, location: csw.LocationService.Location)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class RegistrationResult:
+    unregister: Callable
+    location: Location
+
+    @classmethod
+    def make(cls, _location: Location, _unregister: Callable[[ConnectionInfo], Awaitable]) -&gt; Self:
+        return cls(lambda: _unregister(_location.connection), _location)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.LocationService.RegistrationResult.location"><code class="name">var <span class="ident">location</span> : <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.LocationService.RegistrationResult.unregister"><code class="name">var <span class="ident">unregister</span> : Callable</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.LocationService.RegistrationResult.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>_location: <a title="csw.LocationService.Location" href="#csw.LocationService.Location">Location</a>,<br>_unregister: Callable[[<a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>], <class 'collections.abc.Awaitable'>]) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1043,7 +1103,7 @@ class Registration:
 </dd>
 <dt id="csw.LocationService.ResolveInfo"><code class="flex name class">
 <span>class <span class="ident">ResolveInfo</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, within: str)</span>
+<span>(</span><span>_type: str,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>within: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>ResolveInfo(_type: str, connection: csw.LocationService.ConnectionInfo, within: str)</p></div>
@@ -1072,19 +1132,19 @@ class ResolveInfo:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.ResolveInfo.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ResolveInfo.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ResolveInfo.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1093,13 +1153,13 @@ class ResolveInfo:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.ResolveInfo.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.ResolveInfo.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1108,7 +1168,7 @@ class ResolveInfo:
 </dd>
 <dt id="csw.LocationService.TcpLocation"><code class="flex name class">
 <span>class <span class="ident">TcpLocation</span></span>
-<span>(</span><span>_type: str, connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, uri: str, metadata: dict)</span>
+<span>(</span><span>_type: str,<br>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>uri: str,<br>metadata: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>TcpLocation(_type: str, connection: csw.LocationService.ConnectionInfo, uri: str, metadata: dict)</p></div>
@@ -1128,19 +1188,19 @@ class TcpLocation(Location):
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.TcpLocation.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.TcpLocation.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.TcpLocation.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1149,13 +1209,13 @@ class TcpLocation(Location):
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.TcpLocation.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.TcpLocation.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1164,7 +1224,7 @@ class TcpLocation(Location):
 </dd>
 <dt id="csw.LocationService.TcpRegistration"><code class="flex name class">
 <span>class <span class="ident">TcpRegistration</span></span>
-<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>, port: int, metadata: dict = &lt;factory&gt;)</span>
+<span>(</span><span>connection: <a title="csw.LocationService.ConnectionInfo" href="#csw.LocationService.ConnectionInfo">ConnectionInfo</a>,<br>port: int,<br>metadata: dict = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Used to register a tcp based service with the Location Service.</p></div>
@@ -1200,19 +1260,19 @@ class TcpRegistration(Registration):
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.LocationService.TcpRegistration.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.TcpRegistration.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.TcpRegistration.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1221,13 +1281,13 @@ class TcpRegistration(Registration):
 <h3>Methods</h3>
 <dl>
 <dt id="csw.LocationService.TcpRegistration.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.LocationService.TcpRegistration.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1342,7 +1402,6 @@ class TcpRegistration(Registration):
 <ul class="two-column">
 <li><code><a title="csw.LocationService.LocationService.baseUri" href="#csw.LocationService.LocationService.baseUri">baseUri</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.find" href="#csw.LocationService.LocationService.find">find</a></code></li>
-<li><code><a title="csw.LocationService.LocationService.getFreePort" href="#csw.LocationService.LocationService.getFreePort">getFreePort</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.list" href="#csw.LocationService.LocationService.list">list</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.listByPrefix" href="#csw.LocationService.LocationService.listByPrefix">listByPrefix</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.log" href="#csw.LocationService.LocationService.log">log</a></code></li>
@@ -1350,6 +1409,12 @@ class TcpRegistration(Registration):
 <li><code><a title="csw.LocationService.LocationService.register" href="#csw.LocationService.LocationService.register">register</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.resolve" href="#csw.LocationService.LocationService.resolve">resolve</a></code></li>
 <li><code><a title="csw.LocationService.LocationService.unregister" href="#csw.LocationService.LocationService.unregister">unregister</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="csw.LocationService.LocationServiceUtil" href="#csw.LocationService.LocationServiceUtil">LocationServiceUtil</a></code></h4>
+<ul class="">
+<li><code><a title="csw.LocationService.LocationServiceUtil.getFreePort" href="#csw.LocationService.LocationServiceUtil.getFreePort">getFreePort</a></code></li>
 </ul>
 </li>
 <li>
@@ -1396,6 +1461,14 @@ class TcpRegistration(Registration):
 </ul>
 </li>
 <li>
+<h4><code><a title="csw.LocationService.RegistrationResult" href="#csw.LocationService.RegistrationResult">RegistrationResult</a></code></h4>
+<ul class="">
+<li><code><a title="csw.LocationService.RegistrationResult.location" href="#csw.LocationService.RegistrationResult.location">location</a></code></li>
+<li><code><a title="csw.LocationService.RegistrationResult.make" href="#csw.LocationService.RegistrationResult.make">make</a></code></li>
+<li><code><a title="csw.LocationService.RegistrationResult.unregister" href="#csw.LocationService.RegistrationResult.unregister">unregister</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="csw.LocationService.ResolveInfo" href="#csw.LocationService.ResolveInfo">ResolveInfo</a></code></h4>
 <ul class="two-column">
 <li><code><a title="csw.LocationService.ResolveInfo.connection" href="#csw.LocationService.ResolveInfo.connection">connection</a></code></li>
@@ -1435,7 +1508,7 @@ class TcpRegistration(Registration):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
 </footer>
 </body>
 </html>

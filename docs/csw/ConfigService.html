@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.3">
 <title>csw.ConfigService API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
@@ -54,7 +54,10 @@ class ConfigData:
     You can get the content as a string with `s = configData.content.decode(&#39;utf-8&#39;)`.
     Create from a string with `ConfigData(bytes(&#39;hello&#39;, &#39;utf-8&#39;))`.
     &#34;&#34;&#34;
-    content: bytes</code></pre>
+    content: bytes
+
+    def __str__(self):
+        return self.content.decode(&#39;utf-8&#39;)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -107,19 +110,19 @@ class ConfigFileInfo:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigFileInfo.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigFileInfo.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigFileInfo.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -128,13 +131,13 @@ class ConfigFileInfo:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigFileInfo.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigFileInfo.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -184,19 +187,19 @@ class ConfigFileRevision:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigFileRevision.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigFileRevision.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigFileRevision.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -205,13 +208,13 @@ class ConfigFileRevision:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigFileRevision.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigFileRevision.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -246,19 +249,19 @@ class ConfigId:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigId.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigId.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigId.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -267,13 +270,13 @@ class ConfigId:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigId.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigId.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -323,19 +326,19 @@ class ConfigMetadata:
 <h3>Static methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigMetadata.from_dict"><code class="name flex">
-<span>def <span class="ident">from_dict</span></span>(<span>kvs: Union[dict, list, str, int, float, bool, ForwardRef(None)], *, infer_missing=False) ‑> ~A</span>
+<span>def <span class="ident">from_dict</span></span>(<span>kvs: dict | list | str | int | float | bool | None, *, infer_missing=False) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigMetadata.from_json"><code class="name flex">
-<span>def <span class="ident">from_json</span></span>(<span>s: Union[str, bytes, bytearray], *, parse_float=None, parse_int=None, parse_constant=None, infer_missing=False, **kw) ‑> ~A</span>
+<span>def <span class="ident">from_json</span></span>(<span>s: str | bytes | bytearray,<br>*,<br>parse_float=None,<br>parse_int=None,<br>parse_constant=None,<br>infer_missing=False,<br>**kw) ‑> ~A</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigMetadata.schema"><code class="name flex">
-<span>def <span class="ident">schema</span></span>(<span>*, infer_missing: bool = False, only=None, exclude=(), many: bool = False, context=None, load_only=(), dump_only=(), partial: bool = False, unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
+<span>def <span class="ident">schema</span></span>(<span>*,<br>infer_missing: bool = False,<br>only=None,<br>exclude=(),<br>many: bool = False,<br>context=None,<br>load_only=(),<br>dump_only=(),<br>partial: bool = False,<br>unknown=None) ‑> dataclasses_json.mm.SchemaF[~A]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -344,13 +347,13 @@ class ConfigMetadata:
 <h3>Methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigMetadata.to_dict"><code class="name flex">
-<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, Union[dict, list, str, int, float, bool, ForwardRef(None)]]</span>
+<span>def <span class="ident">to_dict</span></span>(<span>self, encode_json=False) ‑> Dict[str, dict | list | str | int | float | bool | None]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.ConfigService.ConfigMetadata.to_json"><code class="name flex">
-<span>def <span class="ident">to_json</span></span>(<span>self, *, skipkeys: bool = False, ensure_ascii: bool = True, check_circular: bool = True, allow_nan: bool = True, indent: Union[int, str, ForwardRef(None)] = None, separators: Optional[Tuple[str, str]] = None, default: Optional[Callable] = None, sort_keys: bool = False, **kw) ‑> str</span>
+<span>def <span class="ident">to_json</span></span>(<span>self,<br>*,<br>skipkeys: bool = False,<br>ensure_ascii: bool = True,<br>check_circular: bool = True,<br>allow_nan: bool = True,<br>indent: int | str | None = None,<br>separators: Tuple[str, str] | None = None,<br>default: Callable | None = None,<br>sort_keys: bool = False,<br>**kw) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -359,45 +362,53 @@ class ConfigMetadata:
 </dd>
 <dt id="csw.ConfigService.ConfigService"><code class="flex name class">
 <span>class <span class="ident">ConfigService</span></span>
+<span>(</span><span>clientSession: aiohttp.client.ClientSession,<br>client_id: str = 'tmt-frontend-app',<br>user: str = 'config-admin1',<br>password: str = 'config-admin1')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>ConfigService()</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@dataclass
-class ConfigService:
-    client_id = &#34;tmt-frontend-app&#34;
-    user = &#34;config-admin1&#34;
-    password = &#34;config-admin1&#34;
-    _locationService = LocationService()
+<pre><code class="python">class ConfigService:
 
-    def _formatTime(self, time: datetime):
+    def __init__(self,
+                 clientSession: ClientSession,
+                 client_id: str = &#34;tmt-frontend-app&#34;,
+                 user: str = &#34;config-admin1&#34;,
+                 password: str = &#34;config-admin1&#34;,):
+        self._session = clientSession
+        self.client_id = client_id
+        self.user = user
+        self.password = password
+        self._locationService = LocationService(clientSession)
+
+    @staticmethod
+    def _formatTime(time: datetime):
         return time.strftime(&#34;%Y-%m-%dT%H:%M:%SZ&#34;)
 
-    def _getBaseUri(self) -&gt; str:
-        prefix = Prefix(Subsystems.CSW, &#34;ConfigServer&#34;)
+    async def _getBaseUri(self) -&gt; str:
+        prefix = Prefix(Subsystem.CSW, &#34;ConfigServer&#34;)
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        location = self._locationService.resolve(connection)
+        location = await self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError(&#34;Can&#39;t locate CSW Config Service&#34;)
 
-    def _endPoint(self, path: str) -&gt; str:
-        return f&#39;{self._getBaseUri()}{path}&#39;
+    async def _endPoint(self, path: str) -&gt; str:
+        return f&#39;{await self._getBaseUri()}{path}&#39;
 
-    def _locateAuthService(self) -&gt; str:
-        connection = ConnectionInfo.make(Prefix(Subsystems.CSW, &#34;AAS&#34;), ComponentType.Service, ConnectionType.HttpType)
-        location = self._locationService.resolve(connection)
+    async def _locateAuthService(self) -&gt; str:
+        connection = ConnectionInfo.make(Prefix(Subsystem.CSW, &#34;AAS&#34;), ComponentType.Service, ConnectionType.HttpType)
+        location = await self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError(&#34;Can&#39;t locate CSW Auth Service&#34;)
 
-    def _getToken(self):
-        uri = self._locateAuthService()
+    async def _getToken(self):
+        uri = await self._locateAuthService()
         keycloak_openid = KeycloakOpenID(server_url=f&#39;{uri}/&#39;,
                                          client_id=self.client_id,
                                          realm_name=&#39;TMT&#39;)
@@ -413,23 +424,23 @@ class ConfigService:
                 f&#34;Input file path &#39;{path}&#39; contains invalid characters. &#34;
                 + f&#34;Note, these characters {charsMessage} or &#39;white space&#39; are not allowed in file path`&#34;)
 
-    def _createOrUpdate(self, create: bool, path: str, configData: ConfigData,
+    async def _createOrUpdate(self, create: bool, path: str, configData: ConfigData,
                         annex: bool = False, comment: str = &#34;Created&#34;) -&gt; ConfigId:
         self._validatePath(path)
-        token = self._getToken()
+        token = await self._getToken()
         params = urlencode({&#39;annex&#39;: annex, &#39;comment&#39;: comment})
-        baseUri = self._endPoint(f&#39;config/{path}&#39;)
+        baseUri = await self._endPoint(f&#39;config/{path}&#39;)
         uri = f&#39;{baseUri}?{params}&#39;
         headers = {&#39;Content-type&#39;: &#39;application/octet-stream&#39;, &#39;Authorization&#39;: f&#39;Bearer {token}&#39;}
         if create:
-            response = requests.post(uri, headers=headers, data=configData.content)
+            response = await self._session.post(uri, headers=headers, data=configData.content)
         else:
-            response = requests.put(uri, headers=headers, data=configData.content)
+            response = await self._session.put(uri, headers=headers, data=configData.content)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigId(response.json())
+            raise RuntimeError(await response.text())
+        return ConfigId(await response.json())
 
-    def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = &#34;Created&#34;) -&gt; ConfigId:
+    async def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = &#34;Created&#34;) -&gt; ConfigId:
         &#34;&#34;&#34;
         Creates a file at a specified path with given data and comment.
 
@@ -441,9 +452,9 @@ class ConfigService:
 
         Returns: id of file revision
         &#34;&#34;&#34;
-        return self._createOrUpdate(True, path, configData, annex, comment)
+        return await self._createOrUpdate(True, path, configData, annex, comment)
 
-    def update(self, path: str, configData: ConfigData, annex: bool = False, comment: str = &#34;Created&#34;) -&gt; ConfigId:
+    async def update(self, path: str, configData: ConfigData, annex: bool = False, comment: str = &#34;Created&#34;) -&gt; ConfigId:
         &#34;&#34;&#34;
         Updates a file at a specified path with given data and comment.
 
@@ -455,9 +466,9 @@ class ConfigService:
 
         Returns: id of file revision
         &#34;&#34;&#34;
-        return self._createOrUpdate(False, path, configData, annex, comment)
+        return await self._createOrUpdate(False, path, configData, annex, comment)
 
-    def delete(self, path: str, comment: str = &#34;Deleted&#34;):
+    async def delete(self, path: str, comment: str = &#34;Deleted&#34;):
         &#34;&#34;&#34;
         Deletes the given config file (older versions will still be available).
 
@@ -465,18 +476,19 @@ class ConfigService:
             path: the file path relative to the repository root
             comment: comment to associate with this operation
         &#34;&#34;&#34;
-        token = self._getToken()
+        token = await self._getToken()
         params = urlencode({&#39;comment&#39;: comment})
-        baseUri = self._endPoint(f&#39;config/{path}&#39;)
+        baseUri = await self._endPoint(f&#39;config/{path}&#39;)
         uri = f&#39;{baseUri}?{params}&#39;
         headers = {&#39;Authorization&#39;: f&#39;Bearer {token}&#39;}
-        response = requests.delete(uri, headers=headers)
+        response = await self._session.delete(uri, headers=headers)
         if not response.ok:
-            raise RuntimeError(response.text)
+            raise RuntimeError(await response.text())
 
-    def list(self, fileType: FileType = None, pattern: str = None) -&gt; List[ConfigFileInfo]:
+    # noinspection PyUnresolvedReferences
+    async def list(self, fileType: FileType = None, pattern: str = None) -&gt; List[ConfigFileInfo]:
         &#34;&#34;&#34;
-        Returns a list containing all of the known config files of given type(Annex or Normal) and whose name matches the provided pattern.
+        Returns a list containing all the known config files of given type(Annex or Normal) and whose name matches the provided pattern.
 
         Args:
             fileType: optional file type(Annex or Normal)
@@ -490,11 +502,11 @@ class ConfigService:
             params.update({&#39;type&#39;: fileType.name})
         if pattern:
             params.update({&#39;pattern&#39;: pattern})
-        uri = f&#34;{self._endPoint(&#39;list&#39;)}?{urlencode(params)}&#34;
-        response = requests.get(uri)
-        return list(map(lambda p: ConfigFileInfo.from_dict(p), response.json()))
+        uri = f&#34;{await self._endPoint(&#39;list&#39;)}?{urlencode(params)}&#34;
+        response = await self._session.get(uri)
+        return list(map(lambda p: ConfigFileInfo.from_dict(p), await response.json()))
 
-    def exists(self, path: str, configId: ConfigId = None):
+    async def exists(self, path: str, configId: ConfigId = None):
         &#34;&#34;&#34;
         Returns true if the given path exists and is being managed.
 
@@ -507,11 +519,11 @@ class ConfigService:
         params = {}
         if configId:
             params.update({&#39;id&#39;: configId.id})
-        uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
-        response = requests.head(uri)
+        uri = f&#34;{await self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.head(uri)
         return response.ok
 
-    def getLatest(self, path: str) -&gt; ConfigData:
+    async def getLatest(self, path: str) -&gt; ConfigData:
         &#34;&#34;&#34;
         Gets and returns the content of latest version of the file stored under the given path.
 
@@ -520,13 +532,13 @@ class ConfigService:
 
         Returns: file contents
         &#34;&#34;&#34;
-        uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;config&#39;)}/{path}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getById(self, path: str, configId: ConfigId) -&gt; ConfigData:
+    async def getById(self, path: str, configId: ConfigId) -&gt; ConfigData:
         &#34;&#34;&#34;
         Gets and returns the file at the given path with the specified revision id
 
@@ -537,13 +549,13 @@ class ConfigService:
         Returns: file contents
         &#34;&#34;&#34;
         params = {&#39;id&#39;: configId.id}
-        uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getByTime(self, path: str, time: datetime) -&gt; ConfigData:
+    async def getByTime(self, path: str, time: datetime) -&gt; ConfigData:
         &#34;&#34;&#34;
         Gets the file at the given path as it existed on the given instant.
         If instant is before the file was created, the initial version is returned.
@@ -556,13 +568,13 @@ class ConfigService:
         Returns: file contents
         &#34;&#34;&#34;
         params = {&#39;date&#39;: self._formatTime(time)}
-        uri = f&#34;{self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;config&#39;)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getActive(self, path: str) -&gt; ConfigData:
+    async def getActive(self, path: str) -&gt; ConfigData:
         &#34;&#34;&#34;
         Gets and returns the content of active version of the file stored under the given path.
 
@@ -572,13 +584,13 @@ class ConfigService:
         Returns: file contents
 
         &#34;&#34;&#34;
-        uri = f&#34;{self._endPoint(&#39;active-config&#39;)}/{path}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;active-config&#39;)}/{path}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getActiveByTime(self, path: str, time: datetime) -&gt; ConfigData:
+    async def getActiveByTime(self, path: str, time: datetime) -&gt; ConfigData:
         &#34;&#34;&#34;
         Returns the content of active version of the file at the given path as it existed on the given instant
 
@@ -590,13 +602,13 @@ class ConfigService:
 
         &#34;&#34;&#34;
         params = {&#39;date&#39;: self._formatTime(time)}
-        uri = f&#34;{self._endPoint(&#39;active-config&#39;)}/{path}?{urlencode(params)}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;active-config&#39;)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getActiveVersion(self, path: str) -&gt; ConfigId:
+    async def getActiveVersion(self, path: str) -&gt; ConfigId:
         &#34;&#34;&#34;
         Returns the version which represents the &#34;active version&#34; of the file at the given path.
 
@@ -606,25 +618,27 @@ class ConfigService:
         Returns: ConfigId indicating the id of the active version
 
         &#34;&#34;&#34;
-        uri = f&#34;{self._endPoint(&#39;active-version&#39;)}/{path}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;active-version&#39;)}/{path}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigId(response.json())
+            raise RuntimeError(await response.text())
+        return ConfigId(await response.json())
 
-    def getMetadata(self) -&gt; ConfigMetadata:
+    # noinspection PyUnresolvedReferences
+    async def getMetadata(self) -&gt; ConfigMetadata:
         &#34;&#34;&#34;
         Query the metadata of config server.
         Returns: a ConfigMetadata object
 
         &#34;&#34;&#34;
-        uri = f&#34;{self._endPoint(&#39;metadata&#39;)}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(&#39;metadata&#39;)}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigMetadata.from_dict(response.json())
+            raise RuntimeError(await response.text())
+        return ConfigMetadata.from_dict(await response.json())
 
-    def _history(self, key: str, path: str,
+    # noinspection PyUnresolvedReferences
+    async def _history(self, key: str, path: str,
                  fromTime: datetime, toTime: datetime,
                  maxResults: int) -&gt; List[ConfigFileRevision]:
         params = {}
@@ -634,13 +648,13 @@ class ConfigService:
             params.update({&#39;to&#39;: self._formatTime(toTime)})
         if maxResults:
             params.update({&#39;maxResults&#39;: maxResults})
-        uri = f&#34;{self._endPoint(key)}/{path}?{urlencode(params)}&#34;
-        response = requests.get(uri)
+        uri = f&#34;{await self._endPoint(key)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return list(map(lambda p: ConfigFileRevision.from_dict(p), response.json()))
+            raise RuntimeError(await response.text())
+        return list(map(lambda p: ConfigFileRevision.from_dict(p), await response.json()))
 
-    def history(self, path: str,
+    async def history(self, path: str,
                 fromTime: datetime = None, toTime: datetime = None,
                 maxResults: int = 10000) -&gt; List[ConfigFileRevision]:
         &#34;&#34;&#34;
@@ -656,9 +670,9 @@ class ConfigService:
         Returns: list of ConfigFileRevision
 
         &#34;&#34;&#34;
-        return self._history(&#39;history&#39;, path, fromTime, toTime, maxResults)
+        return await self._history(&#39;history&#39;, path, fromTime, toTime, maxResults)
 
-    def historyActive(self, path: str,
+    async def historyActive(self, path: str,
                       fromTime: datetime = None, toTime: datetime = None,
                       maxResults: int = None) -&gt; List[ConfigFileRevision]:
         &#34;&#34;&#34;
@@ -674,9 +688,9 @@ class ConfigService:
         Returns: list of ConfigFileRevision
 
         &#34;&#34;&#34;
-        return self._history(&#39;history-active&#39;, path, fromTime, toTime, maxResults)
+        return await self._history(&#39;history-active&#39;, path, fromTime, toTime, maxResults)
 
-    def setActiveVersion(self, path: str, configId: ConfigId, comment: str):
+    async def setActiveVersion(self, path: str, configId: ConfigId, comment: str):
         &#34;&#34;&#34;
         Sets the active version to be the version provided for the file at the given path.
         If this method is not called, the active version will always be the version with which the file was created.
@@ -689,15 +703,15 @@ class ConfigService:
             comment: comment to associate with this operation
 
         &#34;&#34;&#34;
-        token = self._getToken()
+        token = await self._getToken()
         params = {&#39;id&#39;: configId.id, &#39;comment&#39;: comment}
         headers = {&#39;Authorization&#39;: f&#39;Bearer {token}&#39;}
-        uri = f&#34;{self._endPoint(&#39;active-version&#39;)}/{path}?{urlencode(params)}&#34;
-        response = requests.put(uri, headers=headers)
+        uri = f&#34;{await self._endPoint(&#39;active-version&#39;)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.put(uri, headers=headers)
         if not response.ok:
-            raise RuntimeError(response.text)
+            raise RuntimeError(await response.text())
 
-    def resetActiveVersion(self, path: str, comment: str):
+    async def resetActiveVersion(self, path: str, comment: str):
         &#34;&#34;&#34;
         Resets the &#34;active version&#34; of the file at the given path to the latest version.
 
@@ -706,33 +720,18 @@ class ConfigService:
             comment: comment to associate with this operation
 
         &#34;&#34;&#34;
-        token = self._getToken()
+        token = await self._getToken()
         params = {&#39;comment&#39;: comment}
         headers = {&#39;Authorization&#39;: f&#39;Bearer {token}&#39;}
-        uri = f&#34;{self._endPoint(&#39;active-version&#39;)}/{path}?{urlencode(params)}&#34;
-        response = requests.put(uri, headers=headers)
+        uri = f&#34;{await self._endPoint(&#39;active-version&#39;)}/{path}?{urlencode(params)}&#34;
+        response = await self._session.put(uri, headers=headers)
         if not response.ok:
-            raise RuntimeError(response.text)</code></pre>
+            raise RuntimeError(await response.text())</code></pre>
 </details>
-<h3>Class variables</h3>
-<dl>
-<dt id="csw.ConfigService.ConfigService.client_id"><code class="name">var <span class="ident">client_id</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.ConfigService.ConfigService.password"><code class="name">var <span class="ident">password</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.ConfigService.ConfigService.user"><code class="name">var <span class="ident">user</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="csw.ConfigService.ConfigService.create"><code class="name flex">
-<span>def <span class="ident">create</span></span>(<span>self, path: str, configData: <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a>, annex: bool = False, comment: str = 'Created') ‑> <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a></span>
+<span>async def <span class="ident">create</span></span>(<span>self,<br>path: str,<br>configData: <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a>,<br>annex: bool = False,<br>comment: str = 'Created') ‑> <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a file at a specified path with given data and comment.</p>
@@ -750,7 +749,7 @@ class ConfigService:
 <p>Returns: id of file revision</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.delete"><code class="name flex">
-<span>def <span class="ident">delete</span></span>(<span>self, path: str, comment: str = 'Deleted')</span>
+<span>async def <span class="ident">delete</span></span>(<span>self, path: str, comment: str = 'Deleted')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Deletes the given config file (older versions will still be available).</p>
@@ -763,7 +762,7 @@ class ConfigService:
 </dl></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.exists"><code class="name flex">
-<span>def <span class="ident">exists</span></span>(<span>self, path: str, configId: <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a> = None)</span>
+<span>async def <span class="ident">exists</span></span>(<span>self,<br>path: str,<br>configId: <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a> = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns true if the given path exists and is being managed.</p>
@@ -777,7 +776,7 @@ class ConfigService:
 <p>Returns: true if the file exists in the repo</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getActive"><code class="name flex">
-<span>def <span class="ident">getActive</span></span>(<span>self, path: str) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
+<span>async def <span class="ident">getActive</span></span>(<span>self, path: str) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets and returns the content of active version of the file stored under the given path.</p>
@@ -789,7 +788,7 @@ class ConfigService:
 <p>Returns: file contents</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getActiveByTime"><code class="name flex">
-<span>def <span class="ident">getActiveByTime</span></span>(<span>self, path: str, time: datetime.datetime) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
+<span>async def <span class="ident">getActiveByTime</span></span>(<span>self, path: str, time: datetime.datetime) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the content of active version of the file at the given path as it existed on the given instant</p>
@@ -803,7 +802,7 @@ class ConfigService:
 <p>Returns: file contents</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getActiveVersion"><code class="name flex">
-<span>def <span class="ident">getActiveVersion</span></span>(<span>self, path: str) ‑> <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a></span>
+<span>async def <span class="ident">getActiveVersion</span></span>(<span>self, path: str) ‑> <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the version which represents the "active version" of the file at the given path.</p>
@@ -815,7 +814,7 @@ class ConfigService:
 <p>Returns: ConfigId indicating the id of the active version</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getById"><code class="name flex">
-<span>def <span class="ident">getById</span></span>(<span>self, path: str, configId: <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a>) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
+<span>async def <span class="ident">getById</span></span>(<span>self,<br>path: str,<br>configId: <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a>) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets and returns the file at the given path with the specified revision id</p>
@@ -829,7 +828,7 @@ class ConfigService:
 <p>Returns: file contents</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getByTime"><code class="name flex">
-<span>def <span class="ident">getByTime</span></span>(<span>self, path: str, time: datetime.datetime) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
+<span>async def <span class="ident">getByTime</span></span>(<span>self, path: str, time: datetime.datetime) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the file at the given path as it existed on the given instant.
@@ -845,7 +844,7 @@ If instant is after the last change, the most recent version is returned.</p>
 <p>Returns: file contents</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getLatest"><code class="name flex">
-<span>def <span class="ident">getLatest</span></span>(<span>self, path: str) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
+<span>async def <span class="ident">getLatest</span></span>(<span>self, path: str) ‑> <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets and returns the content of latest version of the file stored under the given path.</p>
@@ -857,14 +856,14 @@ If instant is after the last change, the most recent version is returned.</p>
 <p>Returns: file contents</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.getMetadata"><code class="name flex">
-<span>def <span class="ident">getMetadata</span></span>(<span>self) ‑> <a title="csw.ConfigService.ConfigMetadata" href="#csw.ConfigService.ConfigMetadata">ConfigMetadata</a></span>
+<span>async def <span class="ident">getMetadata</span></span>(<span>self) ‑> <a title="csw.ConfigService.ConfigMetadata" href="#csw.ConfigService.ConfigMetadata">ConfigMetadata</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Query the metadata of config server.
 Returns: a ConfigMetadata object</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.history"><code class="name flex">
-<span>def <span class="ident">history</span></span>(<span>self, path: str, fromTime: datetime.datetime = None, toTime: datetime.datetime = None, maxResults: int = 10000) ‑> List[<a title="csw.ConfigService.ConfigFileRevision" href="#csw.ConfigService.ConfigFileRevision">ConfigFileRevision</a>]</span>
+<span>async def <span class="ident">history</span></span>(<span>self,<br>path: str,<br>fromTime: datetime.datetime = None,<br>toTime: datetime.datetime = None,<br>maxResults: int = 10000) ‑> List[<a title="csw.ConfigService.ConfigFileRevision" href="#csw.ConfigService.ConfigFileRevision">ConfigFileRevision</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the history of versions of the file at the given path for a range of period specified by from and to.
@@ -883,7 +882,7 @@ The size of the list is limited upto maxResults.</p>
 <p>Returns: list of ConfigFileRevision</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.historyActive"><code class="name flex">
-<span>def <span class="ident">historyActive</span></span>(<span>self, path: str, fromTime: datetime.datetime = None, toTime: datetime.datetime = None, maxResults: int = None) ‑> List[<a title="csw.ConfigService.ConfigFileRevision" href="#csw.ConfigService.ConfigFileRevision">ConfigFileRevision</a>]</span>
+<span>async def <span class="ident">historyActive</span></span>(<span>self,<br>path: str,<br>fromTime: datetime.datetime = None,<br>toTime: datetime.datetime = None,<br>maxResults: int = None) ‑> List[<a title="csw.ConfigService.ConfigFileRevision" href="#csw.ConfigService.ConfigFileRevision">ConfigFileRevision</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the history of active versions of the file at the given path for a range of period specified by
@@ -902,10 +901,10 @@ fromTime and toTime. The size of the list is limited upto maxResults.</p>
 <p>Returns: list of ConfigFileRevision</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.list"><code class="name flex">
-<span>def <span class="ident">list</span></span>(<span>self, fileType: <a title="csw.ConfigService.FileType" href="#csw.ConfigService.FileType">FileType</a> = None, pattern: str = None) ‑> List[<a title="csw.ConfigService.ConfigFileInfo" href="#csw.ConfigService.ConfigFileInfo">ConfigFileInfo</a>]</span>
+<span>async def <span class="ident">list</span></span>(<span>self,<br>fileType: <a title="csw.ConfigService.FileType" href="#csw.ConfigService.FileType">FileType</a> = None,<br>pattern: str = None) ‑> List[<a title="csw.ConfigService.ConfigFileInfo" href="#csw.ConfigService.ConfigFileInfo">ConfigFileInfo</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a list containing all of the known config files of given type(Annex or Normal) and whose name matches the provided pattern.</p>
+<div class="desc"><p>Returns a list containing all the known config files of given type(Annex or Normal) and whose name matches the provided pattern.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>fileType</code></strong></dt>
@@ -916,7 +915,7 @@ fromTime and toTime. The size of the list is limited upto maxResults.</p>
 <p>Returns: list of ConfigFileInfo</p></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.resetActiveVersion"><code class="name flex">
-<span>def <span class="ident">resetActiveVersion</span></span>(<span>self, path: str, comment: str)</span>
+<span>async def <span class="ident">resetActiveVersion</span></span>(<span>self, path: str, comment: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Resets the "active version" of the file at the given path to the latest version.</p>
@@ -929,7 +928,7 @@ fromTime and toTime. The size of the list is limited upto maxResults.</p>
 </dl></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.setActiveVersion"><code class="name flex">
-<span>def <span class="ident">setActiveVersion</span></span>(<span>self, path: str, configId: <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a>, comment: str)</span>
+<span>async def <span class="ident">setActiveVersion</span></span>(<span>self,<br>path: str,<br>configId: <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a>,<br>comment: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the active version to be the version provided for the file at the given path.
@@ -947,7 +946,7 @@ the file was created i.e. 1)</dd>
 </dl></div>
 </dd>
 <dt id="csw.ConfigService.ConfigService.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, path: str, configData: <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a>, annex: bool = False, comment: str = 'Created') ‑> <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a></span>
+<span>async def <span class="ident">update</span></span>(<span>self,<br>path: str,<br>configData: <a title="csw.ConfigService.ConfigData" href="#csw.ConfigService.ConfigData">ConfigData</a>,<br>annex: bool = False,<br>comment: str = 'Created') ‑> <a title="csw.ConfigService.ConfigId" href="#csw.ConfigService.ConfigId">ConfigId</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Updates a file at a specified path with given data and comment.</p>
@@ -968,7 +967,7 @@ the file was created i.e. 1)</dd>
 </dd>
 <dt id="csw.ConfigService.FileType"><code class="flex name class">
 <span>class <span class="ident">FileType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents the type of storage for a configuration file</p></div>
@@ -1076,7 +1075,6 @@ the file was created i.e. 1)</dd>
 <li>
 <h4><code><a title="csw.ConfigService.ConfigService" href="#csw.ConfigService.ConfigService">ConfigService</a></code></h4>
 <ul class="two-column">
-<li><code><a title="csw.ConfigService.ConfigService.client_id" href="#csw.ConfigService.ConfigService.client_id">client_id</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.create" href="#csw.ConfigService.ConfigService.create">create</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.delete" href="#csw.ConfigService.ConfigService.delete">delete</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.exists" href="#csw.ConfigService.ConfigService.exists">exists</a></code></li>
@@ -1090,11 +1088,9 @@ the file was created i.e. 1)</dd>
 <li><code><a title="csw.ConfigService.ConfigService.history" href="#csw.ConfigService.ConfigService.history">history</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.historyActive" href="#csw.ConfigService.ConfigService.historyActive">historyActive</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.list" href="#csw.ConfigService.ConfigService.list">list</a></code></li>
-<li><code><a title="csw.ConfigService.ConfigService.password" href="#csw.ConfigService.ConfigService.password">password</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.resetActiveVersion" href="#csw.ConfigService.ConfigService.resetActiveVersion">resetActiveVersion</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.setActiveVersion" href="#csw.ConfigService.ConfigService.setActiveVersion">setActiveVersion</a></code></li>
 <li><code><a title="csw.ConfigService.ConfigService.update" href="#csw.ConfigService.ConfigService.update">update</a></code></li>
-<li><code><a title="csw.ConfigService.ConfigService.user" href="#csw.ConfigService.ConfigService.user">user</a></code></li>
 </ul>
 </li>
 <li>
@@ -1110,7 +1106,7 @@ the file was created i.e. 1)</dd>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
 </footer>
 </body>
 </html>

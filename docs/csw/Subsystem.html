@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.3">
 <title>csw.Subsystem API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
@@ -37,7 +37,247 @@ hljs.highlightAll();
 <dl>
 <dt id="csw.Subsystem.Subsystem"><code class="flex name class">
 <span>class <span class="ident">Subsystem</span></span>
-<span>(</span><span>description: str)</span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a collection of name/value pairs.</p>
+<p>Example enumeration:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class Color(Enum):
+...     RED = 1
+...     BLUE = 2
+...     GREEN = 3
+</code></pre>
+<p>Access them by:</p>
+<ul>
+<li>attribute access:</li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Color.RED
+<Color.RED: 1></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ul>
+<li>value lookup:</li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Color(1)
+<Color.RED: 1></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ul>
+<li>name lookup:</li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Color['RED']
+<Color.RED: 1></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Enumerations can be iterated over, and know how many members they have:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; len(Color)
+3
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(Color)
+[&lt;Color.RED: 1&gt;, &lt;Color.BLUE: 2&gt;, &lt;Color.GREEN: 3&gt;]
+</code></pre>
+<p>Methods can be added to enumerations, and members can have their own
+attributes &ndash; see the documentation for details.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Subsystem(UpperCaseEnum):
+    AOESW = SubsystemValue(&#34;AOESW&#34;, &#34;Adaptive Optics Executive Software&#34;)
+    APS = SubsystemValue(&#34;APS&#34;, &#34;Alignment and Phasing System &#34;)
+    CIS = SubsystemValue(&#34;CIS&#34;, &#34;Communications and Information Systems&#34;)
+    CLN = SubsystemValue(&#34;CLN&#34;, &#34;Optical Cleaning Systems&#34;)
+    CRYO = SubsystemValue(&#34;CRYO&#34;, &#34;Instrumentation Cryogenic Cooling System&#34;)
+    CSW = SubsystemValue(&#34;CSW&#34;, &#34;Common Software&#34;)
+    DMS = SubsystemValue(&#34;DMS&#34;, &#34;Data Management System&#34;)
+    DPS = SubsystemValue(&#34;DPS&#34;, &#34;Data Processing System&#34;)
+    ENC = SubsystemValue(&#34;ENC&#34;, &#34;Enclosure&#34;)
+    ESEN = SubsystemValue(&#34;ESEN&#34;, &#34;Engineering Sensors&#34;)
+    ESW = SubsystemValue(&#34;ESW&#34;, &#34;Executive Software&#34;)
+    HNDL = SubsystemValue(&#34;HNDL&#34;, &#34;Optics Handling Equipment&#34;)
+    HQ = SubsystemValue(&#34;HQ&#34;, &#34;Observatory Headquarters&#34;)
+    IRIS = SubsystemValue(&#34;IRIS&#34;, &#34;InfraRed Imaging Spectrometer&#34;)
+    LGSF = SubsystemValue(&#34;LGSF&#34;, &#34;Laser Guide Star Facility&#34;)
+    M1COAT = SubsystemValue(&#34;COAT&#34;, &#34;M1COAT M1 Optical Coating System&#34;)
+    M1CS = SubsystemValue(&#34;CS&#34;, &#34;M1CS M1 Control System &#34;)
+    M1S = SubsystemValue(&#34;S&#34;, &#34;M1S M1 Optics System&#34;)
+    M2COAT = SubsystemValue(&#34;COAT&#34;, &#34;M2/M3 Optical Coating System&#34;)
+    M2S = SubsystemValue(&#34;S&#34;, &#34;M2S M2 System&#34;)
+    M3S = SubsystemValue(&#34;S&#34;, &#34;M3S M3 System&#34;)
+    MODHIS = SubsystemValue(&#34;MODHIS&#34;, &#34;Multi-Object Diffraction-limited High-resolution IR Spectrograph&#34;)
+    NFIRAOS = SubsystemValue(&#34;NFIRAOS&#34;, &#34;Narrow Field Infrared AO System&#34;)
+    OSS = SubsystemValue(&#34;OSS&#34;, &#34;Observatory Safety System&#34;)
+    REFR = SubsystemValue(&#34;REFR&#34;, &#34;Instrumentation Refrigerant Cooling System &#34;)
+    SCMS = SubsystemValue(&#34;SCMS&#34;, &#34;Site Conditions Monitoring System&#34;)
+    SER = SubsystemValue(&#34;SER&#34;, &#34;Services&#34;)
+    SOSS = SubsystemValue(&#34;SOSS&#34;, &#34;Science Operations Support Systems&#34;)
+    STR = SubsystemValue(&#34;STR&#34;, &#34;Structure &#34;)
+    SUM = SubsystemValue(&#34;SUM&#34;, &#34;Summit Facilities&#34;)
+    TCS = SubsystemValue(&#34;TCS&#34;, &#34;Telescope Control System&#34;)
+    TINS = SubsystemValue(&#34;TINS&#34;, &#34;Test Instruments&#34;)
+    WFOS = SubsystemValue(&#34;WFOS&#34;, &#34;Wide Field Optical Spectrograph&#34;)
+    Container = SubsystemValue(&#34;Container&#34;, &#34;Container Subsystem&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="csw.EnumUtil.UpperCaseEnum" href="EnumUtil.html#csw.EnumUtil.UpperCaseEnum">UpperCaseEnum</a></li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="csw.Subsystem.Subsystem.AOESW"><code class="name">var <span class="ident">AOESW</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.APS"><code class="name">var <span class="ident">APS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.CIS"><code class="name">var <span class="ident">CIS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.CLN"><code class="name">var <span class="ident">CLN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.CRYO"><code class="name">var <span class="ident">CRYO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.CSW"><code class="name">var <span class="ident">CSW</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.Container"><code class="name">var <span class="ident">Container</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.DMS"><code class="name">var <span class="ident">DMS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.DPS"><code class="name">var <span class="ident">DPS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.ENC"><code class="name">var <span class="ident">ENC</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.ESEN"><code class="name">var <span class="ident">ESEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.ESW"><code class="name">var <span class="ident">ESW</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.HNDL"><code class="name">var <span class="ident">HNDL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.HQ"><code class="name">var <span class="ident">HQ</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.IRIS"><code class="name">var <span class="ident">IRIS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.LGSF"><code class="name">var <span class="ident">LGSF</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.M1COAT"><code class="name">var <span class="ident">M1COAT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.M1CS"><code class="name">var <span class="ident">M1CS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.M1S"><code class="name">var <span class="ident">M1S</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.M2COAT"><code class="name">var <span class="ident">M2COAT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.M2S"><code class="name">var <span class="ident">M2S</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.M3S"><code class="name">var <span class="ident">M3S</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.MODHIS"><code class="name">var <span class="ident">MODHIS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.NFIRAOS"><code class="name">var <span class="ident">NFIRAOS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.OSS"><code class="name">var <span class="ident">OSS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.REFR"><code class="name">var <span class="ident">REFR</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.SCMS"><code class="name">var <span class="ident">SCMS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.SER"><code class="name">var <span class="ident">SER</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.SOSS"><code class="name">var <span class="ident">SOSS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.STR"><code class="name">var <span class="ident">STR</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.SUM"><code class="name">var <span class="ident">SUM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.TCS"><code class="name">var <span class="ident">TCS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.TINS"><code class="name">var <span class="ident">TINS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="csw.Subsystem.Subsystem.WFOS"><code class="name">var <span class="ident">WFOS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="csw.Subsystem.SubsystemValue"><code class="flex name class">
+<span>class <span class="ident">SubsystemValue</span></span>
+<span>(</span><span>name: str, description: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Defines constants for the available subsystems</p></div>
@@ -46,205 +286,20 @@ hljs.highlightAll();
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class Subsystem:
+class SubsystemValue:
     &#34;&#34;&#34;
     Defines constants for the available subsystems
     &#34;&#34;&#34;
+    name: str
     description: str</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
-<dt id="csw.Subsystem.Subsystem.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
+<dt id="csw.Subsystem.SubsystemValue.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-</dl>
-</dd>
-<dt id="csw.Subsystem.Subsystems"><code class="flex name class">
-<span>class <span class="ident">Subsystems</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>An enumeration.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class Subsystems(Enum):
-    AOESW = Subsystem(&#34;Adaptive Optics Executive Software&#34;)
-    APS = Subsystem(&#34;Alignment and Phasing System &#34;)
-    CIS = Subsystem(&#34;Communications and Information Systems&#34;)
-    CLN = Subsystem(&#34;Optical Cleaning Systems&#34;)
-    CRYO = Subsystem(&#34;Instrumentation Cryogenic Cooling System&#34;)
-    CSW = Subsystem(&#34;Common Software&#34;)
-    DMS = Subsystem(&#34;Data Management System&#34;)
-    DPS = Subsystem(&#34;Data Processing System&#34;)
-    ENC = Subsystem(&#34;Enclosure&#34;)
-    ESEN = Subsystem(&#34;Engineering Sensors&#34;)
-    ESW = Subsystem(&#34;Executive Software&#34;)
-    HNDL = Subsystem(&#34;Optics Handling Equipment&#34;)
-    HQ = Subsystem(&#34;Observatory Headquarters&#34;)
-    IRIS = Subsystem(&#34;InfraRed Imaging Spectrometer&#34;)
-    LGSF = Subsystem(&#34;Laser Guide Star Facility&#34;)
-    M1COAT = Subsystem(&#34;M1COAT M1 Optical Coating System&#34;)
-    M1CS = Subsystem(&#34;M1CS M1 Control System &#34;)
-    M1S = Subsystem(&#34;M1S M1 Optics System&#34;)
-    M2COAT = Subsystem(&#34;M2/M3 Optical Coating System&#34;)
-    M2S = Subsystem(&#34;M2S M2 System&#34;)
-    M3S = Subsystem(&#34;M3S M3 System&#34;)
-    MODHIS = Subsystem(&#34;Multi-Object Diffraction-limited High-resolution IR Spectrograph&#34;)
-    NFIRAOS = Subsystem(&#34;Narrow Field Infrared AO System&#34;)
-    OSS = Subsystem(&#34;Observatory Safety System&#34;)
-    REFR = Subsystem(&#34;Instrumentation Refrigerant Cooling System &#34;)
-    SCMS = Subsystem(&#34;Site Conditions Monitoring System&#34;)
-    SER = Subsystem(&#34;Services&#34;)
-    SOSS = Subsystem(&#34;Science Operations Support Systems&#34;)
-    STR = Subsystem(&#34;Structure &#34;)
-    SUM = Subsystem(&#34;Summit Facilities&#34;)
-    TCS = Subsystem(&#34;Telescope Control System&#34;)
-    TINS = Subsystem(&#34;Test Instruments&#34;)
-    WFOS = Subsystem(&#34;Wide Field Optical Spectrograph&#34;)
-    Container = Subsystem(&#34;Container Subsystem&#34;)</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="csw.Subsystem.Subsystems.AOESW"><code class="name">var <span class="ident">AOESW</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.APS"><code class="name">var <span class="ident">APS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.CIS"><code class="name">var <span class="ident">CIS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.CLN"><code class="name">var <span class="ident">CLN</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.CRYO"><code class="name">var <span class="ident">CRYO</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.CSW"><code class="name">var <span class="ident">CSW</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.Container"><code class="name">var <span class="ident">Container</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.DMS"><code class="name">var <span class="ident">DMS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.DPS"><code class="name">var <span class="ident">DPS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.ENC"><code class="name">var <span class="ident">ENC</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.ESEN"><code class="name">var <span class="ident">ESEN</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.ESW"><code class="name">var <span class="ident">ESW</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.HNDL"><code class="name">var <span class="ident">HNDL</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.HQ"><code class="name">var <span class="ident">HQ</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.IRIS"><code class="name">var <span class="ident">IRIS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.LGSF"><code class="name">var <span class="ident">LGSF</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.M1COAT"><code class="name">var <span class="ident">M1COAT</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.M1CS"><code class="name">var <span class="ident">M1CS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.M1S"><code class="name">var <span class="ident">M1S</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.M2COAT"><code class="name">var <span class="ident">M2COAT</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.M2S"><code class="name">var <span class="ident">M2S</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.M3S"><code class="name">var <span class="ident">M3S</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.MODHIS"><code class="name">var <span class="ident">MODHIS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.NFIRAOS"><code class="name">var <span class="ident">NFIRAOS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.OSS"><code class="name">var <span class="ident">OSS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.REFR"><code class="name">var <span class="ident">REFR</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.SCMS"><code class="name">var <span class="ident">SCMS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.SER"><code class="name">var <span class="ident">SER</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.SOSS"><code class="name">var <span class="ident">SOSS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.STR"><code class="name">var <span class="ident">STR</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.SUM"><code class="name">var <span class="ident">SUM</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.TCS"><code class="name">var <span class="ident">TCS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.TINS"><code class="name">var <span class="ident">TINS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="csw.Subsystem.Subsystems.WFOS"><code class="name">var <span class="ident">WFOS</span></code></dt>
+<dt id="csw.Subsystem.SubsystemValue.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -267,47 +322,48 @@ class Subsystem:
 <ul>
 <li>
 <h4><code><a title="csw.Subsystem.Subsystem" href="#csw.Subsystem.Subsystem">Subsystem</a></code></h4>
-<ul class="">
-<li><code><a title="csw.Subsystem.Subsystem.description" href="#csw.Subsystem.Subsystem.description">description</a></code></li>
+<ul class="two-column">
+<li><code><a title="csw.Subsystem.Subsystem.AOESW" href="#csw.Subsystem.Subsystem.AOESW">AOESW</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.APS" href="#csw.Subsystem.Subsystem.APS">APS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.CIS" href="#csw.Subsystem.Subsystem.CIS">CIS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.CLN" href="#csw.Subsystem.Subsystem.CLN">CLN</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.CRYO" href="#csw.Subsystem.Subsystem.CRYO">CRYO</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.CSW" href="#csw.Subsystem.Subsystem.CSW">CSW</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.Container" href="#csw.Subsystem.Subsystem.Container">Container</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.DMS" href="#csw.Subsystem.Subsystem.DMS">DMS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.DPS" href="#csw.Subsystem.Subsystem.DPS">DPS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.ENC" href="#csw.Subsystem.Subsystem.ENC">ENC</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.ESEN" href="#csw.Subsystem.Subsystem.ESEN">ESEN</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.ESW" href="#csw.Subsystem.Subsystem.ESW">ESW</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.HNDL" href="#csw.Subsystem.Subsystem.HNDL">HNDL</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.HQ" href="#csw.Subsystem.Subsystem.HQ">HQ</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.IRIS" href="#csw.Subsystem.Subsystem.IRIS">IRIS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.LGSF" href="#csw.Subsystem.Subsystem.LGSF">LGSF</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.M1COAT" href="#csw.Subsystem.Subsystem.M1COAT">M1COAT</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.M1CS" href="#csw.Subsystem.Subsystem.M1CS">M1CS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.M1S" href="#csw.Subsystem.Subsystem.M1S">M1S</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.M2COAT" href="#csw.Subsystem.Subsystem.M2COAT">M2COAT</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.M2S" href="#csw.Subsystem.Subsystem.M2S">M2S</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.M3S" href="#csw.Subsystem.Subsystem.M3S">M3S</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.MODHIS" href="#csw.Subsystem.Subsystem.MODHIS">MODHIS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.NFIRAOS" href="#csw.Subsystem.Subsystem.NFIRAOS">NFIRAOS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.OSS" href="#csw.Subsystem.Subsystem.OSS">OSS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.REFR" href="#csw.Subsystem.Subsystem.REFR">REFR</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.SCMS" href="#csw.Subsystem.Subsystem.SCMS">SCMS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.SER" href="#csw.Subsystem.Subsystem.SER">SER</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.SOSS" href="#csw.Subsystem.Subsystem.SOSS">SOSS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.STR" href="#csw.Subsystem.Subsystem.STR">STR</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.SUM" href="#csw.Subsystem.Subsystem.SUM">SUM</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.TCS" href="#csw.Subsystem.Subsystem.TCS">TCS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.TINS" href="#csw.Subsystem.Subsystem.TINS">TINS</a></code></li>
+<li><code><a title="csw.Subsystem.Subsystem.WFOS" href="#csw.Subsystem.Subsystem.WFOS">WFOS</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="csw.Subsystem.Subsystems" href="#csw.Subsystem.Subsystems">Subsystems</a></code></h4>
-<ul class="two-column">
-<li><code><a title="csw.Subsystem.Subsystems.AOESW" href="#csw.Subsystem.Subsystems.AOESW">AOESW</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.APS" href="#csw.Subsystem.Subsystems.APS">APS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.CIS" href="#csw.Subsystem.Subsystems.CIS">CIS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.CLN" href="#csw.Subsystem.Subsystems.CLN">CLN</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.CRYO" href="#csw.Subsystem.Subsystems.CRYO">CRYO</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.CSW" href="#csw.Subsystem.Subsystems.CSW">CSW</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.Container" href="#csw.Subsystem.Subsystems.Container">Container</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.DMS" href="#csw.Subsystem.Subsystems.DMS">DMS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.DPS" href="#csw.Subsystem.Subsystems.DPS">DPS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.ENC" href="#csw.Subsystem.Subsystems.ENC">ENC</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.ESEN" href="#csw.Subsystem.Subsystems.ESEN">ESEN</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.ESW" href="#csw.Subsystem.Subsystems.ESW">ESW</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.HNDL" href="#csw.Subsystem.Subsystems.HNDL">HNDL</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.HQ" href="#csw.Subsystem.Subsystems.HQ">HQ</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.IRIS" href="#csw.Subsystem.Subsystems.IRIS">IRIS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.LGSF" href="#csw.Subsystem.Subsystems.LGSF">LGSF</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.M1COAT" href="#csw.Subsystem.Subsystems.M1COAT">M1COAT</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.M1CS" href="#csw.Subsystem.Subsystems.M1CS">M1CS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.M1S" href="#csw.Subsystem.Subsystems.M1S">M1S</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.M2COAT" href="#csw.Subsystem.Subsystems.M2COAT">M2COAT</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.M2S" href="#csw.Subsystem.Subsystems.M2S">M2S</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.M3S" href="#csw.Subsystem.Subsystems.M3S">M3S</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.MODHIS" href="#csw.Subsystem.Subsystems.MODHIS">MODHIS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.NFIRAOS" href="#csw.Subsystem.Subsystems.NFIRAOS">NFIRAOS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.OSS" href="#csw.Subsystem.Subsystems.OSS">OSS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.REFR" href="#csw.Subsystem.Subsystems.REFR">REFR</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.SCMS" href="#csw.Subsystem.Subsystems.SCMS">SCMS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.SER" href="#csw.Subsystem.Subsystems.SER">SER</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.SOSS" href="#csw.Subsystem.Subsystems.SOSS">SOSS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.STR" href="#csw.Subsystem.Subsystems.STR">STR</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.SUM" href="#csw.Subsystem.Subsystems.SUM">SUM</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.TCS" href="#csw.Subsystem.Subsystems.TCS">TCS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.TINS" href="#csw.Subsystem.Subsystems.TINS">TINS</a></code></li>
-<li><code><a title="csw.Subsystem.Subsystems.WFOS" href="#csw.Subsystem.Subsystems.WFOS">WFOS</a></code></li>
+<h4><code><a title="csw.Subsystem.SubsystemValue" href="#csw.Subsystem.SubsystemValue">SubsystemValue</a></code></h4>
+<ul class="">
+<li><code><a title="csw.Subsystem.SubsystemValue.description" href="#csw.Subsystem.SubsystemValue.description">description</a></code></li>
+<li><code><a title="csw.Subsystem.SubsystemValue.name" href="#csw.Subsystem.SubsystemValue.name">name</a></code></li>
 </ul>
 </li>
 </ul>
@@ -316,7 +372,7 @@ class Subsystem:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
 </footer>
 </body>
 </html>

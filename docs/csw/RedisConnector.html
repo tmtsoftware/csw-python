@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.3">
 <title>csw.RedisConnector API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
@@ -37,34 +37,49 @@ hljs.highlightAll();
 <dl>
 <dt id="csw.RedisConnector.RedisConnector"><code class="flex name class">
 <span>class <span class="ident">RedisConnector</span></span>
+<span>(</span><span>loc: <a title="csw.LocationService.Location" href="LocationService.html#csw.LocationService.Location">Location</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Events are posted to Redis. This is internal class used to access Redis.</p></div>
+<div class="desc"><p>Events are posted to Redis. This is internal class used to access Redis.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>loc</code></strong> :&ensp;<code>Location</code></dt>
+<dd>EventServer location</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class RedisConnector:
 
-    def __init__(self):
+    def __init__(self, loc: Location):
         &#34;&#34;&#34;
         Events are posted to Redis. This is internal class used to access Redis.
+
+        Args:
+            loc (Location): EventServer location
         &#34;&#34;&#34;
-        prefix = Prefix(Subsystems.CSW, &#34;EventServer&#34;)
-        conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
-        loc = LocationService().find(conn)
-        uri = urlparse(loc.uri)
         # XXX TODO Check why only localhost works!
         # sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
         # print(f&#34;XXX Sentinel({uri.port})&#34;)
-        sentinel = Sentinel([(&#34;localhost&#34;, uri.port)], socket_timeout=0.1)
-        self.__redis = sentinel.master_for(&#39;eventServer&#39;, socket_timeout=0.1)
-        self.__redis_pubsub = self.__redis.pubsub()
+        uri = urlparse(loc.uri)
+        sentinel = Sentinel([(&#34;localhost&#34;, uri.port)])
+        self._redis = sentinel.master_for(&#39;eventServer&#39;)
+        self._pubsub = self._redis.pubsub()
 
-    def close(self):
-        self.__redis_pubsub.close()
+    @classmethod
+    def make(cls) -&gt; Self:
+        prefix = Prefix(Subsystem.CSW, &#34;EventServer&#34;)
+        conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
+        loc = LocationServiceSync().find(conn)
+        return RedisConnector(loc)
 
-    def subscribe(self, keyList: List[str], callback):
+
+    async def close(self):
+        await self._redis.aclose()
+        await self._pubsub.aclose()
+
+    async def subscribe(self, keyList: List[str], callback: Callable[[any], Awaitable]) -&gt; Task:
         &#34;&#34;&#34;
         Set up a Redis subscription on specified keys with specified callback on value changes.
 
@@ -76,17 +91,17 @@ hljs.highlightAll();
             subscription thread. Use .stop() method to stop subscription
         &#34;&#34;&#34;
         d = dict.fromkeys(keyList, callback)
-        self.__redis_pubsub.subscribe(**d)
-        return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+        await self._pubsub.subscribe(**d)
+        return asyncio.create_task(self._pubsub.run())
 
-    def unsubscribe(self, keyList: List[str]):
+    async def unsubscribe(self, keyList: List[str]):
         &#34;&#34;&#34;
         Unsubscribe to the list of event keys
 
         Args:
             keyList (List[str]): list of keys to unsubscribe from
         &#34;&#34;&#34;
-        self.__redis_pubsub.unsubscribe(keyList)
+        await self._pubsub.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, keyList: List[str], callback):
@@ -102,8 +117,8 @@ hljs.highlightAll();
     #         subscription thread. Use .stop() method to stop subscription
     #     &#34;&#34;&#34;
     #     d = dict.fromkeys(keyList, callback)
-    #     self.__redis_pubsub.psubscribe(**d)
-    #     return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+    #     self._pubsub.psubscribe(**d)
+    #     return self._pubsub.run_in_thread(sleep_time=0.001)
 
     # def pUnsubscribe(self, keyList: List[str]):
     #     &#34;&#34;&#34;
@@ -112,9 +127,9 @@ hljs.highlightAll();
     #     Args:
     #         keyList (List[str]): list of key patterns to unsubscribe from
     #     &#34;&#34;&#34;
-    #     self.__redis_pubsub.punsubscribe(keyList)
+    #     self._pubsub.punsubscribe(keyList)
 
-    def publish(self, key: str, encodedValue: bytes):
+    async def publish(self, key: str, encodedValue: bytes):
         &#34;&#34;&#34;
         Publish CBOR encoded event string to Redis
 
@@ -122,10 +137,10 @@ hljs.highlightAll();
             key: String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
             encodedValue: CBOR encoded value for the event (in the form [className, dict])
         &#34;&#34;&#34;
-        self.__redis.set(key, encodedValue)
-        self.__redis.publish(key, encodedValue)
+        await self._redis.set(key, encodedValue)
+        await self._redis.publish(key, encodedValue)
 
-    def get(self, key: str) -&gt; str:
+    async def get(self, key: str) -&gt; str:
         &#34;&#34;&#34;
         Get value from Redis using specified key
 
@@ -135,18 +150,27 @@ hljs.highlightAll();
         Returns: str
             Raw Redis string for event, typically in some encoding
         &#34;&#34;&#34;
-        return self.__redis.get(key)</code></pre>
+        return await self._redis.get(key)</code></pre>
 </details>
+<h3>Static methods</h3>
+<dl>
+<dt id="csw.RedisConnector.RedisConnector.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="csw.RedisConnector.RedisConnector.close"><code class="name flex">
-<span>def <span class="ident">close</span></span>(<span>self)</span>
+<span>async def <span class="ident">close</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="csw.RedisConnector.RedisConnector.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, key: str) ‑> str</span>
+<span>async def <span class="ident">get</span></span>(<span>self, key: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get value from Redis using specified key</p>
@@ -160,7 +184,7 @@ Should be source prefix + "." + event name.</dd>
 Raw Redis string for event, typically in some encoding</p></div>
 </dd>
 <dt id="csw.RedisConnector.RedisConnector.publish"><code class="name flex">
-<span>def <span class="ident">publish</span></span>(<span>self, key: str, encodedValue: bytes)</span>
+<span>async def <span class="ident">publish</span></span>(<span>self, key: str, encodedValue: bytes)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Publish CBOR encoded event string to Redis</p>
@@ -174,7 +198,7 @@ Should be source prefix + "." + event name.</dd>
 </dl></div>
 </dd>
 <dt id="csw.RedisConnector.RedisConnector.subscribe"><code class="name flex">
-<span>def <span class="ident">subscribe</span></span>(<span>self, keyList: List[str], callback)</span>
+<span>async def <span class="ident">subscribe</span></span>(<span>self,<br>keyList: List[str],<br>callback: Callable[[<built-in function any>], Awaitable]) ‑> _asyncio.Task</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Set up a Redis subscription on specified keys with specified callback on value changes.</p>
@@ -190,7 +214,7 @@ Should take a Redis message type.</dd>
 subscription thread. Use .stop() method to stop subscription</p></div>
 </dd>
 <dt id="csw.RedisConnector.RedisConnector.unsubscribe"><code class="name flex">
-<span>def <span class="ident">unsubscribe</span></span>(<span>self, keyList: List[str])</span>
+<span>async def <span class="ident">unsubscribe</span></span>(<span>self, keyList: List[str])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Unsubscribe to the list of event keys</p>
@@ -219,9 +243,10 @@ subscription thread. Use .stop() method to stop subscription</p></div>
 <ul>
 <li>
 <h4><code><a title="csw.RedisConnector.RedisConnector" href="#csw.RedisConnector.RedisConnector">RedisConnector</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="csw.RedisConnector.RedisConnector.close" href="#csw.RedisConnector.RedisConnector.close">close</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.get" href="#csw.RedisConnector.RedisConnector.get">get</a></code></li>
+<li><code><a title="csw.RedisConnector.RedisConnector.make" href="#csw.RedisConnector.RedisConnector.make">make</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.publish" href="#csw.RedisConnector.RedisConnector.publish">publish</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.subscribe" href="#csw.RedisConnector.RedisConnector.subscribe">subscribe</a></code></li>
 <li><code><a title="csw.RedisConnector.RedisConnector.unsubscribe" href="#csw.RedisConnector.RedisConnector.unsubscribe">unsubscribe</a></code></li>
@@ -233,7 +258,7 @@ subscription thread. Use .stop() method to stop subscription</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
 </footer>
 </body>
 </html>

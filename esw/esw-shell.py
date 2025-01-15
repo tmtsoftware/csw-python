@@ -27,6 +27,9 @@ from esw.StepList import StepList
 from esw.Step import Step
 from esw.StepStatus import *
 
+if __name__ != "__main__":
+    exit()
+
 clientSession = ClientSession()
 
 def hcdCommandService(prefix: str) -> CommandService:
