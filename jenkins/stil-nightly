@@ -19,6 +19,7 @@ pipeline {
         stage('Install') {
             steps {
                 withEnv(['PATH+LOCALBIN=/usr/local/bin:/var/lib/jenkins/.local/bin']) {
+                    sh "redis-server --version"
                     sh "cs channel --add https://raw.githubusercontent.com/tmtsoftware/osw-apps/master/apps.json"
                     sh "rm -rf .venv"
                     sh "python3.10 -m pip install --upgrade pip"
