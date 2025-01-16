@@ -17,7 +17,7 @@ doc:
 
 # Run tests against an included, Scala based assembly
 test: all
-	test -d .venv || $(MAKE) venv
+	$(MAKE) venv
 	./runTests.sh
 
 # Remove generated files
