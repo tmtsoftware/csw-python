@@ -19,6 +19,7 @@ logfile=test.log
 set -x
 eval $(cs java --jvm temurin:1.17.0 --env)
 cs launch csw-services:$CSW_VERSION -- start -e -c -k > $logfile 2>&1 &
+sleep 20
 cd tests/testSupport || exit 1
 sbt clean stage  >> $logfile 2>&1
 test-deploy/target/universal/stage/bin/test-container-cmd-app --local test-deploy/src/main/resources/TestContainer.conf   >> $logfile 2>&1 &
@@ -32,3 +33,5 @@ pytest -rsx tests
 kill $assemblyPid
 # Kill csw-services
 kill `ps aux | grep 'csw-services' | grep -v grep | awk '{print $2}'`
+echo "================ logfile contents ========================="
+cat $logfile
