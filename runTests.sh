@@ -13,8 +13,8 @@ hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1;
 
 # Note: Make sure version matches ones used in csw/LocationService.py and tests/testSupport/project/Libs.scala
 #CSW_VERSION=5.0.0
-CSW_VERSION=919e345
-CS_CHANNEL="https://raw.githubusercontent.com/tmtsoftware/osw-apps/Allan/pekko-scala3-update-esw-http-api/apps.json"
+CSW_VERSION=6.0.0
+CS_CHANNEL="https://raw.githubusercontent.com/tmtsoftware/osw-apps/branch-6.0.x/apps.json"
 
 logfile=test.log
 set -x
@@ -27,7 +27,7 @@ assemblyPid=$!
 cd ../..
 export PYTHONPATH=`pwd`
 # give the background assembly time to initialize
-sleep 10
+sleep 30
 # Run the python tests (add -s option to see stdout)
 pytest -rsx tests
 kill $assemblyPid

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tmtpycsw",
-    version="6f29ed1",
+    version="6.0.0",
     python_requires='>=3.12',
     author="Allan Brighton",
     author_email="abrighton@tmt.org",

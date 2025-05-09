@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.3">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>csw.CommandService API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => {
 hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
 hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
 })</script>
 </head>
 <body>
@@ -40,7 +51,6 @@ hljs.highlightAll();
 <span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>componentType: <a title="csw.LocationService.ComponentType" href="LocationService.html#csw.LocationService.ComponentType">ComponentType</a>,<br>clientSession: aiohttp.client.ClientSession)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -299,12 +309,35 @@ hljs.highlightAll();
         if not response.ok:
             raise Exception(f&#34;CommandService: goOffline failed: {await response.text()}&#34;)</code></pre>
 </details>
+<div class="desc"></div>
 <h3>Methods</h3>
 <dl>
 <dt id="csw.CommandService.CommandService.executeDiagnosticMode"><code class="name flex">
 <span>async def <span class="ident">executeDiagnosticMode</span></span>(<span>self,<br>startTime: <a title="csw.TMTTime.UTCTime" href="TMTTime.html#csw.TMTTime.UTCTime">UTCTime</a>,<br>hint: str)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+    &#34;&#34;&#34;
+    On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
+    Validation of supported hints need to be handled by the component writer.
+
+    Args:
+        startTime: represents the time at which the diagnostic mode actions will take effect
+        hint: represents supported diagnostic data mode for a component
+    &#34;&#34;&#34;
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = ExecuteDiagnosticMode(startTime, hint)._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: executeDiagnosticMode failed: {await response.text()}&#34;)</code></pre>
+</details>
 <div class="desc"><p>On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
 Validation of supported hints need to be handled by the component writer.</p>
 <h2 id="args">Args</h2>
@@ -319,24 +352,85 @@ Validation of supported hints need to be handled by the component writer.</p>
 <span>async def <span class="ident">executeOperationsMode</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def executeOperationsMode(self):
+    &#34;&#34;&#34;
+    On receiving a operations mode command, the current diagnostic data mode is halted.
+    &#34;&#34;&#34;
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = ExecuteOperationsMode()._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: executeOperationsMode failed: {await response.text()}&#34;)</code></pre>
+</details>
 <div class="desc"><p>On receiving a operations mode command, the current diagnostic data mode is halted.</p></div>
 </dd>
 <dt id="csw.CommandService.CommandService.goOffline"><code class="name flex">
 <span>async def <span class="ident">goOffline</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def goOffline(self):
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = GoOffline()._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: goOffline failed: {await response.text()}&#34;)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandService.CommandService.goOnline"><code class="name flex">
 <span>async def <span class="ident">goOnline</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def goOnline(self):
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = GoOnline()._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: goOnline failed: {await response.text()}&#34;)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandService.CommandService.oneway"><code class="name flex">
 <span>async def <span class="ident">oneway</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
+    &#34;&#34;&#34;
+   Sends a command to the command service without expecting a reply.
+
+   Args:
+       controlCommand (ControlCommand): command to submit
+
+   Returns: SubmitResponse
+       a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+  &#34;&#34;&#34;
+    return await self._postCommand(&#34;Oneway&#34;, controlCommand)</code></pre>
+</details>
 <div class="desc"><p>Sends a command to the command service without expecting a reply.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -350,6 +444,32 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <span>async def <span class="ident">query</span></span>(<span>self, runId: str) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def query(self, runId: str) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Query for the result of a long-running command which was sent as Submit to get a SubmitResponse.
+    Query allows checking to see if a long-running command is completed without waiting as with queryFinal.
+
+    Args:
+       runId (str): runId for the command
+
+    Returns: SubmitResponse
+       a subclass of SubmitResponse
+    &#34;&#34;&#34;
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = Query(runId)._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: query failed: {await response.json()}&#34;)
+    # return CommandResponse._fromDict(json.loads(await response.json()))
+    return CommandResponse._fromDict(await response.json())</code></pre>
+</details>
 <div class="desc"><p>Query for the result of a long-running command which was sent as Submit to get a SubmitResponse.
 Query allows checking to see if a long-running command is completed without waiting as with queryFinal.</p>
 <h2 id="args">Args</h2>
@@ -364,6 +484,32 @@ a subclass of SubmitResponse</p></div>
 <span>async def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeout: datetime.timedelta) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def queryFinal(self, runId: str, timeout: timedelta) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    If the command for runId returned Started (long-running command), this will
+    return the final result.
+
+   Args:
+       runId (str): runId for the command
+       timeout (timedelta): timr to wait before returning an error
+
+   Returns: SubmitResponse
+       a subclass of SubmitResponse
+  &#34;&#34;&#34;
+    baseUri = (self._getBaseUri()).replace(&#39;http:&#39;, &#39;ws:&#39;)
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+    msgDict = QueryFinal(runId, timeout)._asDict()
+    jsonStr = json.dumps(msgDict)
+    ws = await self._session.ws_connect(wsUri)
+    await ws.send_str(jsonStr)
+    jsonResp = await ws.receive_str()
+    await ws.close()
+    return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
+</details>
 <div class="desc"><p>If the command for runId returned Started (long-running command), this will
 return the final result.</p>
 <h2 id="args">Args</h2>
@@ -380,6 +526,22 @@ a subclass of SubmitResponse</p></div>
 <span>async def <span class="ident">submit</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits a command to the command service
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse
+   &#34;&#34;&#34;
+    return await self._postCommand(&#34;Submit&#34;, controlCommand)</code></pre>
+</details>
 <div class="desc"><p>Submits a command to the command service</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -393,6 +555,28 @@ a subclass of SubmitResponse</p></div>
 <span>async def <span class="ident">submitAndWait</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>,<br>timeout: datetime.timedelta) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def submitAndWait(self, controlCommand: ControlCommand, timeout: timedelta) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits a command to the command service and waits for the final response.
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+        timeout (timedelta): time to wait before returning an error
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse
+   &#34;&#34;&#34;
+    resp = await self.submit(controlCommand)
+    match resp:
+        case Started(runId):
+            return await self.queryFinal(runId, timeout)
+        case _:
+            return resp</code></pre>
+</details>
 <div class="desc"><p>Submits a command to the command service and waits for the final response.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -408,6 +592,30 @@ a subclass of SubmitResponse</p></div>
 <span>async def <span class="ident">submitAndWaitAsync</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>,<br>timeout: datetime.timedelta) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeout: timedelta) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Submits a command to the command service and waits for the final response.
+    This version returns a future response (async).
+    See submitAndWait() for a blocking version.
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+        timeout (timedelta): time to wait before returning an error
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse
+   &#34;&#34;&#34;
+    resp = await self.submit(controlCommand)
+    match resp:
+        case Started(runId):
+            return await self.queryFinal(runId, timeout)
+        case _:
+            return resp</code></pre>
+</details>
 <div class="desc"><p>Submits a command to the command service and waits for the final response.
 This version returns a future response (async).
 See submitAndWait() for a blocking version.</p>
@@ -425,6 +633,25 @@ a subclass of SubmitResponse</p></div>
 <span>async def <span class="ident">subscribeCurrentState</span></span>(<span>self,<br>names: List[str],<br>callback: Callable[[<a title="csw.CurrentState.CurrentState" href="CurrentState.html#csw.CurrentState.CurrentState">CurrentState</a>], Awaitable]) ‑> <a title="csw.CommandService.Subscription" href="#csw.CommandService.Subscription">Subscription</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -&gt; Subscription:
+    &#34;&#34;&#34;
+    Subscribe to the current state of a component
+
+    Args:
+       names (List[str]): subscribe to states which have any of the provided value for name.
+                          If no states are provided, all the current states will be received.
+       callback: a function to be called with the CurrentState values
+
+    Returns: subscription task
+    &#34;&#34;&#34;
+    task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+    await asyncio.sleep(0.1) # XXX TODO FIXME: Need to wait for task to startup
+    return Subscription(task)</code></pre>
+</details>
 <div class="desc"><p>Subscribe to the current state of a component</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -440,6 +667,22 @@ If no states are provided, all the current states will be received.</dd>
 <span>async def <span class="ident">validate</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
+    &#34;&#34;&#34;
+    Validates a command to be sent to the command service.
+
+    Args:
+        controlCommand (ControlCommand): command to submit
+
+    Returns: SubmitResponse
+        a subclass of SubmitResponse (only Accepted, Invalid or Locked)
+   &#34;&#34;&#34;
+    return await self._postCommand(&#34;Validate&#34;, controlCommand)</code></pre>
+</details>
 <div class="desc"><p>Validates a command to be sent to the command service.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -456,7 +699,6 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <span>(</span><span>task: _asyncio.Task)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Subscription(task: _asyncio.Task)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -468,7 +710,8 @@ class Subscription:
     def cancel(self):
         self.task.cancel()</code></pre>
 </details>
-<h3>Class variables</h3>
+<div class="desc"><p>Subscription(task: _asyncio.Task)</p></div>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandService.Subscription.task"><code class="name">var <span class="ident">task</span> : _asyncio.Task</code></dt>
 <dd>
@@ -481,6 +724,13 @@ class Subscription:
 <span>def <span class="ident">cancel</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cancel(self):
+    self.task.cancel()</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -530,7 +780,7 @@ class Subscription:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

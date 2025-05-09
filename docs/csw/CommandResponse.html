@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.3">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>csw.CommandResponse API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => {
 hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
 hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
 })</script>
 </head>
 <body>
@@ -40,7 +51,6 @@ hljs.highlightAll();
 <span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents a final response stating acceptance of a command received</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -55,6 +65,7 @@ class Accepted(CommandResponse):
             runId=obj[&#39;runId&#39;]
         )</code></pre>
 </details>
+<div class="desc"><p>Represents a final response stating acceptance of a command received</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
@@ -65,7 +76,6 @@ class Accepted(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when an Assembly receives a command and one is already executing</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -73,6 +83,7 @@ class Accepted(CommandResponse):
 <pre><code class="python">class AssemblyBusyIssue(CommandIssue):
     &#34;&#34;&#34;Returned when an Assembly receives a command and one is already executing&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when an Assembly receives a command and one is already executing</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -83,7 +94,6 @@ class Accepted(CommandResponse):
 <span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents a negative response that describes the cancellation of command</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -98,6 +108,7 @@ class Cancelled(CommandResponse):
             runId=obj[&#39;runId&#39;]
         )</code></pre>
 </details>
+<div class="desc"><p>Represents a negative response that describes the cancellation of command</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
@@ -108,7 +119,6 @@ class Cancelled(CommandResponse):
 <span>(</span><span>submitResponse: <a title="csw.CommandResponse.Error" href="#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="#csw.CommandResponse.Cancelled">Cancelled</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -117,6 +127,7 @@ class Cancelled(CommandResponse):
     def __init__(self, submitResponse: SubmitResponse):
         super().__init__(submitResponse.message)</code></pre>
 </details>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>builtins.Exception</li>
@@ -128,7 +139,6 @@ class Cancelled(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Describes a command issue with appropriate reason for validation failure</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -142,6 +152,7 @@ class CommandIssue:
     def _fromDict(obj: dict):
         return globals()[obj[&#39;_type&#39;]](obj[&#39;reason&#39;])</code></pre>
 </details>
+<div class="desc"><p>Describes a command issue with appropriate reason for validation failure</p></div>
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.AssemblyBusyIssue" href="#csw.CommandResponse.AssemblyBusyIssue">AssemblyBusyIssue</a></li>
@@ -164,7 +175,7 @@ class CommandIssue:
 <li><a title="csw.CommandResponse.WrongPrefixIssue" href="#csw.CommandResponse.WrongPrefixIssue">WrongPrefixIssue</a></li>
 <li><a title="csw.CommandResponse.WrongUnitsIssue" href="#csw.CommandResponse.WrongUnitsIssue">WrongUnitsIssue</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandResponse.CommandIssue.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
 <dd>
@@ -177,8 +188,6 @@ class CommandIssue:
 <span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Type of response to a command (submit, oneway or validate).
-Note that oneway and validate responses are limited to Accepted, Invalid or Locked.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -257,6 +266,8 @@ class CommandResponse:
         if self.isFailed():
             func(self)</code></pre>
 </details>
+<div class="desc"><p>Type of response to a command (submit, oneway or validate).
+Note that oneway and validate responses are limited to Accepted, Invalid or Locked.</p></div>
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.Accepted" href="#csw.CommandResponse.Accepted">Accepted</a></li>
@@ -267,7 +278,7 @@ class CommandResponse:
 <li><a title="csw.CommandResponse.Locked" href="#csw.CommandResponse.Locked">Locked</a></li>
 <li><a title="csw.CommandResponse.Started" href="#csw.CommandResponse.Started">Started</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandResponse.CommandResponse.runId"><code class="name">var <span class="ident">runId</span> : str</code></dt>
 <dd>
@@ -280,66 +291,149 @@ class CommandResponse:
 <span>def <span class="ident">isCompleted</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isCompleted(self) -&gt; bool:
+    return isinstance(self, Completed)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.isFailed"><code class="name flex">
 <span>def <span class="ident">isFailed</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isFailed(self) -&gt; bool:
+    return self.isNegative()</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.isFinal"><code class="name flex">
 <span>def <span class="ident">isFinal</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isFinal(self) -&gt; bool:
+    return not isinstance(self, Started)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.isIntermediate"><code class="name flex">
 <span>def <span class="ident">isIntermediate</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isIntermediate(self) -&gt; bool:
+    return isinstance(self, Started)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.isNegative"><code class="name flex">
 <span>def <span class="ident">isNegative</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isNegative(self) -&gt; bool:
+    return not (self.isPositive() or self.isIntermediate())</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.isPositive"><code class="name flex">
 <span>def <span class="ident">isPositive</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isPositive(self) -&gt; bool:
+    return isinstance(self, Completed) or isinstance(self, Accepted)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.isStarted"><code class="name flex">
 <span>def <span class="ident">isStarted</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isStarted(self) -&gt; bool:
+    return isinstance(self, Started)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.onCompleted"><code class="name flex">
 <span>def <span class="ident">onCompleted</span></span>(<span>self, func: Callable[[Self], None])</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onCompleted(self, func: Callable[[Self], None]):
+    if isinstance(self, Completed):
+        func(self)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.onFailed"><code class="name flex">
 <span>def <span class="ident">onFailed</span></span>(<span>self, func: Callable[[Self], None])</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFailed(self, func: Callable[[Self], None]):
+    if self.isFailed():
+        func(self)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.onFailedTerminate"><code class="name flex">
 <span>def <span class="ident">onFailedTerminate</span></span>(<span>self) ‑> Self</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFailedTerminate(self) -&gt; Self:
+    if self.isFailed():
+        # noinspection PyTypeChecker
+        raise CommandError(self)
+    return self</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="csw.CommandResponse.CommandResponse.onStarted"><code class="name flex">
 <span>def <span class="ident">onStarted</span></span>(<span>self, func: Callable[[Self], None])</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onStarted(self, func: Callable[[Self], None]):
+    if isinstance(self, Started):
+        func(self)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -349,7 +443,6 @@ class CommandResponse:
 <span>(</span><span>runId: str,<br>result: <a title="csw.CommandResponse.Result" href="#csw.CommandResponse.Result">Result</a> = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents a positive response stating completion of command</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -378,11 +471,12 @@ class Completed(CommandResponse):
             result=Result._fromDict(obj[&#39;result&#39;]),
         )</code></pre>
 </details>
+<div class="desc"><p>Represents a positive response stating completion of command</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandResponse.Completed.result"><code class="name">var <span class="ident">result</span> : <a title="csw.CommandResponse.Result" href="#csw.CommandResponse.Result">Result</a></code></dt>
 <dd>
@@ -395,7 +489,6 @@ class Completed(CommandResponse):
 <span>(</span><span>runId: str, message: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents a negative response that describes an error in executing the command</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -423,11 +516,12 @@ class Error(CommandResponse):
             message=obj[&#39;message&#39;]
         )</code></pre>
 </details>
+<div class="desc"><p>Represents a negative response that describes an error in executing the command</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandResponse.Error.message"><code class="name">var <span class="ident">message</span> : str</code></dt>
 <dd>
@@ -440,7 +534,6 @@ class Error(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when the HCD is busy and can't process a command</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -448,6 +541,7 @@ class Error(CommandResponse):
 <pre><code class="python">class HCDBusyIssue(CommandIssue):
     &#34;&#34;&#34;Returned when the HCD is busy and can&#39;t process a command&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when the HCD is busy and can't process a command</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -458,7 +552,6 @@ class Error(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when a CommandResponse associated with runId is not available</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -466,6 +559,7 @@ class Error(CommandResponse):
 <pre><code class="python">class IdNotAvailableIssue(CommandIssue):
     &#34;&#34;&#34;Returned when a CommandResponse associated with runId is not available&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when a CommandResponse associated with runId is not available</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -476,7 +570,6 @@ class Error(CommandResponse):
 <span>(</span><span>runId: str,<br>issue: <a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Invalid(runId: str, issue: csw.CommandResponse.CommandIssue)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -506,11 +599,12 @@ class Invalid(CommandResponse):
             issue=CommandIssue._fromDict(obj[&#39;issue&#39;]),
         )</code></pre>
 </details>
+<div class="desc"><p>Invalid(runId: str, issue: csw.CommandResponse.CommandIssue)</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandResponse.Invalid.issue"><code class="name">var <span class="ident">issue</span> : <a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></code></dt>
 <dd>
@@ -523,7 +617,6 @@ class Invalid(CommandResponse):
 <span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents a negative response stating that a component is Locked and command was not validated or executed</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -548,6 +641,7 @@ class Locked(CommandResponse):
             runId=obj[&#39;runId&#39;],
         )</code></pre>
 </details>
+<div class="desc"><p>Represents a negative response stating that a component is Locked and command was not validated or executed</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
@@ -558,7 +652,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when a command is missing a required key/parameter</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -566,6 +659,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class MissingKeyIssue(CommandIssue):
     &#34;&#34;&#34;Returned when a command is missing a required key/parameter&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when a command is missing a required key/parameter</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -576,7 +670,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A required Sequencer is not available</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -584,6 +677,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class OtherIssue(CommandIssue):
     &#34;&#34;&#34;A required Sequencer is not available&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>A required Sequencer is not available</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -594,7 +688,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Parameter of a command is out of range</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -602,6 +695,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class ParameterValueOutOfRangeIssue(CommandIssue):
     &#34;&#34;&#34;Parameter of a command is out of range&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Parameter of a command is out of range</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -612,7 +706,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A required Assembly is not available</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -620,6 +713,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class RequiredAssemblyUnavailableIssue(CommandIssue):
     &#34;&#34;&#34;A required Assembly is not available&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>A required Assembly is not available</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -630,7 +724,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A required HCD is not available</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -638,6 +731,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class RequiredHCDUnavailableIssue(CommandIssue):
     &#34;&#34;&#34;A required HCD is not available&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>A required HCD is not available</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -648,7 +742,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when some other issue occurred apart from those already defined</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -656,6 +749,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class RequiredSequencerUnavailableIssue(CommandIssue):
     &#34;&#34;&#34;Returned when some other issue occurred apart from those already defined&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when some other issue occurred apart from those already defined</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -666,7 +760,6 @@ class Locked(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A required service is not available</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -674,6 +767,7 @@ class Locked(CommandResponse):
 <pre><code class="python">class RequiredServiceUnavailableIssue(CommandIssue):
     &#34;&#34;&#34;A required service is not available&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>A required service is not available</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -684,7 +778,6 @@ class Locked(CommandResponse):
 <span>(</span><span>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A result containing parameters for command response</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -713,7 +806,8 @@ class Result:
         paramSet = list(map(lambda p: Parameter._fromDict(p), obj[&#39;paramSet&#39;]))
         return Result(paramSet)</code></pre>
 </details>
-<h3>Class variables</h3>
+<div class="desc"><p>A result containing parameters for command response</p></div>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandResponse.Result.paramSet"><code class="name">var <span class="ident">paramSet</span> : List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>]</code></dt>
 <dd>
@@ -726,7 +820,6 @@ class Result:
 <span>(</span><span>runId: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents an intermediate response stating a long-running command has been started</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -751,6 +844,7 @@ class Started(CommandResponse):
             runId=obj[&#39;runId&#39;],
         )</code></pre>
 </details>
+<div class="desc"><p>Represents an intermediate response stating a long-running command has been started</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandResponse" href="#csw.CommandResponse.CommandResponse">CommandResponse</a></li>
@@ -761,7 +855,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when some required location is not available</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -769,6 +862,7 @@ class Started(CommandResponse):
 <pre><code class="python">class UnresolvedLocationsIssue(CommandIssue):
     &#34;&#34;&#34;Returned when some required location is not available&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when some required location is not available</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -779,7 +873,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A command is unsupported in the current state</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -787,6 +880,7 @@ class Started(CommandResponse):
 <pre><code class="python">class UnsupportedCommandInStateIssue(CommandIssue):
     &#34;&#34;&#34;A command is unsupported in the current state&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>A command is unsupported in the current state</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -797,7 +891,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A command is unsupported by component</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -805,6 +898,7 @@ class Started(CommandResponse):
 <pre><code class="python">class UnsupportedCommandIssue(CommandIssue):
     &#34;&#34;&#34;A command is unsupported by component&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>A command is unsupported by component</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -815,7 +909,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when the given command type is not expected</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -823,6 +916,7 @@ class Started(CommandResponse):
 <pre><code class="python">class WrongCommandTypeIssue(CommandIssue):
     &#34;&#34;&#34;Returned when the given command type is not expected&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when the given command type is not expected</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -833,7 +927,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>The component is in the wrong internal state to handle a command</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -841,6 +934,7 @@ class Started(CommandResponse):
 <pre><code class="python">class WrongInternalStateIssue(CommandIssue):
     &#34;&#34;&#34;The component is in the wrong internal state to handle a command&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>The component is in the wrong internal state to handle a command</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -851,7 +945,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when a command does not have the correct number of parameters</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -859,6 +952,7 @@ class Started(CommandResponse):
 <pre><code class="python">class WrongNumberOfParametersIssue(CommandIssue):
     &#34;&#34;&#34;Returned when a command does not have the correct number of parameters&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when a command does not have the correct number of parameters</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -869,7 +963,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when the parameter for a key is not the correct type (i.e. int vs double, etc.)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -877,6 +970,7 @@ class Started(CommandResponse):
 <pre><code class="python">class WrongParameterTypeIssue(CommandIssue):
     &#34;&#34;&#34;Returned when the parameter for a key is not the correct type (i.e. int vs double, etc.)&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when the parameter for a key is not the correct type (i.e. int vs double, etc.)</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -887,7 +981,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when an Assembly receives a configuration with a prefix that it doesn't support</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -895,6 +988,7 @@ class Started(CommandResponse):
 <pre><code class="python">class WrongPrefixIssue(CommandIssue):
     &#34;&#34;&#34;Returned when an Assembly receives a configuration with a prefix that it doesn&#39;t support&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when an Assembly receives a configuration with a prefix that it doesn't support</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -905,7 +999,6 @@ class Started(CommandResponse):
 <span>(</span><span>reason: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returned when a parameter value does not have the correct units</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -913,6 +1006,7 @@ class Started(CommandResponse):
 <pre><code class="python">class WrongUnitsIssue(CommandIssue):
     &#34;&#34;&#34;Returned when a parameter value does not have the correct units&#34;&#34;&#34;</code></pre>
 </details>
+<div class="desc"><p>Returned when a parameter value does not have the correct units</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="csw.CommandResponse.CommandIssue" href="#csw.CommandResponse.CommandIssue">CommandIssue</a></li>
@@ -1058,7 +1152,7 @@ class Started(CommandResponse):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>
