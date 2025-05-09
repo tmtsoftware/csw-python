@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>csw.SequencerObserveEvent API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>csw.SequencerObserveEvent</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent"><code class="flex name class">
+<span>class <span class="ident">SequencerObserveEvent</span></span>
+<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SequencerObserveEvent:
+    &#34;&#34;&#34;
+    The events that indicate activities for each observation and the acquisition process.
+
+    Args:
+        prefix: the prefix identifier of the sequencer which is generating this event
+    &#34;&#34;&#34;
+    prefix: Prefix
+
+    def presetStart(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of the preset phase of  acquisition
+
+        Args:
+            obsId: Represents a unique observation id
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.PresetStart, obsId)
+
+    def presetEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+          This event indicates the end of the preset phase of  acquisition
+
+        Args:
+            obsId: Represents a unique observation id
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.PresetEnd, obsId)
+
+    def guidestarAcqStart(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of locking the telescope to the  sky with guide and WFS targets
+
+        Args:
+            obsId: Represents a unique observation id
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.GuidestarAcqStart, obsId)
+
+    def guidestarAcqEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+       This event indicates the end of locking the telescope to the sky with guide and WFS targets
+
+        Args:
+            obsId: Represents a unique observation id
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.GuidestarAcqEnd, obsId)
+
+    def scitargetAcqStart(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of acquisition phase where  science target is peaked up as needed after  guidestar locking
+
+        Args:
+            obsId: Represents a unique observation id
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.ScitargetAcqStart, obsId)
+
+    def scitargetAcqEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the end of acquisition phase where  science target is centered as needed after  guidestar locking
+
+        Args:
+            obsId: Represents a unique observation id
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.ScitargetAcqEnd, obsId)
+
+    def observationStart(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of execution of actions related  to an observation including acquisition and  science data acquisition.
+
+        Args:
+            obsId: Represents a unique observation id
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.ObservationStart, obsId)
+
+    def observationEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the end of execution of actions related  to an observation including acquisition and  science data acquisition.
+
+        Args:
+            obsId: Represents a unique observation id
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.ObservationEnd, obsId)
+
+    def observeStart(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of execution of actions related  to an Observe command
+
+        Args:
+            obsId: Represents a unique observation id
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.ObserveStart, obsId)
+
+    def observeEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the end of execution of actions related  to an Observe command
+
+        Args:
+            obsId: Represents a unique observation id
+        &#34;&#34;&#34;
+        return self._createObserveEvent(ObserveEventNames.ObserveEnd, obsId)
+
+    def exposureStart(self, exposureId: ExposureId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of data acquisition that  results in a file produced for DMS. This is a potential metadata event for DMS.
+
+        Args:
+            exposureId:    an identifier in ESW/DMS for a single exposure.
+                           The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
+                           when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
+                           when the ExposureId is created.
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.ExposureStart, exposureId)
+
+    def exposureEnd(self, exposureId: ExposureId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the end of data acquisition that results  in a file produced for DMS. This is a potential metadata event for DMS.
+
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+                        The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
+                        when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
+                        when the ExposureId is created.
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.ExposureEnd, exposureId)
+
+    def readoutEnd(self, exposureId: ExposureId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that a readout that is part of a ramp  has completed.
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.ReadoutEnd, exposureId)
+
+    def readoutFailed(self, exposureId: ExposureId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that a readout that is part of a ramp  has failed indicating transfer failure or some  other issue.
+
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.ReadoutFailed, exposureId)
+
+    def dataWriteStart(self, exposureId: ExposureId, filename: str) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that the instrument has started writing  the exposure data file or transfer of exposure  data to DMS.
+
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+            filename: the path of the file
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.DataWriteStart, exposureId, filename)
+
+    def dataWriteEnd(self, exposureId: ExposureId, filename: str) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that the instrument has finished  writing the exposure data file or transfer of  exposure data to DMS.
+
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+            filename: the path of the file
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.DataWriteEnd, exposureId, filename)
+
+    def prepareStart(self, exposureId: ExposureId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that the detector system is preparing to start an exposure.
+
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.PrepareStart, exposureId)
+
+    def exposureAborted(self, exposureId: ExposureId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that a request was made to abort the  exposure and it has completed. Normal data events should occur if data is  recoverable.
+
+        Args:
+            exposureId: an identifier in ESW/DMS for a single exposure.
+        &#34;&#34;&#34;
+        return self._createObserveEventWithExposureId(ObserveEventNames.ExposureAborted, exposureId)
+
+    def observePaused(self) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that a user has paused the current  observation Sequence which will happen after  the current step concludes
+        &#34;&#34;&#34;
+        return ObserveEvent(self.prefix, ObserveEventNames.ObservePaused, [])
+
+    def observeResumed(self) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that a user has resumed a paused  observation Sequence.
+        &#34;&#34;&#34;
+        return ObserveEvent(self.prefix, ObserveEventNames.ObserveResumed, [])
+
+    def downtimeStart(self, obsId: ObsId, reasonForDowntime: str) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates that something has occurred that  interrupts the normal observing workflow and  time accounting.
+        This event will have a hint (TBD) that indicates  the cause of the downtime for statistics.
+        Examples are: weather, equipment or other  technical failure, etc.
+        Downtime is ended by the start of an observation  or exposure.
+
+        Args:
+            obsId: Represents a unique observation id
+            reasonForDowntime:  a hint that indicates the cause of the downtime for statistics.
+
+        Returns:
+
+        &#34;&#34;&#34;
+        obsIdParam = ParamFactories.obsIdParam(obsId)
+        downtimeReasonParam = ParamFactories.downTimeReasonParam(reasonForDowntime)
+        return ObserveEvent(self.prefix, ObserveEventNames.DowntimeStart, [obsIdParam, downtimeReasonParam])
+
+    def offsetStart(self, obsId: ObsId, coordinateSystem: CoordinateSystem, p: float, q: float) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of a telescope offset or dither
+
+        Args:
+            obsId: representing a unique observation id
+            coordinateSystem: Represents coordinate system
+            p: Represents telescope&#39;s xCoordinate offset
+            q: Represents telescope&#39;s yCoordinate offset
+        &#34;&#34;&#34;
+        return ObserveEvent(
+            self.prefix,
+            ObserveEventNames.OffsetStart,
+            [
+                ParamFactories.obsIdParam(obsId),
+                ParamFactories.coordinateSystemParam(coordinateSystem),
+                ParamFactories.pOffsetParam(p),
+                ParamFactories.qOffsetParam(q)
+            ]
+        )
+
+    def offsetEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the end of a telescope offset or dither
+
+        Args:
+            obsId: representing a unique observation id
+        &#34;&#34;&#34;
+        return ObserveEvent(self.prefix, ObserveEventNames.OffsetEnd, [ParamFactories.obsIdParam(obsId)])
+
+    def inputRequestStart(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the start of a request to the user for input
+
+        Args:
+            obsId: Representing a unique observation id
+        &#34;&#34;&#34;
+        return ObserveEvent(self.prefix, ObserveEventNames.InputRequestStart, [ParamFactories.obsIdParam(obsId)])
+
+    def inputRequestEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+        &#34;&#34;&#34;
+        This event indicates the end of a request to the user for input
+
+        Args:
+            obsId: Representing a unique observation id
+        &#34;&#34;&#34;
+        return ObserveEvent(self.prefix, ObserveEventNames.InputRequestEnd, [ParamFactories.obsIdParam(obsId)])
+
+    def _createObserveEvent(self, eventName: EventName, obsId: ObsId) -&gt; ObserveEvent:
+        params = [ParamFactories.obsIdParam(obsId)]
+        return ObserveEvent(self.prefix, eventName, params)
+
+    def _createObserveEventWithExposureId(self, eventName: EventName, exposureId: ExposureId,
+                                          filename: str = None) -&gt; ObserveEvent:
+        params = [ParamFactories.exposureIdParam(exposureId)]
+        if not filename is None:
+            params.append(ParamFactories.filenameParam(filename))
+        return ObserveEvent(self.prefix, eventName, params)</code></pre>
+</details>
+<div class="desc"><p>The events that indicate activities for each observation and the acquisition process.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>prefix</code></strong></dt>
+<dd>the prefix identifier of the sequencer which is generating this event</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.prefix"><code class="name">var <span class="ident">prefix</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.dataWriteEnd"><code class="name flex">
+<span>def <span class="ident">dataWriteEnd</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>,<br>filename: str) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dataWriteEnd(self, exposureId: ExposureId, filename: str) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that the instrument has finished  writing the exposure data file or transfer of  exposure data to DMS.
+
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+        filename: the path of the file
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.DataWriteEnd, exposureId, filename)</code></pre>
+</details>
+<div class="desc"><p>This event indicates that the instrument has finished
+writing the exposure data file or transfer of
+exposure data to DMS.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.</dd>
+<dt><strong><code>filename</code></strong></dt>
+<dd>the path of the file</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.dataWriteStart"><code class="name flex">
+<span>def <span class="ident">dataWriteStart</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>,<br>filename: str) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dataWriteStart(self, exposureId: ExposureId, filename: str) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that the instrument has started writing  the exposure data file or transfer of exposure  data to DMS.
+
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+        filename: the path of the file
+
+    Returns:
+
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.DataWriteStart, exposureId, filename)</code></pre>
+</details>
+<div class="desc"><p>This event indicates that the instrument has started writing
+the exposure data file or transfer of exposure
+data to DMS.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.</dd>
+<dt><strong><code>filename</code></strong></dt>
+<dd>the path of the file</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.downtimeStart"><code class="name flex">
+<span>def <span class="ident">downtimeStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>,<br>reasonForDowntime: str) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def downtimeStart(self, obsId: ObsId, reasonForDowntime: str) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that something has occurred that  interrupts the normal observing workflow and  time accounting.
+    This event will have a hint (TBD) that indicates  the cause of the downtime for statistics.
+    Examples are: weather, equipment or other  technical failure, etc.
+    Downtime is ended by the start of an observation  or exposure.
+
+    Args:
+        obsId: Represents a unique observation id
+        reasonForDowntime:  a hint that indicates the cause of the downtime for statistics.
+
+    Returns:
+
+    &#34;&#34;&#34;
+    obsIdParam = ParamFactories.obsIdParam(obsId)
+    downtimeReasonParam = ParamFactories.downTimeReasonParam(reasonForDowntime)
+    return ObserveEvent(self.prefix, ObserveEventNames.DowntimeStart, [obsIdParam, downtimeReasonParam])</code></pre>
+</details>
+<div class="desc"><p>This event indicates that something has occurred that
+interrupts the normal observing workflow and
+time accounting.
+This event will have a hint (TBD) that indicates
+the cause of the downtime for statistics.
+Examples are: weather, equipment or other
+technical failure, etc.
+Downtime is ended by the start of an observation
+or exposure.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+<dt><strong><code>reasonForDowntime</code></strong></dt>
+<dd>a hint that indicates the cause of the downtime for statistics.</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.exposureAborted"><code class="name flex">
+<span>def <span class="ident">exposureAborted</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exposureAborted(self, exposureId: ExposureId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that a request was made to abort the  exposure and it has completed. Normal data events should occur if data is  recoverable.
+
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.ExposureAborted, exposureId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates that a request was made to abort the
+exposure and it has completed. Normal data events should occur if data is
+recoverable.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.exposureEnd"><code class="name flex">
+<span>def <span class="ident">exposureEnd</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exposureEnd(self, exposureId: ExposureId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the end of data acquisition that results  in a file produced for DMS. This is a potential metadata event for DMS.
+
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+                    The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
+                    when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
+                    when the ExposureId is created.
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.ExposureEnd, exposureId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of data acquisition that results
+in a file produced for DMS. This is a potential metadata event for DMS.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.
+The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
+when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
+when the ExposureId is created.</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.exposureStart"><code class="name flex">
+<span>def <span class="ident">exposureStart</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exposureStart(self, exposureId: ExposureId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of data acquisition that  results in a file produced for DMS. This is a potential metadata event for DMS.
+
+    Args:
+        exposureId:    an identifier in ESW/DMS for a single exposure.
+                       The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
+                       when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
+                       when the ExposureId is created.
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.ExposureStart, exposureId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of data acquisition that
+results in a file produced for DMS. This is a potential metadata event for DMS.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.
+The ExposureId follows the structure: 2020A-001-123-WFOS-IMG1-SCI0-0001 with an included ObsId or
+when no ObsId is present, in the standalone format: 20200706-190204-WFOS-IMG1-SCI0-0001 with a UTC time
+when the ExposureId is created.</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.guidestarAcqEnd"><code class="name flex">
+<span>def <span class="ident">guidestarAcqEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def guidestarAcqEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+   This event indicates the end of locking the telescope to the sky with guide and WFS targets
+
+    Args:
+        obsId: Represents a unique observation id
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.GuidestarAcqEnd, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of locking the telescope to the sky with guide and WFS targets</p>
+<p>Args:
+obsId: Represents a unique observation id</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.guidestarAcqStart"><code class="name flex">
+<span>def <span class="ident">guidestarAcqStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def guidestarAcqStart(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of locking the telescope to the  sky with guide and WFS targets
+
+    Args:
+        obsId: Represents a unique observation id
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.GuidestarAcqStart, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of locking the telescope to the
+sky with guide and WFS targets</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.inputRequestEnd"><code class="name flex">
+<span>def <span class="ident">inputRequestEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def inputRequestEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the end of a request to the user for input
+
+    Args:
+        obsId: Representing a unique observation id
+    &#34;&#34;&#34;
+    return ObserveEvent(self.prefix, ObserveEventNames.InputRequestEnd, [ParamFactories.obsIdParam(obsId)])</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of a request to the user for input</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Representing a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.inputRequestStart"><code class="name flex">
+<span>def <span class="ident">inputRequestStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def inputRequestStart(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of a request to the user for input
+
+    Args:
+        obsId: Representing a unique observation id
+    &#34;&#34;&#34;
+    return ObserveEvent(self.prefix, ObserveEventNames.InputRequestStart, [ParamFactories.obsIdParam(obsId)])</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of a request to the user for input</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Representing a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.observationEnd"><code class="name flex">
+<span>def <span class="ident">observationEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observationEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the end of execution of actions related  to an observation including acquisition and  science data acquisition.
+
+    Args:
+        obsId: Represents a unique observation id
+
+    Returns:
+
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.ObservationEnd, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of execution of actions related
+to an observation including acquisition and
+science data acquisition.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.observationStart"><code class="name flex">
+<span>def <span class="ident">observationStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observationStart(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of execution of actions related  to an observation including acquisition and  science data acquisition.
+
+    Args:
+        obsId: Represents a unique observation id
+
+    Returns:
+
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.ObservationStart, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of execution of actions related
+to an observation including acquisition and
+science data acquisition.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.observeEnd"><code class="name flex">
+<span>def <span class="ident">observeEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observeEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the end of execution of actions related  to an Observe command
+
+    Args:
+        obsId: Represents a unique observation id
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.ObserveEnd, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of execution of actions related
+to an Observe command</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.observePaused"><code class="name flex">
+<span>def <span class="ident">observePaused</span></span>(<span>self) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observePaused(self) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that a user has paused the current  observation Sequence which will happen after  the current step concludes
+    &#34;&#34;&#34;
+    return ObserveEvent(self.prefix, ObserveEventNames.ObservePaused, [])</code></pre>
+</details>
+<div class="desc"><p>This event indicates that a user has paused the current
+observation Sequence which will happen after
+the current step concludes</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.observeResumed"><code class="name flex">
+<span>def <span class="ident">observeResumed</span></span>(<span>self) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observeResumed(self) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that a user has resumed a paused  observation Sequence.
+    &#34;&#34;&#34;
+    return ObserveEvent(self.prefix, ObserveEventNames.ObserveResumed, [])</code></pre>
+</details>
+<div class="desc"><p>This event indicates that a user has resumed a paused
+observation Sequence.</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.observeStart"><code class="name flex">
+<span>def <span class="ident">observeStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def observeStart(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of execution of actions related  to an Observe command
+
+    Args:
+        obsId: Represents a unique observation id
+
+    Returns:
+
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.ObserveStart, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of execution of actions related
+to an Observe command</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.offsetEnd"><code class="name flex">
+<span>def <span class="ident">offsetEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def offsetEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the end of a telescope offset or dither
+
+    Args:
+        obsId: representing a unique observation id
+    &#34;&#34;&#34;
+    return ObserveEvent(self.prefix, ObserveEventNames.OffsetEnd, [ParamFactories.obsIdParam(obsId)])</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of a telescope offset or dither</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>representing a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.offsetStart"><code class="name flex">
+<span>def <span class="ident">offsetStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>,<br>coordinateSystem: <a title="csw.CoordinateSystem.CoordinateSystem" href="CoordinateSystem.html#csw.CoordinateSystem.CoordinateSystem">CoordinateSystem</a>,<br>p: float,<br>q: float) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def offsetStart(self, obsId: ObsId, coordinateSystem: CoordinateSystem, p: float, q: float) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of a telescope offset or dither
+
+    Args:
+        obsId: representing a unique observation id
+        coordinateSystem: Represents coordinate system
+        p: Represents telescope&#39;s xCoordinate offset
+        q: Represents telescope&#39;s yCoordinate offset
+    &#34;&#34;&#34;
+    return ObserveEvent(
+        self.prefix,
+        ObserveEventNames.OffsetStart,
+        [
+            ParamFactories.obsIdParam(obsId),
+            ParamFactories.coordinateSystemParam(coordinateSystem),
+            ParamFactories.pOffsetParam(p),
+            ParamFactories.qOffsetParam(q)
+        ]
+    )</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of a telescope offset or dither</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>representing a unique observation id</dd>
+<dt><strong><code>coordinateSystem</code></strong></dt>
+<dd>Represents coordinate system</dd>
+<dt><strong><code>p</code></strong></dt>
+<dd>Represents telescope's xCoordinate offset</dd>
+<dt><strong><code>q</code></strong></dt>
+<dd>Represents telescope's yCoordinate offset</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.prepareStart"><code class="name flex">
+<span>def <span class="ident">prepareStart</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepareStart(self, exposureId: ExposureId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that the detector system is preparing to start an exposure.
+
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.PrepareStart, exposureId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates that the detector system is preparing to start an exposure.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.presetEnd"><code class="name flex">
+<span>def <span class="ident">presetEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def presetEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+      This event indicates the end of the preset phase of  acquisition
+
+    Args:
+        obsId: Represents a unique observation id
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.PresetEnd, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of the preset phase of
+acquisition</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.presetStart"><code class="name flex">
+<span>def <span class="ident">presetStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def presetStart(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of the preset phase of  acquisition
+
+    Args:
+        obsId: Represents a unique observation id
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.PresetStart, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of the preset phase of
+acquisition</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.readoutEnd"><code class="name flex">
+<span>def <span class="ident">readoutEnd</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def readoutEnd(self, exposureId: ExposureId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that a readout that is part of a ramp  has completed.
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.ReadoutEnd, exposureId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates that a readout that is part of a ramp
+has completed.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.readoutFailed"><code class="name flex">
+<span>def <span class="ident">readoutFailed</span></span>(<span>self,<br>exposureId: <a title="csw.ExposureId.ExposureId" href="ExposureId.html#csw.ExposureId.ExposureId">ExposureId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def readoutFailed(self, exposureId: ExposureId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates that a readout that is part of a ramp  has failed indicating transfer failure or some  other issue.
+
+    Args:
+        exposureId: an identifier in ESW/DMS for a single exposure.
+    &#34;&#34;&#34;
+    return self._createObserveEventWithExposureId(ObserveEventNames.ReadoutFailed, exposureId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates that a readout that is part of a ramp
+has failed indicating transfer failure or some
+other issue.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>exposureId</code></strong></dt>
+<dd>an identifier in ESW/DMS for a single exposure.</dd>
+</dl></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.scitargetAcqEnd"><code class="name flex">
+<span>def <span class="ident">scitargetAcqEnd</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scitargetAcqEnd(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the end of acquisition phase where  science target is centered as needed after  guidestar locking
+
+    Args:
+        obsId: Represents a unique observation id
+
+    Returns:
+
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.ScitargetAcqEnd, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the end of acquisition phase where
+science target is centered as needed after
+guidestar locking</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="csw.SequencerObserveEvent.SequencerObserveEvent.scitargetAcqStart"><code class="name flex">
+<span>def <span class="ident">scitargetAcqStart</span></span>(<span>self,<br>obsId: <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a>) ‑> <a title="csw.Event.ObserveEvent" href="Event.html#csw.Event.ObserveEvent">ObserveEvent</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scitargetAcqStart(self, obsId: ObsId) -&gt; ObserveEvent:
+    &#34;&#34;&#34;
+    This event indicates the start of acquisition phase where  science target is peaked up as needed after  guidestar locking
+
+    Args:
+        obsId: Represents a unique observation id
+
+    Returns:
+
+    &#34;&#34;&#34;
+    return self._createObserveEvent(ObserveEventNames.ScitargetAcqStart, obsId)</code></pre>
+</details>
+<div class="desc"><p>This event indicates the start of acquisition phase where
+science target is peaked up as needed after
+guidestar locking</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>obsId</code></strong></dt>
+<dd>Represents a unique observation id</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="csw" href="index.html">csw</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent" href="#csw.SequencerObserveEvent.SequencerObserveEvent">SequencerObserveEvent</a></code></h4>
+<ul class="two-column">
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.dataWriteEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.dataWriteEnd">dataWriteEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.dataWriteStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.dataWriteStart">dataWriteStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.downtimeStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.downtimeStart">downtimeStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.exposureAborted" href="#csw.SequencerObserveEvent.SequencerObserveEvent.exposureAborted">exposureAborted</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.exposureEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.exposureEnd">exposureEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.exposureStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.exposureStart">exposureStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.guidestarAcqEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.guidestarAcqEnd">guidestarAcqEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.guidestarAcqStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.guidestarAcqStart">guidestarAcqStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.inputRequestEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.inputRequestEnd">inputRequestEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.inputRequestStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.inputRequestStart">inputRequestStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.observationEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.observationEnd">observationEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.observationStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.observationStart">observationStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.observeEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.observeEnd">observeEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.observePaused" href="#csw.SequencerObserveEvent.SequencerObserveEvent.observePaused">observePaused</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.observeResumed" href="#csw.SequencerObserveEvent.SequencerObserveEvent.observeResumed">observeResumed</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.observeStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.observeStart">observeStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.offsetEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.offsetEnd">offsetEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.offsetStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.offsetStart">offsetStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.prefix" href="#csw.SequencerObserveEvent.SequencerObserveEvent.prefix">prefix</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.prepareStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.prepareStart">prepareStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.presetEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.presetEnd">presetEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.presetStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.presetStart">presetStart</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.readoutEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.readoutEnd">readoutEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.readoutFailed" href="#csw.SequencerObserveEvent.SequencerObserveEvent.readoutFailed">readoutFailed</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.scitargetAcqEnd" href="#csw.SequencerObserveEvent.SequencerObserveEvent.scitargetAcqEnd">scitargetAcqEnd</a></code></li>
+<li><code><a title="csw.SequencerObserveEvent.SequencerObserveEvent.scitargetAcqStart" href="#csw.SequencerObserveEvent.SequencerObserveEvent.scitargetAcqStart">scitargetAcqStart</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
