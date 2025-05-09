@@ -1,4 +1,4 @@
-PYTHON_VERSION = 3.12
+PYTHON_VERSION = 3.13
 PYTHON = .venv/bin/python
 PIPENV = .venv/bin/pipenv
 
