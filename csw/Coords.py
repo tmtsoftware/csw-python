@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from enum import Enum
 from astropy.coordinates import Angle
 from astropy import units as u
@@ -264,8 +264,8 @@ class AltAzCoord(Coord):
     """
     Represents Alt-Az Coordinates (mirrors class of same name in the CSW Scala code).
     """
-    alt: Angle = Angle("0 deg")
-    az: Angle = Angle("0 deg")
+    alt: Angle = field(default_factory=lambda: Angle("0 deg"))
+    az: Angle = field(default_factory=lambda: Angle("0 deg"))
 
     @staticmethod
     def make(tag: str = "BASE", alt: any = "0 deg", az: any = "0 deg"):

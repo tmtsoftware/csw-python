@@ -1,11 +1,23 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [tmtpycsw v6.0.0] - (in development)
+
+### Added
+
+- Added many csw, esw and sequencer APIs
+- Added an HTTP script server that can be used to serve Python esw sequencer scripts (see OcsScriptServer for the server, ./examples for sample esw seuqncer scripts)
+- Updated dependencies
+- Updated python version to 3.13
+
+### Changed
+
+
 ## [tmtpycsw v5.0.0] - 2022-11-30
 
 ### Changed
 
-- Updated dependencies and moved to Python 3.10
+- Updated dependencies and moved to Python 3.12
 - Changed the way parameters are accessed to be more like the Java/Scala CSW APIs
 - Added use of Python Generics for keys and parameters, to provide type hints for IDEs
 - Added Sequencer client APIs (so you can control a running sequencer from Python)

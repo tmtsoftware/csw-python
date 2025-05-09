@@ -15,12 +15,12 @@ from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import *
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # noinspection PyTypeChecker,PyBroadException
 class MyComponentHandlers(ComponentHandlers):
-    prefix = Prefix(Subsystems.CSW, "pycswTest")
+    prefix = Prefix(Subsystem.CSW, "pycswTest")
     dir = pathlib.Path(__file__).parent.absolute()
     outFileName = "PyTestAssemblyCommandResponses.out"
     tmpOutFile = f"/tmp/{outFileName}"
@@ -39,7 +39,7 @@ class MyComponentHandlers(ComponentHandlers):
         await asyncio.sleep(1)
         await self.publishCurrentStates()
         await asyncio.sleep(1)
-        self.log.debug("Long running task completed")
+        self.log.debug("long-running task completed")
         return Completed(runId)
 
     # Checks the command's contents, shows how to access the parameters
@@ -80,7 +80,7 @@ class MyComponentHandlers(ComponentHandlers):
         for the contents of the command's parameters.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: (CommandResponse, Task)
@@ -115,7 +115,7 @@ class MyComponentHandlers(ComponentHandlers):
         Overrides the base class onOneway method to handle commands from a CSW component.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: CommandResponse
@@ -130,7 +130,7 @@ class MyComponentHandlers(ComponentHandlers):
         Overrides the base class validate method to verify that the given command is valid.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: CommandResponse

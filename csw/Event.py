@@ -1,11 +1,12 @@
 import uuid
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Self
 from abc import abstractmethod
 
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
 from csw.Prefix import Prefix
+
 
 @dataclass
 class EventName:
@@ -13,6 +14,7 @@ class EventName:
     A wrapper class representing the name of an Event
     """
     name: str
+
 
 @dataclass
 class Event:
@@ -29,9 +31,9 @@ class Event:
     """
     source: Prefix
     eventName: EventName
-    paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.now()
-    eventId: str = str(uuid.uuid4())
+    paramSet: List[Parameter] = field(default_factory=lambda: [])
+    eventTime: EventTime = field(default_factory=lambda: EventTime.now())
+    eventId: str = field(default_factory=lambda: str(uuid.uuid4()))
 
     @abstractmethod
     def eventType(self) -> str:
@@ -71,7 +73,7 @@ class Event:
             'source': str(self.source),
             'eventName': self.eventName.name,
             'eventTime': self.eventTime._asDict(),
-                'paramSet': list(map(lambda p: p._asDict(True), self.paramSet))
+            'paramSet': list(map(lambda p: p._asDict(True), self.paramSet))
         }
 
     def isInvalid(self):
@@ -120,9 +122,25 @@ class SystemEvent(Event):
         eventId (str): event id (optional: Should leave empty unless received from event service)
 
     """
+    from csw.EventKey import EventKey
+
     @abstractmethod
     def eventType(self) -> str:
         return "SystemEvent"
+
+    @classmethod
+    def invalidEvent(cls, eventKey: EventKey) -> Self:
+        """
+        A helper method to create an event which is provided to subscriber when there is no event available at the
+        time of subscription
+
+        Args:
+            eventKey: the Event Key for which subscription was made
+
+        Returns:
+            an event with the same key as provided but with id and timestamp denoting an invalid event
+        """
+        return SystemEvent(eventKey.source, eventKey.eventName, [], EventTime(-1, 0), "-1")
 
 
 @dataclass
@@ -138,6 +156,7 @@ class ObserveEvent(Event):
         eventId (str): event id (optional: Should leave empty unless received from event service)
 
     """
+
     @abstractmethod
     def eventType(self) -> str:
         return "ObserveEvent"

@@ -1,12 +1,12 @@
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
 from csw.Event import EventName
 from csw.EventKey import EventKey
 
 
 def test_event_key():
-    prefix = Prefix(Subsystems.TCS, "ENCAssembly")
-    prefix2 = Prefix(Subsystems.TCS, "ENC.Assembly")
+    prefix = Prefix(Subsystem.TCS, "ENCAssembly")
+    prefix2 = Prefix(Subsystem.TCS, "ENC.Assembly")
     eventName = EventName("CurrentPosition")
     k1 = EventKey(prefix, eventName)
     k2 = EventKey.from_str("TCS.ENCAssembly.CurrentPosition")

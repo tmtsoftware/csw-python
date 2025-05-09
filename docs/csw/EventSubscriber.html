@@ -2,18 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>csw.EventSubscriber API documentation</title>
-<meta name="description" content="" />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
 </head>
 <body>
 <main>
@@ -22,94 +36,6 @@
 <h1 class="title">Module <code>csw.EventSubscriber</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">import cbor2
-
-from csw.RedisConnector import RedisConnector
-from csw.Event import Event
-from csw.EventKey import EventKey
-
-class EventSubscriber:
-
-    def __init__(self):
-        self.__redis = RedisConnector()
-
-    @staticmethod
-    def __handleCallback(message: dict, callback):
-        data = message[&#39;data&#39;]
-        event = Event._fromDict(cbor2.loads(data))
-        callback(event)
-
-    def subscribe(self, eventKeyList: list[EventKey], callback):
-        &#34;&#34;&#34;
-        Start a subscription to system events in event service, specifying a callback
-        to be called when an event in the list has its value updated.
-
-        Args:
-            eventKeyList (list[EventKey]): list of event EventKey to subscribe to
-            callback (function): function to be called when event updates. Should take Event and return void
-
-        Returns: PubSubWorkerThread
-            subscription thread. Use .stop() method to stop subscription.
-        &#34;&#34;&#34;
-        keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
-
-    def unsubscribe(self, eventKeyList: list[EventKey]):
-        &#34;&#34;&#34;
-        Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
-
-        Args:
-            eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
-        &#34;&#34;&#34;
-        keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.unsubscribe(keyList)
-
-    # XXX Commented out due to Event Service performance concerns when using psubscribe
-    # def pSubscribe(self, eventKeyList: list, callback):
-    #     &#34;&#34;&#34;
-    #     Start a subscription to system events in event service, specifying a callback
-    #     to be called when an event in the list has its value updated.
-    #     In this case the keys are treated as glob-style patterns:
-    #     h?llo subscribes to hello, hallo and hxllo,
-    #     h*llo subscribes to hllo and heeeello,
-    #     h[ae]llo subscribes to hello and hallo, but not hillo.
-    #
-    #     Args:
-    #         eventKeyList (list): list of event key (string patterns) to subscribe to
-    #         callback (function): function to be called when event updates. Should take Event and return void
-    #
-    #     Returns: PubSubWorkerThread
-    #         subscription thread. Use .stop() method to stop subscription.
-    #     &#34;&#34;&#34;
-    #     return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
-
-    # def pUnsubscribe(self, eventKeyList: list):
-    #     &#34;&#34;&#34;
-    #     Unsubscribes to the given list of event key patterns (or all keys, if eventKeyList is empty)
-    #
-    #     Args:
-    #         eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
-    #     &#34;&#34;&#34;
-    #     return self.__redis.pUnsubscribe(eventKeyList)
-
-    def get(self, eventKey: EventKey):
-        &#34;&#34;&#34;
-        Get an event from the Event Service
-
-        Args:
-            eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
-
-        Returns: Event
-            Event obtained from Event Service, decoded into a Event
-        &#34;&#34;&#34;
-        data = self.__redis.get(str(eventKey))
-        event = Event._fromDict(cbor2.loads(data))
-        return event</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -122,40 +48,55 @@ class EventSubscriber:
 <dl>
 <dt id="csw.EventSubscriber.EventSubscriber"><code class="flex name class">
 <span>class <span class="ident">EventSubscriber</span></span>
+<span>(</span><span>redis: <a title="csw.RedisConnector.RedisConnector" href="RedisConnector.html#csw.RedisConnector.RedisConnector">RedisConnector</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class EventSubscriber:
 
-    def __init__(self):
-        self.__redis = RedisConnector()
+    def __init__(self, redis: RedisConnector):
+        self._redis = redis
+
+    @classmethod
+    def make(cls) -&gt; Self:
+        return cls(RedisConnector.make())
+
+    async def close(self):
+        await self._redis.close()
 
     @staticmethod
-    def __handleCallback(message: dict, callback):
+    async def _handleCallback(message: dict, callback: Callable[[Event], Awaitable]):
         data = message[&#39;data&#39;]
         event = Event._fromDict(cbor2.loads(data))
-        callback(event)
+        await callback(event)
 
-    def subscribe(self, eventKeyList: list[EventKey], callback):
+    async def subscribe(self, eventKeyList: list[EventKey],
+                        callback: Callable[[Event], Awaitable]) -&gt; EventSubscription:
         &#34;&#34;&#34;
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
         Args:
             eventKeyList (list[EventKey]): list of event EventKey to subscribe to
-            callback (function): function to be called when event updates. Should take Event and return void
+            callback (Callable[[Event], None]): function to be called when event updates. Should take Event and return void
 
-        Returns: PubSubWorkerThread
-            subscription thread. Use .stop() method to stop subscription.
+        Returns:
+            an object that can be used to unsubscribe
         &#34;&#34;&#34;
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
 
-    def unsubscribe(self, eventKeyList: list[EventKey]):
+        async def f(message):
+            await self._handleCallback(message, callback)
+
+        t = await self._redis.subscribe(keyList, f)
+        async def unsub():
+            await self._redis.unsubscribe(keyList)
+        return EventSubscription(t, unsub)
+
+    async def unsubscribe(self, eventKeyList: list[EventKey]):
         &#34;&#34;&#34;
         Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
@@ -163,7 +104,7 @@ class EventSubscriber:
             eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         &#34;&#34;&#34;
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.unsubscribe(keyList)
+        return await self._redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -182,7 +123,7 @@ class EventSubscriber:
     #     Returns: PubSubWorkerThread
     #         subscription thread. Use .stop() method to stop subscription.
     #     &#34;&#34;&#34;
-    #     return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+    #     return self._redis.pSubscribe(eventKeyList, lambda message: self._handleCallback(message, callback))
 
     # def pUnsubscribe(self, eventKeyList: list):
     #     &#34;&#34;&#34;
@@ -191,28 +132,88 @@ class EventSubscriber:
     #     Args:
     #         eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
     #     &#34;&#34;&#34;
-    #     return self.__redis.pUnsubscribe(eventKeyList)
+    #     return self._redis.pUnsubscribe(eventKeyList)
 
-    def get(self, eventKey: EventKey):
+    async def gets(self, eventKeys: Set[EventKey]) -&gt; Set[Event]:
+        &#34;&#34;&#34;
+        Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
+        If event is not published for one or more event keys, `invalid event` will be received for those Event Keys.
+
+        In case the underlying server is not available, the future fails with [[csw.event.api.exceptions.EventServerNotAvailable]] exception.
+        In all other cases of exception, the future fails with the respective exception
+
+        Args:
+            eventKeys: a set of [[csw.params.events.EventKey]] to subscribe to
+        Returns:
+            a set of latest Event for the provided Event Keys
+        &#34;&#34;&#34;
+        fList = list(map(lambda k: self.get(k), eventKeys))
+        events: List[Event] = await asyncio.gather(*fList)
+        return set(events)
+
+    async def get(self, eventKey: EventKey) -&gt; Event:
         &#34;&#34;&#34;
         Get an event from the Event Service
 
         Args:
             eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
 
-        Returns: Event
-            Event obtained from Event Service, decoded into a Event
+        Returns: Event obtained from Event Service, decoded into a Event
         &#34;&#34;&#34;
-        data = self.__redis.get(str(eventKey))
-        event = Event._fromDict(cbor2.loads(data))
-        return event</code></pre>
+        data = await self._redis.get(str(eventKey))
+        if data:
+            event = Event._fromDict(cbor2.loads(data))
+            return event
+        return SystemEvent.invalidEvent(eventKey)</code></pre>
 </details>
-<h3>Methods</h3>
+<div class="desc"></div>
+<h3>Static methods</h3>
 <dl>
-<dt id="csw.EventSubscriber.EventSubscriber.get"><code class="name flex">
-<span>def <span class="ident">get</span></span>(<span>self, eventKey: <a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>)</span>
+<dt id="csw.EventSubscriber.EventSubscriber.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>) ‑> Self</span>
 </code></dt>
 <dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="csw.EventSubscriber.EventSubscriber.close"><code class="name flex">
+<span>async def <span class="ident">close</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def close(self):
+    await self._redis.close()</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="csw.EventSubscriber.EventSubscriber.get"><code class="name flex">
+<span>async def <span class="ident">get</span></span>(<span>self,<br>eventKey: <a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>) ‑> <a title="csw.Event.Event" href="Event.html#csw.Event.Event">Event</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def get(self, eventKey: EventKey) -&gt; Event:
+    &#34;&#34;&#34;
+    Get an event from the Event Service
+
+    Args:
+        eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
+
+    Returns: Event obtained from Event Service, decoded into a Event
+    &#34;&#34;&#34;
+    data = await self._redis.get(str(eventKey))
+    if data:
+        event = Event._fromDict(cbor2.loads(data))
+        return event
+    return SystemEvent.invalidEvent(eventKey)</code></pre>
+</details>
 <div class="desc"><p>Get an event from the Event Service</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -220,77 +221,97 @@ class EventSubscriber:
 <dd>String specifying Redis key for event.
 Should be source prefix + "." + event name.</dd>
 </dl>
-<p>Returns: Event
-Event obtained from Event Service, decoded into a Event</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get(self, eventKey: EventKey):
-    &#34;&#34;&#34;
-    Get an event from the Event Service
-
-    Args:
-        eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + &#34;.&#34; + event name.
-
-    Returns: Event
-        Event obtained from Event Service, decoded into a Event
-    &#34;&#34;&#34;
-    data = self.__redis.get(str(eventKey))
-    event = Event._fromDict(cbor2.loads(data))
-    return event</code></pre>
-</details>
+<p>Returns: Event obtained from Event Service, decoded into a Event</p></div>
 </dd>
-<dt id="csw.EventSubscriber.EventSubscriber.subscribe"><code class="name flex">
-<span>def <span class="ident">subscribe</span></span>(<span>self, eventKeyList: list[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>], callback)</span>
+<dt id="csw.EventSubscriber.EventSubscriber.gets"><code class="name flex">
+<span>async def <span class="ident">gets</span></span>(<span>self,<br>eventKeys: Set[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>]) ‑> Set[<a title="csw.Event.Event" href="Event.html#csw.Event.Event">Event</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Start a subscription to system events in event service, specifying a callback
-to be called when an event in the list has its value updated.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list[EventKey]</code></dt>
-<dd>list of event EventKey to subscribe to</dd>
-<dt><strong><code>callback</code></strong> :&ensp;<code>function</code></dt>
-<dd>function to be called when event updates. Should take Event and return void</dd>
-</dl>
-<p>Returns: PubSubWorkerThread
-subscription thread. Use .stop() method to stop subscription.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def subscribe(self, eventKeyList: list[EventKey], callback):
+<pre><code class="python">async def gets(self, eventKeys: Set[EventKey]) -&gt; Set[Event]:
+    &#34;&#34;&#34;
+    Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
+    If event is not published for one or more event keys, `invalid event` will be received for those Event Keys.
+
+    In case the underlying server is not available, the future fails with [[csw.event.api.exceptions.EventServerNotAvailable]] exception.
+    In all other cases of exception, the future fails with the respective exception
+
+    Args:
+        eventKeys: a set of [[csw.params.events.EventKey]] to subscribe to
+    Returns:
+        a set of latest Event for the provided Event Keys
+    &#34;&#34;&#34;
+    fList = list(map(lambda k: self.get(k), eventKeys))
+    events: List[Event] = await asyncio.gather(*fList)
+    return set(events)</code></pre>
+</details>
+<div class="desc"><p>Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
+If event is not published for one or more event keys, <code>invalid event</code> will be received for those Event Keys.</p>
+<p>In case the underlying server is not available, the future fails with [[csw.event.api.exceptions.EventServerNotAvailable]] exception.
+In all other cases of exception, the future fails with the respective exception</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>eventKeys</code></strong></dt>
+<dd>a set of [[csw.params.events.EventKey]] to subscribe to</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>a set of latest Event for the provided Event Keys</p></div>
+</dd>
+<dt id="csw.EventSubscriber.EventSubscriber.subscribe"><code class="name flex">
+<span>async def <span class="ident">subscribe</span></span>(<span>self,<br>eventKeyList: list[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>],<br>callback: Callable[[<a title="csw.Event.Event" href="Event.html#csw.Event.Event">Event</a>], Awaitable]) ‑> <a title="csw.EventSubscription.EventSubscription" href="EventSubscription.html#csw.EventSubscription.EventSubscription">EventSubscription</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def subscribe(self, eventKeyList: list[EventKey],
+                    callback: Callable[[Event], Awaitable]) -&gt; EventSubscription:
     &#34;&#34;&#34;
     Start a subscription to system events in event service, specifying a callback
     to be called when an event in the list has its value updated.
 
     Args:
         eventKeyList (list[EventKey]): list of event EventKey to subscribe to
-        callback (function): function to be called when event updates. Should take Event and return void
+        callback (Callable[[Event], None]): function to be called when event updates. Should take Event and return void
 
-    Returns: PubSubWorkerThread
-        subscription thread. Use .stop() method to stop subscription.
+    Returns:
+        an object that can be used to unsubscribe
     &#34;&#34;&#34;
     keyList = list(map(lambda k: str(k), eventKeyList))
-    return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))</code></pre>
+
+    async def f(message):
+        await self._handleCallback(message, callback)
+
+    t = await self._redis.subscribe(keyList, f)
+    async def unsub():
+        await self._redis.unsubscribe(keyList)
+    return EventSubscription(t, unsub)</code></pre>
 </details>
-</dd>
-<dt id="csw.EventSubscriber.EventSubscriber.unsubscribe"><code class="name flex">
-<span>def <span class="ident">unsubscribe</span></span>(<span>self, eventKeyList: list[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>])</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)</p>
+<div class="desc"><p>Start a subscription to system events in event service, specifying a callback
+to be called when an event in the list has its value updated.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list[EventKey]</code></dt>
-<dd>list of EventKeys to unsubscribe from</dd>
-</dl></div>
+<dd>list of event EventKey to subscribe to</dd>
+<dt><strong><code>callback</code></strong> :&ensp;<code>Callable[[Event], None]</code></dt>
+<dd>function to be called when event updates. Should take Event and return void</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>an object that can be used to unsubscribe</p></div>
+</dd>
+<dt id="csw.EventSubscriber.EventSubscriber.unsubscribe"><code class="name flex">
+<span>async def <span class="ident">unsubscribe</span></span>(<span>self,<br>eventKeyList: list[<a title="csw.EventKey.EventKey" href="EventKey.html#csw.EventKey.EventKey">EventKey</a>])</span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def unsubscribe(self, eventKeyList: list[EventKey]):
+<pre><code class="python">async def unsubscribe(self, eventKeyList: list[EventKey]):
     &#34;&#34;&#34;
     Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
@@ -298,8 +319,14 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
         eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
     &#34;&#34;&#34;
     keyList = list(map(lambda k: str(k), eventKeyList))
-    return self.__redis.unsubscribe(keyList)</code></pre>
+    return await self._redis.unsubscribe(keyList)</code></pre>
 </details>
+<div class="desc"><p>Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>eventKeyList</code></strong> :&ensp;<code>list[EventKey]</code></dt>
+<dd>list of EventKeys to unsubscribe from</dd>
+</dl></div>
 </dd>
 </dl>
 </dd>
@@ -307,7 +334,6 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -321,8 +347,11 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
 <ul>
 <li>
 <h4><code><a title="csw.EventSubscriber.EventSubscriber" href="#csw.EventSubscriber.EventSubscriber">EventSubscriber</a></code></h4>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="csw.EventSubscriber.EventSubscriber.close" href="#csw.EventSubscriber.EventSubscriber.close">close</a></code></li>
 <li><code><a title="csw.EventSubscriber.EventSubscriber.get" href="#csw.EventSubscriber.EventSubscriber.get">get</a></code></li>
+<li><code><a title="csw.EventSubscriber.EventSubscriber.gets" href="#csw.EventSubscriber.EventSubscriber.gets">gets</a></code></li>
+<li><code><a title="csw.EventSubscriber.EventSubscriber.make" href="#csw.EventSubscriber.EventSubscriber.make">make</a></code></li>
 <li><code><a title="csw.EventSubscriber.EventSubscriber.subscribe" href="#csw.EventSubscriber.EventSubscriber.subscribe">subscribe</a></code></li>
 <li><code><a title="csw.EventSubscriber.EventSubscriber.unsubscribe" href="#csw.EventSubscriber.EventSubscriber.unsubscribe">unsubscribe</a></code></li>
 </ul>
@@ -333,7 +362,7 @@ subscription thread. Use .stop() method to stop subscription.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

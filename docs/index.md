@@ -8,7 +8,7 @@ and [TMT Executive Software (ESW)](https://tmtsoftware.github.io/esw/).
 
 ## Requirements
 
-* Python version 3.10 or newer
+* Python version 3.13
 * pdoc3 (`pip3 install pdoc3`)
 * pipenv (latest)
 

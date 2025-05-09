@@ -1,29 +1,31 @@
 import asyncio
 import os
 import sys
+from datetime import timedelta
 
 import py
 import pytest
+from aiohttp import ClientSession
 from xprocess import ProcessStarter
 from csw.CommandResponse import Completed, Started
 from csw.CommandService import CommandService
 from csw.CurrentState import CurrentState
-from csw.LocationService import ComponentType, LocationService, ConnectionInfo, ConnectionType
+from csw.LocationService import ComponentType, ConnectionInfo, ConnectionType
+from csw.LocationServiceSync import LocationServiceSync
 from csw.Parameter import IntKey
 from csw.ParameterSetType import CommandName, Setup
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Start a local python based command service (defined in TestComponentHandlers.py) for testing
 from csw.Units import Units
 
-
 @pytest.fixture(autouse=True)
 def start_server(xprocess):
     # Remove any leftover reg from loc service
-    locationService = LocationService()
-    prefix = Prefix(Subsystems.CSW, "pycswTest2")
+    locationService = LocationServiceSync()
+    prefix = Prefix(Subsystem.CSW, "pycswTest2")
     connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
     locationService.unregister(connection)
 
@@ -43,36 +45,36 @@ def start_server(xprocess):
     xprocess.getinfo("TestComponentHandlers").terminate()
 
 
-# noinspection DuplicatedCode,PyPep8Naming
+@pytest.mark.asyncio
 class TestCommandServiceClientServer:
     _csCount = 0
     _currentState: CurrentState = None
 
-    def _currentStateHandler(self, cs: CurrentState):
+    async def _currentStateHandler(self, cs: CurrentState):
         print(f'Received CurrentState: {cs.stateName}')
         self._csCount = self._csCount + 1
         self._currentState = cs
 
 
     async def test_command_client_server(self):
+        clientSession = ClientSession()
         # Create a python based command service client
-        cs = CommandService(Prefix(Subsystems.CSW, "pycswTest2"), ComponentType.Service)
-        prefix = Prefix(Subsystems.CSW, "TestClient")
-        maybeObsId = []
-        resp = cs.submit(Setup(prefix, CommandName("SimpleCommand"), maybeObsId, []))
+        cs = CommandService(Prefix(Subsystem.CSW, "pycswTest2"), ComponentType.Service, clientSession)
+        prefix = Prefix(Subsystem.CSW, "TestClient")
+        resp = await cs.submit(Setup(prefix, CommandName("SimpleCommand")))
         assert isinstance(resp, Completed)
-        resp2 = cs.submit(Setup(prefix, CommandName("ResultCommand"), maybeObsId, []))
+        resp2 = await cs.submit(Setup(prefix, CommandName("ResultCommand")))
         assert isinstance(resp2, Completed)
         assert len(resp2.result.paramSet) == 1
 
         # LongRunningCommand
-        subscription = cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
+        subscription = await cs.subscribeCurrentState(["PyCswState"], self._currentStateHandler)
         await asyncio.sleep(1)
-        resp3 = cs.submit(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []))
+        resp3 = await cs.submit(Setup(prefix, CommandName("LongRunningCommand")))
         assert isinstance(resp3, Started)
-        resp4 = cs.queryFinal(resp3.runId, 5)
+        resp4 = await cs.queryFinal(resp3.runId, timedelta(seconds=5))
         assert isinstance(resp4, Completed)
-        resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), timedelta(seconds=5))
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4
@@ -80,8 +82,8 @@ class TestCommandServiceClientServer:
         assert self._currentState(IntKey.make("IntValue", Units.arcsec)).values[0] == 42
         subscription.cancel()
         await asyncio.sleep(1)
-        resp5 = cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand"), maybeObsId, []), 5)
+        resp5 = await cs.submitAndWait(Setup(prefix, CommandName("LongRunningCommand")), timedelta(seconds=5))
         assert isinstance(resp5, Completed)
         await asyncio.sleep(1)
         assert self._csCount == 4
-        asyncio.get_event_loop().stop()
+        await clientSession.close()

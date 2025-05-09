@@ -1,6 +1,8 @@
+import asyncio
+
 from csw.Event import Event, EventName
 from csw.EventSubscriber import EventSubscriber
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
 from csw.EventKey import EventKey
 
@@ -9,22 +11,24 @@ from csw.EventKey import EventKey
 class TestSubscriber1:
 
     def __init__(self):
+        self.eventSubscriber = EventSubscriber.make()
         self.count = 0
-        self.eventKey = EventKey(Prefix(Subsystems.CSW, "testassembly"), EventName("myAssemblyEvent"))
-        self.eventSubscriber = EventSubscriber()
-        self.eventThread = self.eventSubscriber.subscribe([self.eventKey], self.callback)
+        self.eventKey = EventKey(Prefix(Subsystem.CSW, "testassembly"), EventName("myAssemblyEvent"))
+        self.eventSubscription = self.eventSubscriber.subscribe([self.eventKey], self.callback)
 
-    def callback(self, event: Event):
+    async def subscribe(self):
+        self.eventSubscription = self.eventSubscriber.subscribe([self.eventKey], self.callback)
+
+    async def callback(self, event: Event):
         print(f"Event = {event} (Event Time = {str(event.eventTime)}")
         self.count = self.count + 1
         if (self.count > 4):
-            self.eventSubscriber.unsubscribe([self.eventKey])
-            self.eventThread.stop()
+            await self.eventSubscriber.unsubscribe([self.eventKey])
 
 
-def main():
-    TestSubscriber1()
+async def main():
+    test = TestSubscriber1()
+    await test.subscribe()
 
 
-if __name__ == "__main__":
-    main()
+asyncio.run(main())

@@ -1,17 +1,19 @@
-PYTHON = python3.10
+PYTHON_VERSION = 3.13
+PYTHON = .venv/bin/python
+PIPENV = .venv/bin/pipenv
 
 all: doc
 
 # Generate the documentation (under build/csw)
 doc:
 	test -d .venv || $(MAKE) venv
-	pipenv run pdoc3 --force --html --output-dir build csw
-	pipenv run pdoc3 --force --html --output-dir build esw
+	${PIPENV} run pdoc3 --force --html --output-dir build csw
+	${PIPENV} run pdoc3 --force --html --output-dir build esw
 	test -d docs/csw || mkdir docs/csw
 	test -d docs/esw || mkdir docs/esw
 	rm -f docs/*.html docs/csw/*.html docs/esw/*.html
 	cp build/csw/*.html docs/csw
-	cp build/esw/*.html docs/esw
+# 	cp build/esw/*.html docs/esw
 
 # Run tests against an included, Scala based assembly
 test: all
@@ -25,6 +27,7 @@ clean:
 
 # Upload release (requires username, password)
 release: doc
+	test -d .venv || $(MAKE) venv
 	rm -rf dist build tmtpycsw.egg-info
 	$(PYTHON) -m pip install --upgrade setuptools wheel
 	$(PYTHON) setup.py sdist bdist_wheel
@@ -38,6 +41,7 @@ release: doc
 venv:
 	rm -rf .venv
 	mkdir .venv
-	$(PYTHON) -m venv .venv
-	pipenv run pip install pdoc3
-	pipenv install
+	python${PYTHON_VERSION} -m venv .venv
+	${PYTHON} -m pip install pipenv
+	${PIPENV} run pip install pdoc3
+	${PIPENV} install

@@ -1,3 +1,4 @@
+import atexit
 import json
 
 import aiohttp
@@ -5,7 +6,6 @@ import structlog
 from aiohttp import web, WSMessage
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
-import atexit
 import uuid
 
 from aiohttp.web_ws import WebSocketResponse
@@ -14,16 +14,15 @@ from csw.CommandResponse import Error
 from csw.CommandResponseManager import CommandResponseManager
 from csw.CommandServiceRequest import QueryFinal, SubscribeCurrentState
 from csw.ComponentHandlers import ComponentHandlers
+from csw.LocationServiceSync import LocationServiceSync
 from csw.ParameterSetType import ControlCommand
 from csw.Prefix import Prefix
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, HttpRegistration, \
+    LocationServiceUtil
 
 
 # noinspection PyProtectedMember
 class CommandServer:
-    _app = web.Application()
-    _crm = CommandResponseManager()
-    log = structlog.get_logger()
 
     async def _handlePost(self, request: Request) -> Response:
         obj = await request.json()
@@ -42,17 +41,17 @@ class CommandServer:
                 if task is not None:
                     # noinspection PyTypeChecker
                     self._crm.addTask(runId, task)
-                    self.log.debug("Long running task in progress...")
+                    self.log.debug("long-running task in progress...")
             case 'Oneway':
                 commandResponse = self.handler.onOneway(runId, command)
             case 'Validate':
                 commandResponse = self.handler.validateCommand(runId, command)
-            case x:  # should not happe
+            case _:  # should not happe
                 commandResponse = Error(runId, "Invalid command")
         return web.json_response(commandResponse._asDict())
 
     async def _handleQueryFinal(self, queryFinal: QueryFinal) -> Response:
-        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeoutInSeconds)
+        commandResponse = await self._crm.waitForTask(queryFinal.runId, queryFinal.timeout)
         responseDict = commandResponse._asDict()
         return web.json_response(responseDict)
 
@@ -89,11 +88,11 @@ class CommandServer:
         self.handler._unsubscribeCurrentState(ws)
         return ws
 
-    def _registerWithLocationService(self, prefix: Prefix, port: int):
-        locationService = LocationService()
-        connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
+    def registerWithLocationService(self):
+        locationService = LocationServiceSync()
+        connection = ConnectionInfo.make(self.prefix, ComponentType.Service, ConnectionType.HttpType)
         atexit.register(locationService.unregister, connection)
-        locationService.register(HttpRegistration(connection, port))
+        locationService.register(HttpRegistration(connection, self.port))
 
     def __init__(self, prefix: Prefix, handler: ComponentHandlers, port: int = 0):
         """
@@ -106,13 +105,18 @@ class CommandServer:
             handler (ComponentHandlers): command handler notified when commands are received
             port (int): optional port for HTTP server
         """
+        self.log = structlog.get_logger()
+        self.prefix = prefix
         self.handler = handler
-        self.port = LocationService.getFreePort(port)
+        self.port = LocationServiceUtil.getFreePort(port)
+        self._app = web.Application()
+        self._crm = CommandResponseManager()
+        self._log = structlog.get_logger()
         self._app.add_routes([
             web.post('/post-endpoint', self._handlePost),
             web.get("/websocket-endpoint", self._handleWs)
         ])
-        self._registerWithLocationService(prefix, self.port)
+        self.registerWithLocationService()
 
     def start(self):
         """

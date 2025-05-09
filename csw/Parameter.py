@@ -1,10 +1,10 @@
 # noinspection PyUnresolvedReferences
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TypeVar, Generic, List
 
 from csw.KeyTypes import KeyTypes
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
+from csw.TMTTime import TAITime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 from csw.Coords import *
 
@@ -37,7 +37,7 @@ class Parameter(Generic[T]):
     keyName: str
     keyType: KeyTypes
     values: List[T]
-    units: Units = Units.NoUnits
+    units: Units = field(default_factory=lambda: Units.NoUnits)
 
     @staticmethod
     def _paramValueOrDict(keyType: KeyTypes, param: T, forEvent: bool):
@@ -346,7 +346,7 @@ class DoubleArrayKey:
 # noinspection DuplicatedCode
 class ByteMatrixKey:
     @staticmethod
-    def make(name: str, units: Units = Units.NoUnits) -> Key[List[List[int]]]:
+    def make(name: str, units: Units = Units.NoUnits) -> Key[List[List[bytes]]]:
         return Key(name, KeyTypes.ByteMatrixKey, units)
 
 
@@ -379,3 +379,12 @@ class DoubleMatrixKey:
     @staticmethod
     def make(name: str, units: Units = Units.NoUnits) -> Key[List[List[float]]]:
         return Key(name, KeyTypes.DoubleMatrixKey, units)
+
+
+# For use in scripts
+def stringKey(name: str, units: Units = Units.NoUnits) -> Key[str]:
+    return StringKey().make(name, units)
+
+# XXX TODO: rest of key functions
+
+

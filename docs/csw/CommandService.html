@@ -2,18 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>csw.CommandService API documentation</title>
-<meta name="description" content="" />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
 </head>
 <body>
 <main>
@@ -22,219 +36,6 @@
 <h1 class="title">Module <code>csw.CommandService</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">import asyncio
-import uuid
-from asyncio import Task
-from typing import List
-import traceback
-
-import requests
-import websockets
-from websocket import create_connection
-
-from csw.CommandResponse import SubmitResponse, Error, CommandResponse, Started, ValidateResponse, OnewayResponse
-from csw.CommandServiceRequest import Submit, Validate, Oneway, QueryFinal, SubscribeCurrentState
-from csw.CurrentState import CurrentState
-from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
-from csw.ParameterSetType import ControlCommand
-from csw.Prefix import Prefix
-import json
-from dataclasses import dataclass
-
-
-@dataclass
-class Subscription:
-    task: Task
-
-    def cancel(self):
-        self.task.cancel()
-
-
-# A CSW command service client
-# noinspection PyProtectedMember
-@dataclass
-class CommandService:
-    prefix: Prefix
-    componentType: ComponentType
-
-    def _getBaseUri(self) -&gt; str:
-        locationService = LocationService()
-        connection = ConnectionInfo.make(self.prefix, self.componentType, ConnectionType.HttpType)
-        location = locationService.resolve(connection)
-        if location is not None:
-            location.__class__ = HttpLocation
-            return location.uri
-        raise RuntimeError
-
-    def _postCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
-        baseUri = self._getBaseUri()
-        postUri = f&#34;{baseUri}post-endpoint&#34;
-        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
-        match command:
-            case &#39;Submit&#39;:
-                data = Submit(controlCommand)._asDict()
-            case &#39;Validate&#39;:
-                data = Validate(controlCommand)._asDict()
-            case _:
-                data = Oneway(controlCommand)._asDict()
-        jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
-        if not response.ok:
-            runId = str(uuid.uuid4())
-            return Error(runId, response.text)
-        resp = CommandResponse._fromDict(response.json())
-        return resp
-
-    # def _wsCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
-    #     baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-    #     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-
-    def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
-        &#34;&#34;&#34;
-        Submits a command to the command service
-
-        Args:
-            controlCommand (ControlCommand): command to submit
-
-        Returns: SubmitResponse
-            a subclass of SubmitResponse
-       &#34;&#34;&#34;
-        return self._postCommand(&#34;Submit&#34;, controlCommand)
-
-    def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
-        &#34;&#34;&#34;
-        Validates a command to be sent to the command service.
-
-        Args:
-            controlCommand (ControlCommand): command to submit
-
-        Returns: SubmitResponse
-            a subclass of SubmitResponse (only Accepted, Invalid or Locked)
-       &#34;&#34;&#34;
-        return self._postCommand(&#34;Validate&#34;, controlCommand)
-
-    def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
-        &#34;&#34;&#34;
-       Sends a command to the command service without expecting a reply.
-
-       Args:
-           controlCommand (ControlCommand): command to submit
-
-       Returns: SubmitResponse
-           a subclass of SubmitResponse (only Accepted, Invalid or Locked)
-      &#34;&#34;&#34;
-        return self._postCommand(&#34;Oneway&#34;, controlCommand)
-
-    async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
-        &#34;&#34;&#34;
-        If the command for runId returned Started (long running command), this will
-        return the final result.
-        This version returns a future response (async).
-        See queryFinal() for a blocking version.
-
-       Args:
-           runId (str): runId for the command
-           timeoutInSeconds (int): seconds to wait before returning an error
-
-       Returns: SubmitResponse
-           a subclass of SubmitResponse
-      &#34;&#34;&#34;
-        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(msgDict)
-        async with websockets.connect(wsUri) as websocket:
-            await websocket.send(jsonStr)
-            jsonResp = await websocket.recv()
-            return CommandResponse._fromDict(json.loads(jsonResp))
-
-    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
-        &#34;&#34;&#34;
-        Submits a command to the command service and waits for the final response.
-        This version returns a future response (async).
-        See submitAndWait() for a blocking version.
-
-        Args:
-            controlCommand (ControlCommand): command to submit
-            timeoutInSeconds (int): seconds to wait before returning an error
-
-        Returns: SubmitResponse
-            a subclass of SubmitResponse
-       &#34;&#34;&#34;
-        resp = self.submit(controlCommand)
-        match resp:
-            case Started(runId):
-                return await self.queryFinalAsync(runId, timeoutInSeconds)
-            case _:
-                return resp
-
-    def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
-        &#34;&#34;&#34;
-        If the command for runId returned Started (long-running command), this will
-        return the final result.
-
-       Args:
-           runId (str): runId for the command
-           timeoutInSeconds (int): seconds to wait before returning an error
-
-       Returns: SubmitResponse
-           a subclass of SubmitResponse
-      &#34;&#34;&#34;
-        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(msgDict)
-        ws = create_connection(wsUri)
-        ws.send(jsonStr)
-        jsonResp = ws.recv()
-        return CommandResponse._fromDict(json.loads(jsonResp))
-
-    def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
-        &#34;&#34;&#34;
-        Submits a command to the command service and waits for the final response.
-
-        Args:
-            controlCommand (ControlCommand): command to submit
-            timeoutInSeconds (int): seconds to wait before returning an error
-
-        Returns: SubmitResponse
-            a subclass of SubmitResponse
-       &#34;&#34;&#34;
-        resp = self.submit(controlCommand)
-        match resp:
-            case Started(runId):
-                return self.queryFinal(runId, timeoutInSeconds)
-            case _:
-                return resp
-
-    async def _subscribeCurrentState(self, names: List[str], callback):
-        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        msgDict = SubscribeCurrentState(names)._asDict()
-        jsonStr = json.dumps(msgDict)
-        async for websocket in websockets.connect(wsUri):
-            await websocket.send(jsonStr)
-            async for message in websocket:
-                callback(CurrentState._fromDict(json.loads(message)))
-
-    def subscribeCurrentState(self, names: List[str], callback) -&gt; Subscription:
-        &#34;&#34;&#34;
-        Subscribe to the current state of a component
-
-        Args:
-           names (List[str]): subscribe to states which have any of the provided value for name.
-                              If no states are provided, all the current states will be received.
-           callback: a function to be called with the CurrentState values
-
-        Returns: subscription task
-        &#34;&#34;&#34;
-        task = asyncio.create_task(self._subscribeCurrentState(names, callback))
-        return Subscription(task)</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -247,21 +48,24 @@ class CommandService:
 <dl>
 <dt id="csw.CommandService.CommandService"><code class="flex name class">
 <span>class <span class="ident">CommandService</span></span>
-<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>, componentType: <a title="csw.LocationService.ComponentType" href="LocationService.html#csw.LocationService.ComponentType">ComponentType</a>)</span>
+<span>(</span><span>prefix: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>componentType: <a title="csw.LocationService.ComponentType" href="LocationService.html#csw.LocationService.ComponentType">ComponentType</a>,<br>clientSession: aiohttp.client.ClientSession)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>CommandService(prefix: csw.Prefix.Prefix, componentType: csw.LocationService.ComponentType)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@dataclass
-class CommandService:
-    prefix: Prefix
-    componentType: ComponentType
+<pre><code class="python">class CommandService:
+
+    def __init__(self, prefix: Prefix, componentType: ComponentType, clientSession: ClientSession):
+        self.prefix = prefix
+        self.componentType = componentType
+        self._session = clientSession
+        self.log = structlog.get_logger()
+
 
     def _getBaseUri(self) -&gt; str:
-        locationService = LocationService()
+        locationService = LocationServiceSync()
         connection = ConnectionInfo.make(self.prefix, self.componentType, ConnectionType.HttpType)
         location = locationService.resolve(connection)
         if location is not None:
@@ -269,7 +73,7 @@ class CommandService:
             return location.uri
         raise RuntimeError
 
-    def _postCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    async def _postCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
         baseUri = self._getBaseUri()
         postUri = f&#34;{baseUri}post-endpoint&#34;
         headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
@@ -281,18 +85,14 @@ class CommandService:
             case _:
                 data = Oneway(controlCommand)._asDict()
         jsonData = json.loads(json.dumps(data))
-        response = requests.post(postUri, headers=headers, json=jsonData)
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
         if not response.ok:
             runId = str(uuid.uuid4())
-            return Error(runId, response.text)
-        resp = CommandResponse._fromDict(response.json())
+            return Error(runId, await response.text())
+        resp = CommandResponse._fromDict(await response.json())
         return resp
 
-    # def _wsCommand(self, command: str, controlCommand: ControlCommand) -&gt; SubmitResponse:
-    #     baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-    #     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-
-    def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+    async def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
         &#34;&#34;&#34;
         Submits a command to the command service
 
@@ -302,9 +102,9 @@ class CommandService:
         Returns: SubmitResponse
             a subclass of SubmitResponse
        &#34;&#34;&#34;
-        return self._postCommand(&#34;Submit&#34;, controlCommand)
+        return await self._postCommand(&#34;Submit&#34;, controlCommand)
 
-    def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
+    async def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
         &#34;&#34;&#34;
         Validates a command to be sent to the command service.
 
@@ -314,9 +114,9 @@ class CommandService:
         Returns: SubmitResponse
             a subclass of SubmitResponse (only Accepted, Invalid or Locked)
        &#34;&#34;&#34;
-        return self._postCommand(&#34;Validate&#34;, controlCommand)
+        return await self._postCommand(&#34;Validate&#34;, controlCommand)
 
-    def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
+    async def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
         &#34;&#34;&#34;
        Sends a command to the command service without expecting a reply.
 
@@ -326,32 +126,32 @@ class CommandService:
        Returns: SubmitResponse
            a subclass of SubmitResponse (only Accepted, Invalid or Locked)
       &#34;&#34;&#34;
-        return self._postCommand(&#34;Oneway&#34;, controlCommand)
+        return await self._postCommand(&#34;Oneway&#34;, controlCommand)
 
-    async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+    # noinspection DuplicatedCode
+    async def queryFinal(self, runId: str, timeout: timedelta) -&gt; SubmitResponse:
         &#34;&#34;&#34;
-        If the command for runId returned Started (long running command), this will
+        If the command for runId returned Started (long-running command), this will
         return the final result.
-        This version returns a future response (async).
-        See queryFinal() for a blocking version.
 
        Args:
            runId (str): runId for the command
-           timeoutInSeconds (int): seconds to wait before returning an error
+           timeout (timedelta): timr to wait before returning an error
 
        Returns: SubmitResponse
            a subclass of SubmitResponse
       &#34;&#34;&#34;
-        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
+        baseUri = (self._getBaseUri()).replace(&#39;http:&#39;, &#39;ws:&#39;)
         wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
+        msgDict = QueryFinal(runId, timeout)._asDict()
         jsonStr = json.dumps(msgDict)
-        async with websockets.connect(wsUri) as websocket:
-            await websocket.send(jsonStr)
-            jsonResp = await websocket.recv()
-            return CommandResponse._fromDict(json.loads(jsonResp))
+        ws = await self._session.ws_connect(wsUri)
+        await ws.send_str(jsonStr)
+        jsonResp = await ws.receive_str()
+        await ws.close()
+        return CommandResponse._fromDict(json.loads(jsonResp))
 
-    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+    async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeout: timedelta) -&gt; SubmitResponse:
         &#34;&#34;&#34;
         Submits a command to the command service and waits for the final response.
         This version returns a future response (async).
@@ -359,68 +159,91 @@ class CommandService:
 
         Args:
             controlCommand (ControlCommand): command to submit
-            timeoutInSeconds (int): seconds to wait before returning an error
+            timeout (timedelta): time to wait before returning an error
 
         Returns: SubmitResponse
             a subclass of SubmitResponse
        &#34;&#34;&#34;
-        resp = self.submit(controlCommand)
+        resp = await self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return await self.queryFinalAsync(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeout)
             case _:
                 return resp
 
-    def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
+    # noinspection DuplicatedCode
+    async def query(self, runId: str) -&gt; SubmitResponse:
         &#34;&#34;&#34;
-        If the command for runId returned Started (long-running command), this will
-        return the final result.
+        Query for the result of a long-running command which was sent as Submit to get a SubmitResponse.
+        Query allows checking to see if a long-running command is completed without waiting as with queryFinal.
 
-       Args:
+        Args:
            runId (str): runId for the command
-           timeoutInSeconds (int): seconds to wait before returning an error
 
-       Returns: SubmitResponse
+        Returns: SubmitResponse
            a subclass of SubmitResponse
-      &#34;&#34;&#34;
-        baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-        wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-        msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-        jsonStr = json.dumps(msgDict)
-        ws = create_connection(wsUri)
-        ws.send(jsonStr)
-        jsonResp = ws.recv()
-        return CommandResponse._fromDict(json.loads(jsonResp))
+        &#34;&#34;&#34;
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        data = Query(runId)._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f&#34;CommandService: query failed: {await response.json()}&#34;)
+        # return CommandResponse._fromDict(json.loads(await response.json()))
+        return CommandResponse._fromDict(await response.json())
 
-    def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+
+    async def submitAndWait(self, controlCommand: ControlCommand, timeout: timedelta) -&gt; SubmitResponse:
         &#34;&#34;&#34;
         Submits a command to the command service and waits for the final response.
 
         Args:
             controlCommand (ControlCommand): command to submit
-            timeoutInSeconds (int): seconds to wait before returning an error
+            timeout (timedelta): time to wait before returning an error
 
         Returns: SubmitResponse
             a subclass of SubmitResponse
        &#34;&#34;&#34;
-        resp = self.submit(controlCommand)
+        resp = await self.submit(controlCommand)
         match resp:
             case Started(runId):
-                return self.queryFinal(runId, timeoutInSeconds)
+                return await self.queryFinal(runId, timeout)
             case _:
                 return resp
 
-    async def _subscribeCurrentState(self, names: List[str], callback):
+    async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]):
         baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
         wsUri = f&#34;{baseUri}websocket-endpoint&#34;
         msgDict = SubscribeCurrentState(names)._asDict()
         jsonStr = json.dumps(msgDict)
-        async for websocket in websockets.connect(wsUri):
+        async with connect(wsUri) as websocket:
             await websocket.send(jsonStr)
             async for message in websocket:
-                callback(CurrentState._fromDict(json.loads(message)))
+                await callback(CurrentState._fromDict(json.loads(message)))
 
-    def subscribeCurrentState(self, names: List[str], callback) -&gt; Subscription:
+    # async def _subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]):
+    #     baseUri = (self._getBaseUri()).replace(&#39;http:&#39;, &#39;ws:&#39;)
+    #     wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+    #     msgDict = SubscribeCurrentState(names)._asDict()
+    #     jsonStr = json.dumps(msgDict)
+    #     print(f&#34;XXX _subscribeCurrentState: json = {jsonStr}&#34;)
+    #     async with self._session.ws_connect(wsUri) as ws:
+    #         await ws.send_str(jsonStr)
+    #         async for msgF in ws:
+    #             msg = await msgF
+    #             print(f&#34;XXX _subscribeCurrentState: message = {msg}&#34;)
+    #             match msg.type:
+    #                 case aiohttp.WSMsgType.TEXT:
+    #                     print(f&#34;XXX _subscribeCurrentState: callback({CurrentState._fromDict(json.loads(msg.data))})&#34;)
+    #                     await callback(CurrentState._fromDict(json.loads(msg.data)))
+    #                 case aiohttp.WSMsgType.CLOSED:
+    #                     break
+    #                 case aiohttp.WSMsgType.ERROR:
+    #                     break
+
+    async def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -&gt; Subscription:
         &#34;&#34;&#34;
         Subscribe to the current state of a component
 
@@ -432,38 +255,171 @@ class CommandService:
         Returns: subscription task
         &#34;&#34;&#34;
         task = asyncio.create_task(self._subscribeCurrentState(names, callback))
-        return Subscription(task)</code></pre>
+        await asyncio.sleep(0.1) # XXX TODO FIXME: Need to wait for task to startup
+        return Subscription(task)
+
+    async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+        &#34;&#34;&#34;
+        On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
+        Validation of supported hints need to be handled by the component writer.
+
+        Args:
+            startTime: represents the time at which the diagnostic mode actions will take effect
+            hint: represents supported diagnostic data mode for a component
+        &#34;&#34;&#34;
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        data = ExecuteDiagnosticMode(startTime, hint)._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f&#34;CommandService: executeDiagnosticMode failed: {await response.text()}&#34;)
+
+    async def executeOperationsMode(self):
+        &#34;&#34;&#34;
+        On receiving a operations mode command, the current diagnostic data mode is halted.
+        &#34;&#34;&#34;
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        data = ExecuteOperationsMode()._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f&#34;CommandService: executeOperationsMode failed: {await response.text()}&#34;)
+
+    async def goOnline(self):
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        data = GoOnline()._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f&#34;CommandService: goOnline failed: {await response.text()}&#34;)
+
+    async def goOffline(self):
+        baseUri = self._getBaseUri()
+        postUri = f&#34;{baseUri}post-endpoint&#34;
+        headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+        data = GoOffline()._asDict()
+        jsonData = json.loads(json.dumps(data))
+        response = await self._session.post(postUri, headers=headers, json=jsonData)
+        if not response.ok:
+            raise Exception(f&#34;CommandService: goOffline failed: {await response.text()}&#34;)</code></pre>
 </details>
-<h3>Class variables</h3>
-<dl>
-<dt id="csw.CommandService.CommandService.componentType"><code class="name">var <span class="ident">componentType</span> : <a title="csw.LocationService.ComponentType" href="LocationService.html#csw.LocationService.ComponentType">ComponentType</a></code></dt>
-<dd>
 <div class="desc"></div>
-</dd>
-<dt id="csw.CommandService.CommandService.prefix"><code class="name">var <span class="ident">prefix</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
-<dt id="csw.CommandService.CommandService.oneway"><code class="name flex">
-<span>def <span class="ident">oneway</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
+<dt id="csw.CommandService.CommandService.executeDiagnosticMode"><code class="name flex">
+<span>async def <span class="ident">executeDiagnosticMode</span></span>(<span>self,<br>startTime: <a title="csw.TMTTime.UTCTime" href="TMTTime.html#csw.TMTTime.UTCTime">UTCTime</a>,<br>hint: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sends a command to the command service without expecting a reply.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
-<dd>command to submit</dd>
-</dl>
-<p>Returns: SubmitResponse
-a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
+<pre><code class="python">async def executeDiagnosticMode(self, startTime: UTCTime, hint: str):
+    &#34;&#34;&#34;
+    On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
+    Validation of supported hints need to be handled by the component writer.
+
+    Args:
+        startTime: represents the time at which the diagnostic mode actions will take effect
+        hint: represents supported diagnostic data mode for a component
+    &#34;&#34;&#34;
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = ExecuteDiagnosticMode(startTime, hint)._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: executeDiagnosticMode failed: {await response.text()}&#34;)</code></pre>
+</details>
+<div class="desc"><p>On receiving a diagnostic data command, the component goes into a diagnostic data mode based on hint at the specified startTime.
+Validation of supported hints need to be handled by the component writer.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>startTime</code></strong></dt>
+<dd>represents the time at which the diagnostic mode actions will take effect</dd>
+<dt><strong><code>hint</code></strong></dt>
+<dd>represents supported diagnostic data mode for a component</dd>
+</dl></div>
+</dd>
+<dt id="csw.CommandService.CommandService.executeOperationsMode"><code class="name flex">
+<span>async def <span class="ident">executeOperationsMode</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def executeOperationsMode(self):
+    &#34;&#34;&#34;
+    On receiving a operations mode command, the current diagnostic data mode is halted.
+    &#34;&#34;&#34;
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = ExecuteOperationsMode()._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: executeOperationsMode failed: {await response.text()}&#34;)</code></pre>
+</details>
+<div class="desc"><p>On receiving a operations mode command, the current diagnostic data mode is halted.</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.goOffline"><code class="name flex">
+<span>async def <span class="ident">goOffline</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def goOffline(self):
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = GoOffline()._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: goOffline failed: {await response.text()}&#34;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="csw.CommandService.CommandService.goOnline"><code class="name flex">
+<span>async def <span class="ident">goOnline</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def goOnline(self):
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = GoOnline()._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: goOnline failed: {await response.text()}&#34;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="csw.CommandService.CommandService.oneway"><code class="name flex">
+<span>async def <span class="ident">oneway</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def oneway(self, controlCommand: ControlCommand) -&gt; OnewayResponse:
     &#34;&#34;&#34;
    Sends a command to the command service without expecting a reply.
 
@@ -473,112 +429,108 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
    Returns: SubmitResponse
        a subclass of SubmitResponse (only Accepted, Invalid or Locked)
   &#34;&#34;&#34;
-    return self._postCommand(&#34;Oneway&#34;, controlCommand)</code></pre>
+    return await self._postCommand(&#34;Oneway&#34;, controlCommand)</code></pre>
 </details>
-</dd>
-<dt id="csw.CommandService.CommandService.queryFinal"><code class="name flex">
-<span>def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>If the command for runId returned Started (long-running command), this will
-return the final result.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
-<dd>runId for the command</dd>
-<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
-<dd>seconds to wait before returning an error</dd>
-</dl>
-<p>Returns: SubmitResponse
-a subclass of SubmitResponse</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def queryFinal(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
-    &#34;&#34;&#34;
-    If the command for runId returned Started (long-running command), this will
-    return the final result.
-
-   Args:
-       runId (str): runId for the command
-       timeoutInSeconds (int): seconds to wait before returning an error
-
-   Returns: SubmitResponse
-       a subclass of SubmitResponse
-  &#34;&#34;&#34;
-    baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-    msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-    jsonStr = json.dumps(msgDict)
-    ws = create_connection(wsUri)
-    ws.send(jsonStr)
-    jsonResp = ws.recv()
-    return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
-</details>
-</dd>
-<dt id="csw.CommandService.CommandService.queryFinalAsync"><code class="name flex">
-<span>async def <span class="ident">queryFinalAsync</span></span>(<span>self, runId: str, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>If the command for runId returned Started (long running command), this will
-return the final result.
-This version returns a future response (async).
-See queryFinal() for a blocking version.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
-<dd>runId for the command</dd>
-<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
-<dd>seconds to wait before returning an error</dd>
-</dl>
-<p>Returns: SubmitResponse
-a subclass of SubmitResponse</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def queryFinalAsync(self, runId: str, timeoutInSeconds: int) -&gt; SubmitResponse:
-    &#34;&#34;&#34;
-    If the command for runId returned Started (long running command), this will
-    return the final result.
-    This version returns a future response (async).
-    See queryFinal() for a blocking version.
-
-   Args:
-       runId (str): runId for the command
-       timeoutInSeconds (int): seconds to wait before returning an error
-
-   Returns: SubmitResponse
-       a subclass of SubmitResponse
-  &#34;&#34;&#34;
-    baseUri = self._getBaseUri().replace(&#39;http:&#39;, &#39;ws:&#39;)
-    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
-    msgDict = QueryFinal(runId, timeoutInSeconds)._asDict()
-    jsonStr = json.dumps(msgDict)
-    async with websockets.connect(wsUri) as websocket:
-        await websocket.send(jsonStr)
-        jsonResp = await websocket.recv()
-        return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
-</details>
-</dd>
-<dt id="csw.CommandService.CommandService.submit"><code class="name flex">
-<span>def <span class="ident">submit</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Submits a command to the command service</p>
+<div class="desc"><p>Sends a command to the command service without expecting a reply.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
 <dd>command to submit</dd>
 </dl>
 <p>Returns: SubmitResponse
-a subclass of SubmitResponse</p></div>
+a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.query"><code class="name flex">
+<span>async def <span class="ident">query</span></span>(<span>self, runId: str) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
+<pre><code class="python">async def query(self, runId: str) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    Query for the result of a long-running command which was sent as Submit to get a SubmitResponse.
+    Query allows checking to see if a long-running command is completed without waiting as with queryFinal.
+
+    Args:
+       runId (str): runId for the command
+
+    Returns: SubmitResponse
+       a subclass of SubmitResponse
+    &#34;&#34;&#34;
+    baseUri = self._getBaseUri()
+    postUri = f&#34;{baseUri}post-endpoint&#34;
+    headers = {&#39;Content-type&#39;: &#39;application/json&#39;}
+    data = Query(runId)._asDict()
+    jsonData = json.loads(json.dumps(data))
+    response = await self._session.post(postUri, headers=headers, json=jsonData)
+    if not response.ok:
+        raise Exception(f&#34;CommandService: query failed: {await response.json()}&#34;)
+    # return CommandResponse._fromDict(json.loads(await response.json()))
+    return CommandResponse._fromDict(await response.json())</code></pre>
+</details>
+<div class="desc"><p>Query for the result of a long-running command which was sent as Submit to get a SubmitResponse.
+Query allows checking to see if a long-running command is completed without waiting as with queryFinal.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId for the command</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.queryFinal"><code class="name flex">
+<span>async def <span class="ident">queryFinal</span></span>(<span>self, runId: str, timeout: datetime.timedelta) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def queryFinal(self, runId: str, timeout: timedelta) -&gt; SubmitResponse:
+    &#34;&#34;&#34;
+    If the command for runId returned Started (long-running command), this will
+    return the final result.
+
+   Args:
+       runId (str): runId for the command
+       timeout (timedelta): timr to wait before returning an error
+
+   Returns: SubmitResponse
+       a subclass of SubmitResponse
+  &#34;&#34;&#34;
+    baseUri = (self._getBaseUri()).replace(&#39;http:&#39;, &#39;ws:&#39;)
+    wsUri = f&#34;{baseUri}websocket-endpoint&#34;
+    msgDict = QueryFinal(runId, timeout)._asDict()
+    jsonStr = json.dumps(msgDict)
+    ws = await self._session.ws_connect(wsUri)
+    await ws.send_str(jsonStr)
+    jsonResp = await ws.receive_str()
+    await ws.close()
+    return CommandResponse._fromDict(json.loads(jsonResp))</code></pre>
+</details>
+<div class="desc"><p>If the command for runId returned Started (long-running command), this will
+return the final result.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>runId</code></strong> :&ensp;<code>str</code></dt>
+<dd>runId for the command</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>timedelta</code></dt>
+<dd>timr to wait before returning an error</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.submit"><code class="name flex">
+<span>async def <span class="ident">submit</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def submit(self, controlCommand: ControlCommand) -&gt; SubmitResponse:
     &#34;&#34;&#34;
     Submits a command to the command service
 
@@ -588,67 +540,63 @@ a subclass of SubmitResponse</p></div>
     Returns: SubmitResponse
         a subclass of SubmitResponse
    &#34;&#34;&#34;
-    return self._postCommand(&#34;Submit&#34;, controlCommand)</code></pre>
+    return await self._postCommand(&#34;Submit&#34;, controlCommand)</code></pre>
 </details>
-</dd>
-<dt id="csw.CommandService.CommandService.submitAndWait"><code class="name flex">
-<span>def <span class="ident">submitAndWait</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Submits a command to the command service and waits for the final response.</p>
+<div class="desc"><p>Submits a command to the command service</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
 <dd>command to submit</dd>
-<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
-<dd>seconds to wait before returning an error</dd>
 </dl>
 <p>Returns: SubmitResponse
 a subclass of SubmitResponse</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.submitAndWait"><code class="name flex">
+<span>async def <span class="ident">submitAndWait</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>,<br>timeout: datetime.timedelta) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def submitAndWait(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+<pre><code class="python">async def submitAndWait(self, controlCommand: ControlCommand, timeout: timedelta) -&gt; SubmitResponse:
     &#34;&#34;&#34;
     Submits a command to the command service and waits for the final response.
 
     Args:
         controlCommand (ControlCommand): command to submit
-        timeoutInSeconds (int): seconds to wait before returning an error
+        timeout (timedelta): time to wait before returning an error
 
     Returns: SubmitResponse
         a subclass of SubmitResponse
    &#34;&#34;&#34;
-    resp = self.submit(controlCommand)
+    resp = await self.submit(controlCommand)
     match resp:
         case Started(runId):
-            return self.queryFinal(runId, timeoutInSeconds)
+            return await self.queryFinal(runId, timeout)
         case _:
             return resp</code></pre>
 </details>
-</dd>
-<dt id="csw.CommandService.CommandService.submitAndWaitAsync"><code class="name flex">
-<span>async def <span class="ident">submitAndWaitAsync</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>, timeoutInSeconds: int) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Submits a command to the command service and waits for the final response.
-This version returns a future response (async).
-See submitAndWait() for a blocking version.</p>
+<div class="desc"><p>Submits a command to the command service and waits for the final response.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
 <dd>command to submit</dd>
-<dt><strong><code>timeoutInSeconds</code></strong> :&ensp;<code>int</code></dt>
-<dd>seconds to wait before returning an error</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>timedelta</code></dt>
+<dd>time to wait before returning an error</dd>
 </dl>
 <p>Returns: SubmitResponse
 a subclass of SubmitResponse</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.submitAndWaitAsync"><code class="name flex">
+<span>async def <span class="ident">submitAndWaitAsync</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>,<br>timeout: datetime.timedelta) ‑> <a title="csw.CommandResponse.Error" href="CommandResponse.html#csw.CommandResponse.Error">Error</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a> | <a title="csw.CommandResponse.Started" href="CommandResponse.html#csw.CommandResponse.Started">Started</a> | <a title="csw.CommandResponse.Completed" href="CommandResponse.html#csw.CommandResponse.Completed">Completed</a> | <a title="csw.CommandResponse.Cancelled" href="CommandResponse.html#csw.CommandResponse.Cancelled">Cancelled</a></span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeoutInSeconds: int) -&gt; SubmitResponse:
+<pre><code class="python">async def submitAndWaitAsync(self, controlCommand: ControlCommand, timeout: timedelta) -&gt; SubmitResponse:
     &#34;&#34;&#34;
     Submits a command to the command service and waits for the final response.
     This version returns a future response (async).
@@ -656,38 +604,40 @@ a subclass of SubmitResponse</p></div>
 
     Args:
         controlCommand (ControlCommand): command to submit
-        timeoutInSeconds (int): seconds to wait before returning an error
+        timeout (timedelta): time to wait before returning an error
 
     Returns: SubmitResponse
         a subclass of SubmitResponse
    &#34;&#34;&#34;
-    resp = self.submit(controlCommand)
+    resp = await self.submit(controlCommand)
     match resp:
         case Started(runId):
-            return await self.queryFinalAsync(runId, timeoutInSeconds)
+            return await self.queryFinal(runId, timeout)
         case _:
             return resp</code></pre>
 </details>
-</dd>
-<dt id="csw.CommandService.CommandService.subscribeCurrentState"><code class="name flex">
-<span>def <span class="ident">subscribeCurrentState</span></span>(<span>self, names: List[str], callback) ‑> <a title="csw.CommandService.Subscription" href="#csw.CommandService.Subscription">Subscription</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Subscribe to the current state of a component</p>
+<div class="desc"><p>Submits a command to the command service and waits for the final response.
+This version returns a future response (async).
+See submitAndWait() for a blocking version.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>names</code></strong> :&ensp;<code>List[str]</code></dt>
-<dd>subscribe to states which have any of the provided value for name.
-If no states are provided, all the current states will be received.</dd>
-<dt><strong><code>callback</code></strong></dt>
-<dd>a function to be called with the CurrentState values</dd>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+<dt><strong><code>timeout</code></strong> :&ensp;<code>timedelta</code></dt>
+<dd>time to wait before returning an error</dd>
 </dl>
-<p>Returns: subscription task</p></div>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.subscribeCurrentState"><code class="name flex">
+<span>async def <span class="ident">subscribeCurrentState</span></span>(<span>self,<br>names: List[str],<br>callback: Callable[[<a title="csw.CurrentState.CurrentState" href="CurrentState.html#csw.CurrentState.CurrentState">CurrentState</a>], Awaitable]) ‑> <a title="csw.CommandService.Subscription" href="#csw.CommandService.Subscription">Subscription</a></span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def subscribeCurrentState(self, names: List[str], callback) -&gt; Subscription:
+<pre><code class="python">async def subscribeCurrentState(self, names: List[str], callback: Callable[[CurrentState], Awaitable]) -&gt; Subscription:
     &#34;&#34;&#34;
     Subscribe to the current state of a component
 
@@ -699,26 +649,29 @@ If no states are provided, all the current states will be received.</dd>
     Returns: subscription task
     &#34;&#34;&#34;
     task = asyncio.create_task(self._subscribeCurrentState(names, callback))
+    await asyncio.sleep(0.1) # XXX TODO FIXME: Need to wait for task to startup
     return Subscription(task)</code></pre>
 </details>
-</dd>
-<dt id="csw.CommandService.CommandService.validate"><code class="name flex">
-<span>def <span class="ident">validate</span></span>(<span>self, controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Validates a command to be sent to the command service.</p>
+<div class="desc"><p>Subscribe to the current state of a component</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
-<dd>command to submit</dd>
+<dt><strong><code>names</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>subscribe to states which have any of the provided value for name.
+If no states are provided, all the current states will be received.</dd>
+<dt><strong><code>callback</code></strong></dt>
+<dd>a function to be called with the CurrentState values</dd>
 </dl>
-<p>Returns: SubmitResponse
-a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
+<p>Returns: subscription task</p></div>
+</dd>
+<dt id="csw.CommandService.CommandService.validate"><code class="name flex">
+<span>async def <span class="ident">validate</span></span>(<span>self,<br>controlCommand: <a title="csw.ParameterSetType.ControlCommand" href="ParameterSetType.html#csw.ParameterSetType.ControlCommand">ControlCommand</a>) ‑> <a title="csw.CommandResponse.Accepted" href="CommandResponse.html#csw.CommandResponse.Accepted">Accepted</a> | <a title="csw.CommandResponse.Invalid" href="CommandResponse.html#csw.CommandResponse.Invalid">Invalid</a> | <a title="csw.CommandResponse.Locked" href="CommandResponse.html#csw.CommandResponse.Locked">Locked</a></span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
+<pre><code class="python">async def validate(self, controlCommand: ControlCommand) -&gt; ValidateResponse:
     &#34;&#34;&#34;
     Validates a command to be sent to the command service.
 
@@ -728,8 +681,16 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
     Returns: SubmitResponse
         a subclass of SubmitResponse (only Accepted, Invalid or Locked)
    &#34;&#34;&#34;
-    return self._postCommand(&#34;Validate&#34;, controlCommand)</code></pre>
+    return await self._postCommand(&#34;Validate&#34;, controlCommand)</code></pre>
 </details>
+<div class="desc"><p>Validates a command to be sent to the command service.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>controlCommand</code></strong> :&ensp;<code>ControlCommand</code></dt>
+<dd>command to submit</dd>
+</dl>
+<p>Returns: SubmitResponse
+a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 </dd>
 </dl>
 </dd>
@@ -738,7 +699,6 @@ a subclass of SubmitResponse (only Accepted, Invalid or Locked)</p></div>
 <span>(</span><span>task: _asyncio.Task)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Subscription(task: _asyncio.Task)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -750,11 +710,12 @@ class Subscription:
     def cancel(self):
         self.task.cancel()</code></pre>
 </details>
-<h3>Class variables</h3>
+<div class="desc"><p>Subscription(task: _asyncio.Task)</p></div>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.CommandService.Subscription.task"><code class="name">var <span class="ident">task</span> : _asyncio.Task</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -763,7 +724,6 @@ class Subscription:
 <span>def <span class="ident">cancel</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -771,6 +731,7 @@ class Subscription:
 <pre><code class="python">def cancel(self):
     self.task.cancel()</code></pre>
 </details>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -778,7 +739,6 @@ class Subscription:
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -793,11 +753,13 @@ class Subscription:
 <li>
 <h4><code><a title="csw.CommandService.CommandService" href="#csw.CommandService.CommandService">CommandService</a></code></h4>
 <ul class="">
-<li><code><a title="csw.CommandService.CommandService.componentType" href="#csw.CommandService.CommandService.componentType">componentType</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.executeDiagnosticMode" href="#csw.CommandService.CommandService.executeDiagnosticMode">executeDiagnosticMode</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.executeOperationsMode" href="#csw.CommandService.CommandService.executeOperationsMode">executeOperationsMode</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.goOffline" href="#csw.CommandService.CommandService.goOffline">goOffline</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.goOnline" href="#csw.CommandService.CommandService.goOnline">goOnline</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.oneway" href="#csw.CommandService.CommandService.oneway">oneway</a></code></li>
-<li><code><a title="csw.CommandService.CommandService.prefix" href="#csw.CommandService.CommandService.prefix">prefix</a></code></li>
+<li><code><a title="csw.CommandService.CommandService.query" href="#csw.CommandService.CommandService.query">query</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.queryFinal" href="#csw.CommandService.CommandService.queryFinal">queryFinal</a></code></li>
-<li><code><a title="csw.CommandService.CommandService.queryFinalAsync" href="#csw.CommandService.CommandService.queryFinalAsync">queryFinalAsync</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.submit" href="#csw.CommandService.CommandService.submit">submit</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.submitAndWait" href="#csw.CommandService.CommandService.submitAndWait">submitAndWait</a></code></li>
 <li><code><a title="csw.CommandService.CommandService.submitAndWaitAsync" href="#csw.CommandService.CommandService.submitAndWaitAsync">submitAndWaitAsync</a></code></li>
@@ -818,7 +780,7 @@ class Subscription:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

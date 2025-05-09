@@ -5,13 +5,13 @@ from typing import List
 from urllib.parse import urlencode
 
 import re
-import requests
+from aiohttp import ClientSession
 from dataclasses_json import dataclass_json
 from keycloak import KeycloakOpenID
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpLocation
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 @dataclass
 class ConfigData:
@@ -22,6 +22,8 @@ class ConfigData:
     """
     content: bytes
 
+    def __str__(self):
+        return self.content.decode('utf-8')
 
 @dataclass_json
 @dataclass
@@ -76,38 +78,45 @@ class ConfigFileRevision:
     time: str
 
 
-@dataclass
 class ConfigService:
-    client_id = "tmt-frontend-app"
-    user = "config-admin1"
-    password = "config-admin1"
-    _locationService = LocationService()
 
-    def _formatTime(self, time: datetime):
+    def __init__(self,
+                 clientSession: ClientSession,
+                 client_id: str = "tmt-frontend-app",
+                 user: str = "config-admin1",
+                 password: str = "config-admin1",):
+        self._session = clientSession
+        self.client_id = client_id
+        self.user = user
+        self.password = password
+        self._locationService = LocationService(clientSession)
+
+    @staticmethod
+    def _formatTime(time: datetime):
         return time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    def _getBaseUri(self) -> str:
-        prefix = Prefix(Subsystems.CSW, "ConfigServer")
+    async def _getBaseUri(self) -> str:
+        prefix = Prefix(Subsystem.CSW, "ConfigServer")
         connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
-        location = self._locationService.resolve(connection)
+        location = await self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError("Can't locate CSW Config Service")
 
-    def _endPoint(self, path: str) -> str:
-        return f'{self._getBaseUri()}{path}'
+    async def _endPoint(self, path: str) -> str:
+        return f'{await self._getBaseUri()}{path}'
 
-    def _locateAuthService(self) -> str:
-        connection = ConnectionInfo.make(Prefix(Subsystems.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
-        location = self._locationService.resolve(connection)
+    async def _locateAuthService(self) -> str:
+        connection = ConnectionInfo.make(Prefix(Subsystem.CSW, "AAS"), ComponentType.Service, ConnectionType.HttpType)
+        location = await self._locationService.resolve(connection)
         if location is not None:
             location.__class__ = HttpLocation
             return location.uri
         raise RuntimeError("Can't locate CSW Auth Service")
 
-    def _getToken(self):
-        uri = self._locateAuthService()
+    async def _getToken(self):
+        uri = await self._locateAuthService()
         keycloak_openid = KeycloakOpenID(server_url=f'{uri}/',
                                          client_id=self.client_id,
                                          realm_name='TMT')
@@ -123,23 +132,23 @@ class ConfigService:
                 f"Input file path '{path}' contains invalid characters. "
                 + f"Note, these characters {charsMessage} or 'white space' are not allowed in file path`")
 
-    def _createOrUpdate(self, create: bool, path: str, configData: ConfigData,
+    async def _createOrUpdate(self, create: bool, path: str, configData: ConfigData,
                         annex: bool = False, comment: str = "Created") -> ConfigId:
         self._validatePath(path)
-        token = self._getToken()
+        token = await self._getToken()
         params = urlencode({'annex': annex, 'comment': comment})
-        baseUri = self._endPoint(f'config/{path}')
+        baseUri = await self._endPoint(f'config/{path}')
         uri = f'{baseUri}?{params}'
         headers = {'Content-type': 'application/octet-stream', 'Authorization': f'Bearer {token}'}
         if create:
-            response = requests.post(uri, headers=headers, data=configData.content)
+            response = await self._session.post(uri, headers=headers, data=configData.content)
         else:
-            response = requests.put(uri, headers=headers, data=configData.content)
+            response = await self._session.put(uri, headers=headers, data=configData.content)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigId(response.json())
+            raise RuntimeError(await response.text())
+        return ConfigId(await response.json())
 
-    def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
+    async def create(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
         """
         Creates a file at a specified path with given data and comment.
 
@@ -151,9 +160,9 @@ class ConfigService:
 
         Returns: id of file revision
         """
-        return self._createOrUpdate(True, path, configData, annex, comment)
+        return await self._createOrUpdate(True, path, configData, annex, comment)
 
-    def update(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
+    async def update(self, path: str, configData: ConfigData, annex: bool = False, comment: str = "Created") -> ConfigId:
         """
         Updates a file at a specified path with given data and comment.
 
@@ -165,9 +174,9 @@ class ConfigService:
 
         Returns: id of file revision
         """
-        return self._createOrUpdate(False, path, configData, annex, comment)
+        return await self._createOrUpdate(False, path, configData, annex, comment)
 
-    def delete(self, path: str, comment: str = "Deleted"):
+    async def delete(self, path: str, comment: str = "Deleted"):
         """
         Deletes the given config file (older versions will still be available).
 
@@ -175,18 +184,19 @@ class ConfigService:
             path: the file path relative to the repository root
             comment: comment to associate with this operation
         """
-        token = self._getToken()
+        token = await self._getToken()
         params = urlencode({'comment': comment})
-        baseUri = self._endPoint(f'config/{path}')
+        baseUri = await self._endPoint(f'config/{path}')
         uri = f'{baseUri}?{params}'
         headers = {'Authorization': f'Bearer {token}'}
-        response = requests.delete(uri, headers=headers)
+        response = await self._session.delete(uri, headers=headers)
         if not response.ok:
-            raise RuntimeError(response.text)
+            raise RuntimeError(await response.text())
 
-    def list(self, fileType: FileType = None, pattern: str = None) -> List[ConfigFileInfo]:
+    # noinspection PyUnresolvedReferences
+    async def list(self, fileType: FileType = None, pattern: str = None) -> List[ConfigFileInfo]:
         """
-        Returns a list containing all of the known config files of given type(Annex or Normal) and whose name matches the provided pattern.
+        Returns a list containing all the known config files of given type(Annex or Normal) and whose name matches the provided pattern.
 
         Args:
             fileType: optional file type(Annex or Normal)
@@ -200,11 +210,11 @@ class ConfigService:
             params.update({'type': fileType.name})
         if pattern:
             params.update({'pattern': pattern})
-        uri = f"{self._endPoint('list')}?{urlencode(params)}"
-        response = requests.get(uri)
-        return list(map(lambda p: ConfigFileInfo.from_dict(p), response.json()))
+        uri = f"{await self._endPoint('list')}?{urlencode(params)}"
+        response = await self._session.get(uri)
+        return list(map(lambda p: ConfigFileInfo.from_dict(p), await response.json()))
 
-    def exists(self, path: str, configId: ConfigId = None):
+    async def exists(self, path: str, configId: ConfigId = None):
         """
         Returns true if the given path exists and is being managed.
 
@@ -217,11 +227,11 @@ class ConfigService:
         params = {}
         if configId:
             params.update({'id': configId.id})
-        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
-        response = requests.head(uri)
+        uri = f"{await self._endPoint('config')}/{path}?{urlencode(params)}"
+        response = await self._session.head(uri)
         return response.ok
 
-    def getLatest(self, path: str) -> ConfigData:
+    async def getLatest(self, path: str) -> ConfigData:
         """
         Gets and returns the content of latest version of the file stored under the given path.
 
@@ -230,13 +240,13 @@ class ConfigService:
 
         Returns: file contents
         """
-        uri = f"{self._endPoint('config')}/{path}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('config')}/{path}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getById(self, path: str, configId: ConfigId) -> ConfigData:
+    async def getById(self, path: str, configId: ConfigId) -> ConfigData:
         """
         Gets and returns the file at the given path with the specified revision id
 
@@ -247,13 +257,13 @@ class ConfigService:
         Returns: file contents
         """
         params = {'id': configId.id}
-        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('config')}/{path}?{urlencode(params)}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getByTime(self, path: str, time: datetime) -> ConfigData:
+    async def getByTime(self, path: str, time: datetime) -> ConfigData:
         """
         Gets the file at the given path as it existed on the given instant.
         If instant is before the file was created, the initial version is returned.
@@ -266,13 +276,13 @@ class ConfigService:
         Returns: file contents
         """
         params = {'date': self._formatTime(time)}
-        uri = f"{self._endPoint('config')}/{path}?{urlencode(params)}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('config')}/{path}?{urlencode(params)}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getActive(self, path: str) -> ConfigData:
+    async def getActive(self, path: str) -> ConfigData:
         """
         Gets and returns the content of active version of the file stored under the given path.
 
@@ -282,13 +292,13 @@ class ConfigService:
         Returns: file contents
 
         """
-        uri = f"{self._endPoint('active-config')}/{path}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('active-config')}/{path}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getActiveByTime(self, path: str, time: datetime) -> ConfigData:
+    async def getActiveByTime(self, path: str, time: datetime) -> ConfigData:
         """
         Returns the content of active version of the file at the given path as it existed on the given instant
 
@@ -300,13 +310,13 @@ class ConfigService:
 
         """
         params = {'date': self._formatTime(time)}
-        uri = f"{self._endPoint('active-config')}/{path}?{urlencode(params)}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('active-config')}/{path}?{urlencode(params)}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigData(response.content)
+            raise RuntimeError(await response.text())
+        return ConfigData(await response.content.read())
 
-    def getActiveVersion(self, path: str) -> ConfigId:
+    async def getActiveVersion(self, path: str) -> ConfigId:
         """
         Returns the version which represents the "active version" of the file at the given path.
 
@@ -316,25 +326,27 @@ class ConfigService:
         Returns: ConfigId indicating the id of the active version
 
         """
-        uri = f"{self._endPoint('active-version')}/{path}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('active-version')}/{path}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigId(response.json())
+            raise RuntimeError(await response.text())
+        return ConfigId(await response.json())
 
-    def getMetadata(self) -> ConfigMetadata:
+    # noinspection PyUnresolvedReferences
+    async def getMetadata(self) -> ConfigMetadata:
         """
         Query the metadata of config server.
         Returns: a ConfigMetadata object
 
         """
-        uri = f"{self._endPoint('metadata')}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint('metadata')}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return ConfigMetadata.from_dict(response.json())
+            raise RuntimeError(await response.text())
+        return ConfigMetadata.from_dict(await response.json())
 
-    def _history(self, key: str, path: str,
+    # noinspection PyUnresolvedReferences
+    async def _history(self, key: str, path: str,
                  fromTime: datetime, toTime: datetime,
                  maxResults: int) -> List[ConfigFileRevision]:
         params = {}
@@ -344,13 +356,13 @@ class ConfigService:
             params.update({'to': self._formatTime(toTime)})
         if maxResults:
             params.update({'maxResults': maxResults})
-        uri = f"{self._endPoint(key)}/{path}?{urlencode(params)}"
-        response = requests.get(uri)
+        uri = f"{await self._endPoint(key)}/{path}?{urlencode(params)}"
+        response = await self._session.get(uri)
         if not response.ok:
-            raise RuntimeError(response.text)
-        return list(map(lambda p: ConfigFileRevision.from_dict(p), response.json()))
+            raise RuntimeError(await response.text())
+        return list(map(lambda p: ConfigFileRevision.from_dict(p), await response.json()))
 
-    def history(self, path: str,
+    async def history(self, path: str,
                 fromTime: datetime = None, toTime: datetime = None,
                 maxResults: int = 10000) -> List[ConfigFileRevision]:
         """
@@ -366,9 +378,9 @@ class ConfigService:
         Returns: list of ConfigFileRevision
 
         """
-        return self._history('history', path, fromTime, toTime, maxResults)
+        return await self._history('history', path, fromTime, toTime, maxResults)
 
-    def historyActive(self, path: str,
+    async def historyActive(self, path: str,
                       fromTime: datetime = None, toTime: datetime = None,
                       maxResults: int = None) -> List[ConfigFileRevision]:
         """
@@ -384,9 +396,9 @@ class ConfigService:
         Returns: list of ConfigFileRevision
 
         """
-        return self._history('history-active', path, fromTime, toTime, maxResults)
+        return await self._history('history-active', path, fromTime, toTime, maxResults)
 
-    def setActiveVersion(self, path: str, configId: ConfigId, comment: str):
+    async def setActiveVersion(self, path: str, configId: ConfigId, comment: str):
         """
         Sets the active version to be the version provided for the file at the given path.
         If this method is not called, the active version will always be the version with which the file was created.
@@ -399,15 +411,15 @@ class ConfigService:
             comment: comment to associate with this operation
 
         """
-        token = self._getToken()
+        token = await self._getToken()
         params = {'id': configId.id, 'comment': comment}
         headers = {'Authorization': f'Bearer {token}'}
-        uri = f"{self._endPoint('active-version')}/{path}?{urlencode(params)}"
-        response = requests.put(uri, headers=headers)
+        uri = f"{await self._endPoint('active-version')}/{path}?{urlencode(params)}"
+        response = await self._session.put(uri, headers=headers)
         if not response.ok:
-            raise RuntimeError(response.text)
+            raise RuntimeError(await response.text())
 
-    def resetActiveVersion(self, path: str, comment: str):
+    async def resetActiveVersion(self, path: str, comment: str):
         """
         Resets the "active version" of the file at the given path to the latest version.
 
@@ -416,10 +428,10 @@ class ConfigService:
             comment: comment to associate with this operation
 
         """
-        token = self._getToken()
+        token = await self._getToken()
         params = {'comment': comment}
         headers = {'Authorization': f'Bearer {token}'}
-        uri = f"{self._endPoint('active-version')}/{path}?{urlencode(params)}"
-        response = requests.put(uri, headers=headers)
+        uri = f"{await self._endPoint('active-version')}/{path}?{urlencode(params)}"
+        response = await self._session.put(uri, headers=headers)
         if not response.ok:
-            raise RuntimeError(response.text)
+            raise RuntimeError(await response.text())

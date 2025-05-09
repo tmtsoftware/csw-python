@@ -1,14 +1,13 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Self, Callable
 
 from csw.Parameter import Parameter
-
 
 # noinspection PyProtectedMember
 @dataclass
 class CommandResponse:
     """
-    Type of a response to a command (submit, oneway or validate).
+    Type of response to a command (submit, oneway or validate).
     Note that oneway and validate responses are limited to Accepted, Invalid or Locked.
     """
     runId: str
@@ -39,6 +38,45 @@ class CommandResponse:
                 return Accepted._fromDict(obj)
             case "Invalid":
                 return Invalid._fromDict(obj)
+
+    def isPositive(self) -> bool:
+        return isinstance(self, Completed) or isinstance(self, Accepted)
+
+    def isCompleted(self) -> bool:
+        return isinstance(self, Completed)
+
+    def isIntermediate(self) -> bool:
+        return isinstance(self, Started)
+
+    def isStarted(self) -> bool:
+        return isinstance(self, Started)
+
+    def isFinal(self) -> bool:
+        return not isinstance(self, Started)
+
+    def isNegative(self) -> bool:
+        return not (self.isPositive() or self.isIntermediate())
+
+    def isFailed(self) -> bool:
+        return self.isNegative()
+
+    def onFailedTerminate(self) -> Self:
+        if self.isFailed():
+            # noinspection PyTypeChecker
+            raise CommandError(self)
+        return self
+
+    def onStarted(self, func: Callable[[Self], None]):
+        if isinstance(self, Started):
+            func(self)
+
+    def onCompleted(self, func: Callable[[Self], None]):
+        if isinstance(self, Completed):
+            func(self)
+
+    def onFailed(self, func: Callable[[Self], None]):
+        if self.isFailed():
+            func(self)
 
 
 @dataclass
@@ -128,11 +166,10 @@ class Started(CommandResponse):
             runId=obj['runId'],
         )
 
-
 @dataclass
 class Result:
     """A result containing parameters for command response"""
-    paramSet: List[Parameter]
+    paramSet: List[Parameter] = field(default_factory=list)
 
     # noinspection PyProtectedMember
     def _asDict(self):
@@ -157,7 +194,7 @@ class Result:
 @dataclass
 class Completed(CommandResponse):
     """Represents a positive response stating completion of command"""
-    result: Result = Result([])
+    result: Result = field(default_factory=lambda: Result([]))
 
     # noinspection PyProtectedMember
     def _asDict(self):
@@ -295,3 +332,10 @@ class Invalid(CommandResponse):
 SubmitResponse = Error | Invalid | Locked | Started | Completed | Cancelled
 ValidateResponse = Accepted | Invalid | Locked
 OnewayResponse = Accepted | Invalid | Locked
+
+class CommandError(Exception):
+    def __init__(self, submitResponse: SubmitResponse):
+        super().__init__(submitResponse.message)
+
+
+

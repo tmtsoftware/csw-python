@@ -1,10 +1,12 @@
 import traceback
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import List
 
 from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import ControlCommand
+from csw.TMTTime import UTCTime
 
 
 @dataclass_json
@@ -49,15 +51,15 @@ class Oneway(CommandServiceRequest):
 @dataclass
 class QueryFinal:
     """
-    A message sent to query the final result of a long running command.
+    A message sent to query the final result of a long-running command.
     The response should be a CommandResponse.
 
     Args:
         runId (str): The command's runId
-        timeoutInSeconds (int) amount of time to wait
+        timeout (timedelta) amount of time to wait
     """
     runId: str
-    timeoutInSeconds: int
+    timeout: timedelta
 
     @staticmethod
     def _fromDict(obj):
@@ -66,8 +68,8 @@ class QueryFinal:
         """
         try:
             runId = obj['runId']
-            timeoutInSeconds = obj['timeoutInSeconds']
-            return QueryFinal(runId, timeoutInSeconds)
+            timeout = timedelta(seconds=obj['timeoutInSeconds'])
+            return QueryFinal(runId, timeout)
         except:
             traceback.print_exc()
 
@@ -79,7 +81,7 @@ class QueryFinal:
         return {
             "_type": self.__class__.__name__,
             'runId': self.runId,
-            'timeoutInSeconds': self.timeoutInSeconds
+            'timeoutInSeconds': int(self.timeout.total_seconds())
         }
 
 
@@ -118,4 +120,64 @@ class SubscribeCurrentState:
         return {
             "_type": self.__class__.__name__,
             'names': self.stateNames
+        }
+
+
+@dataclass
+class ExecuteDiagnosticMode:
+    startTime: UTCTime
+    hint: str
+
+    @staticmethod
+    def _fromDict(obj):
+        """
+        Returns an ExecuteDiagnosticMode for the given dict.
+        """
+        startTime = UTCTime.from_str(obj['startTime'])
+        hint = obj['hint']
+        return ExecuteDiagnosticMode(startTime, hint)
+
+    def _asDict(self):
+        """
+        Returns: dict
+            a dictionary corresponding to this object
+        """
+        return {
+            "_type": self.__class__.__name__,
+            "startTime": str(self.startTime),
+            "hint": self.hint
+        }
+
+
+class ExecuteOperationsMode:
+
+    @staticmethod
+    def _fromDict(_):
+        return ExecuteOperationsMode()
+
+    def _asDict(self):
+        return {
+            "_type": self.__class__.__name__,
+        }
+
+class GoOnline:
+
+    @staticmethod
+    def _fromDict(_):
+        return GoOnline()
+
+    def _asDict(self):
+        return {
+            "_type": self.__class__.__name__,
+        }
+
+class GoOffline:
+
+    @staticmethod
+    def _fromDict(_):
+        return GoOffline()
+
+    def _asDict(self):
+        return {
+            "_type": self.__class__.__name__,
         }

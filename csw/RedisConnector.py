@@ -1,35 +1,48 @@
+import asyncio
+from asyncio import Task
 from urllib.parse import urlparse
 
-import redis
-from typing import List
+from typing import List, Self, Awaitable, Callable
 
-from redis.sentinel import Sentinel
+from redis.asyncio.sentinel import Sentinel
 
-from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, LocationService
+from csw.LocationService import ConnectionInfo, ComponentType, ConnectionType, Location
+from csw.LocationServiceSync import LocationServiceSync
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
-
+# XXX TODO FIXME: Use redis.asyncio?
+# See https://redis-py.readthedocs.io/en/stable/examples/asyncio_examples.html
 class RedisConnector:
 
-    def __init__(self):
+    def __init__(self, loc: Location):
         """
         Events are posted to Redis. This is internal class used to access Redis.
+
+        Args:
+            loc (Location): EventServer location
         """
-        prefix = Prefix(Subsystems.CSW, "EventServer")
-        conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
-        loc = LocationService().find(conn)
-        uri = urlparse(loc.uri)
         # XXX TODO Check why only localhost works!
         # sentinel = Sentinel([(uri.hostname, uri.port)], socket_timeout=0.1)
-        sentinel = Sentinel([("localhost", uri.port)], socket_timeout=0.1)
-        self.__redis = sentinel.master_for('eventServer', socket_timeout=0.1)
-        self.__redis_pubsub = self.__redis.pubsub()
+        # print(f"XXX Sentinel({uri.port})")
+        uri = urlparse(loc.uri)
+        sentinel = Sentinel([("localhost", uri.port)])
+        self._redis = sentinel.master_for('eventServer')
+        self._pubsub = self._redis.pubsub()
 
-    def close(self):
-        self.__redis_pubsub.close()
+    @classmethod
+    def make(cls) -> Self:
+        prefix = Prefix(Subsystem.CSW, "EventServer")
+        conn = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.TcpType)
+        loc = LocationServiceSync().find(conn)
+        return RedisConnector(loc)
 
-    def subscribe(self, keyList: List[str], callback):
+
+    async def close(self):
+        await self._redis.aclose()
+        await self._pubsub.aclose()
+
+    async def subscribe(self, keyList: List[str], callback: Callable[[any], Awaitable]) -> Task:
         """
         Set up a Redis subscription on specified keys with specified callback on value changes.
 
@@ -41,17 +54,17 @@ class RedisConnector:
             subscription thread. Use .stop() method to stop subscription
         """
         d = dict.fromkeys(keyList, callback)
-        self.__redis_pubsub.subscribe(**d)
-        return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+        await self._pubsub.subscribe(**d)
+        return asyncio.create_task(self._pubsub.run())
 
-    def unsubscribe(self, keyList: List[str]):
+    async def unsubscribe(self, keyList: List[str]):
         """
         Unsubscribe to the list of event keys
 
         Args:
             keyList (List[str]): list of keys to unsubscribe from
         """
-        self.__redis_pubsub.unsubscribe(keyList)
+        await self._pubsub.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, keyList: List[str], callback):
@@ -67,8 +80,8 @@ class RedisConnector:
     #         subscription thread. Use .stop() method to stop subscription
     #     """
     #     d = dict.fromkeys(keyList, callback)
-    #     self.__redis_pubsub.psubscribe(**d)
-    #     return self.__redis_pubsub.run_in_thread(sleep_time=0.001)
+    #     self._pubsub.psubscribe(**d)
+    #     return self._pubsub.run_in_thread(sleep_time=0.001)
 
     # def pUnsubscribe(self, keyList: List[str]):
     #     """
@@ -77,9 +90,9 @@ class RedisConnector:
     #     Args:
     #         keyList (List[str]): list of key patterns to unsubscribe from
     #     """
-    #     self.__redis_pubsub.punsubscribe(keyList)
+    #     self._pubsub.punsubscribe(keyList)
 
-    def publish(self, key: str, encodedValue: bytes):
+    async def publish(self, key: str, encodedValue: bytes):
         """
         Publish CBOR encoded event string to Redis
 
@@ -87,10 +100,10 @@ class RedisConnector:
             key: String specifying Redis key for event.  Should be source prefix + "." + event name.
             encodedValue: CBOR encoded value for the event (in the form [className, dict])
         """
-        self.__redis.set(key, encodedValue)
-        self.__redis.publish(key, encodedValue)
+        await self._redis.set(key, encodedValue)
+        await self._redis.publish(key, encodedValue)
 
-    def get(self, key: str) -> str:
+    async def get(self, key: str) -> str:
         """
         Get value from Redis using specified key
 
@@ -100,4 +113,4 @@ class RedisConnector:
         Returns: str
             Raw Redis string for event, typically in some encoding
         """
-        return self.__redis.get(key)
+        return await self._redis.get(key)

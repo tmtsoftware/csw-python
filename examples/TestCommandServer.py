@@ -8,19 +8,19 @@ from csw.CommandServer import CommandServer, ComponentHandlers
 from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import IntKey, UTCTimeKey, TAITimeKey, IntArrayKey, FloatArrayKey, IntMatrixKey, DoubleKey
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
+from csw.TMTTime import TAITime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 class MyComponentHandlers(ComponentHandlers):
-    prefix = Prefix(Subsystems.CSW, "pycswTest")
+    prefix = Prefix(Subsystem.CSW, "pycswTest")
 
     async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
         await asyncio.sleep(3)
-        print("Long running task completed")
+        print("long-running task completed")
         # TODO: Do this in a timer task
         await self.publishCurrentStates()
         return Completed(runId)
@@ -30,7 +30,7 @@ class MyComponentHandlers(ComponentHandlers):
         Overrides the base class onSubmit method to handle commands from a CSW component
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the ControlCommand from CSW
 
         Returns: (CommandResponse, Task)
@@ -56,7 +56,7 @@ class MyComponentHandlers(ComponentHandlers):
         Overrides the base class onOneway method to handle commands from a CSW component.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the ControlCommand from CSW
 
         Returns: CommandResponse

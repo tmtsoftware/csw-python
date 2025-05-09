@@ -20,8 +20,8 @@ with the difference that in some cases the Python types are simpler, due to less
 ## CSW Location Service
 
 The Location Service can be used to register, list and lookup CSW services.
-Python applications can access `tcp` and `http` based services, but not `akka` services,
-which are based on akka actors.
+Python applications can access `tcp` and `http` based services, but not `pekko` services,
+which are based on pekko actors.
 
 The following code demonstrates the Python API for the Location Service:
 
@@ -30,7 +30,7 @@ import structlog
 
 from csw.LocationService import LocationService, ConnectionInfo, ComponentType, ConnectionType, HttpRegistration
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Demonstrate usage of the Python Location Service API
@@ -64,14 +64,14 @@ def test_location_service():
                 x.connection.prefix == 'CSW.EventServer' and x.connection.componentType == 'Service']
 
     # Register a connection
-    prefix = Prefix(Subsystems.CSW, "myComp")
+    prefix = Prefix(Subsystem.CSW, "myComp")
     connection = ConnectionInfo.make(prefix, ComponentType.Service, ConnectionType.HttpType)
     reg = HttpRegistration(connection, LocationService.getFreePort(), path="myservice/test")
     regResult = locationService.register(reg)
     log.debug("\nRegistration result: " + str(regResult))
-    assert regResult.componentType == ComponentType.Service.value
-    assert regResult.prefix == 'CSW.myComp'
-    assert regResult.connectionType == ConnectionType.HttpType.value
+    assert regResult.location.connection.componentType == ComponentType.Service.value
+    assert regResult.location.connection.prefix == 'CSW.myComp'
+    assert regResult.location.connection.connectionType == ConnectionType.HttpType.value
 
     # Find a connection
     location1 = locationService.find(connection)
@@ -111,7 +111,7 @@ you can call `EventSubscriber().subscribe`:
 
 ```python
 from csw.EventSubscriber import EventSubscriber
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix
 from csw.Event import EventName
 from csw.EventKey import EventKey
@@ -121,7 +121,7 @@ from csw.EventKey import EventKey
 class TestSubscriber3:
 
     def __init__(self):
-        self.eventKey = EventKey(Prefix(Subsystems.CSW, "testassembly"), EventName("myAssemblyEvent"))
+        self.eventKey = EventKey(Prefix(Subsystem.CSW, "testassembly"), EventName("myAssemblyEvent"))
         EventSubscriber().subscribe([self.eventKey], self.callback)
 
     @staticmethod
@@ -157,13 +157,13 @@ from csw.LocationService import ComponentType
 from csw.Parameter import IntKey
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Assumes csw-services and test assembly are running!
 def test_command_service_client():
-    cs = CommandService(Prefix(Subsystems.CSW, "TestPublisher"), ComponentType.Assembly)
-    prefix = Prefix(Subsystems.CSW, "TestClient")
+    cs = CommandService(Prefix(Subsystem.CSW, "TestPublisher"), ComponentType.Assembly)
+    prefix = Prefix(Subsystem.CSW, "TestClient")
     commandName = CommandName("Test")
     maybeObsId = []
     param = IntKey.make("testValue").set(42)
@@ -223,84 +223,84 @@ from csw.TAITime import TAITime
 from csw.UTCTime import UTCTime
 from csw.Units import Units
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 class MyComponentHandlers(ComponentHandlers):
- prefix = Prefix(Subsystems.CSW, "pycswTest")
+    prefix = Prefix(Subsystem.CSW, "pycswTest")
 
- async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
-  await asyncio.sleep(3)
-  print("Long running task completed")
-  # TODO: Do this in a timer task
-  await self.publishCurrentStates()
-  return Completed(runId)
+    async def longRunningCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
+        await asyncio.sleep(3)
+        print("Long running task completed")
+        # TODO: Do this in a timer task
+        await self.publishCurrentStates()
+        return Completed(runId)
 
- def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
-  """
-  Overrides the base class onSubmit method to handle commands from a CSW component
+    def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
+        """
+        Overrides the base class onSubmit method to handle commands from a CSW component
+      
+        Args:
+            runId (str): unique id for this command
+            command (ControlCommand): contains the ControlCommand from CSW
+      
+        Returns: (CommandResponse, Task)
+            a subclass of CommandResponse that is serialized and passed back to the CSW component
+        """
+        n = len(command.paramSet)
+        print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
 
-  Args:
-      runId (str): unique id for this command
-      command (ControlCommand): contains the ControlCommand from CSW
+        if command.commandName.name == "LongRunningCommand":
+            task = asyncio.create_task(self.longRunningCommand(runId, command))
+            return Started(runId, "Long running task in progress..."), task
+        elif command.commandName.name == "SimpleCommand":
+            return Completed(runId), None
+        elif command.commandName.name == "ResultCommand":
+            param = DoubleKey.make("myValue").set(42.0)
+            result = Result([param])
+            return Completed(runId, result), None
+        else:
+            return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName.name}")), None
 
-  Returns: (CommandResponse, Task)
-      a subclass of CommandResponse that is serialized and passed back to the CSW component
-  """
-  n = len(command.paramSet)
-  print(f"MyComponentHandlers Received setup {str(command)} with {n} params")
+    def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
+        """
+        Overrides the base class onOneway method to handle commands from a CSW component.
+      
+        Args:
+            runId (str): unique id for this command
+            command (ControlCommand): contains the ControlCommand from CSW
+      
+        Returns: CommandResponse
+            an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
+        """
+        n = len(command.paramSet)
+        print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
+        return Accepted(runId)
 
-  if command.commandName.name == "LongRunningCommand":
-   task = asyncio.create_task(self.longRunningCommand(runId, command))
-   return Started(runId, "Long running task in progress..."), task
-  elif command.commandName.name == "SimpleCommand":
-   return Completed(runId), None
-  elif command.commandName.name == "ResultCommand":
-   param = DoubleKey.make("myValue").set(42.0)
-   result = Result([param])
-   return Completed(runId, result), None
-  else:
-   return Invalid(runId, UnsupportedCommandIssue(f"Unknown command: {command.commandName.name}")), None
+    def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
+        """
+        Overrides the base class validate method to verify that the given command is valid.
+      
+        Args:
+            runId (str): unique id for this command
+            command (ControlCommand): contains the ControlCommand from CSW
+      
+        Returns: CommandResponse
+            an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
+        """
+        return Accepted(runId)
 
- def onOneway(self, runId: str, command: ControlCommand) -> CommandResponse:
-  """
-  Overrides the base class onOneway method to handle commands from a CSW component.
-
-  Args:
-      runId (str): unique id for this command
-      command (ControlCommand): contains the ControlCommand from CSW
-
-  Returns: CommandResponse
-      an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
-  """
-  n = len(command.paramSet)
-  print(f"MyComponentHandlers Received oneway {str(command)} with {n} params")
-  return Accepted(runId)
-
- def validateCommand(self, runId: str, command: ControlCommand) -> CommandResponse:
-  """
-  Overrides the base class validate method to verify that the given command is valid.
-
-  Args:
-      runId (str): unique id for this command
-      command (ControlCommand): contains the ControlCommand from CSW
-
-  Returns: CommandResponse
-      an instance of one of these command responses: Accepted, Invalid, Locked (OnewayResponse in CSW)
-  """
-  return Accepted(runId)
-
- # Returns the current state
- def currentStates(self) -> List[CurrentState]:
-  intParam = IntKey.make("IntValue", Units.arcsec).set(42)
-  intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
-  floatArrayParam = FloatArrayKey.make("FloatArrayValue").set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
-  intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
-                                                                        [[-1, -2, -3, -4], [-5, -6, -7, -8]])
-  utcTimeParam = UTCTimeKey.make("UTCTimeValue").set(UTCTime.from_str("2021-09-17T09:17:08.608242344Z"))
-  taiTimeParam = TAITimeKey.make("TAITimeValue").set(TAITime.from_str("2021-09-17T09:17:45.610701219Z"))
-  params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
-  return [CurrentState(self.prefix, "PyCswState", params)]
+    # Returns the current state
+    def currentStates(self) -> List[CurrentState]:
+        intParam = IntKey.make("IntValue", Units.arcsec).set(42)
+        intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
+        floatArrayParam = FloatArrayKey.make("FloatArrayValue").set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
+        intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
+                                                                              [[-1, -2, -3, -4], [-5, -6, -7, -8]])
+        utcTimeParam = UTCTimeKey.make("UTCTimeValue").set(UTCTime.from_str("2021-09-17T09:17:08.608242344Z"))
+        taiTimeParam = TAITimeKey.make("TAITimeValue").set(TAITime.from_str("2021-09-17T09:17:45.610701219Z"))
+        params = [intParam, intArrayParam, floatArrayParam, intMatrixParam, utcTimeParam, taiTimeParam]
+        return [CurrentState(self.prefix, "PyCswState", params)]
 
 
 # noinspection PyTypeChecker

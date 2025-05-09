@@ -1,6 +1,7 @@
 import asyncio
 from asyncio import Task
 import pathlib
+
 from aiohttp.web_runner import GracefulExit
 from csw.CommandResponse import CommandResponse, Result, Completed, Invalid, MissingKeyIssue, \
     Error, Accepted, Started, UnsupportedCommandIssue
@@ -9,14 +10,14 @@ from csw.ParameterSetType import ControlCommand
 from csw.CurrentState import CurrentState
 from csw.Parameter import *
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # noinspection DuplicatedCode
 # This is a local command service used with the @pytest.fixture annotation for testing.
 # See ./test_command_service_client_server.py.
 class TestComponentHandlers(ComponentHandlers):
-    prefix = Prefix(Subsystems.CSW, "pycswTest2")
+    prefix = Prefix(Subsystem.CSW, "pycswTest2")
     dir = pathlib.Path(__file__).parent.absolute()
 
     # noinspection PyUnusedLocal
@@ -27,7 +28,7 @@ class TestComponentHandlers(ComponentHandlers):
         await asyncio.sleep(1)
         await self.publishCurrentStates()
         await asyncio.sleep(1)
-        self.log.debug("Long running task completed")
+        self.log.debug("long-running task completed")
         return Completed(runId)
 
     def onSubmit(self, runId: str, command: ControlCommand) -> (CommandResponse, Task):
@@ -38,7 +39,7 @@ class TestComponentHandlers(ComponentHandlers):
         for the contents of the command's parameters.
 
         Args:
-            runId (str): unique id for this command
+            runId (str): unique id for this command.
             command (ControlCommand): contains the command
 
         Returns: (CommandResponse, Task)

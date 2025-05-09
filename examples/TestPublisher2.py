@@ -1,31 +1,33 @@
+import asyncio
+
 from csw.Parameter import IntKey, IntArrayKey, FloatArrayKey, IntMatrixKey
 from csw.Event import SystemEvent, EventName
 from csw.EventPublisher import EventPublisher
 from csw.Units import Units
 from csw.Prefix import Prefix
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 
 
 # Test publishing events using the Parameter and Event wrapper classes
 class TestPublisher2:
-    pub = EventPublisher()
 
     def __init__(self):
+        self.pub = EventPublisher.make()
         intParam = IntKey.make("IntValue", Units.arcsec).set(42)
         intArrayParam = IntArrayKey.make("IntArrayValue").set([1, 2, 3, 4], [5, 6, 7, 8])
         floatArrayParam = FloatArrayKey.make("FloatArrayValue").set([1.2, 2.3, 3.4], [5.6, 7.8, 9.1])
         intMatrixParam = IntMatrixKey.make("IntMatrixValue", Units.meter).set([[1, 2, 3, 4], [5, 6, 7, 8]],
                                                                               [[-1, -2, -3, -4], [-5, -6, -7, -8]])
         paramSet = [intParam, intArrayParam, floatArrayParam, intMatrixParam]
-        prefix = Prefix(Subsystems.CSW, "testassembly")
+        prefix = Prefix(Subsystem.CSW, "testassembly")
         eventName = EventName("myAssemblyEvent")
-        event = SystemEvent(prefix, eventName, paramSet)
-        self.pub.publish(event)
+        self.event = SystemEvent(prefix, eventName, paramSet)
+
+    async def publish(self):
+        await self.pub.publish(self.event)
 
 
-def main():
-    TestPublisher2()
+async def main():
+    test = TestPublisher2()
 
-
-if __name__ == "__main__":
-    main()
+asyncio.run(main())

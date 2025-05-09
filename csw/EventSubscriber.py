@@ -1,36 +1,58 @@
+import asyncio
+from typing import Callable, Set, Self, Awaitable, List
+
 import cbor2
 
+from csw.EventSubscription import EventSubscription
 from csw.RedisConnector import RedisConnector
-from csw.Event import Event
+from csw.Event import Event, SystemEvent
 from csw.EventKey import EventKey
+
+
+# XXX TODO FIXME: Use async redis
 
 class EventSubscriber:
 
-    def __init__(self):
-        self.__redis = RedisConnector()
+    def __init__(self, redis: RedisConnector):
+        self._redis = redis
+
+    @classmethod
+    def make(cls) -> Self:
+        return cls(RedisConnector.make())
+
+    async def close(self):
+        await self._redis.close()
 
     @staticmethod
-    def __handleCallback(message: dict, callback):
+    async def _handleCallback(message: dict, callback: Callable[[Event], Awaitable]):
         data = message['data']
         event = Event._fromDict(cbor2.loads(data))
-        callback(event)
+        await callback(event)
 
-    def subscribe(self, eventKeyList: list[EventKey], callback):
+    async def subscribe(self, eventKeyList: list[EventKey],
+                        callback: Callable[[Event], Awaitable]) -> EventSubscription:
         """
         Start a subscription to system events in event service, specifying a callback
         to be called when an event in the list has its value updated.
 
         Args:
             eventKeyList (list[EventKey]): list of event EventKey to subscribe to
-            callback (function): function to be called when event updates. Should take Event and return void
+            callback (Callable[[Event], None]): function to be called when event updates. Should take Event and return void
 
-        Returns: PubSubWorkerThread
-            subscription thread. Use .stop() method to stop subscription.
+        Returns:
+            an object that can be used to unsubscribe
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.subscribe(keyList, lambda message: self.__handleCallback(message, callback))
 
-    def unsubscribe(self, eventKeyList: list[EventKey]):
+        async def f(message):
+            await self._handleCallback(message, callback)
+
+        t = await self._redis.subscribe(keyList, f)
+        async def unsub():
+            await self._redis.unsubscribe(keyList)
+        return EventSubscription(t, unsub)
+
+    async def unsubscribe(self, eventKeyList: list[EventKey]):
         """
         Unsubscribes to the given list of event keys (or all keys, if eventKeyList is empty)
 
@@ -38,7 +60,7 @@ class EventSubscriber:
             eventKeyList (list[EventKey]): list of EventKeys to unsubscribe from
         """
         keyList = list(map(lambda k: str(k), eventKeyList))
-        return self.__redis.unsubscribe(keyList)
+        return await self._redis.unsubscribe(keyList)
 
     # XXX Commented out due to Event Service performance concerns when using psubscribe
     # def pSubscribe(self, eventKeyList: list, callback):
@@ -57,7 +79,7 @@ class EventSubscriber:
     #     Returns: PubSubWorkerThread
     #         subscription thread. Use .stop() method to stop subscription.
     #     """
-    #     return self.__redis.pSubscribe(eventKeyList, lambda message: self.__handleCallback(message, callback))
+    #     return self._redis.pSubscribe(eventKeyList, lambda message: self._handleCallback(message, callback))
 
     # def pUnsubscribe(self, eventKeyList: list):
     #     """
@@ -66,18 +88,36 @@ class EventSubscriber:
     #     Args:
     #         eventKeyList (list): list of event key patterns (Strings) to unsubscribe from
     #     """
-    #     return self.__redis.pUnsubscribe(eventKeyList)
+    #     return self._redis.pUnsubscribe(eventKeyList)
 
-    def get(self, eventKey: EventKey):
+    async def gets(self, eventKeys: Set[EventKey]) -> Set[Event]:
+        """
+        Get latest events for multiple Event Keys. The latest events available for the given Event Keys will be received first.
+        If event is not published for one or more event keys, `invalid event` will be received for those Event Keys.
+
+        In case the underlying server is not available, the future fails with [[csw.event.api.exceptions.EventServerNotAvailable]] exception.
+        In all other cases of exception, the future fails with the respective exception
+
+        Args:
+            eventKeys: a set of [[csw.params.events.EventKey]] to subscribe to
+        Returns:
+            a set of latest Event for the provided Event Keys
+        """
+        fList = list(map(lambda k: self.get(k), eventKeys))
+        events: List[Event] = await asyncio.gather(*fList)
+        return set(events)
+
+    async def get(self, eventKey: EventKey) -> Event:
         """
         Get an event from the Event Service
 
         Args:
             eventKey (EventKey): String specifying Redis key for event.  Should be source prefix + "." + event name.
 
-        Returns: Event
-            Event obtained from Event Service, decoded into a Event
+        Returns: Event obtained from Event Service, decoded into a Event
         """
-        data = self.__redis.get(str(eventKey))
-        event = Event._fromDict(cbor2.loads(data))
-        return event
+        data = await self._redis.get(str(eventKey))
+        if data:
+            event = Event._fromDict(cbor2.loads(data))
+            return event
+        return SystemEvent.invalidEvent(eventKey)

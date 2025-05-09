@@ -2,18 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>csw.Units API documentation</title>
-<meta name="description" content="" />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
 </head>
 <body>
 <main>
@@ -22,148 +36,6 @@
 <h1 class="title">Module <code>csw.Units</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">from enum import Enum
-from dataclasses import dataclass
-
-
-@dataclass
-class Unit:
-    &#34;&#34;&#34;
-    A class representing units for TMT (Corresponds to the CSW Units Scala class)
-    &#34;&#34;&#34;
-    name: str
-    description: str
-
-
-class Units(Enum):
-    # SI units
-    angstrom = Unit(&#34;Angstrom&#34;, &#34;angstrom&#34;)
-    alpha = Unit(&#34;alpha&#34;, &#34;alpha: fine structure constant&#34;)
-    ampere = Unit(&#34;A&#34;, &#34;ampere: unit of electric current&#34;)
-    arcmin = Unit(&#34;arcmin&#34;, &#34;arc minute; angular measurement&#34;)
-    arcsec = Unit(&#34;arcsec&#34;, &#34;arc second: angular measurement&#34;)
-    bar = Unit(&#34;bar&#34;, &#34;bar: metric ton of pressure&#34;)
-    candela = Unit(&#34;candela&#34;, &#34;candela(lumen/sr)&#34;)
-    day = Unit(&#34;d&#34;, &#34;day&#34;)
-    degree = Unit(&#34;deg&#34;, &#34;degree: angular measurement 1/360 of full rotation&#34;)
-    degC = Unit(&#34;degC&#34;, &#34;Degree Celsius K&#34;)
-    degF = Unit(&#34;degF&#34;, &#34;Fahrenheit&#34;)
-    elvolt = Unit(&#34;eV&#34;, &#34;electron volt&#34;)
-    gauss = Unit(&#34;gauss&#34;, &#34;gauss&#34;)
-    gram = Unit(&#34;g&#34;, &#34;gram&#34;)
-    hertz = Unit(&#34;Hz&#34;, &#34;frequency&#34;)
-    henry = Unit(&#34;henry&#34;, &#34;Henry&#34;)
-    hour = Unit(&#34;h&#34;, &#34;hour&#34;)
-    joule = Unit(&#34;J&#34;, &#34;Joule: energy&#34;)
-    kelvin = Unit(&#34;K&#34;, &#34;Kelvin: temperature with a null point at absolute zero&#34;)
-    kilogram = Unit(&#34;kg&#34;, &#34;kilogram, base unit of mass in SI&#34;)
-    kilometer = Unit(&#34;km&#34;, &#34;kilometers&#34;)
-    liter = Unit(&#34;l&#34;, &#34;liter, metric unit of volume&#34;)
-    lm = Unit(&#34;lm&#34;, &#34;lumen&#34;)
-    lsun = Unit(&#34;lsun&#34;, &#34;solar luminosity&#34;)
-    lx = Unit(&#34;lx&#34;, &#34;lux(lm/m2)&#34;)
-    mas = Unit(&#34;mas&#34;, &#34;milli arc second&#34;)
-    me = Unit(&#34;me&#34;, &#34;me(electron_mass)&#34;)
-    meter = Unit(&#34;m&#34;, &#34;meter: base unit of length in SI&#34;)
-    microarcsec = Unit(&#34;µas&#34;, &#34;micro arcsec: angular measurement&#34;)
-    millimeter = Unit(&#34;mm&#34;, &#34;millimeters&#34;)
-    millisecond = Unit(&#34;ms&#34;, &#34;milliseconds&#34;)
-    micron = Unit(&#34;µm&#34;, &#34;micron: alias for micrometer&#34;)
-    micrometer = Unit(&#34;µm&#34;, &#34;micron&#34;)
-    minute = Unit(&#34;min&#34;, &#34;minute&#34;)
-    MJD = Unit(&#34;MJD&#34;, &#34;Mod. Julian Date&#34;)
-    mol = Unit(&#34;mol&#34;, &#34;mole- unit of substance&#34;)
-    month = Unit(&#34;month&#34;, &#34;Month name or number&#34;)
-    mmyy = Unit(&#34;mmyy&#34;, &#34;mmyy: Month/Year&#34;)
-    mu0 = Unit(&#34;mu0&#34;, &#34;mu0: magnetic constant&#34;)
-    muB = Unit(&#34;muB&#34;, &#34;Bohr magneton&#34;)
-    nanometer = Unit(&#34;nm&#34;, &#34;nanometers&#34;)
-    newton = Unit(&#34;N&#34;, &#34;Newton: force&#34;)
-    ohm = Unit(&#34;ohm&#34;, &#34;Ohm&#34;)
-    pascal = Unit(&#34;Pa&#34;, &#34;Pascal: pressure&#34;)
-    pi = Unit(&#34;pi&#34;, &#34;pi&#34;)
-    pc = Unit(&#34;pc&#34;, &#34;parsec&#34;)
-    ppm = Unit(&#34;ppm&#34;, &#34;part per million&#34;)
-    radian = Unit(&#34;rad&#34;, &#34;radian: angular measurement of the ratio between the length of an arc and its radius&#34;)
-    second = Unit(&#34;s&#34;, &#34;second: base unit of time in SI&#34;)
-    sday = Unit(&#34;sday&#34;, &#34;sidereal day is the time of one rotation of the Earth&#34;)
-    steradian = Unit(&#34;sr&#34;, &#34;steradian: unit of solid angle in SI&#34;)
-    volt = Unit(&#34;V&#34;, &#34;Volt: electric potential or electromotive force&#34;)
-    watt = Unit(&#34;W&#34;, &#34;Watt: power&#34;)
-    Wb = Unit(&#34;Wb&#34;, &#34;Weber&#34;)
-    week = Unit(&#34;wk&#34;, &#34;week&#34;)
-    year = Unit(&#34;yr&#34;, &#34;year&#34;)
-
-    # CGS units
-    coulomb = Unit(&#34;C&#34;, &#34;coulomb: electric charge&#34;)
-    centimeter = Unit(&#34;cm&#34;, &#34;centimeter&#34;)
-    D = Unit(&#34;Debye&#34;, &#34;Debye(dipole) A electric dipole moment &#34;)
-    dyn = Unit(&#34;dyne&#34;, &#34;dyne: Unit of force &#34;)
-    erg = Unit(&#34;erg&#34;, &#34;erg: CGS unit of energy&#34;)
-
-    # Astropyhsics units
-    au = Unit(&#34;AU&#34;, &#34;astronomical unit: approximately the mean Earth-Sun distance&#34;)
-    a0 = Unit(&#34;a0&#34;,
-              &#34;bohr radius: probable distance between the nucleus and the electron in a hydrogen atom in its ground state&#34;)
-    c = Unit(&#34;c&#34;, &#34;c: speed of light&#34;)
-    cKayser = Unit(&#34;cKayser&#34;, &#34;cKayser&#34;)
-    crab = Unit(&#34;crab&#34;, &#34;Crab: astrophotometrical unit for measurement of the intensity of Astrophysical X-ray sources&#34;)
-    damas = Unit(&#34;d:m:s&#34;, &#34;damas: degree arcminute arcsecond (sexagesimal angle from degree)&#34;)
-    e = Unit(&#34;e&#34;, &#34;electron charge&#34;)
-    earth = Unit(&#34;earth&#34;, &#34;earth (geo) unit&#34;)
-    F = Unit(&#34;F&#34;, &#34;Farad: F&#34;)
-    G = Unit(&#34;G&#34;, &#34;gravitation constant&#34;)
-    geoMass = Unit(&#34;geoMass&#34;, &#34;Earth Mass&#34;)
-    hm = Unit(&#34;hm&#34;, &#34;hour minutes (sexagesimal time from hours)&#34;)
-    hms = Unit(&#34;hms&#34;, &#34;hour minutes seconds (sexagesimal time from hours)&#34;)
-    hhmmss = Unit(&#34;HH:MM:SS&#34;, &#34;hour minutes seconds (sexagesimal time)&#34;)
-    jansky = Unit(&#34;Jy&#34;, &#34;Jansky: spectral flux density&#34;)
-    jd = Unit(&#34;jd&#34;, &#34;Julian Day&#34;)
-    jovmass = Unit(&#34;jovMass&#34;, &#34;Jupiter mass&#34;)
-    lightyear = Unit(&#34;lyr&#34;, &#34;light year&#34;)
-    mag = Unit(&#34;mag&#34;, &#34;stellar magnitude&#34;)
-    mjup = Unit(&#34;Mjup&#34;, &#34;Jupiter mass&#34;)
-    mp = Unit(&#34;mp&#34;, &#34;proton_mass&#34;)
-    minsec = Unit(&#34;m:s&#34;, &#34;minutes seconds (sexagesimal time from minutes)&#34;)
-    msun = Unit(&#34;Msun&#34;, &#34;solar mass&#34;)
-    photon = Unit(&#34;photon&#34;, &#34;photon&#34;)
-    rgeo = Unit(&#34;Rgeo&#34;, &#34;Earth radius (eq)&#34;)
-    rjup = Unit(&#34;Rjup&#34;, &#34;Jupiter Radius(eq)&#34;)
-    rsun = Unit(&#34;Rsun&#34;, &#34;solar radius&#34;)
-    rydberg = Unit(&#34;Rydberg&#34;, &#34;energy of the photon whose wavenumber is the Rydberg constant&#34;)
-    seimens = Unit(&#34;seimens&#34;, &#34;Seimens&#34;)
-    tesla = Unit(&#34;tesla&#34;, &#34;Tesla&#34;)
-    u = Unit(&#34;u&#34;, &#34;atomic mass unit&#34;)
-
-    # Imperial units
-    barn = Unit(&#34;barn&#34;, &#34;barn: metric unit of area&#34;)
-    cal = Unit(&#34;cal&#34;, &#34;thermochemical calorie: pre-SI metric unit of energy&#34;)
-    foot = Unit(&#34;ft&#34;, &#34;international foot&#34;)
-    inch = Unit(&#34;inch&#34;, &#34;international inch&#34;)
-    pound = Unit(&#34;lb&#34;, &#34;international avoirdupois pound&#34;)
-    mile = Unit(&#34;mi&#34;, &#34;international mile&#34;)
-    ounce = Unit(&#34;oz&#34;, &#34;international avoirdupois ounce&#34;)
-    yard = Unit(&#34;yd&#34;, &#34;international yard&#34;)
-
-    # Others - engineering
-    NoUnits = Unit(&#34;none&#34;, &#34;scalar - no units specified&#34;)
-    bit = Unit(&#34;bit&#34;, &#34;bit: binary value of 0 or 1&#34;)
-    encoder = Unit(&#34;enc&#34;, &#34;encoder counts&#34;)
-    count = Unit(&#34;ct&#34;, &#34;counts as for an encoder or detector&#34;)
-    mmhg = Unit(&#34;mmHg&#34;, &#34;millimetre of mercury is a manometric unit of pressure&#34;)
-    percent = Unit(&#34;percent&#34;, &#34;percentage&#34;)
-    pix = Unit(&#34;pix&#34;, &#34;pixel&#34;)
-
-    # Datetime units
-    tai = Unit(&#34;TAI&#34;, &#34;TAI time unit&#34;)
-    utc = Unit(&#34;UTC&#34;, &#34;UTC time unit&#34;)
-    date = Unit(&#34;date&#34;, &#34;date&#34;)
-    datetime = Unit(&#34;datetime&#34;, &#34;date/time&#34;)</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -179,7 +51,6 @@ class Units(Enum):
 <span>(</span><span>name: str, description: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A class representing units for TMT (Corresponds to the CSW Units Scala class)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -192,24 +63,24 @@ class Unit:
     name: str
     description: str</code></pre>
 </details>
-<h3>Class variables</h3>
+<div class="desc"><p>A class representing units for TMT (Corresponds to the CSW Units Scala class)</p></div>
+<h3>Instance variables</h3>
 <dl>
 <dt id="csw.Units.Unit.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Unit.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 </dl>
 </dd>
 <dt id="csw.Units.Units"><code class="flex name class">
 <span>class <span class="ident">Units</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -339,6 +210,56 @@ class Unit:
     date = Unit(&#34;date&#34;, &#34;date&#34;)
     datetime = Unit(&#34;datetime&#34;, &#34;date/time&#34;)</code></pre>
 </details>
+<div class="desc"><p>Create a collection of name/value pairs.</p>
+<p>Example enumeration:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class Color(Enum):
+...     RED = 1
+...     BLUE = 2
+...     GREEN = 3
+</code></pre>
+<p>Access them by:</p>
+<ul>
+<li>attribute access:</li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Color.RED
+<Color.RED: 1></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ul>
+<li>value lookup:</li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Color(1)
+<Color.RED: 1></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ul>
+<li>name lookup:</li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Color['RED']
+<Color.RED: 1></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Enumerations can be iterated over, and know how many members they have:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; len(Color)
+3
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(Color)
+[&lt;Color.RED: 1&gt;, &lt;Color.BLUE: 2&gt;, &lt;Color.GREEN: 3&gt;]
+</code></pre>
+<p>Methods can be added to enumerations, and members can have their own
+attributes &ndash; see the documentation for details.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>enum.Enum</li>
@@ -347,447 +268,447 @@ class Unit:
 <dl>
 <dt id="csw.Units.Units.D"><code class="name">var <span class="ident">D</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.F"><code class="name">var <span class="ident">F</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.G"><code class="name">var <span class="ident">G</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.MJD"><code class="name">var <span class="ident">MJD</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.NoUnits"><code class="name">var <span class="ident">NoUnits</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.Wb"><code class="name">var <span class="ident">Wb</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.a0"><code class="name">var <span class="ident">a0</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.alpha"><code class="name">var <span class="ident">alpha</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.ampere"><code class="name">var <span class="ident">ampere</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.angstrom"><code class="name">var <span class="ident">angstrom</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.arcmin"><code class="name">var <span class="ident">arcmin</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.arcsec"><code class="name">var <span class="ident">arcsec</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.au"><code class="name">var <span class="ident">au</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.bar"><code class="name">var <span class="ident">bar</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.barn"><code class="name">var <span class="ident">barn</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.bit"><code class="name">var <span class="ident">bit</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.c"><code class="name">var <span class="ident">c</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.cKayser"><code class="name">var <span class="ident">cKayser</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.cal"><code class="name">var <span class="ident">cal</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.candela"><code class="name">var <span class="ident">candela</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.centimeter"><code class="name">var <span class="ident">centimeter</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.coulomb"><code class="name">var <span class="ident">coulomb</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.count"><code class="name">var <span class="ident">count</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.crab"><code class="name">var <span class="ident">crab</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.damas"><code class="name">var <span class="ident">damas</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.date"><code class="name">var <span class="ident">date</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.datetime"><code class="name">var <span class="ident">datetime</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.day"><code class="name">var <span class="ident">day</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.degC"><code class="name">var <span class="ident">degC</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.degF"><code class="name">var <span class="ident">degF</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.degree"><code class="name">var <span class="ident">degree</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.dyn"><code class="name">var <span class="ident">dyn</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.e"><code class="name">var <span class="ident">e</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.earth"><code class="name">var <span class="ident">earth</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.elvolt"><code class="name">var <span class="ident">elvolt</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.encoder"><code class="name">var <span class="ident">encoder</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.erg"><code class="name">var <span class="ident">erg</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.foot"><code class="name">var <span class="ident">foot</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.gauss"><code class="name">var <span class="ident">gauss</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.geoMass"><code class="name">var <span class="ident">geoMass</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.gram"><code class="name">var <span class="ident">gram</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.henry"><code class="name">var <span class="ident">henry</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.hertz"><code class="name">var <span class="ident">hertz</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.hhmmss"><code class="name">var <span class="ident">hhmmss</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.hm"><code class="name">var <span class="ident">hm</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.hms"><code class="name">var <span class="ident">hms</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.hour"><code class="name">var <span class="ident">hour</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.inch"><code class="name">var <span class="ident">inch</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.jansky"><code class="name">var <span class="ident">jansky</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.jd"><code class="name">var <span class="ident">jd</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.joule"><code class="name">var <span class="ident">joule</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.jovmass"><code class="name">var <span class="ident">jovmass</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.kelvin"><code class="name">var <span class="ident">kelvin</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.kilogram"><code class="name">var <span class="ident">kilogram</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.kilometer"><code class="name">var <span class="ident">kilometer</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.lightyear"><code class="name">var <span class="ident">lightyear</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.liter"><code class="name">var <span class="ident">liter</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.lm"><code class="name">var <span class="ident">lm</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.lsun"><code class="name">var <span class="ident">lsun</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.lx"><code class="name">var <span class="ident">lx</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mag"><code class="name">var <span class="ident">mag</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mas"><code class="name">var <span class="ident">mas</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.me"><code class="name">var <span class="ident">me</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.meter"><code class="name">var <span class="ident">meter</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.microarcsec"><code class="name">var <span class="ident">microarcsec</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.micrometer"><code class="name">var <span class="ident">micrometer</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.micron"><code class="name">var <span class="ident">micron</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mile"><code class="name">var <span class="ident">mile</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.millimeter"><code class="name">var <span class="ident">millimeter</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.millisecond"><code class="name">var <span class="ident">millisecond</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.minsec"><code class="name">var <span class="ident">minsec</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.minute"><code class="name">var <span class="ident">minute</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mjup"><code class="name">var <span class="ident">mjup</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mmhg"><code class="name">var <span class="ident">mmhg</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mmyy"><code class="name">var <span class="ident">mmyy</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mol"><code class="name">var <span class="ident">mol</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.month"><code class="name">var <span class="ident">month</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mp"><code class="name">var <span class="ident">mp</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.msun"><code class="name">var <span class="ident">msun</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.mu0"><code class="name">var <span class="ident">mu0</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.muB"><code class="name">var <span class="ident">muB</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.nanometer"><code class="name">var <span class="ident">nanometer</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.newton"><code class="name">var <span class="ident">newton</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.ohm"><code class="name">var <span class="ident">ohm</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.ounce"><code class="name">var <span class="ident">ounce</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.pascal"><code class="name">var <span class="ident">pascal</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.pc"><code class="name">var <span class="ident">pc</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.percent"><code class="name">var <span class="ident">percent</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.photon"><code class="name">var <span class="ident">photon</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.pi"><code class="name">var <span class="ident">pi</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.pix"><code class="name">var <span class="ident">pix</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.pound"><code class="name">var <span class="ident">pound</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.ppm"><code class="name">var <span class="ident">ppm</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.radian"><code class="name">var <span class="ident">radian</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.rgeo"><code class="name">var <span class="ident">rgeo</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.rjup"><code class="name">var <span class="ident">rjup</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.rsun"><code class="name">var <span class="ident">rsun</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.rydberg"><code class="name">var <span class="ident">rydberg</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.sday"><code class="name">var <span class="ident">sday</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.second"><code class="name">var <span class="ident">second</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.seimens"><code class="name">var <span class="ident">seimens</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.steradian"><code class="name">var <span class="ident">steradian</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.tai"><code class="name">var <span class="ident">tai</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.tesla"><code class="name">var <span class="ident">tesla</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.u"><code class="name">var <span class="ident">u</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.utc"><code class="name">var <span class="ident">utc</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.volt"><code class="name">var <span class="ident">volt</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.watt"><code class="name">var <span class="ident">watt</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.week"><code class="name">var <span class="ident">week</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.yard"><code class="name">var <span class="ident">yard</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.Units.Units.year"><code class="name">var <span class="ident">year</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 </dl>
 </dd>
@@ -795,7 +716,6 @@ class Unit:
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -936,7 +856,7 @@ class Unit:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

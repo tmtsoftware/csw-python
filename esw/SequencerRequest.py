@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Self
 
 from dataclasses_json import dataclass_json
 
 from csw.ParameterSetType import SequenceCommand
-from csw.UTCTime import UTCTime
+from csw.TMTTime import UTCTime
+
 
 # noinspection PyProtectedMember
 
@@ -21,8 +22,8 @@ class SequencerRequest:
         }
 
     # noinspection PyProtectedMember
-    @staticmethod
-    def _fromDict(obj):
+    @classmethod
+    def _fromDict(cls, obj) -> Self:
         """
         Returns a LoadSequence object for the given dict.
         """
@@ -51,9 +52,9 @@ class SequencerRequest:
             case 'Resume':
                 return Resume()
             case 'AddBreakpoint':
-                return AddBreakpoint.from_dict(obj)
+                return AddBreakpoint._fromDict(obj)
             case 'RemoveBreakpoint':
-                return RemoveBreakpoint.from_dict(obj)
+                return RemoveBreakpoint._fromDict(obj)
             case 'AbortSequence':
                 return AbortSequence()
             case 'Stop':
@@ -61,7 +62,7 @@ class SequencerRequest:
             case 'Submit':
                 return Submit._fromDict(obj)
             case 'Query':
-                return Query.from_dict(obj)
+                return Query._fromDict(obj)
             case 'GoOnline':
                 return GoOnline()
             case 'GoOffline':
@@ -74,6 +75,18 @@ class SequencerRequest:
                 return GetSequenceComponent()
             case 'GetSequencerState':
                 return GetSequencerState()
+            # -- For scripts ----------
+            case 'PullNext':
+                return PullNext()
+            case 'MaybeNext':
+                return MaybeNext()
+            case 'ReadyToExecuteNext':
+                return ReadyToExecuteNext()
+            case 'StepSuccess':
+                return StepSuccess()
+            case 'StepFailure':
+                return StepFailure._fromDict(obj)
+        # --------------------------------
 
 
 # noinspection DuplicatedCode,PyProtectedMember
@@ -81,13 +94,13 @@ class SequencerRequest:
 class LoadSequence(SequencerRequest):
     sequence: List[SequenceCommand]
 
-    @staticmethod
-    def _fromDict(obj):
+    @classmethod
+    def _fromDict(cls, obj) ->Self:
         """
         Returns a LoadSequence object for the given dict.
         """
         sequence = list(map(lambda p: SequenceCommand._fromDict(p), obj['sequence']))
-        return LoadSequence(sequence)
+        return cls(sequence)
 
     def _asDict(self) -> dict:
         """
@@ -252,13 +265,13 @@ class AddBreakpoint(SequencerRequest):
     id: str
 
     # noinspection PyProtectedMember
-    @staticmethod
-    def _fromDict(obj):
+    @classmethod
+    def _fromDict(cls, obj) -> Self:
         """
         Returns an Add object for the given dict.
         """
         id = obj['id']
-        return AddBreakpoint(id)
+        return cls(id)
 
     def _asDict(self) -> dict:
         """
@@ -277,13 +290,13 @@ class RemoveBreakpoint(SequencerRequest):
     id: str
 
     # noinspection PyProtectedMember
-    @staticmethod
-    def _fromDict(obj):
+    @classmethod
+    def _fromDict(cls, obj) -> Self:
         """
         Returns an Add object for the given dict.
         """
         id = obj['id']
-        return RemoveBreakpoint(id)
+        return cls(id)
 
     def _asDict(self) -> dict:
         """
@@ -333,14 +346,14 @@ class DiagnosticMode(SequencerRequest):
     startTime: UTCTime
     hint: str
 
-    @staticmethod
-    def _fromDict(obj):
+    @classmethod
+    def _fromDict(cls, obj) -> Self:
         """
         Returns a DiagnosticMode object for the given dict.
         """
-        startTime = UTCTime.from_str(obj['startTime'])
+        startTime = UTCTime.from_str(obj['startTime']['value'])
         hint = obj['hint']
-        return DiagnosticMode(startTime, hint)
+        return cls(startTime, hint)
 
     def _asDict(self) -> dict:
         """
@@ -358,7 +371,35 @@ class OperationsMode(SequencerRequest):
     pass
 
 
-# Sequencer Command Protocol
+# -- For scripts --
+
+class PullNext(SequencerRequest):
+    pass
+
+
+class MaybeNext(SequencerRequest):
+    pass
+
+
+class ReadyToExecuteNext(SequencerRequest):
+    pass
+
+
+class StepSuccess(SequencerRequest):
+    pass
+
+
+@dataclass
+class StepFailure(SequencerRequest):
+    message: str
+
+    @classmethod
+    def _fromDict(cls, obj) -> Self:
+        message = obj['message']
+        return cls(message)
+
+
+# -- Sequencer Command Protocol --
 
 @dataclass
 class Submit(SequencerRequest):
@@ -389,13 +430,13 @@ class Query(SequencerRequest):
     runId: str
 
     # noinspection PyProtectedMember
-    @staticmethod
-    def _fromDict(obj):
+    @classmethod
+    def _fromDict(cls, obj) -> Self:
         """
         Returns an Add object for the given dict.
         """
         runId = obj['runId']
-        return Query(runId)
+        return cls(runId)
 
     def _asDict(self) -> dict:
         """

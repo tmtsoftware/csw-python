@@ -1,58 +1,60 @@
-from datetime import datetime, timezone
+import pytest
 
 from csw.ConfigService import *
 
 
+@pytest.mark.asyncio
 class TestConfigService:
-    configService = ConfigService()
 
-    def test_config_service(self):
-        if self.configService.exists("foo"):
-            self.configService.delete("foo")
-        id = self.configService.create("foo", ConfigData(bytes('hello', 'utf-8')), comment="test")
-        x = self.configService.getLatest('foo')
+    async def test_config_service(self):
+        clientSession = ClientSession()
+        configService = ConfigService(clientSession)
+        if await configService.exists("foo"):
+            await configService.delete("foo")
+        configId = await configService.create("foo", ConfigData(bytes('hello', 'utf-8')), comment="test")
+        x = await configService.getLatest('foo')
         assert (x.content.decode('utf-8') == 'hello')
 
-        x2 = self.configService.getById('foo', id)
+        x2 = await configService.getById('foo', configId)
         assert (x2.content.decode('utf-8') == 'hello')
 
-        x3 = self.configService.getByTime('foo', datetime.now())
+        x3 = await configService.getByTime('foo', datetime.now())
         assert (x3.content.decode('utf-8') == 'hello')
 
-        x4 = self.configService.getActive('foo')
+        x4 = await configService.getActive('foo')
         assert (x4.content.decode('utf-8') == 'hello')
 
-        x5 = self.configService.getActiveByTime('foo', datetime.now())
+        x5 = await configService.getActiveByTime('foo', datetime.now())
         assert (x5.content.decode('utf-8') == 'hello')
-        assert self.configService.getActiveVersion('foo') == id
+        assert await configService.getActiveVersion('foo') == configId
 
-        list = [x for x in self.configService.list() if x.path == "foo"]
-        assert (list[0].path == "foo")
-        assert (list[0].id == id.id)
-        assert (list[0].comment == "test")
+        infoList = [x for x in await configService.list() if x.path == "foo"]
+        assert (infoList[0].path == "foo")
+        assert (infoList[0].id == configId.id)
+        assert (infoList[0].comment == "test")
 
-        metadata = self.configService.getMetadata()
+        metadata = await configService.getMetadata()
         print(f'metadata = {metadata}')
 
-        hist = self.configService.history('foo',
-                                          fromTime=datetime(2000, 1, 1),
-                                          toTime=datetime.now(), maxResults=100)
+        hist = await configService.history('foo',
+                                                fromTime=datetime(2000, 1, 1),
+                                                toTime=datetime.now(), maxResults=100)
         assert len(hist) == 1
-        assert hist[0].id == id.id
+        assert hist[0].id == configId.id
 
-        hist2 = self.configService.historyActive('foo')
+        hist2 = await configService.historyActive('foo')
         assert hist[0].id == hist2[0].id
 
-        id2 = self.configService.update("foo", ConfigData(bytes('hello again', 'utf-8')), comment="test2")
-        hist3 = self.configService.history('foo')
+        configId2 = await configService.update("foo", ConfigData(bytes('hello again', 'utf-8')), comment="test2")
+        hist3 = await configService.history('foo')
         assert len(hist3) == 2
-        assert hist3[1].id == id.id
-        assert hist3[0].id == id2.id
+        assert hist3[1].id == configId.id
+        assert hist3[0].id == configId2.id
 
-        self.configService.setActiveVersion('foo', id, 'test3')
-        x6 = self.configService.getActive('foo')
-        assert(x6.content.decode('utf-8') == 'hello')
+        await configService.setActiveVersion('foo', configId, 'test3')
+        x6 = await configService.getActive('foo')
+        assert (x6.content.decode('utf-8') == 'hello')
 
-        self.configService.resetActiveVersion('foo', 'test4')
-        x7 = self.configService.getActive('foo')
-        assert(x7.content.decode('utf-8') == 'hello again')
+        await configService.resetActiveVersion('foo', 'test4')
+        x7 = await configService.getActive('foo')
+        assert (x7.content.decode('utf-8') == 'hello again')

@@ -11,10 +11,10 @@ from csw.Parameter import *
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
 from csw.Event import SystemEvent, EventName
-from csw.Subsystem import Subsystems
+from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
-from csw.TAITime import TAITime
-from csw.UTCTime import UTCTime
+from csw.TMTTime import TAITime
+from csw.TMTTime import UTCTime
 from csw.Units import Units
 from csw.Coords import *
 from csw.CurrentState import CurrentState
@@ -22,24 +22,28 @@ from csw.ConfigService import *
 
 from esw.Sequence import Sequence
 from esw.SequencerClient import SequencerClient
-from esw.SequencerRes import *
+from esw.EswSequencerResponse import *
 from esw.StepList import StepList
 from esw.Step import Step
 from esw.StepStatus import *
 
+if __name__ != "__main__":
+    exit()
+
+clientSession = ClientSession()
 
 def hcdCommandService(prefix: str) -> CommandService:
-    return CommandService(Prefix.from_str(prefix), ComponentType.HCD)
+    return CommandService(Prefix.from_str(prefix), ComponentType.HCD, clientSession)
 
 
 def assemblyCommandService(prefix: str) -> CommandService:
-    return CommandService(Prefix.from_str(prefix), ComponentType.Assembly)
+    return CommandService(Prefix.from_str(prefix), ComponentType.Assembly, clientSession)
 
 
 def sequencerCommandService(prefix: str) -> CommandService:
-    return CommandService(Prefix.from_str(prefix), ComponentType.Sequencer)
+    return CommandService(Prefix.from_str(prefix), ComponentType.Sequencer, clientSession)
 
 
-locationService = LocationService()
+locationService = LocationService(clientSession)
 
 print("Wellcome to ESW Shell")
