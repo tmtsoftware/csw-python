@@ -166,11 +166,10 @@ class Started(CommandResponse):
             runId=obj['runId'],
         )
 
-
 @dataclass
 class Result:
     """A result containing parameters for command response"""
-    paramSet: List[Parameter]
+    paramSet: List[Parameter] = field(default_factory=list)
 
     # noinspection PyProtectedMember
     def _asDict(self):

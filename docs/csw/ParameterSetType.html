@@ -67,7 +67,7 @@ class CommandName:
 <dl>
 <dt id="csw.ParameterSetType.CommandName.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 </dl>
 </dd>
@@ -98,9 +98,13 @@ class ControlCommand(SequenceCommand):
 <ul class="hlist">
 <li><code><b><a title="csw.ParameterSetType.SequenceCommand" href="#csw.ParameterSetType.SequenceCommand">SequenceCommand</a></b></code>:
 <ul class="hlist">
+<li><code><a title="csw.ParameterSetType.SequenceCommand.commandName" href="#csw.ParameterSetType.SequenceCommand.commandName">commandName</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.maybeObsId" href="#csw.ParameterSetType.SequenceCommand.maybeObsId">maybeObsId</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.paramSet" href="#csw.ParameterSetType.SequenceCommand.paramSet">paramSet</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.source" href="#csw.ParameterSetType.SequenceCommand.source">source</a></code></li>
 </ul>
 </li>
 </ul>
@@ -131,9 +135,13 @@ class Observe(ControlCommand):
 <ul class="hlist">
 <li><code><b><a title="csw.ParameterSetType.ControlCommand" href="#csw.ParameterSetType.ControlCommand">ControlCommand</a></b></code>:
 <ul class="hlist">
+<li><code><a title="csw.ParameterSetType.ControlCommand.commandName" href="#csw.ParameterSetType.SequenceCommand.commandName">commandName</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.maybeObsId" href="#csw.ParameterSetType.SequenceCommand.maybeObsId">maybeObsId</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.paramSet" href="#csw.ParameterSetType.SequenceCommand.paramSet">paramSet</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.source" href="#csw.ParameterSetType.SequenceCommand.source">source</a></code></li>
 </ul>
 </li>
 </ul>
@@ -265,19 +273,19 @@ class SequenceCommand:
 <dl>
 <dt id="csw.ParameterSetType.SequenceCommand.commandName"><code class="name">var <span class="ident">commandName</span> : <a title="csw.ParameterSetType.CommandName" href="#csw.ParameterSetType.CommandName">CommandName</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.ParameterSetType.SequenceCommand.maybeObsId"><code class="name">var <span class="ident">maybeObsId</span> : <a title="csw.ObsId.ObsId" href="ObsId.html#csw.ObsId.ObsId">ObsId</a> | None</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.ParameterSetType.SequenceCommand.paramSet"><code class="name">var <span class="ident">paramSet</span> : List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="csw.ParameterSetType.SequenceCommand.source"><code class="name">var <span class="ident">source</span> : <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -407,9 +415,13 @@ class Setup(ControlCommand):
 <ul class="hlist">
 <li><code><b><a title="csw.ParameterSetType.ControlCommand" href="#csw.ParameterSetType.ControlCommand">ControlCommand</a></b></code>:
 <ul class="hlist">
+<li><code><a title="csw.ParameterSetType.ControlCommand.commandName" href="#csw.ParameterSetType.SequenceCommand.commandName">commandName</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
 <li><code><a title="csw.ParameterSetType.ControlCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.maybeObsId" href="#csw.ParameterSetType.SequenceCommand.maybeObsId">maybeObsId</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.paramSet" href="#csw.ParameterSetType.SequenceCommand.paramSet">paramSet</a></code></li>
+<li><code><a title="csw.ParameterSetType.ControlCommand.source" href="#csw.ParameterSetType.SequenceCommand.source">source</a></code></li>
 </ul>
 </li>
 </ul>
@@ -439,9 +451,13 @@ class Wait(SequenceCommand):
 <ul class="hlist">
 <li><code><b><a title="csw.ParameterSetType.SequenceCommand" href="#csw.ParameterSetType.SequenceCommand">SequenceCommand</a></b></code>:
 <ul class="hlist">
+<li><code><a title="csw.ParameterSetType.SequenceCommand.commandName" href="#csw.ParameterSetType.SequenceCommand.commandName">commandName</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.exists" href="#csw.ParameterSetType.SequenceCommand.exists">exists</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.get" href="#csw.ParameterSetType.SequenceCommand.get">get</a></code></li>
 <li><code><a title="csw.ParameterSetType.SequenceCommand.gets" href="#csw.ParameterSetType.SequenceCommand.gets">gets</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.maybeObsId" href="#csw.ParameterSetType.SequenceCommand.maybeObsId">maybeObsId</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.paramSet" href="#csw.ParameterSetType.SequenceCommand.paramSet">paramSet</a></code></li>
+<li><code><a title="csw.ParameterSetType.SequenceCommand.source" href="#csw.ParameterSetType.SequenceCommand.source">source</a></code></li>
 </ul>
 </li>
 </ul>

@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added many csw, esw and sequencer APIs
 - Added an HTTP script server that can be used to serve Python esw sequencer scripts (see OcsScriptServer for the server, ./examples for sample esw seuqncer scripts)
 - Updated dependencies
+- Updated python version to 3.13
 
 ### Changed
 
