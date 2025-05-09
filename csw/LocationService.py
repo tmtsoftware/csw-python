@@ -118,6 +118,8 @@ class Registration:
     """
     connection: ConnectionInfo
 
+def defaultNetworkType():
+    return NetworkType("Inside")
 
 @dataclass_json
 @dataclass
@@ -135,10 +137,10 @@ class HttpRegistration(Registration):
     Used to register an http based service with the Location Service.
     """
     port: int
-    path: str = ""
-    networkType: NetworkType = NetworkType("Inside")
+    path: str = field(default="")
+    networkType: NetworkType = field(default_factory=defaultNetworkType)
     metadata: dict = field(default_factory=csw_version)
-    _type: str = "HttpRegistration"
+    _type: str = field(default="HttpRegistration")
 
 
 @dataclass_json

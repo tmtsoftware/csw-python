@@ -1,5 +1,5 @@
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 from abc import abstractmethod
 
@@ -13,6 +13,9 @@ class EventName:
     A wrapper class representing the name of an Event
     """
     name: str
+
+def defaultEventTime():
+    return EventTime.now()
 
 @dataclass
 class Event:
@@ -29,9 +32,9 @@ class Event:
     """
     source: Prefix
     eventName: EventName
-    paramSet: List[Parameter]
-    eventTime: EventTime = EventTime.now()
-    eventId: str = str(uuid.uuid4())
+    paramSet: List[Parameter] = field(default_factory=list)
+    eventTime: EventTime = field(default_factory=defaultEventTime)
+    eventId: str = field(default=str(uuid.uuid4()))
 
     @abstractmethod
     def eventType(self) -> str:
