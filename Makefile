@@ -42,6 +42,7 @@ venv:
 	rm -rf .venv
 	mkdir .venv
 	python${PYTHON_VERSION} -m venv .venv
+	${PYTHON} -m pip install pytest
 	${PYTHON} -m pip install pipenv
 	${PIPENV} run pip install pdoc3
 	${PIPENV} install
