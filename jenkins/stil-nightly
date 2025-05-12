@@ -18,21 +18,13 @@ pipeline {
 
         stage('Install') {
             steps {
-                withEnv(['PATH+LOCALBIN=/usr/local/bin:/var/lib/jenkins/.local/bin']) {
-                    sh "redis-server --version"
-                    sh "cs channel --add https://raw.githubusercontent.com/tmtsoftware/osw-apps/branch-6.0.x/apps.json"
-                    sh "rm -rf .venv"
-                    sh "python3.13 -m pip install --upgrade pip"
-                    sh "python3.13 -m pip install pipenv"
-                }
+                sh "scripts/install_python.sh"
             }
         }
 
         stage('Tests') {
             steps {
-                withEnv(['PATH+LOCALBIN=/usr/local/bin:/var/lib/jenkins/.local/bin']) {
-                    sh "AAS_INTERFACE_NAME=lo INTERFACE_NAME=lo make test"
-                }
+                sh "AAS_INTERFACE_NAME=lo INTERFACE_NAME=lo make test"
             }
         }
     }
