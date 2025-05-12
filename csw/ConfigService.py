@@ -367,7 +367,7 @@ class ConfigService:
                 maxResults: int = 10000) -> List[ConfigFileRevision]:
         """
         Returns the history of versions of the file at the given path for a range of period specified by from and to.
-        The size of the list is limited upto maxResults.
+        The size of the list is limited up to maxResults.
 
         Args:
             path: the file path relative to the repository root

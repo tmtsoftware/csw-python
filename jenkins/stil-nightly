@@ -16,12 +16,6 @@ pipeline {
             }
         }
 
-        stage('Install') {
-            steps {
-                sh "scripts/install_python.sh"
-            }
-        }
-
         stage('Tests') {
             steps {
                 sh "AAS_INTERFACE_NAME=lo INTERFACE_NAME=lo make test"
