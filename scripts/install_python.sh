@@ -1,7 +1,8 @@
 #!/bin/sh
 
-sudo apt install -y build-essential libssl-dev zlib1g-dev libsqlite3-dev libffi-dev
+# XXX Temp: missing some system dependencies
+rm -rf  /var/lib/jenkins/.pyenv
 
 #test -d $HOME/.pyenv && exit 0
 #curl https://pyenv.run | bash
-pyenv install -v 3.13.3
+#pyenv install -v 3.13.3
