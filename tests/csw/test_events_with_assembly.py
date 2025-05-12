@@ -12,7 +12,8 @@ from csw.Parameter import *
 
 from csw.Coords import EqCoord, EqFrame, SolarSystemCoord, SolarSystemObject, MinorPlanetCoord, \
     CometCoord, AltAzCoord
-from csw.Event import SystemEvent, EventName
+from csw.Event import SystemEvent
+from csw.EventName import EventName
 from csw.EventPublisher import EventPublisher
 from csw.Prefix import Prefix
 from csw.Subsystem import Subsystem

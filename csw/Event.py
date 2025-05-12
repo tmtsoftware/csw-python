@@ -3,17 +3,10 @@ from dataclasses import dataclass, field
 from typing import List, Self
 from abc import abstractmethod
 
+from csw.EventName import EventName
 from csw.Parameter import Parameter
 from csw.EventTime import EventTime
 from csw.Prefix import Prefix
-
-
-@dataclass
-class EventName:
-    """
-    A wrapper class representing the name of an Event
-    """
-    name: str
 
 
 @dataclass

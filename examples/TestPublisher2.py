@@ -1,7 +1,8 @@
 import asyncio
 
 from csw.Parameter import IntKey, IntArrayKey, FloatArrayKey, IntMatrixKey
-from csw.Event import SystemEvent, EventName
+from csw.Event import SystemEvent
+from csw.EventName import EventName
 from csw.EventPublisher import EventPublisher
 from csw.Units import Units
 from csw.Prefix import Prefix

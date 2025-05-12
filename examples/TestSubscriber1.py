@@ -1,6 +1,7 @@
 import asyncio
 
-from csw.Event import Event, EventName
+from csw.Event import Event
+from csw.EventName import EventName
 from csw.EventSubscriber import EventSubscriber
 from csw.Subsystem import Subsystem
 from csw.Prefix import Prefix

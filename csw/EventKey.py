@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
+from csw.EventName import EventName
 from csw.Prefix import Prefix
-from csw.Event import EventName
 
 @dataclass
 class EventKey:

@@ -1,6 +1,6 @@
 from typing import Self
 
-from csw.Event import EventName
+from csw.EventName import EventName
 
 
 class ObserveEventNames:

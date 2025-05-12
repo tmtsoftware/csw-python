@@ -10,7 +10,8 @@ from csw.KeyTypes import KeyTypes
 from csw.Parameter import *
 from csw.EventSubscriber import EventSubscriber
 from csw.EventPublisher import EventPublisher
-from csw.Event import SystemEvent, EventName
+from csw.Event import SystemEvent
+from csw.EventName import EventName
 from csw.Subsystem import Subsystem
 from csw.EventKey import EventKey
 from csw.TMTTime import TAITime

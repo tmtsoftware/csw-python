@@ -3,7 +3,8 @@ from typing import Callable, Set
 
 from multipledispatch import dispatch
 
-from csw.Event import EventName, SystemEvent, Event
+from csw.Event import SystemEvent, Event
+from csw.EventName import EventName
 from csw.EventKey import EventKey
 from csw.EventPublisher import EventPublisher
 from csw.EventSubscriber import EventSubscriber

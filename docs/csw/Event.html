@@ -48,7 +48,7 @@ el.replaceWith(d);
 <dl>
 <dt id="csw.Event.Event"><code class="flex name class">
 <span>class <span class="ident">Event</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>eventName: <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a>,<br>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>] = &lt;factory&gt;,<br>eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = &lt;factory&gt;,<br>eventId: str = &lt;factory&gt;)</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>,<br>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>] = &lt;factory&gt;,<br>eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = &lt;factory&gt;,<br>eventId: str = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -153,7 +153,7 @@ class Event:
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -173,7 +173,7 @@ class Event:
 <dd>
 <div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
-<dt id="csw.Event.Event.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
+<dt id="csw.Event.Event.eventName"><code class="name">var <span class="ident">eventName</span> : <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a></code></dt>
 <dd>
 <div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
@@ -292,34 +292,9 @@ the parameter, if found</p></div>
 </dd>
 </dl>
 </dd>
-<dt id="csw.Event.EventName"><code class="flex name class">
-<span>class <span class="ident">EventName</span></span>
-<span>(</span><span>name: str)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@dataclass
-class EventName:
-    &#34;&#34;&#34;
-    A wrapper class representing the name of an Event
-    &#34;&#34;&#34;
-    name: str</code></pre>
-</details>
-<div class="desc"><p>A wrapper class representing the name of an Event</p></div>
-<h3>Instance variables</h3>
-<dl>
-<dt id="csw.Event.EventName.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
-<dd>
-<div class="desc"><p>The type of the None singleton.</p></div>
-</dd>
-</dl>
-</dd>
 <dt id="csw.Event.ObserveEvent"><code class="flex name class">
 <span>class <span class="ident">ObserveEvent</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>eventName: <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a>,<br>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>] = &lt;factory&gt;,<br>eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = &lt;factory&gt;,<br>eventId: str = &lt;factory&gt;)</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>,<br>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>] = &lt;factory&gt;,<br>eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = &lt;factory&gt;,<br>eventId: str = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -349,7 +324,7 @@ class ObserveEvent(Event):
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -380,7 +355,7 @@ class ObserveEvent(Event):
 </dd>
 <dt id="csw.Event.SystemEvent"><code class="flex name class">
 <span>class <span class="ident">SystemEvent</span></span>
-<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>eventName: <a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a>,<br>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>] = &lt;factory&gt;,<br>eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = &lt;factory&gt;,<br>eventId: str = &lt;factory&gt;)</span>
+<span>(</span><span>source: <a title="csw.Prefix.Prefix" href="Prefix.html#csw.Prefix.Prefix">Prefix</a>,<br>eventName: <a title="csw.EventName.EventName" href="EventName.html#csw.EventName.EventName">EventName</a>,<br>paramSet: List[<a title="csw.Parameter.Parameter" href="Parameter.html#csw.Parameter.Parameter">Parameter</a>] = &lt;factory&gt;,<br>eventTime: <a title="csw.EventTime.EventTime" href="EventTime.html#csw.EventTime.EventTime">EventTime</a> = &lt;factory&gt;,<br>eventId: str = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -425,7 +400,7 @@ class SystemEvent(Event):
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>prefix representing source of the event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>the name of event</dd>
 <dt><strong><code>paramSet</code></strong> :&ensp;<code>list</code></dt>
 <dd>list of Parameter (keys with values)</dd>
@@ -447,7 +422,7 @@ class SystemEvent(Event):
 <dl>
 <dt><strong><code>source</code></strong> :&ensp;<code>Prefix</code></dt>
 <dd>represents the prefix of the component that publishes this event</dd>
-<dt><strong><code>eventName</code></strong> :&ensp;<code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></dt>
+<dt><strong><code>eventName</code></strong> :&ensp;<code>EventName</code></dt>
 <dd>represents the name of the event</dd>
 </dl></div>
 </dd>
@@ -512,12 +487,6 @@ time of subscription</p>
 <li><code><a title="csw.Event.Event.isInvalid" href="#csw.Event.Event.isInvalid">isInvalid</a></code></li>
 <li><code><a title="csw.Event.Event.paramSet" href="#csw.Event.Event.paramSet">paramSet</a></code></li>
 <li><code><a title="csw.Event.Event.source" href="#csw.Event.Event.source">source</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="csw.Event.EventName" href="#csw.Event.EventName">EventName</a></code></h4>
-<ul class="">
-<li><code><a title="csw.Event.EventName.name" href="#csw.Event.EventName.name">name</a></code></li>
 </ul>
 </li>
 <li>

@@ -6,7 +6,8 @@ from pyhocon import ConfigFactory
 
 from csw.CommandResponse import Started, Completed
 from csw.CurrentState import CurrentState
-from csw.Event import Event, SystemEvent, EventName
+from csw.Event import Event, SystemEvent
+from csw.EventName import EventName
 from csw.ExposureId import ExposureId
 from csw.ObsId import ObsId
 from csw.ParameterSetType import Observe, Setup

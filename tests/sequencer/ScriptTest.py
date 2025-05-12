@@ -7,7 +7,8 @@ import aiohttp
 from aiohttp import ClientSession
 
 from csw.AlarmService import AlarmService
-from csw.Event import SystemEvent, EventName
+from csw.Event import SystemEvent
+from csw.EventName import EventName
 from csw.EventService import EventService
 from csw.ParameterSetType import Setup, CommandName
 from csw.Prefix import Prefix
