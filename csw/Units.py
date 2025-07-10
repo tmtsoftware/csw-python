@@ -135,7 +135,3 @@ class Units(Enum):
     utc = Unit("UTC", "UTC time unit")
     date = Unit("date", "date")
     datetime = Unit("datetime", "date/time")
-
-    # Flow and pressure units
-    psi = Unit("psi", "pounds per square inch")
-    lpm= Unit("lpm", "liters per minute")
