@@ -5,7 +5,8 @@ object Libs {
 }
 
 object CSW {
-  val Version = "6.0.0"
+//  val Version = "6.0.0"
+  val Version = "8bdbda0"
 
   val `csw-framework` = "com.github.tmtsoftware.csw" %% "csw-framework" % Version
   val `csw-testkit`   = "com.github.tmtsoftware.csw" %% "csw-testkit" % Version

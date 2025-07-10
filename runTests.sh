@@ -12,8 +12,8 @@ hash cs 2>/dev/null || { echo >&2 "Please install cs first.  Aborting."; exit 1;
 set -x
 
 # Note: Make sure version matches ones used in csw/LocationService.py and tests/testSupport/project/Libs.scala
-#CSW_VERSION=5.0.0
-CSW_VERSION=6.0.0
+#CSW_VERSION=6.0.0
+CSW_VERSION=8bdbda0
 CS_CHANNEL="https://raw.githubusercontent.com/tmtsoftware/osw-apps/branch-6.0.x/apps.json"
 export PYTHONPATH=`pwd`
 
